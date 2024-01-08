@@ -1,5 +1,5 @@
 <h1>hacksawEngine</h1>
-<h3>successor to elisoscelesEngine</h3>
+<h3>simple internal game engine</h3>
 <br>
 <h3>to do</h3>
  <ul>
