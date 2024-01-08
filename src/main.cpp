@@ -1,3 +1,7 @@
+//author: eli
+//created: 1-2-2024
+//main.cpp containing main method
+
 #include <string>
 #include <SDL2/SDL.h>
 #include "windowmgr.h"
@@ -19,6 +23,12 @@ int main(int argc, char* argv[]) {
 
   initWindow();
   initRenderer();
+
+  
+  //initial setup finished, run start tasks here
+
+  cfgPrintAllValues();
+
 
   while(1) {
     
