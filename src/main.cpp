@@ -2,12 +2,16 @@
 //created: 1-2-2024
 //main.cpp containing main method
 
+#include <iostream>
 #include <string>
 #include <SDL2/SDL.h>
 #include "windowmgr.h"
 #include <SDL2/SDL_video.h>
 #include "renderer.h"
 #include "config.h"
+#include "keyboard.h"
+
+SDL_Event mainEvent;
 
 int main(int argc, char* argv[]) {
 
@@ -32,8 +36,14 @@ int main(int argc, char* argv[]) {
 
   while(1) {
     
-    SDL_Event quitEvent;
-    if(SDL_PollEvent(&quitEvent) && quitEvent.type == SDL_QUIT) break;
+    if(SDL_PollEvent(&mainEvent) && mainEvent.type == SDL_QUIT) break;
+
+    if(getKeyDown('q')) {
+      break;
+    }
+    if(getKeyDown('a')) {
+      SDL_Log("cool");
+    }
 
     updateWindow();
     
@@ -43,4 +53,8 @@ int main(int argc, char* argv[]) {
  
   return 0;
 
+}
+
+SDL_Event* getMainEvent() {
+  return &mainEvent;
 }

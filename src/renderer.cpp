@@ -42,7 +42,6 @@ void initRenderer() {
 
   //creeate vertex shader object
   vertexShader = glCreateShader(GL_VERTEX_SHADER);
-
   glShaderSource(vertexShader, 1, &vtShaderSrc, NULL);
   glCompileShader(vertexShader);
 
