@@ -4,7 +4,7 @@
 #include <SDL2/SDL_opengl.h>
 #include <iostream>
 #include <cstring>
-#include "config.h"
+#include "Config.h"
 
 SDL_Window* window;
 

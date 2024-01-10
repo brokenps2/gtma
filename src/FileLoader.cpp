@@ -1,10 +1,10 @@
 //author: eli
 //created: 1-8-2024
-//shaderprogram.cpp shader program handler and loader
+//fileloader.cpp file loader
 
 #include <string>
 #include <fstream>
-#include "config.h"
+#include "Config.h"
 
 using namespace std;
 
@@ -33,3 +33,4 @@ string getFragmentShaderSrc() {
   return contents;
 
 }
+

@@ -7,7 +7,7 @@
 #include <SDL2/SDL_opengl.h>
 #include <string>
 #include <stdio.h>
-#include "shaderprogram.h"
+#include "FileLoader.h"
 
 float vertices[] = {
      0.5f,  0.35f, 0.0f,  // top right
@@ -20,22 +20,22 @@ unsigned int indices[] = {  // note that we start from 0!
     1, 2, 3    // second triangle
 };
 
-std::string vtShaderSrcValue;
-const char *vtShaderSrc;
-
-std::string frShaderSrcValue;
-const char *frShaderSrc;
-
-GLuint vertexShader;
-GLuint fragmentShader;
 GLuint shaderProgram;
 
 GLuint VBO;
 GLuint VAO;
 GLuint EBO;
 
-void initRenderer() {
+void loadDefaultShaders() {
 
+  GLuint vertexShader;
+  GLuint fragmentShader;
+
+  std::string vtShaderSrcValue;
+  const char *vtShaderSrc;
+
+  std::string frShaderSrcValue;
+  const char *frShaderSrc;
 
   vtShaderSrcValue = getVertexShaderSrc(); vtShaderSrc = vtShaderSrcValue.c_str();
   frShaderSrcValue = getFragmentShaderSrc(); frShaderSrc = frShaderSrcValue.c_str();
@@ -45,7 +45,7 @@ void initRenderer() {
   glShaderSource(vertexShader, 1, &vtShaderSrc, NULL);
   glCompileShader(vertexShader);
 
-  //create fragment shader object
+ //create fragment shader object
   fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
   glShaderSource(fragmentShader, 1, &frShaderSrc, NULL);
   glCompileShader(fragmentShader);
@@ -64,6 +64,12 @@ void initRenderer() {
   glDeleteShader(vertexShader);
   glDeleteShader(fragmentShader);
 
+}
+
+void initRenderer() {
+
+  loadDefaultShaders();
+ 
   //generate vao & vbo
   glGenVertexArrays(1, &VAO);
   glGenBuffers(1, &VBO);

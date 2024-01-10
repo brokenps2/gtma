@@ -5,10 +5,10 @@
 #include <iostream>
 #include <string>
 #include <SDL2/SDL.h>
-#include "windowmgr.h"
+#include "WindowManager.h"
 #include <SDL2/SDL_video.h>
-#include "renderer.h"
-#include "config.h"
+#include "Renderer.h"
+#include "Config.h"
 
 SDL_Event mainEvent;
 
