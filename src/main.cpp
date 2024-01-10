@@ -9,7 +9,6 @@
 #include <SDL2/SDL_video.h>
 #include "renderer.h"
 #include "config.h"
-#include "keyboard.h"
 
 SDL_Event mainEvent;
 
@@ -37,13 +36,6 @@ int main(int argc, char* argv[]) {
   while(1) {
     
     if(SDL_PollEvent(&mainEvent) && mainEvent.type == SDL_QUIT) break;
-
-    if(getKeyDown('q')) {
-      break;
-    }
-    if(getKeyDown('a')) {
-      SDL_Log("cool");
-    }
 
     updateWindow();
     
