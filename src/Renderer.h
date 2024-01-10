@@ -1,4 +1,4 @@
 #pragma once
 
 void initRenderer();
-void updRenderer();
+void render();

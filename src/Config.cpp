@@ -117,6 +117,7 @@ string cfgGetVertexShaderPath() {
     cfg.readFile(path);
   }
   catch(const FileIOException &fioex) {
+    std::cout << path << std::endl;
     std::cerr << "I/O error while reading configuration file." << std::endl;
     exit(1);
   }

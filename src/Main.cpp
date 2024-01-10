@@ -39,7 +39,7 @@ int main(int argc, char* argv[]) {
 
     updateWindow();
     
-    updRenderer();
+    render();
 
   }
  
