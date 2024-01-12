@@ -5,20 +5,19 @@
 #include <SDL2/SDL.h>
 #include <GL/glew.h>
 #include <SDL2/SDL_opengl.h>
-#include <string>
-#include <stdio.h>
-#include "FileLoader.h"
 #include "Shader.h"
 
 float vertices[] = {
-    // positions         // colors
-     0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,   // bottom right
-    -0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,   // bottom left
-     0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f    // top 
-};    
-unsigned int indices[] = {  // note that we start from 0!
-    0, 1, 3,   // first triangle
-    1, 2, 3    // second triangle
+  -0.5f, 0.0f, 0.0f,
+  -1.0f, -1.0f, 0.0f,
+  0.0f, -1.0f, 0.0f,
+
+  0.0f, 1.0f, 0.0f,
+  1.0f, 0.0f, 0.0f,
+  0.0f, 0.0f, 1.0f
+};
+unsigned int indices[] = {
+  1, 0, 2
 };
 
 GLuint shaderProgram;
@@ -29,49 +28,9 @@ GLuint EBO;
 
 Shader shader = Shader(0);
 
-void loadDefaultShaders() {
-
-  GLuint vertexShader;
-  GLuint fragmentShader;
-
-  std::string vtShaderSrcValue;
-  const char *vtShaderSrc;
-
-  std::string frShaderSrcValue;
-  const char *frShaderSrc;
-
-  vtShaderSrcValue = getVertexShaderSrc(); vtShaderSrc = vtShaderSrcValue.c_str();
-  frShaderSrcValue = getFragmentShaderSrc(); frShaderSrc = frShaderSrcValue.c_str();
-
-  //creeate vertex shader object
-  vertexShader = glCreateShader(GL_VERTEX_SHADER);
-  glShaderSource(vertexShader, 1, &vtShaderSrc, NULL);
-  glCompileShader(vertexShader);
-
- //create fragment shader object
-  fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-  glShaderSource(fragmentShader, 1, &frShaderSrc, NULL);
-  glCompileShader(fragmentShader);
-
-  //create shader program
-  shaderProgram  = glCreateProgram();
-  
-  //attach shaders to the program
-  glAttachShader(shaderProgram, vertexShader);
-  glAttachShader(shaderProgram, fragmentShader);
-
-  //link shaders
-  glLinkProgram(shaderProgram);
-
-  //delete shaders
-  glDeleteShader(vertexShader);
-  glDeleteShader(fragmentShader);
-
-}
 
 void initRenderer() {
 
-  //loadDefaultShaders();
   shader.initialize();
 
   //generate vao & vbo
@@ -93,9 +52,11 @@ void initRenderer() {
 
   //tell gl how to read vbo
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3* sizeof(float)));
   //enable vbo
   glEnableVertexAttribArray(0);
+
+  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3* sizeof(float)));
+  glEnableVertexAttribArray(1);
 
   //bind vbo
   glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -107,7 +68,7 @@ void initRenderer() {
 
 void render() {
 
-  glUseProgram(shaderProgram);
+  shader.use();
   glBindVertexArray(VAO);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
   glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);

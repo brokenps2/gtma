@@ -17,8 +17,8 @@ int main(int argc, char* argv[]) {
   SDL_Init(SDL_INIT_EVERYTHING);
 
   if(argc < 2 || argc > 2) {
-    printf("Usage: chiselengine [config file path]\n");
-    printf("this will be handled by the launcher eventually\n");
+    std::cout << "Usage: chiselengine [config file path]";
+    std::cout << "this will be handled by the launcher eventually";
     exit(1);
   }
 
@@ -29,9 +29,6 @@ int main(int argc, char* argv[]) {
 
   
   //initial setup finished, run start tasks here
-
-  cfgPrintAllValues();
-
 
   while(1) {
     
