@@ -31,4 +31,8 @@ public:
   void setInt(const std::string &name, int value) const;   
   void setFloat(const std::string &name, float value) const;
 
+  GLint getBool(const std::string &name) const;
+  GLint getInt(const std::string &name) const;
+  GLfloat getFloat(const std::string &name) const;
+
 };

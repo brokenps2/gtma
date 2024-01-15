@@ -2,6 +2,7 @@
 //created: 1-10-2024
 //Shader.cpp shader class
 
+#include <iostream>
 #include <GL/glew.h>
 #include <string>
 #include "FileLoader.h"
@@ -35,13 +36,23 @@ void Shader::initialize() {
 }
 
 void Shader::setBool(const std::string &name, bool value) const {         
-    glUniform1i(glGetUniformLocation(shaderProgram, name.c_str()), (int)value); 
+  glUniform1i(glGetUniformLocation(shaderProgram, name.c_str()), (int)value); 
 }
 void Shader::setInt(const std::string &name, int value) const { 
-    glUniform1i(glGetUniformLocation(shaderProgram, name.c_str()), value); 
+  glUniform1i(glGetUniformLocation(shaderProgram, name.c_str()), value); 
 }
 void Shader::setFloat(const std::string &name, float value) const { 
-    glUniform1f(glGetUniformLocation(shaderProgram, name.c_str()), value); 
+  glUniform1f(glGetUniformLocation(shaderProgram, name.c_str()), value); 
+}
+
+GLint Shader::getBool(const std::string &name) const {
+  return glGetUniformLocation(shaderProgram, name.c_str());
+}
+GLint Shader::getInt(const std::string &name) const {
+  return glGetUniformLocation(shaderProgram, name.c_str());
+}
+GLfloat Shader::getFloat(const std::string &name) const {
+  return glGetUniformLocation(shaderProgram, name.c_str());
 }
 
 void Shader::use() {

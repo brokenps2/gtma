@@ -42,7 +42,7 @@ void updateWindow() {
   SDL_UpdateWindowSurface(window);
   SDL_GL_SwapWindow(window);
   glClear(GL_COLOR_BUFFER_BIT);
-  glClearColor(0, 0.43, 0.43, 1);
+  glClearColor(0, 0.0, 0.0, 1);
 }
 
 SDL_Window* getWindow() {
