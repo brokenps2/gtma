@@ -9,8 +9,11 @@
 #include <SDL2/SDL_video.h>
 #include "Renderer.h"
 #include "Config.h"
+#include <stdio.h>
+#include <SDL2/SDL_stdinc.h>
 
 SDL_Event mainEvent;
+int cool = 0;
 
 int main(int argc, char* argv[]) {
 
@@ -35,7 +38,10 @@ int main(int argc, char* argv[]) {
     if(SDL_PollEvent(&mainEvent) && mainEvent.type == SDL_QUIT) break;
 
     updateWindow();
-    
+
+    //std::cout << cool << std::endl;
+    cool++;
+
     render();
 
   }

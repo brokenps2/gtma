@@ -5,6 +5,6 @@ in vec3 nColor;
 
 uniform float alpha = 1.0f;
 
-void mai() {
+void main() {
   FragColor = vec4(nColor, alpha);
 } 
