@@ -2,7 +2,7 @@
 
 #include <GL/glew.h>
 #include <string>
-#include "FileLoader.h"
+#include "Files.h"
 
 class Shader {
 

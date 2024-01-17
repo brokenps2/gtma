@@ -5,7 +5,7 @@
 #include <iostream>
 #include <GL/glew.h>
 #include <string>
-#include "FileLoader.h"
+#include "Files.h"
 #include "Shader.h"
 
 Shader::Shader(int type) {

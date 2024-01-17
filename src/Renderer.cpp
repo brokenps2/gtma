@@ -19,12 +19,18 @@ unsigned int indices[] = {
   0, 2, 1,
   1, 2, 3
 };
+float texCoords[] = {
+  0.0f, 0.0f,  // lower-left corner  
+  1.0f, 0.0f,  // lower-right corner
+  0.5f, 1.0f   // top-center corner
+};
 
 GLuint shaderProgram;
 
 GLuint VBO;
 GLuint VAO;
 GLuint EBO;
+GLuint texture;
 
 Shader shader = Shader(0);
 
@@ -37,6 +43,7 @@ void initRenderer() {
   glGenVertexArrays(1, &VAO);
   glGenBuffers(1, &VBO);
   glGenBuffers(1, &EBO);
+  glGenTextures(1, &texture);
 
   //bind vao
   glBindVertexArray(VAO);
@@ -64,6 +71,14 @@ void initRenderer() {
   glBindVertexArray(0);
 
   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+  glBindTexture(GL_TEXTURE_2D, texture);
 
 }
 
