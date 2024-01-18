@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <GL/glew.h>
 
 std::string getVertexShaderSrc();
 std::string getFragmentShaderSrc();
@@ -8,12 +9,10 @@ class hsTexture {
 
 public:
 
-  hsTexture(const char* fileName);
-
   int width, height, nrChannels;
+  GLuint id;
   unsigned char *data;
-  printf(fileName.c_str());
-
-
+  hsTexture(const char* fileName);
+  void dispose();
 
 };

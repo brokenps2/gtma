@@ -2,14 +2,14 @@
 //created: 1-6-2024
 //renderer.cpp opengl renderer
 
-#include <iostream>
 #include <SDL2/SDL.h>
 #include <GL/glew.h>
 #include <SDL2/SDL_opengl.h>
 #include "Shader.h"
+#include "Files.h"
 
 float vertices[] = {
-  -0.5f, 0.5f, 0.0f,  0.0f, 1.0f, 0.0f,
+ 
   -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
   0.5f, 0.4f, 0.0f,   0.4f, 0.0f, 1.0f,
   0.5f, -0.4f, 0.0f,  0.0f, 0.0f, 1.0f
@@ -30,7 +30,8 @@ GLuint shaderProgram;
 GLuint VBO;
 GLuint VAO;
 GLuint EBO;
-GLuint texture;
+
+hsTexture texture = hsTexture("res/cool.png");
 
 Shader shader = Shader(0);
 
@@ -43,7 +44,7 @@ void initRenderer() {
   glGenVertexArrays(1, &VAO);
   glGenBuffers(1, &VBO);
   glGenBuffers(1, &EBO);
-  glGenTextures(1, &texture);
+  glGenTextures(1, &texture.id);
 
   //bind vao
   glBindVertexArray(VAO);
@@ -78,13 +79,20 @@ void initRenderer() {
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-  glBindTexture(GL_TEXTURE_2D, texture);
+  glBindTexture(GL_TEXTURE_2D, texture.id);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, texture.width, texture.height, 0, GL_RGB, GL_UNSIGNED_BYTE, texture.data);
+  
+  //glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+  //glEnableVertexAttribArray(2); 
+
+  texture.dispose();
 
 }
 
 void render() {
 
   shader.use();
+  //glBindTexture(GL_TEXTURE_2D, texture.id);
   glBindVertexArray(VAO);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
   glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);

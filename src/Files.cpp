@@ -38,18 +38,13 @@ string getFragmentShaderSrc() {
 
 }
 
-unsigned char getBasicImageTexture(string fileName) {
-  int width, height, nrChannels;
-  unsigned char *data = stbi_load(fileName.c_str(), &width, &height, &nrChannels, 0);
-  printf(fileName.c_str());
-  char* attribs[sizeof(data)][4];
-  attribs[0][0] = (char*)fileName.c_str();
-  sprintf(attribs[1][0], "%i", width);
-  sprintf(attribs[2][0], "%i", height);
-  sprintf(attribs[3][0], "%i", nrChannels);
-}
-
-
 hsTexture::hsTexture(const char* fileName) {
 
+  hsTexture::data = stbi_load(fileName, &width, &height, &nrChannels, 0);
+  printf(fileName);
+
+}
+
+void hsTexture::dispose() {
+  stbi_image_free(data);
 }

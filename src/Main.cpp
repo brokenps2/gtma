@@ -10,10 +10,11 @@
 #include "Renderer.h"
 #include "Config.h"
 #include <stdio.h>
+#include "OBJLoader.h"
 #include <SDL2/SDL_stdinc.h>
 
 SDL_Event mainEvent;
-int cool = 0;
+double cool = 1;
 
 int main(int argc, char* argv[]) {
 
@@ -28,8 +29,9 @@ int main(int argc, char* argv[]) {
   cfgSetPath(argv[1]);
 
   initWindow();
-  initRenderer();
+  //initRenderer();
 
+  std::cout << getModelSrc("res/decube.obj");
   
   //initial setup finished, run start tasks here
 
@@ -39,10 +41,10 @@ int main(int argc, char* argv[]) {
 
     updateWindow();
 
-    //std::cout << cool << std::endl;
-    cool++;
-
-    render();
+    std::cout << cool << std::endl;
+    cool = cool + 1;
+    
+    //render();
 
   }
  
