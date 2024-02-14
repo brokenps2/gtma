@@ -1,7 +1,3 @@
-//author: eli
-//created: 1-8-2024
-//fileloader.cpp file loader
-
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 

@@ -1,7 +1,3 @@
-//author: eli
-//created: 1-10-2024
-//Shader.cpp shader class
-
 #include <iostream>
 #include <GL/glew.h>
 #include <string>

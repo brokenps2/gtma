@@ -1,7 +1,3 @@
-//author: eli
-//created: 1-6-2024
-//config.cpp config file reader
-
 #include <iostream>
 #include <string>
 #include <libconfig.h++>
