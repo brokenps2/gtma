@@ -1,4 +1,5 @@
-<h1>GTMA</h1>
+<img src="gtma.png">
+<h2>GTMA</h2>
 <h3>Game/Graphics Toolkit with Minimal Abstraction</h3>
 <br>
 <h3>to do</h3>
