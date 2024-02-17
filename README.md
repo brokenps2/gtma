@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="gtma2.png"/>
+  <img src="gtma.png"/>
 </p>
 <h2>GTMA</h2>
 <h3>Game/Graphics Toolkit with Minimal Abstraction</h3>
