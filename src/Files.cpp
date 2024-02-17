@@ -1,6 +1,5 @@
-#define STB_IMAGE_IMPLEMENTATION
-#include <stb_image.h>
 
+#include <stb_image.h>
 #include <string>
 #include <fstream>
 #include "Config.h"
@@ -34,13 +33,10 @@ string getFragmentShaderSrc() {
 
 }
 
-hsTexture::hsTexture(const char* fileName) {
-
-  hsTexture::data = stbi_load(fileName, &width, &height, &nrChannels, 0);
-  printf(fileName);
+Texture::Texture(const char* fileName) {
 
 }
 
-void hsTexture::dispose() {
-  stbi_image_free(data);
+void Texture::dispose() {
+
 }

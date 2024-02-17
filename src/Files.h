@@ -5,14 +5,14 @@
 std::string getVertexShaderSrc();
 std::string getFragmentShaderSrc();
 
-class hsTexture {
+class Texture {
 
 public:
 
   int width, height, nrChannels;
   GLuint id;
   unsigned char *data;
-  hsTexture(const char* fileName);
+  Texture(const char* fileName);
   void dispose();
 
 };

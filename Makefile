@@ -1,6 +1,6 @@
 TARGET = bin/program
 
-SRCS = src/*.cpp
+SRCS = $(wildcard src/*.cpp)
 
 INCLUDES = -Iinclude/
 

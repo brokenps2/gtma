@@ -1,12 +1,12 @@
 #version 330 core
 out vec4 FragColor;
-
-in vec3 nColor;
+  
+in vec3 ourColor;
 in vec2 TexCoord;
 
-uniform float alpha = 1.0f;
-uniform sampler2D coolTexture;
+uniform sampler2D ourTexture;
 
-void main() {
-  FragColor = vec4(nColor, 1.0);
-} 
+void main()
+{
+  FragColor = texture(ourTexture, TexCoord);
+}
