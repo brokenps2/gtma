@@ -7,13 +7,9 @@
 
 using namespace std;
 
-string vtShaderPath;
-
 string getVertexShaderSrc() {
-
-  vtShaderPath = cfgGetVertexShaderPath();
   
-  ifstream in(vtShaderPath);
+  ifstream in(cfgGetVertexShaderPath());
   string contents((istreambuf_iterator<char>(in)), 
     istreambuf_iterator<char>());
 
@@ -23,20 +19,10 @@ string getVertexShaderSrc() {
 
 string getFragmentShaderSrc() {
 
-  vtShaderPath = cfgGetFragmentShaderPath();
-  
-  ifstream in(vtShaderPath);
+  ifstream in(cfgGetFragmentShaderPath());
   string contents((istreambuf_iterator<char>(in)), 
     istreambuf_iterator<char>());
 
   return contents;
-
-}
-
-Texture::Texture(const char* fileName) {
-
-}
-
-void Texture::dispose() {
 
 }

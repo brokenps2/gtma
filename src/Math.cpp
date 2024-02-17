@@ -1,4 +1,4 @@
-#include "Color.h"
+#include "Math.h"
 
 float glc(float color) {
   float glcolor;

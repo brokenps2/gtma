@@ -5,7 +5,7 @@
 #include <iostream>
 #include <cstring>
 #include "Config.h"
-#include "Color.h"
+#include "Math.h"
 
 SDL_Window* window;
 
