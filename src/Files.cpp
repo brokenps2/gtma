@@ -1,3 +1,6 @@
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image.h>
+
 #include <string>
 #include <fstream>
 #include "Config.h"
@@ -23,4 +26,12 @@ string getFragmentShaderSrc() {
 
   return contents;
 
+}
+
+Texture::Texture(char* path) {
+  data = stbi_load(path, &w, &h, &channels, 0);
+}
+
+void Texture::dispose() {
+  stbi_image_free(data);
 }

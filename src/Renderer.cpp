@@ -1,6 +1,3 @@
-#define STB_IMAGE_IMPLEMENTATION
-#include <stb_image.h>
-
 #include <SDL2/SDL.h>
 #include <GL/glew.h>
 #include <SDL2/SDL_opengl.h>
@@ -22,15 +19,17 @@ Shader shader = Shader(0);
 
 u_int VBO, VAO, EBO;
 
-int w, h, ch;
-u_char* bytes = stbi_load("fart.png", &w, &h, &ch, 0);
-GLuint texture;
+Texture texture("fart.png");
+
+//int w, h, ch;
+//u_char* bytes = stbi_load("fart.png", &w, &h, &ch, 0);
+//GLuint texture;
 
 void initRenderer() {
 
-  glGenTextures(1, &texture);
+  glGenTextures(1, &texture.id);
   glActiveTexture(GL_TEXTURE0);
-  glBindTexture(GL_TEXTURE_2D, texture);
+  glBindTexture(GL_TEXTURE_2D, texture.id);
 
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -38,10 +37,9 @@ void initRenderer() {
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0, GL_RGB, GL_UNSIGNED_BYTE, bytes);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, texture.w, texture.h, 0, GL_RGB, GL_UNSIGNED_BYTE, texture.data);
 
-  stbi_image_free(bytes);
-
+  texture.dispose();
 
   shader.initialize();
 
@@ -72,7 +70,7 @@ void initRenderer() {
 
 void render() {
   shader.use();
-  glBindTexture(GL_TEXTURE_2D, texture);
+  glBindTexture(GL_TEXTURE_2D, texture.id);
   glBindVertexArray(VAO);
   glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }
