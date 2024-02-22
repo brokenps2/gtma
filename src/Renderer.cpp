@@ -1,42 +1,49 @@
 #define STB_IMAGE_IMPLEMENTATION
+#include <stb_image.h>
 
 #include <SDL2/SDL.h>
 #include <GL/glew.h>
 #include <SDL2/SDL_opengl.h>
 #include "Shader.h"
-#include <stb_image.h>
 #include "Files.h"
 
 float vertices[] = {
-  // positions          // colors           // texture coords
-  0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f, // top right
-  0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f, // bottom right
-  -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f, // bottom left
-  -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f  // top left 
+  -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+  -0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 0.0f,  0.0f, 1.0f,
+  0.5f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f,   1.0f, 1.0f,
+  0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 1.0f,  1.0f, 0.0f
 };
 unsigned int indices[] = {
   0, 1, 3, // first triangle
-  1, 2, 3  // second triangle
+  1, 2, 3
 };
 
 Shader shader = Shader(0);
 
 u_int VBO, VAO, EBO;
 
-int width, height, nrChannels;
-GLuint id;
-unsigned char *data;
-
-
-//Texture tex("setup.png");
+int w, h, ch;
+u_char* bytes = stbi_load("fart.png", &w, &h, &ch, 0);
+GLuint texture;
 
 void initRenderer() {
 
-  shader.initialize();
+  glGenTextures(1, &texture);
+  glActiveTexture(GL_TEXTURE0);
+  glBindTexture(GL_TEXTURE_2D, texture);
 
-  //tex = Texture("setup.png");
-  data = stbi_load("setup.png", &width, &height, &nrChannels, 0);
-  if(data == NULL) printf("fart\n");
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0, GL_RGB, GL_UNSIGNED_BYTE, bytes);
+
+  stbi_image_free(bytes);
+
+
+  shader.initialize();
 
   glGenVertexArrays(1, &VAO);
   glGenBuffers(1, &VBO);
@@ -59,29 +66,13 @@ void initRenderer() {
   glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
   glEnableVertexAttribArray(2);
 
-  //glGenTextures(1, &tex.id);
-  glGenTextures(1, &id);
-  //glBindTexture(GL_TEXTURE_2D, tex.id);
-  glBindTexture(GL_TEXTURE_2D, id);
-
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-  //glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, tex.width, tex.height, 0, GL_RGB, GL_UNSIGNED_BYTE, tex.data);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-
-
   shader.use();
-  shader.setInt("ourTexture", 1);
-  glUniform1i(glGetUniformLocation(shader.shaderProgram, "ourTexture"), 1);
-
+  glUniform1i(glGetUniformLocation(shader.shaderProgram, "tex0"), 0);
 }
 
 void render() {
-  glBindTexture(GL_TEXTURE_2D, id);
   shader.use();
+  glBindTexture(GL_TEXTURE_2D, texture);
   glBindVertexArray(VAO);
   glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }

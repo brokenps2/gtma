@@ -1,5 +1,3 @@
-
-#include <stb_image.h>
 #include <string>
 #include <fstream>
 #include "Config.h"
