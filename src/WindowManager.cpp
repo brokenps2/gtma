@@ -1,29 +1,23 @@
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_video.h>
 #include <GL/glew.h>
-#include <SDL2/SDL_opengl.h>
+#include <GLFW/glfw3.h>
 #include <iostream>
 #include <cstring>
 #include "Config.h"
 #include "Math.h"
 
-SDL_Window* window;
+GLFWwindow* window;
 
 void initWindow() {
  
-  char* ctitle;
+  std::string why = cfgGetTitle(); // whhhhyyyyy do you need to dooo thisssss
+  char* ctitle = (char*)why.c_str();
 
-  if(cfgGetResX() == 1 || cfgGetResY() == 1 || cfgGetTitle() == "1") {
-    std::cerr << "Unknown error in configuration file" << std::endl;
-    exit(1);
-  } else {
-    const int length = cfgGetTitle().length();
-    ctitle = new char[length+1];
-    strcpy(ctitle, cfgGetTitle().c_str());
-    window = SDL_CreateWindow(ctitle, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, cfgGetResX(), cfgGetResY(), SDL_WINDOW_OPENGL);
-  }
-
-  SDL_GL_CreateContext(window);
+  window = glfwCreateWindow(cfgGetResX(), cfgGetResY(), ctitle, NULL, NULL);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 0);
+  glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+  glfwMakeContextCurrent(window);
+  glfwSetWindowPos(window, 800, 600);
 
   const GLenum err = glewInit();
   glewExperimental = GL_TRUE;
@@ -32,22 +26,18 @@ void initWindow() {
     exit(1);
   }
 
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-
   glViewport(0, 0, cfgGetResX(), cfgGetResY());
   glEnable(GL_DEPTH_TEST);
 }
 
+GLFWwindow* getWindow() {
+  return window;
+}
+
 void updateWindow() {
-  SDL_UpdateWindowSurface(window);
-  SDL_GL_SwapWindow(window);
+  glfwSwapBuffers(window);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glViewport(0, 0, (GLint)cfgGetResX(), (GLint)cfgGetResY());
   glClearColor(glc(135), glc(206), glc(235), 1);
 }
 
-SDL_Window* getWindow() {
-  return window;
-} 

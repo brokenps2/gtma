@@ -1,18 +1,15 @@
 #include <iostream>
 #include <string>
-#include <SDL2/SDL.h>
+#include <GLFW/glfw3.h>
 #include "WindowManager.h"
-#include <SDL2/SDL_video.h>
 #include "Renderer.h"
 #include "Config.h"
-#include "Events.h"
-#include <SDL2/SDL_stdinc.h>
 
 int main(int argc, char* argv[]) {
 
-  SDL_Init(SDL_INIT_VIDEO);
-  SDL_Init(SDL_INIT_AUDIO);
-  SDL_Init(SDL_INIT_EVENTS);
+  if (!glfwInit()) {
+    std::cout << "GLFW Init Failed!" << std::endl;
+  }
 
   if(argc < 2 || argc > 2) {
     std::cout << "Usage: gtma [config file path]" << std::endl;
@@ -27,18 +24,17 @@ int main(int argc, char* argv[]) {
  
   //initial setup finished, run start tasks here
 
-  while(1) {
-
-    if(checkForQuit()) {
-      break;
-    }
+  while(!glfwWindowShouldClose(getWindow())) {
 
     updateWindow();
 
     render();
 
+    glfwPollEvents();
+
   }
  
+  glfwTerminate();
   return 0;
 
 }

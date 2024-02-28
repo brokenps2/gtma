@@ -1,7 +1,7 @@
 #pragma once
 
-typedef struct SDL_Window SDL_Window;
+typedef struct GLFWwindow GLFWwindow;
 
 void initWindow();
 void updateWindow();
-SDL_Window* getWindow();
+GLFWwindow* getWindow();
