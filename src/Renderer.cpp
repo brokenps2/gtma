@@ -10,21 +10,32 @@
 #include "Config.h"
 #include "Files.h"
 
-float vertices[] = {
-	-0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f,	0.0f, 0.0f,
-	-0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	5.0f, 0.0f,
-	 0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	0.0f, 0.0f,
-	 0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f,	5.0f, 0.0f,
-	 0.0f, 0.8f,  0.0f,     0.92f, 0.86f, 0.76f,	2.5f, 5.0f
+GLfloat vertices[] = {
+    // Position            // Color               // Texture coordinates
+   -0.5f, -0.5f, -0.5f,    1.0f, 0.0f, 0.0f,     0.0f, 0.0f,  // 0
+    0.5f, -0.5f, -0.5f,    0.0f, 1.0f, 0.0f,     1.0f, 0.0f,  // 1
+    0.5f,  0.5f, -0.5f,    0.0f, 0.0f, 1.0f,     1.0f, 1.0f,  // 2
+   -0.5f,  0.5f, -0.5f,    1.0f, 1.0f, 0.0f,     0.0f, 1.0f,  // 3
+   -0.5f, -0.5f,  0.5f,    0.0f, 1.0f, 1.0f,     0.0f, 0.0f,  // 4
+    0.5f, -0.5f,  0.5f,    1.0f, 0.0f, 1.0f,     1.0f, 0.0f,  // 5
+    0.5f,  0.5f,  0.5f,    1.0f, 1.0f, 1.0f,     1.0f, 1.0f,  // 6
+   -0.5f,  0.5f,  0.5f,    0.5f, 0.5f, 0.5f,     0.0f, 1.0f   // 7
 };
-unsigned int indices[] = {
-	0, 1, 2,
-	0, 2, 3,
-	0, 1, 4,
-	1, 2, 4,
-	2, 3, 4,
-	3, 0, 4, // first triangle
 
+// Indices for a cube (using triangles)
+GLuint indices[] = {
+    0, 1, 2,  // Front face
+    2, 3, 0,
+    1, 5, 6,  // Right face
+    6, 2, 1,
+    7, 6, 5,  // Top face
+    5, 4, 7,
+    4, 0, 3,  // Left face
+    3, 7, 4,
+    4, 5, 1,  // Bottom face
+    1, 0, 4,
+    3, 2, 6,  // Back face
+    6, 7, 3
 };
 
 Shader shader = Shader(0);
@@ -37,7 +48,7 @@ glm::mat4 proj = glm::mat4(1.0f);
 
 Texture texture("fart.png");
 
-float rotation = 0;
+float rotation = 1.5f;
 
 void initMatrices() {
 
@@ -87,6 +98,9 @@ void initRenderer() {
 
   shader.use();
   glUniform1i(glGetUniformLocation(shader.shaderProgram, "tex0"), 0);
+
+  view = glm::translate(view, glm::vec3(0.0f, 0.0f, -4.0f));
+  proj = glm::perspective(glm::radians(45.0f), ((float)800 / (float)800), 0.1f, 100.0f);
   
 
 
@@ -98,12 +112,7 @@ void render() {
   glBindVertexArray(VAO);
   glDrawElements(GL_TRIANGLES, sizeof(indices)/sizeof(int), GL_UNSIGNED_INT, 0);
 
-  rotation += 0.01f;
-
-
-  model = glm::rotate(model, glm::radians(rotation), glm::vec3(0.0f, 1.0f, 0.0f));
-  //view = glm::translate(view, glm::vec3(0.0f, -0.5f, -2.0f));
-  //proj = glm::perspective(glm::radians(45.0f), ((float)800 / (float)800), 0.1f, 100.0f);
+  model = glm::rotate(model, glm::radians(rotation), glm::vec3(0.0f, 1.0f, 1.0f));
 
   shader.use();
   int modelLoc = glGetUniformLocation(shader.shaderProgram, "model");

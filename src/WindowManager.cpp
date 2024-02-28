@@ -37,12 +37,13 @@ void initWindow() {
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
   glViewport(0, 0, cfgGetResX(), cfgGetResY());
+  glEnable(GL_DEPTH_TEST);
 }
 
 void updateWindow() {
   SDL_UpdateWindowSurface(window);
   SDL_GL_SwapWindow(window);
-  glClear(GL_COLOR_BUFFER_BIT);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glClearColor(glc(0), glc(0), glc(0), 1);
 }
 
