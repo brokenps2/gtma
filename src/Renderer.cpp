@@ -9,6 +9,7 @@
 #include "Shader.h"
 #include "Config.h"
 #include "Files.h"
+#include "Events.h"
 
 GLfloat vertices[] = {
     // Position            // Color               // Texture coordinates
@@ -125,4 +126,5 @@ void render() {
   glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
   int projLoc = glGetUniformLocation(shader.shaderProgram, "proj");
   glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(proj));
+
 }

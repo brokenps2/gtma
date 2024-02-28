@@ -5,6 +5,7 @@
 #include <SDL2/SDL_video.h>
 #include "Renderer.h"
 #include "Config.h"
+#include "Events.h"
 #include <SDL2/SDL_stdinc.h>
 
 int main(int argc, char* argv[]) {
@@ -26,11 +27,11 @@ int main(int argc, char* argv[]) {
  
   //initial setup finished, run start tasks here
 
-  SDL_Event qev;
-
   while(1) {
-    
-    if(SDL_PollEvent(&qev) && qev.type == SDL_QUIT) break;
+
+    if(checkForQuit()) {
+      break;
+    }
 
     updateWindow();
 
