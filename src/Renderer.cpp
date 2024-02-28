@@ -12,14 +12,14 @@
 
 GLfloat vertices[] = {
     // Position            // Color               // Texture coordinates
-   -0.5f, -0.5f, -0.5f,    1.0f, 0.0f, 0.0f,     0.0f, 0.0f,  // 0
+   -0.5f, -0.5f, -0.5f,    0.0f, 0.0f, 1.0f,     0.0f, 0.0f,  // 0
     0.5f, -0.5f, -0.5f,    0.0f, 1.0f, 0.0f,     1.0f, 0.0f,  // 1
     0.5f,  0.5f, -0.5f,    0.0f, 0.0f, 1.0f,     1.0f, 1.0f,  // 2
-   -0.5f,  0.5f, -0.5f,    1.0f, 1.0f, 0.0f,     0.0f, 1.0f,  // 3
+   -0.5f,  0.5f, -0.5f,    0.0f, 1.0f, 0.0f,     0.0f, 1.0f,  // 3
    -0.5f, -0.5f,  0.5f,    0.0f, 1.0f, 1.0f,     0.0f, 0.0f,  // 4
-    0.5f, -0.5f,  0.5f,    1.0f, 0.0f, 1.0f,     1.0f, 0.0f,  // 5
-    0.5f,  0.5f,  0.5f,    1.0f, 1.0f, 1.0f,     1.0f, 1.0f,  // 6
-   -0.5f,  0.5f,  0.5f,    0.5f, 0.5f, 0.5f,     0.0f, 1.0f   // 7
+    0.5f, -0.5f,  0.5f,    0.0f, 0.0f, 1.0f,     1.0f, 0.0f,  // 5
+    0.5f,  0.5f,  0.5f,    0.0f, 1.0f, 1.0f,     1.0f, 1.0f,  // 6
+   -0.5f,  0.5f,  0.5f,    0.0f, 0.5f, 0.5f,     0.0f, 1.0f   // 7
 };
 
 // Indices for a cube (using triangles)
@@ -42,11 +42,11 @@ Shader shader = Shader(0);
 
 u_int VBO, VAO, EBO;
 
-glm::mat4 model = glm::mat4(1.0f);
+glm::mat4 trans = glm::mat4(1.0f);
 glm::mat4 view = glm::mat4(1.0f);
 glm::mat4 proj = glm::mat4(1.0f);
 
-Texture texture("fart.png");
+Texture texture("setup.png");
 
 float rotation = 1.5f;
 
@@ -99,6 +99,10 @@ void initRenderer() {
   shader.use();
   glUniform1i(glGetUniformLocation(shader.shaderProgram, "tex0"), 0);
 
+  glMatrixMode(GL_PROJECTION);
+  glLoadIdentity();
+  glm::ortho(0.0f, (float)cfgGetResX(), 0.0f, (float)cfgGetResY(), 0.1f, 100.0f);
+
   view = glm::translate(view, glm::vec3(0.0f, 0.0f, -4.0f));
   proj = glm::perspective(glm::radians(45.0f), ((float)800 / (float)800), 0.1f, 100.0f);
   
@@ -112,11 +116,11 @@ void render() {
   glBindVertexArray(VAO);
   glDrawElements(GL_TRIANGLES, sizeof(indices)/sizeof(int), GL_UNSIGNED_INT, 0);
 
-  model = glm::rotate(model, glm::radians(rotation), glm::vec3(0.0f, 1.0f, 1.0f));
+  trans = glm::rotate(trans, glm::radians(rotation), glm::vec3(0.0f, 1.0f, 1.0f));
 
   shader.use();
-  int modelLoc = glGetUniformLocation(shader.shaderProgram, "model");
-  glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+  int modelLoc = glGetUniformLocation(shader.shaderProgram, "trans");
+  glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(trans));
   int viewLoc = glGetUniformLocation(shader.shaderProgram, "view");
   glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
   int projLoc = glGetUniformLocation(shader.shaderProgram, "proj");
