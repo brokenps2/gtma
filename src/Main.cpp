@@ -4,7 +4,6 @@
 #include "WindowManager.h"
 #include "Renderer.h"
 #include "Config.h"
-#include "Events.h"
 
 int main(int argc, char* argv[]) {
 
@@ -30,6 +29,8 @@ int main(int argc, char* argv[]) {
     updateWindow();
 
     render();
+
+    glfwPollEvents();
 
   }
  

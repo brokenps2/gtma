@@ -9,21 +9,15 @@ GLFWwindow* window;
 
 void initWindow() {
  
-  char* ctitle;
+  std::string why = cfgGetTitle(); // whhhhyyyyy do you need to dooo thisssss
+  char* ctitle = (char*)why.c_str();
 
-  if(cfgGetResX() == 1 || cfgGetResY() == 1 || cfgGetTitle() == "1") {
-    std::cerr << "Unknown error in configuration file" << std::endl;
-    exit(1);
-  } else {
-    const int length = cfgGetTitle().length();
-    ctitle = new char[length+1];
-    strcpy(ctitle, cfgGetTitle().c_str());
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 0);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    window = glfwCreateWindow(cfgGetResX(), cfgGetResY(), ctitle, NULL, NULL);
-    glfwMakeContextCurrent(window);
-  }
+  window = glfwCreateWindow(cfgGetResX(), cfgGetResY(), ctitle, NULL, NULL);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 0);
+  glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+  glfwMakeContextCurrent(window);
+  glfwSetWindowPos(window, 800, 600);
 
   const GLenum err = glewInit();
   glewExperimental = GL_TRUE;
@@ -31,10 +25,6 @@ void initWindow() {
     std::cout << "GLEW Error: " << glewGetErrorString(err) << std::endl;
     exit(1);
   }
-
-  //SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-  //SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
-  //SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
   glViewport(0, 0, cfgGetResX(), cfgGetResY());
   glEnable(GL_DEPTH_TEST);
