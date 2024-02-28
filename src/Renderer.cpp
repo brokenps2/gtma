@@ -1,14 +1,19 @@
+#include <iostream>
+#include <stb_image.h>
 #include <SDL2/SDL.h>
 #include <GL/glew.h>
 #include <SDL2/SDL_opengl.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include "Shader.h"
 #include "Files.h"
 
 float vertices[] = {
-  -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-  -0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 0.0f,  0.0f, 1.0f,
-  0.5f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f,   1.0f, 1.0f,
-  0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 1.0f,  1.0f, 0.0f
+  -1.0f, -1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+  -1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f,  0.0f, 1.0f,
+  1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f,   1.0f, 1.0f,
+  1.0f, -1.0f, 0.0f, 1.0f, 1.0f, 1.0f,  1.0f, 0.0f
 };
 unsigned int indices[] = {
   0, 1, 3, // first triangle
@@ -37,7 +42,7 @@ void initRenderer() {
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, texture.w, texture.h, 0, GL_RGB, GL_UNSIGNED_BYTE, texture.data);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texture.w, texture.h, 0, GL_RGBA, GL_UNSIGNED_BYTE, texture.data);
 
   texture.dispose();
 
@@ -66,6 +71,12 @@ void initRenderer() {
 
   shader.use();
   glUniform1i(glGetUniformLocation(shader.shaderProgram, "tex0"), 0);
+
+  glm::vec4 vec(1.0f, 0.0f, 0.0f, 1.0f);
+  glm::mat4 trans = glm::mat4(1.0f);
+  trans = glm::translate(trans, glm::vec3(1.0f, 1.0f, 0.0f));
+  vec = trans * vec;
+  std::cout << vec.x << vec.y << vec.z << std::endl;
 }
 
 void render() {

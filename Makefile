@@ -2,6 +2,8 @@ TARGET = bin/program
 
 SRCS = $(wildcard src/*.cpp)
 
+OBJS := $(patsubst %.c, %.o, $(wildcard src/*.c))
+
 INCLUDES = -Iinclude/
 
 LIBDIRS = -L/usr/lib

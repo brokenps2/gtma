@@ -15,7 +15,7 @@ class Texture {
   u_char* data;
   GLuint id;
 
-  Texture(char* path);
+  Texture(const char* path);
   void dispose();
 
 };

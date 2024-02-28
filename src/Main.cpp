@@ -14,7 +14,7 @@ int main(int argc, char* argv[]) {
   SDL_Init(SDL_INIT_EVENTS);
 
   if(argc < 2 || argc > 2) {
-    std::cout << "Usage: chiselengine [config file path]" << std::endl;
+    std::cout << "Usage: gtma [config file path]" << std::endl;
     std::cout << "this will be handled by the launcher eventually" << std::endl;
     exit(1);
   }

@@ -28,7 +28,8 @@ string getFragmentShaderSrc() {
 
 }
 
-Texture::Texture(char* path) {
+Texture::Texture(const char* path) {
+  stbi_set_flip_vertically_on_load(true);
   data = stbi_load(path, &w, &h, &channels, 0);
 }
 
