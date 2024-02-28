@@ -7,30 +7,47 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include "Shader.h"
+#include "Config.h"
 #include "Files.h"
 
 float vertices[] = {
-  -1.0f, -1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-  -1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f,  0.0f, 1.0f,
-  1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f,   1.0f, 1.0f,
-  1.0f, -1.0f, 0.0f, 1.0f, 1.0f, 1.0f,  1.0f, 0.0f
+	-0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f,	0.0f, 0.0f,
+	-0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	5.0f, 0.0f,
+	 0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	0.0f, 0.0f,
+	 0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f,	5.0f, 0.0f,
+	 0.0f, 0.8f,  0.0f,     0.92f, 0.86f, 0.76f,	2.5f, 5.0f
 };
 unsigned int indices[] = {
-  0, 1, 3, // first triangle
-  1, 2, 3
+	0, 1, 2,
+	0, 2, 3,
+	0, 1, 4,
+	1, 2, 4,
+	2, 3, 4,
+	3, 0, 4, // first triangle
+
 };
 
 Shader shader = Shader(0);
 
 u_int VBO, VAO, EBO;
 
+glm::mat4 model = glm::mat4(1.0f);
+glm::mat4 view = glm::mat4(1.0f);
+glm::mat4 proj = glm::mat4(1.0f);
+
 Texture texture("fart.png");
 
-//int w, h, ch;
-//u_char* bytes = stbi_load("fart.png", &w, &h, &ch, 0);
-//GLuint texture;
+float rotation = 0;
+
+void initMatrices() {
+
+  //temp stuff????
+
+}
 
 void initRenderer() {
+
+  shader.initialize();
 
   glGenTextures(1, &texture.id);
   glActiveTexture(GL_TEXTURE0);
@@ -43,10 +60,8 @@ void initRenderer() {
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texture.w, texture.h, 0, GL_RGBA, GL_UNSIGNED_BYTE, texture.data);
-
+  
   texture.dispose();
-
-  shader.initialize();
 
   glGenVertexArrays(1, &VAO);
   glGenBuffers(1, &VBO);
@@ -69,19 +84,32 @@ void initRenderer() {
   glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
   glEnableVertexAttribArray(2);
 
+
   shader.use();
   glUniform1i(glGetUniformLocation(shader.shaderProgram, "tex0"), 0);
+  
 
-  glm::vec4 vec(1.0f, 0.0f, 0.0f, 1.0f);
-  glm::mat4 trans = glm::mat4(1.0f);
-  trans = glm::translate(trans, glm::vec3(1.0f, 1.0f, 0.0f));
-  vec = trans * vec;
-  std::cout << vec.x << vec.y << vec.z << std::endl;
+
 }
 
 void render() {
   shader.use();
   glBindTexture(GL_TEXTURE_2D, texture.id);
   glBindVertexArray(VAO);
-  glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+  glDrawElements(GL_TRIANGLES, sizeof(indices)/sizeof(int), GL_UNSIGNED_INT, 0);
+
+  rotation += 0.01f;
+
+
+  model = glm::rotate(model, glm::radians(rotation), glm::vec3(0.0f, 1.0f, 0.0f));
+  //view = glm::translate(view, glm::vec3(0.0f, -0.5f, -2.0f));
+  //proj = glm::perspective(glm::radians(45.0f), ((float)800 / (float)800), 0.1f, 100.0f);
+
+  shader.use();
+  int modelLoc = glGetUniformLocation(shader.shaderProgram, "model");
+  glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+  int viewLoc = glGetUniformLocation(shader.shaderProgram, "view");
+  glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+  int projLoc = glGetUniformLocation(shader.shaderProgram, "proj");
+  glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(proj));
 }
