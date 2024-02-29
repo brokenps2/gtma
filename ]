@@ -17,7 +17,6 @@ void initWindow() {
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 0);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
   glfwMakeContextCurrent(window);
-  glfwSetWindowAttrib(window, GLFW_RESIZABLE, false);
   glfwSetWindowPos(window, 800, 200);
 
   const GLenum err = glewInit();
