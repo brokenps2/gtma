@@ -6,11 +6,9 @@
 <br>
 <h3>to do</h3>
  <ul>
-  <li>3d</li>
   <li>shading</li>
   <li>lighting</li>
   <li>audio</li>
-  <li>textures</li>
   <li>ui</li>
   <li>physics</li>
   <li>networking</li>
