@@ -2,12 +2,13 @@
 #include <stb_image.h>
 #include <GL/glew.h>
 #include <glm/glm.hpp>
+#include <GLFW/glfw3.h>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include "Shader.h"
+#include "WindowManager.h"
 #include "Config.h"
 #include "Files.h"
-#include "Events.h"
 
 GLfloat vertices[] = {
     // Position            // Color               // Texture coordinates
@@ -104,7 +105,7 @@ void initRenderer() {
 
   view = glm::translate(view, glm::vec3(0.0f, 0.0f, -4.0f));
   proj = glm::perspective(glm::radians(45.0f), ((float)800 / (float)800), 0.1f, 100.0f);
-  
+  trans = glm::rotate(trans, glm::radians(rotation), glm::vec3(0.0f, 5.0f, 1.0f));
 
 
 }
@@ -115,7 +116,16 @@ void render() {
   glBindVertexArray(VAO);
   glDrawElements(GL_TRIANGLES, sizeof(indices)/sizeof(int), GL_UNSIGNED_INT, 0);
 
-  trans = glm::rotate(trans, glm::radians(rotation), glm::vec3(0.0f, 1.0f, 1.0f));
+  if(glfwGetKey(getWindow(), GLFW_KEY_UP) == GLFW_PRESS) {
+    view = glm::translate(view, glm::vec3(0.0f, 0.0f, 0.1f));
+  }
+  if(glfwGetKey(getWindow(), GLFW_KEY_DOWN) == GLFW_PRESS) {
+    view = glm::translate(view, glm::vec3(0.0f, 0.0f, -0.1f));
+  }
+  if(glfwGetKey(getWindow(), GLFW_KEY_LEFT) == GLFW_PRESS) {
+    trans = glm::rotate(trans, glm::radians(rotation), glm::vec3(0.0f, 1.0f, 1.0f));
+  }
+
 
   shader.use();
   int modelLoc = glGetUniformLocation(shader.shaderProgram, "trans");
