@@ -5,10 +5,13 @@
 #include <GLFW/glfw3.h>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-#include "Shader.h"
 #include "WindowManager.h"
-#include "Config.h"
+#include "Shader.h"
+#include "Camera.h"
 #include "Files.h"
+
+using namespace glm;
+
 
 GLfloat vertices[] = {
     // Position            // Color               // Texture coordinates
@@ -38,17 +41,11 @@ GLuint indices[] = {
     6, 7, 3
 };
 
-Shader shader = Shader(0);
-
 u_int VBO, VAO, EBO;
 
-glm::mat4 trans = glm::mat4(1.0f);
-glm::mat4 view = glm::mat4(1.0f);
-glm::mat4 proj = glm::mat4(1.0f);
-
+Shader shader = Shader(0);
 Texture texture("setup.png");
-
-float rotation = 1.5f;
+Camera camera(800, 600, vec3(0.0f, 0.0f, 2.0f));
 
 void initMatrices() {
 
@@ -95,18 +92,8 @@ void initRenderer() {
   glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
   glEnableVertexAttribArray(2);
 
-
   shader.use();
   glUniform1i(glGetUniformLocation(shader.shaderProgram, "tex0"), 0);
-
-  glMatrixMode(GL_PROJECTION);
-  glLoadIdentity();
-  glm::ortho(0.0f, (float)cfgGetResX(), 0.0f, (float)cfgGetResY(), 0.1f, 100.0f);
-
-  view = glm::translate(view, glm::vec3(0.0f, 0.0f, -4.0f));
-  proj = glm::perspective(glm::radians(45.0f), ((float)800 / (float)800), 0.1f, 100.0f);
-  trans = glm::rotate(trans, glm::radians(rotation), glm::vec3(0.0f, 5.0f, 1.0f));
-
 
 }
 
@@ -116,23 +103,22 @@ void render() {
   glBindVertexArray(VAO);
   glDrawElements(GL_TRIANGLES, sizeof(indices)/sizeof(int), GL_UNSIGNED_INT, 0);
 
-  if(glfwGetKey(getWindow(), GLFW_KEY_UP) == GLFW_PRESS) {
-    view = glm::translate(view, glm::vec3(0.0f, 0.0f, 0.1f));
-  }
-  if(glfwGetKey(getWindow(), GLFW_KEY_DOWN) == GLFW_PRESS) {
-    view = glm::translate(view, glm::vec3(0.0f, 0.0f, -0.1f));
-  }
-  if(glfwGetKey(getWindow(), GLFW_KEY_LEFT) == GLFW_PRESS) {
-    trans = glm::rotate(trans, glm::radians(rotation), glm::vec3(0.0f, 1.0f, 1.0f));
+  camera.matrix(45.0f, 0.1f, 100.0f, shader, "camMatrix");
+
+  if(glfwGetKey(getWindow(), GLFW_KEY_W) == GLFW_PRESS) {
+    camera.incPosition(vec3(0.0f, 0.0f, 0.01f));
   }
 
+  if(glfwGetKey(getWindow(), GLFW_KEY_S) == GLFW_PRESS) {
+    camera.incPosition(vec3(0.0f, 0.0f, -0.01f));
+  }
 
-  shader.use();
-  int modelLoc = glGetUniformLocation(shader.shaderProgram, "trans");
-  glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(trans));
-  int viewLoc = glGetUniformLocation(shader.shaderProgram, "view");
-  glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-  int projLoc = glGetUniformLocation(shader.shaderProgram, "proj");
-  glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(proj));
+  if(glfwGetKey(getWindow(), GLFW_KEY_A) == GLFW_PRESS) {
+    camera.incPosition(vec3(0.01f, 0.0f, 0.0f));
+  }
+
+  if(glfwGetKey(getWindow(), GLFW_KEY_D) == GLFW_PRESS) {
+    camera.incPosition(vec3(-0.01f, 0.0f, 0.0f));
+  }
 
 }
