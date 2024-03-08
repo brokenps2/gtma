@@ -104,21 +104,23 @@ void render() {
   glDrawElements(GL_TRIANGLES, sizeof(indices)/sizeof(int), GL_UNSIGNED_INT, 0);
 
   camera.matrix(45.0f, 0.1f, 100.0f, shader, "camMatrix");
+  camera.move();  
 
-  if(glfwGetKey(getWindow(), GLFW_KEY_W) == GLFW_PRESS) {
-    camera.incPosition(vec3(0.0f, 0.0f, 0.01f));
+
+  if(glfwGetKey(getWindow(), GLFW_KEY_RIGHT) == GLFW_PRESS) {
+    camera.yaw += 1;
+  }
+  if(glfwGetKey(getWindow(), GLFW_KEY_LEFT) == GLFW_PRESS) {
+    camera.yaw -= 1;
+  }
+  if(glfwGetKey(getWindow(), GLFW_KEY_UP) == GLFW_PRESS) {
+    camera.pitch += 1;
+  }
+  if(glfwGetKey(getWindow(), GLFW_KEY_DOWN) == GLFW_PRESS) {
+    camera.pitch -= 1;
   }
 
-  if(glfwGetKey(getWindow(), GLFW_KEY_S) == GLFW_PRESS) {
-    camera.incPosition(vec3(0.0f, 0.0f, -0.01f));
-  }
+  printf("pitch: %f           yaw: %f             pos: %f  %f  %f\n", camera.pitch, camera.yaw, camera.pos.x, camera.pos.y, camera.pos.z);
 
-  if(glfwGetKey(getWindow(), GLFW_KEY_A) == GLFW_PRESS) {
-    camera.incPosition(vec3(0.01f, 0.0f, 0.0f));
-  }
-
-  if(glfwGetKey(getWindow(), GLFW_KEY_D) == GLFW_PRESS) {
-    camera.incPosition(vec3(-0.01f, 0.0f, 0.0f));
-  }
 
 }
