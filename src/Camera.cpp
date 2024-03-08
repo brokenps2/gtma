@@ -19,8 +19,7 @@ void Camera::matrix(float fov, float nearPlane, float farPlane, Shader &shader, 
   mat4 view = mat4(1.0f);
   mat4 proj = mat4(1.0f);
   
-  //may not be rot
-  view = lookAt(pos, pos + rot, up);
+  view = lookAt(pos, target, worldUp);
   proj = perspective(radians(fov), (float)(width / height), nearPlane, farPlane);
 
   glUniformMatrix4fv(glGetUniformLocation(shader.shaderProgram, uniform), 1, GL_FALSE, glm::value_ptr(proj * view));

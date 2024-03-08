@@ -9,8 +9,11 @@ class Camera {
 
 public:
   vec3 pos;
-  vec3 rot = vec3(0.0f, 0.0f, 1.0f);
-  vec3 up = vec3(0.0f, 1.0f, 0.0f);
+  vec3 target = vec3(0.0f, 0.0f, 1.0f);
+  vec3 worldUp = vec3(0.0f, 1.0f, 0.0f);
+  vec3 direction = normalize(pos - target);
+  vec3 right = normalize(cross(worldUp, direction));
+  vec3 up = cross(direction, right);
 
   int width, height;
 
