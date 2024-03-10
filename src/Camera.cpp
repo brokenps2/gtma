@@ -15,7 +15,7 @@ double oldMouseX = 0, oldMouseY = 0, newMouseX = 0, newMouseY = 0;
 Camera::Camera(int width, int height, vec3 pos) {
   Camera::width = width;
   Camera::height = height;
-  pos = pos;
+  Camera::pos = pos;
 }
 
 void Camera::matrix(float fov, float nearPlane, float farPlane, Shader &shader, const char* uniform) {
@@ -41,7 +41,7 @@ void Camera::look() {
   newMouseY = getMouseY();
 
   if(pitch < 90) pitch = 90;
-  if(pitch > 360) pitch = 360;
+  if(pitch > 280) pitch = 280;
 
   float dx = (float) (newMouseX - oldMouseX);
   float dy = (float) (newMouseY - oldMouseY);
@@ -52,7 +52,7 @@ void Camera::look() {
   oldMouseX = newMouseX;
   oldMouseY = newMouseY;
 
-  printf("nmx:    %lf          omx    %lf               dx    %f             yaw    %f\n", newMouseX, oldMouseX, dx, pitch);
+  printf("nmx:  %lf       omx  %lf       dx  %f       yaw  %f        pos  %f %f %f\n", newMouseX, oldMouseX, dx, pitch, pos.x, pos.y, pos.z);
 
 }
 

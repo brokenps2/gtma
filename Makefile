@@ -1,19 +1,13 @@
-TARGET = bin/program
+SRC_DIR := src
+OBJ_DIR := obj
+SRC_FILES := $(wildcard $(SRC_DIR)/*.cpp)
+OBJ_FILES := $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRC_FILES))
+INCLUDES := -Iinclude/
+LDFLAGS := -L/usr/lib -l:libglfw.so -lm -lGL -l:libGLEW.so -l:libconfig++.so
+CPPFLAGS := -O2 -Wall
 
-SRCS = $(wildcard src/*.cpp)
+bin/program: $(OBJ_FILES)
+	g++ $(LDFLAGS) -o $@ $^
 
-OBJS := $(patsubst %.c, %.o, $(wildcard src/*.c))
-
-INCLUDES = -Iinclude/
-
-LIBDIRS = -L/usr/lib
-
-LIBS = -l:libglfw.so -lm -lGL -l:libGLEW.so -l:libconfig++.so
-
-CFLAGS = -O2 -Wall -ggdb -g3
-
-CC = g++
-
-all:
-	$(CC) $(CFLAGS) $(SRCS) $(INCLUDES) $(LIBDIRS) $(LIBS) -o $(TARGET)
-
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
+	g++ $(CPPFLAGS) -c -o $@ $<
