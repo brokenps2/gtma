@@ -45,7 +45,7 @@ u_int VBO, VAO, EBO;
 
 Shader shader = Shader(0);
 Texture texture("setup.png");
-Camera camera(800, 600, vec3(0.0f, 0.0f, 2.0f));
+Camera camera(800, 600, vec3(0.0f, 0.0f, -4.0f));
 
 void initMatrices() {
 
@@ -56,6 +56,8 @@ void initMatrices() {
 void initRenderer() {
 
   shader.initialize();
+
+  glfwSetInputMode(getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
   glGenTextures(1, &texture.id);
   glActiveTexture(GL_TEXTURE0);
@@ -119,8 +121,5 @@ void render() {
   if(glfwGetKey(getWindow(), GLFW_KEY_DOWN) == GLFW_PRESS) {
     camera.pitch -= 1;
   }
-
-  printf("pitch: %f           yaw: %f             pos: %f  %f  %f\n", camera.pitch, camera.yaw, camera.pos.x, camera.pos.y, camera.pos.z);
-
 
 }

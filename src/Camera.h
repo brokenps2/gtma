@@ -28,4 +28,7 @@ public:
   void move();
   void setPosition(vec3 npos);
   void incPosition(vec3 inc);
+
+private:
+  void look();
 };
