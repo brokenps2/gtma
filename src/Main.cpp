@@ -3,7 +3,7 @@
 #include <GLFW/glfw3.h>
 #include "WindowManager.h"
 #include "Renderer.h"
-#include "Mouse.h"
+#include "Input.h"
 #include "Config.h"
 
 int main(int argc, char* argv[]) {
@@ -22,7 +22,7 @@ int main(int argc, char* argv[]) {
 
   initWindow();
   initRenderer();
-  initMouse();
+  initInput();
  
   //initial setup finished, run start tasks here
 

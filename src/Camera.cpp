@@ -5,7 +5,7 @@
 #include <glm/glm.hpp>
 #include <glm/common.hpp>
 #include "WindowManager.h"
-#include "Mouse.h"
+#include "Input.h"
 #include "Camera.h"
 
 using namespace glm;
@@ -40,42 +40,54 @@ void Camera::look() {
   newMouseX = getMouseX();
   newMouseY = getMouseY();
 
-  if(pitch < 90) pitch = 90;
-  if(pitch > 280) pitch = 280;
+  if(pitch < 85) pitch = 85;
+  if(pitch > 269) pitch = 269;
 
-  float dx = (float) (newMouseX - oldMouseX);
-  float dy = (float) (newMouseY - oldMouseY);
+  float dx = (float) (newMouseX - oldMouseX) * getDeltaTime();
+  float dy = (float) (newMouseY - oldMouseY) * getDeltaTime();
 
-  yaw += dx * 0.2f;
-  pitch += dy * 0.2f;
+  yaw += dx * sensitivity;
+  pitch += dy * sensitivity;
 
   oldMouseX = newMouseX;
   oldMouseY = newMouseY;
 
-  printf("nmx:  %lf       omx  %lf       dx  %f       yaw  %f        pos  %f %f %f\n", newMouseX, oldMouseX, dx, pitch, pos.x, pos.y, pos.z);
+  //printf("nmx:  %lf       omx  %lf       dx  %f       yaw  %f        pos  %f %f %f\n", newMouseX, oldMouseX, dx, pitch, pos.x, pos.y, pos.z);
 
 }
 
 void Camera::move() {
 
-  if(glfwGetKey(getWindow(), GLFW_KEY_A) == GLFW_PRESS) {
-    pos.x -= (sin(radians(yaw)) * speed);
-    pos.z += (cos(radians(yaw)) * speed);
+  if(isKeyDown(GLFW_KEY_A)) {
+    pos.x -= (sin(radians(yaw)) * speed) * getDeltaTime();
+    pos.z += (cos(radians(yaw)) * speed) * getDeltaTime();
   }
 
-  if(glfwGetKey(getWindow(), GLFW_KEY_W) == GLFW_PRESS) {
-    pos.x += (-cos(radians(yaw)) * speed);
-    pos.z -= (sin(radians(yaw)) * speed);
+  if(isKeyDown(GLFW_KEY_W)) {
+    pos.x += (-cos(radians(yaw)) * speed) * getDeltaTime();
+    pos.z -= (sin(radians(yaw)) * speed) * getDeltaTime();
   }
 
-  if(glfwGetKey(getWindow(), GLFW_KEY_S) == GLFW_PRESS) {
-    pos.x -= (-cos(radians(yaw)) * speed);
-    pos.z += (sin(radians(yaw)) * speed);
+  if(isKeyDown(GLFW_KEY_S)) {
+    pos.x -= (-cos(radians(yaw)) * speed) * getDeltaTime();
+    pos.z += (sin(radians(yaw)) * speed) * getDeltaTime();
   }
 
-  if(glfwGetKey(getWindow(), GLFW_KEY_D) == GLFW_PRESS) {
-    pos.x += (sin(radians(yaw)) * speed);
-    pos.z -= (cos(radians(yaw)) * speed);
+  if(isKeyDown(GLFW_KEY_D)) {
+    pos.x += (sin(radians(yaw)) * speed) * getDeltaTime();
+    pos.z -= (cos(radians(yaw)) * speed) * getDeltaTime();
+  }
+
+  if(isKeyDown(GLFW_KEY_LEFT_SHIFT)){
+    pos.y -= speed * getDeltaTime();
+  }
+
+  if(isKeyDown(GLFW_KEY_SPACE)) {
+    pos.y += speed * getDeltaTime();
+  }
+
+  if(isKeyDown(GLFW_KEY_E)) {
+    printf("wahoo!\n");
   }
 
   look();

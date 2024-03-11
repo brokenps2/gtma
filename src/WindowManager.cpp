@@ -6,6 +6,9 @@
 #include "Math.h"
 
 GLFWwindow* window;
+float currentTime = 0;
+float lastTime;
+float deltaTime;
 
 void initWindow() {
  
@@ -35,7 +38,16 @@ GLFWwindow* getWindow() {
   return window;
 }
 
+float getDeltaTime() {
+  return deltaTime;
+}
+
 void updateWindow() {
+
+  lastTime = currentTime;
+  currentTime = glfwGetTime();
+  deltaTime = currentTime - lastTime;
+
   glfwSwapBuffers(window);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glViewport(0, 0, (GLint)cfgGetResX(), (GLint)cfgGetResY());

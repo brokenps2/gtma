@@ -2,4 +2,5 @@
 
 double getMouseX();
 double getMouseY();
-void initMouse();
+bool isKeyDown(int keycode);
+void initInput();

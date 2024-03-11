@@ -44,8 +44,8 @@ GLuint indices[] = {
 u_int VBO, VAO, EBO;
 
 Shader shader = Shader(0);
-Texture texture("setup.png");
-Camera camera(800, 600, vec3(0.0f, 2.0f, -2.0f));
+Texture texture("bob.png");
+Camera camera(800, 600, vec3(0.0f, 0.0f, -2.0f));
 
 void initMatrices() {
 

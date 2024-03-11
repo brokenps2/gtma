@@ -19,8 +19,8 @@ public:
 
   int width, height;
 
-  float speed = 0.01f;
-  float sensitivity = 100.0f;
+  float speed = 3.0f;
+  float sensitivity = 20.0f;
 
   Camera(int width, int height, vec3 pos);
 
