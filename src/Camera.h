@@ -31,4 +31,5 @@ public:
 
 private:
     void look();
+    mat4 loadViewMatrix();
 };
