@@ -42,14 +42,14 @@ void Camera::look() {
     float dx = (float) (newMouseX - oldMouseX) * getDeltaTime();
     float dy = (float) (newMouseY - oldMouseY) * getDeltaTime();
 
-    if(pitch > 90.0f) pitch = 90.0f;
-    if(pitch < -90.0f) pitch = -90.0f;
-
     yaw += dx * sensitivity;
     pitch -= dy * sensitivity;
 
     oldMouseX = newMouseX;
     oldMouseY = newMouseY;
+
+    if(pitch > 89.0f) pitch = 89.0f;
+    if(pitch < -89.0f) pitch = -89.0f;
 
     printf("%f %f %f    %f     \n", pitch, yaw, pos.z, up.y);
 
