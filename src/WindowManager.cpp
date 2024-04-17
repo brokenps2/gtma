@@ -11,11 +11,16 @@ float lastTime;
 float deltaTime;
 
 void initWindow() {
+
+    glfwInit();
  
-    std::string why = cfgGetTitle(); // whhhhyyyyy do you need to dooo thisssss
-    char* ctitle = (char*)why.c_str();
+    std::string title = cfgGetTitle();
+    const char* ctitle = title.c_str();
 
     window = glfwCreateWindow(cfgGetResX(), cfgGetResY(), ctitle, NULL, NULL);
+    if(window == NULL) {
+        std::cerr << "Window create failed" << std::endl;
+    }
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 0);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -51,6 +56,6 @@ void updateWindow() {
     glfwSwapBuffers(window);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glViewport(0, 0, (GLint)cfgGetResX(), (GLint)cfgGetResY());
-    glClearColor(glc(0), glc(128), glc(128), 1);
+    glClearColor(glc(0), glc(0), glc(0), 1);
 }
 
