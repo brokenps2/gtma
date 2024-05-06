@@ -1,38 +1,45 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
-#include <string>
-#include <fstream>
 #include "Config.h"
 #include "Files.h"
 
-using namespace std;
 
-string getVertexShaderSrc() {
+const char* getVertexShaderSrc() {
   
-    ifstream in(cfgGetVertexShaderPath());
-    string contents((istreambuf_iterator<char>(in)), 
-        istreambuf_iterator<char>());
+    FILE* fptr;
+    fptr = fopen(cfgGetVertexShaderPath(), "r");
+    fseek(fptr, 0L, SEEK_END);
+    int length = ftell(fptr);
+    rewind(fptr);
+    char* contents;
+    fgets(contents, length, fptr);
+    fclose(fptr);
 
     return contents;
 
 }
 
-string getFragmentShaderSrc() {
+const char* getFragmentShaderSrc() {
 
-    ifstream in(cfgGetFragmentShaderPath());
-    string contents((istreambuf_iterator<char>(in)), 
-        istreambuf_iterator<char>());
+    FILE* fptr;
+    fptr = fopen(cfgGetFragmentShaderPath(), "r");
+    fseek(fptr, 0L, SEEK_END);
+    int length = ftell(fptr);
+    rewind(fptr);
+    char* contents;
+    fgets(contents, length, fptr);
+    fclose(fptr);
 
     return contents;
 
 }
 
-Texture::Texture(const char* path) {
-    stbi_set_flip_vertically_on_load(true);
-    data = stbi_load(path, &w, &h, &channels, 0);
+void createTexture(Texture* tex, const char* path) {
+    stbi_set_flip_vertically_on_load(1);
+    tex->data = stbi_load(path, &tex->w, &tex->h, &tex->channels, 0);
 }
 
-void Texture::dispose() {
-    stbi_image_free(data);
+void disposeTexture(Texture* tex) {
+    stbi_image_free(&tex->data);
 }

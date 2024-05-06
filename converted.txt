@@ -1,15 +1,3 @@
-Config.cpp
-Config.h
-Files.cpp
-Files.h
-Input.cpp
-Input.h
-Main.h
-Math.cpp
-Math.h
-Model.cpp
-Model.h
-ModelLoader.cpp
 Renderer.cpp
 Renderer.h
 Shader.cpp
@@ -21,3 +9,11 @@ Done:
     Main.c
     Camera.c
     Camera.h
+    Config.c
+    Config.h
+    Files.c
+    Files.h
+    Input.c
+    Input.h
+    Math.c
+    Math.h

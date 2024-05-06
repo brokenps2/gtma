@@ -1,7 +1,8 @@
+#include <stdio.h>
+#include <stdlib.h>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#include <iostream>
-#include <cstring>
+#include <stdbool.h>
 #include "Config.h"
 #include "Math.h"
 
@@ -12,8 +13,7 @@ float deltaTime;
 
 void initWindow() {
  
-    std::string why = cfgGetTitle(); // whhhhyyyyy do you need to dooo thisssss
-    char* ctitle = (char*)why.c_str();
+    const char* ctitle = cfgGetTitle();
 
     window = glfwCreateWindow(cfgGetResX(), cfgGetResY(), ctitle, NULL, NULL);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -26,7 +26,7 @@ void initWindow() {
     const GLenum err = glewInit();
     glewExperimental = GL_TRUE;
     if (GLEW_OK != err) {
-        std::cout << "GLEW Error: " << glewGetErrorString(err) << std::endl;
+        printf("GLEW Error: %s", glewGetErrorString(err));
         exit(1);
     }
 

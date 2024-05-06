@@ -1,17 +1,12 @@
-#include <iostream>
 #include <stb_image.h>
 #include <GL/glew.h>
-#include <glm/glm.hpp>
 #include <GLFW/glfw3.h>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-#include "WindowManager.h"
+#include <cglm/common.h>
+#include <cglm/types.h>
 #include "Shader.h"
 #include "Camera.h"
+#include "WindowManager.h"
 #include "Files.h"
-
-using namespace glm;
-
 
 GLfloat vertices[] = {
     // Position            // Color               // Texture coordinates
@@ -43,9 +38,10 @@ GLuint indices[] = {
 
 u_int VBO, VAO, EBO;
 
-Shader shader = Shader(0);
-Texture texture("bob.png");
-Camera camera(800, 600, vec3(0.0f, 0.0f, 0.0f));
+Shader shader;
+Texture texture;
+Camera camera;
+vec3 camPos = {0, 0, 0};
 
 void initMatrices() {
 
@@ -55,7 +51,10 @@ void initMatrices() {
 
 void initRenderer() {
 
-    shader.initialize();
+
+    createShader(&shader);
+    createTexture(&texture, "bob.png");
+    createCamera(&camera, 800, 600, camPos);
 
     glfwSetInputMode(getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
@@ -71,7 +70,7 @@ void initRenderer() {
 
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texture.w, texture.h, 0, GL_RGBA, GL_UNSIGNED_BYTE, texture.data);
   
-    texture.dispose();
+    disposeTexture(&texture);
 
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
@@ -94,20 +93,19 @@ void initRenderer() {
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
     glEnableVertexAttribArray(2);
 
-    shader.use();
-    glUniform1i(glGetUniformLocation(shader.shaderProgram, "tex0"), 0);
+    useShader(&shader);
+    glUniform1i(glGetUniformLocation(shader.id, "tex0"), 0);
 
 }
 
 void render() {
-    shader.use();
+    useShader(&shader);
     glBindTexture(GL_TEXTURE_2D, texture.id);
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, sizeof(indices)/sizeof(int), GL_UNSIGNED_INT, 0);
 
-    camera.matrix(45.0f, 0.1f, 100.0f, shader, "camMatrix");
-    camera.move();  
-
+    cameraMatrix(&camera, 45.0f, 0.1f, 100.0f, &shader, "camMatrix");
+    cameraMove(&camera);
 
     if(glfwGetKey(getWindow(), GLFW_KEY_RIGHT) == GLFW_PRESS) {
         camera.yaw += 1;

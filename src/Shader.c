@@ -1,56 +1,53 @@
-#include <iostream>
 #include <GL/glew.h>
-#include <string>
+#include <stdbool.h>
 #include "Files.h"
 #include "Shader.h"
 
-Shader::Shader(int type) {
-    sType = type;
+void createShader(Shader* shader) {
+    shader->vtShaderValue = getVertexShaderSrc();
+    shader->frShaderValue = getFragmentShaderSrc();
+
+    shader->vertexShader = glCreateShader(GL_VERTEX_SHADER);
+    glShaderSource(shader->vertexShader, 1, &shader->vtShaderSrc, NULL);
+    glCompileShader(shader->vertexShader);
+
+    shader->fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+    glShaderSource(shader->fragmentShader, 1, &shader->frShaderSrc, NULL);
+    glCompileShader(shader->fragmentShader);
+
+    shader->id = glCreateProgram();
+
+    glAttachShader(shader->id, shader->vertexShader);
+    glAttachShader(shader->id, shader->fragmentShader);
+
+    glLinkProgram(shader->id);
+
+    glDeleteShader(shader->vertexShader);
+    glDeleteShader(shader->fragmentShader);
+
 }
 
-void Shader::initialize() { 
-    vtShaderValue = getVertexShaderSrc(); vtShaderSrc = vtShaderValue.c_str();
-    frShaderValue = getFragmentShaderSrc(); frShaderSrc = frShaderValue.c_str();
 
-    vertexShader = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertexShader, 1, &vtShaderSrc, NULL);
-    glCompileShader(vertexShader);
-
-    fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragmentShader, 1, &frShaderSrc, NULL);
-    glCompileShader(fragmentShader);
-
-    shaderProgram = glCreateProgram();
-
-    glAttachShader(shaderProgram, vertexShader);
-    glAttachShader(shaderProgram, fragmentShader);
-
-    glLinkProgram(shaderProgram);
-
-    glDeleteShader(vertexShader);
-    glDeleteShader(fragmentShader);
+void setBool(Shader* shader, const char* name, bool value) {         
+    glUniform1i(glGetUniformLocation(shader->id, name), value);
+}
+void setInt(Shader* shader, const char* name, int value) { 
+    glUniform1i(glGetUniformLocation(shader->id, name), value);
+}
+void setFloat(Shader* shader, const char* name, float value) { 
+    glUniform1i(glGetUniformLocation(shader->id, name), value);
 }
 
-void Shader::setBool(const std::string &name, bool value) const {         
-    glUniform1i(glGetUniformLocation(shaderProgram, name.c_str()), (int)value); 
+GLint getBool(Shader* shader, const char* name) {
+    return glGetUniformLocation(shader->id, name);
 }
-void Shader::setInt(const std::string &name, int value) const { 
-    glUniform1i(glGetUniformLocation(shaderProgram, name.c_str()), value); 
+GLint getInt(Shader* shader, const char* name) {
+    return glGetUniformLocation(shader->id, name);
 }
-void Shader::setFloat(const std::string &name, float value) const { 
-    glUniform1f(glGetUniformLocation(shaderProgram, name.c_str()), value); 
-}
-
-GLint Shader::getBool(const std::string &name) const {
-    return glGetUniformLocation(shaderProgram, name.c_str());
-}
-GLint Shader::getInt(const std::string &name) const {
-    return glGetUniformLocation(shaderProgram, name.c_str());
-}
-GLfloat Shader::getFloat(const std::string &name) const {
-    return glGetUniformLocation(shaderProgram, name.c_str());
+GLfloat getFloat(Shader* shader, const char* name) {
+    return glGetUniformLocation(shader->id, name);
 }
 
-void Shader::use() {
-    glUseProgram(shaderProgram);
+void useShader(Shader* shader) {
+    glUseProgram(shader->id);
 }

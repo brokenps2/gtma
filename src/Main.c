@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <GLFW/glfw3.h>
+#include <stdbool.h>
 #include "WindowManager.h"
 #include "Renderer.h"
 #include "Input.h"
@@ -20,6 +21,7 @@ int main(int argc, char* argv[]) {
 
     cfgSetPath(argv[1]);
 
+    initConfig();
     initWindow();
     initRenderer();
     initInput();

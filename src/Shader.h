@@ -1,38 +1,29 @@
 #pragma once
-
 #include <GL/glew.h>
-#include <string>
 #include "Files.h"
 
-class Shader {
-
-public:
+typedef struct Shader {
 
     GLuint vertexShader;
     GLuint fragmentShader;
-
-    GLuint shaderProgram;
+    GLuint id;
 
     int sType;
 
-    std::string vtShaderValue;
+    const char* vtShaderValue;
     const char* vtShaderSrc;
-  
-    std::string frShaderValue;
+
+    const char* frShaderValue;
     const char* frShaderSrc;
 
-    Shader(int type);
+} Shader;
 
-    void initialize();
+void createShader(Shader* shader);
+void useShader(Shader* shader);
+void setBool(Shader* shader, const char* name, bool value);
+void setInt(Shader* shader, const char* name, int value);
+void setFloat(Shader* shader, const char* name, float value);
+GLint getBool(Shader* shader, const char* name);
+GLint getInt(Shader* shader, const char* name);
+GLfloat getFloat(Shader* shader, const char* name);
 
-    void use();
-
-    void setBool(const std::string &name, bool value) const;  
-    void setInt(const std::string &name, int value) const;   
-    void setFloat(const std::string &name, float value) const;
-
-    GLint getBool(const std::string &name) const;
-    GLint getInt(const std::string &name) const;
-    GLfloat getFloat(const std::string &name) const;
-
-};

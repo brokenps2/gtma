@@ -1,21 +1,19 @@
 #pragma once
-#include <string>
 #include <GL/glew.h>
 
-std::string getVertexShaderSrc();
-std::string getFragmentShaderSrc();
-
-class Texture {
-
-public:
-    
+typedef struct Texture {
     int w;
     int h;
     int channels;
-    u_char* data;
+    unsigned char* data;
     GLuint id;
 
-    Texture(const char* path);
-    void dispose();
+} Texture;
 
-};
+const char* getVertexShaderSrc();
+const char* getFragmentShaderSrc();
+
+void createTexture(Texture* tex, const char* path);
+void disposeTexture(Texture* tex);
+
+

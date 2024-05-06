@@ -1,193 +1,81 @@
-#include <iostream>
-#include <string>
-#include <libconfig.h++>
+#include <stdio.h>
+#include <stdlib.h>
+#include <libconfig.h>
 
-using namespace std;
-using namespace libconfig;
+const char* path;
+config_t cfg;
 
-string path;
+void initConfig() {
+    config_init(&cfg);
+    if(!config_read_file(&cfg, path)) {
+        printf("Unable to read config file\n");
+        exit(1);
+    }
+}
 
-void cfgSetPath(string newPath) {
-    path = newPath;
+void cfgSetPath(const char* spath) {
+    path = spath;
 }
 
 int cfgGetResX() {
-  
-    Config cfg;
 
-    try {
-        cfg.readFile(path);
-    }
-    catch(const FileIOException &fioex) {
-        std::cerr << "I/O Error Reading configuration file" << std::endl;
-        exit(1);
-    }
-    catch(const ParseException &pex) {
-        std::cerr << "Parse error at " << pex.getFile() << ":" << pex.getLine()
-                << " - " << pex.getError() << std::endl;
-        exit(1);
-    }
+    int rx;
 
-    try {
-        int sx = cfg.lookup("resX");
-        return sx;
+    if(config_lookup_int(&cfg, "resX", &rx)) {
+        return rx;
+    } else {
+        printf("resX setting not found, defualting to 800.\n");
+        return 800;
     }
-    catch(const SettingNotFoundException &nfex) {
-        cerr << "No 'resX' setting in configuration file." << endl;
-    }
-
-    return 1;
 }
 
 int cfgGetResY() {
-  
-    Config cfg;
 
-    try {
-        cfg.readFile(path);
-    }
-    catch(const FileIOException &fioex) {
-        std::cerr << "I/O error while reading configuration file." << std::endl;
-        exit(1);
-    }
-    catch(const ParseException &pex) {
-        std::cerr << "Parse error at " << pex.getFile() << ":" << pex.getLine()
-                << " - " << pex.getError() << std::endl;
-        exit(1);
-    }
+    int ry;
 
-    try {
-        int sy = cfg.lookup("resY");
-        return sy;
+    if(config_lookup_int(&cfg, "resY", &ry)) {
+        return ry;
+    } else {
+        printf("resY setting not found, defualting to 600.\n");
+        return 600;
     }
-    catch(const SettingNotFoundException &nfex) {
-        cerr << "No 'resY' setting in configuration file." << endl;
-    }
-
-    return 1;
-
 }
 
-string cfgGetTitle() {
-  
-    Config cfg;
+const char* cfgGetTitle() {
 
-    try {
-        cfg.readFile(path);
+    const char* tt;
+    
+    if(config_lookup_string(&cfg, "title", &tt)) {
+        return tt;
+    } else {
+        printf("title setting not found, defualting.\n");
+        return "gtma";
     }
-    catch(const FileIOException &fioex) {
-        std::cerr << "I/O error while reading configuration file." << std::endl;
-        exit(1);
-    }
-    catch(const ParseException &pex) {
-        std::cerr << "Parse error at " << pex.getFile() << ":" << pex.getLine()
-                << " - " << pex.getError() << std::endl;
-        exit(1);
-    }
-
-    try {
-        string st = cfg.lookup("title");
-        return st;
-    }
-    catch(const SettingNotFoundException &nfex) {
-        cerr << "No 'name' setting in configuration file." << endl;
-    }
-
-    return "gtma";
 
 }
 
 
-string cfgGetVertexShaderPath() {
+const char* cfgGetVertexShaderPath() {
   
-    Config cfg;
-
-    try {
-        cfg.readFile(path);
-    }
-    catch(const FileIOException &fioex) {
-        std::cout << path << std::endl;
-        std::cerr << "I/O error while reading configuration file." << std::endl;
+    const char* vs;
+    
+    if(config_lookup_string(&cfg, "vtShaderPath", &vs)) {
+        return vs;
+    } else {
+        printf("vtShaderPath setting not found, please set vertex shader path in configuration file.\n");
         exit(1);
     }
-    catch(const ParseException &pex) {
-        std::cerr << "Parse error at " << pex.getFile() << ":" << pex.getLine()
-                << " - " << pex.getError() << std::endl;
-        exit(1);
-    }
-
-    try {
-        string st = cfg.lookup("vtShaderPath");
-        return st;
-    }
-    catch(const SettingNotFoundException &nfex) {
-        cerr << "No 'vtShaderPath' setting in configuration file." << endl;
-    }
-
-    return "1";
-
 }
 
-string cfgGetFragmentShaderPath() {
+const char* cfgGetFragmentShaderPath() {
+
+    const char* fs;
   
-    Config cfg;
-
-    try {
-        cfg.readFile(path);
-    }
-    catch(const FileIOException &fioex) {
-        std::cerr << "I/O error while reading configuration file." << std::endl;
+    if(config_lookup_string(&cfg, "frShaderPath", &fs)) {
+        return fs;
+    } else {
+        printf("frShaderPath setting not found, please set fragment shader path in configuration file.\n");
         exit(1);
-    }
-    catch(const ParseException &pex) {
-        std::cerr << "Parse error at " << pex.getFile() << ":" << pex.getLine()
-                << " - " << pex.getError() << std::endl;
-        exit(1);
-    }
-
-    try {
-        string st = cfg.lookup("frShaderPath");
-        return st;
-    }
-    catch(const SettingNotFoundException &nfex) {
-        cerr << "No 'frShaderPath' setting in configuration file." << endl;
-    }
-
-    return "1";
-
-}
-
-
-void cfgPrintAllValues() {
-
-    Config cfg;
-
-    try {
-        cfg.readFile(path);
-    }
-    catch(const FileIOException &fioex) {
-        std::cerr << "I/O error while reading configuration file." << std::endl;
-        exit(1);
-    }
-    catch(const ParseException &pex) {
-        std::cerr << "Parse error at " << pex.getFile() << ":" << pex.getLine()
-                << " - " << pex.getError() << std::endl;
-        exit(1);
-    }
-    try {
-        int sx = cfg.lookup("resX");
-        int sy = cfg.lookup("resY");
-        string st = cfg.lookup("title");
-
-        std::cout << "resX: " << sx << "\n";
-
-        std::cout << "resY: " << sy << "\n";
-
-        std::cout << "title: " << st << "\n";
-
-    }
-    catch(const SettingNotFoundException &nfex) {
-        cerr << "can't find setting(s) in configuration file." << endl;
     }
 
 }
