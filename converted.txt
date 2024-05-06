@@ -1,0 +1,23 @@
+Config.cpp
+Config.h
+Files.cpp
+Files.h
+Input.cpp
+Input.h
+Main.h
+Math.cpp
+Math.h
+Model.cpp
+Model.h
+ModelLoader.cpp
+Renderer.cpp
+Renderer.h
+Shader.cpp
+Shader.h
+WindowManager.cpp
+WindowManager.h
+
+Done:
+    Main.c
+    Camera.c
+    Camera.h

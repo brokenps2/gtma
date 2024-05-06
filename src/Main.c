@@ -1,5 +1,5 @@
-#include <iostream>
-#include <string>
+#include <stdio.h>
+#include <stdlib.h>
 #include <GLFW/glfw3.h>
 #include "WindowManager.h"
 #include "Renderer.h"
@@ -9,12 +9,12 @@
 int main(int argc, char* argv[]) {
 
     if (!glfwInit()) {
-        std::cout << "GLFW Init Failed!" << std::endl;
+        printf("GLFW Init Failed!\n");
     }
 
     if(argc < 2 || argc > 2) {
-        std::cout << "Usage: gtma [config file path]" << std::endl;
-        std::cout << "this will be handled by the launcher eventually" << std::endl;
+        printf("Usage: gtma [config file path]\n");
+        printf("this will be handled by the launcher eventually\n");
         exit(1);
     }
 
