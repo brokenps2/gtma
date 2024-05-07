@@ -7,37 +7,11 @@ using namespace libconfig;
 
 string path;
 
-int resX;
-int resY;
-string vtShaderPath;
-string frShaderPath;
-string title;
-
-string os;
-
 void cfgSetPath(string newPath) {
     path = newPath;
 }
 
-void cfgGetOS() {
-    #ifdef _WIN32
-    os = "Windows 32-bit";
-    #elif _WIN64
-    os = "Windows 64-bit";
-    #elif __APPLE__ || __MACH__
-    os = "macOS/OSX";
-    #elif __linux__
-    os = "Linux";
-    #elif __FreeBSD__
-    os = "FreeBSD";
-    #elif __unix || __unix__
-    os = "Unix";
-    #else
-    os = "Other";
-    #endif
-}
-
-void cfgSetResX() {
+int cfgGetResX() {
   
     Config cfg;
 
@@ -56,19 +30,16 @@ void cfgSetResX() {
 
     try {
         int sx = cfg.lookup("resX");
-        resX = sx;
+        return sx;
     }
     catch(const SettingNotFoundException &nfex) {
-        cerr << "No 'resX' setting in configuration file. Defaulting to 800" << endl;
-        resX = 800;
+        cerr << "No 'resX' setting in configuration file." << endl;
     }
+
+    return 1;
 }
 
-int cfgGetResX() {
-    return resX;
-}
-
-int cfgSetResY() {
+int cfgGetResY() {
   
     Config cfg;
 
@@ -87,22 +58,17 @@ int cfgSetResY() {
 
     try {
         int sy = cfg.lookup("resY");
-        resY = sy;
+        return sy;
     }
     catch(const SettingNotFoundException &nfex) {
         cerr << "No 'resY' setting in configuration file." << endl;
-        resY = 600;
     }
 
     return 1;
 
 }
 
-int cfgGetResY() {
-    return resY;
-}
-
-void cfgSetTitle() {
+string cfgGetTitle() {
   
     Config cfg;
 
@@ -121,20 +87,18 @@ void cfgSetTitle() {
 
     try {
         string st = cfg.lookup("title");
-        title = st;
+        return st;
     }
     catch(const SettingNotFoundException &nfex) {
         cerr << "No 'name' setting in configuration file." << endl;
-        title = "gtma";
     }
 
+    return "gtma";
+
 }
 
-string cfgGetTitle() {
-    return title;
-}
 
-void cfgSetVertexShaderPath() {
+string cfgGetVertexShaderPath() {
   
     Config cfg;
 
@@ -154,20 +118,17 @@ void cfgSetVertexShaderPath() {
 
     try {
         string st = cfg.lookup("vtShaderPath");
-        vtShaderPath = st;
+        return st;
     }
     catch(const SettingNotFoundException &nfex) {
         cerr << "No 'vtShaderPath' setting in configuration file." << endl;
-        exit(1);
     }
 
+    return "1";
+
 }
 
-string cfgGetVertexShaderPath() {
-    return vtShaderPath;
-}
-
-void cfgSetFragmentShaderPath() {
+string cfgGetFragmentShaderPath() {
   
     Config cfg;
 
@@ -186,25 +147,47 @@ void cfgSetFragmentShaderPath() {
 
     try {
         string st = cfg.lookup("frShaderPath");
-        frShaderPath = st;
+        return st;
     }
     catch(const SettingNotFoundException &nfex) {
         cerr << "No 'frShaderPath' setting in configuration file." << endl;
+    }
+
+    return "1";
+
+}
+
+
+void cfgPrintAllValues() {
+
+    Config cfg;
+
+    try {
+        cfg.readFile(path);
+    }
+    catch(const FileIOException &fioex) {
+        std::cerr << "I/O error while reading configuration file." << std::endl;
         exit(1);
     }
-}
+    catch(const ParseException &pex) {
+        std::cerr << "Parse error at " << pex.getFile() << ":" << pex.getLine()
+                << " - " << pex.getError() << std::endl;
+        exit(1);
+    }
+    try {
+        int sx = cfg.lookup("resX");
+        int sy = cfg.lookup("resY");
+        string st = cfg.lookup("title");
 
-string cfgGetFragmentShaderPath() {
-    return frShaderPath;
-}
+        std::cout << "resX: " << sx << "\n";
 
+        std::cout << "resY: " << sy << "\n";
 
-void cfgInitValues(string path) {
-    cfgSetPath(path);
-    cfgSetResX();
-    cfgSetResY();
-    cfgSetTitle();
-    cfgSetVertexShaderPath();
-    cfgSetFragmentShaderPath();
-    cfgGetOS();
+        std::cout << "title: " << st << "\n";
+
+    }
+    catch(const SettingNotFoundException &nfex) {
+        cerr << "can't find setting(s) in configuration file." << endl;
+    }
+
 }

@@ -8,4 +8,4 @@ int cfgGetResY();
 std::string cfgGetTitle();
 std::string cfgGetVertexShaderPath();
 std::string cfgGetFragmentShaderPath();
-void cfgInitValues(std::string path);
+void cfgPrintAllValues();
