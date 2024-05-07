@@ -51,7 +51,6 @@ void initMatrices() {
 
 void initRenderer() {
 
-
     createShader(&shader);
     createTexture(&texture, "bob.png");
     createCamera(&camera, 800, 600, camPos);

@@ -16,12 +16,12 @@ void createCamera(Camera* cam, int width, int height, vec3 pos) {
     cam->height = height;
 
     cam->front[0] = 0.0f;
-    cam->front[0] = 0.0f;
-    cam->front[0] = -1.0f;
+    cam->front[1] = 0.0f;
+    cam->front[2] = -1.0f;
 
     cam->up[0] = 0.0f;
-    cam->up[0] = 1.0f;
-    cam->up[0] = 0.0f;
+    cam->up[1] = 1.0f;
+    cam->up[2] = 0.0f;
 
     cam->pos[0] = pos[0];
     cam->pos[1] = pos[1];
@@ -45,24 +45,18 @@ void cameraMatrix(Camera* cam, float fov, float nearPlane, float farPlane, Shade
     cam->direction[0] = cos(glm_rad(cam->yaw)) * cos(glm_rad(cam->pitch));
     cam->direction[1] = sin(glm_rad(cam->pitch));
     cam->direction[2] = sin(glm_rad(cam->yaw)) * cos(glm_rad(cam->pitch));
-    glm_normalize_to(&cam->direction[0], &cam->front[0]);
-    glm_normalize_to(&cam->direction[1], &cam->front[1]);
-    glm_normalize_to(&cam->direction[2], &cam->front[2]);
+    glm_normalize_to(cam->direction, cam->front);
 
     vec3 cent;
-    cent[0] = cam->pos[0] + cam->front[0];
-    cent[1] = cam->pos[1] + cam->front[1];
-    cent[2] = cam->pos[2] + cam->front[2];
+    glm_vec3_add(cam->pos, cam->front, cent);
 
     glm_lookat(cam->pos, cent, cam->up, view);
     glm_perspective(glm_rad(fov), ((float)cam->width / (float)cam->height), nearPlane, farPlane, proj);
-
 
     mat4 camCross;
     glm_mat4_mul(proj, view, camCross);
 
     glUniformMatrix4fv(glGetUniformLocation(shader->id, uniform), 1, GL_FALSE, (GLfloat*)camCross);
-
 }
 
 void cameraLook(Camera* cam) {
@@ -83,8 +77,6 @@ void cameraLook(Camera* cam) {
     if(cam->pitch < -89.0f) cam->pitch = -89.0f;
 
     printf("%f %f %f    %f     \n", cam->pitch, cam->yaw, cam->pos[2], cam->up[1]);
-
-    //printf("nmx:  %lf       omx  %lf       dx  %f       yaw  %f        pos  %f %f %f\n", newMouseX, oldMouseX, dx, pitch, pos.x, pos.y, pos.z);
 
 }
 
