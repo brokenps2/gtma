@@ -14,9 +14,24 @@ double oldMouseX = 0, oldMouseY = 0, newMouseX = 0, newMouseY = 0;
 void createCamera(Camera* cam, int width, int height, vec3 pos) {
     cam->width = width;
     cam->height = height;
+
+    cam->front[0] = 0.0f;
+    cam->front[0] = 0.0f;
+    cam->front[0] = -1.0f;
+
+    cam->up[0] = 0.0f;
+    cam->up[0] = 1.0f;
+    cam->up[0] = 0.0f;
+
     cam->pos[0] = pos[0];
     cam->pos[1] = pos[1];
     cam->pos[2] = pos[2];
+
+    cam->pitch = 90.0f;
+    cam->yaw = 0.0f;
+    cam->roll = 0.0f;
+    cam->speed = 3.0f;
+    cam->sensitivity = 20.0f;
 }
 
 void cameraMatrix(Camera* cam, float fov, float nearPlane, float farPlane, Shader* shader, const char* uniform) {

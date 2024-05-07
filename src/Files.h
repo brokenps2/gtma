@@ -10,8 +10,11 @@ typedef struct Texture {
 
 } Texture;
 
-const char* getVertexShaderSrc();
-const char* getFragmentShaderSrc();
+char* getVertexShaderSrc();
+char* getFragmentShaderSrc();
+
+long getVtShaderLen();
+long getFrShaderLen();
 
 void createTexture(Texture* tex, const char* path);
 void disposeTexture(Texture* tex);

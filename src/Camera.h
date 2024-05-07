@@ -6,18 +6,18 @@
 
 typedef struct Camera {
     vec3 pos;
-    vec3 front = {0.0f, 0.0f, -1.0f};
-    vec3 up = {0.0f, 1.0f, 0.0f};
+    vec3 front;
+    vec3 up;
     vec3 direction;
 
-    float pitch = 90.0f;
-    float yaw = 0.0f;
-    float roll = 0.0f;
+    float pitch;
+    float yaw;
+    float roll;
 
     int width;
     int height;
-    float speed = 3.0f;
-    float sensitivity = 20.0f;
+    float speed;
+    float sensitivity;
 
 } Camera;
 

@@ -1,37 +1,49 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
-
 #include "Config.h"
 #include "Files.h"
 
+long vtShaderLength;
+long frShaderLength;
 
-const char* getVertexShaderSrc() {
-  
-    FILE* fptr;
-    fptr = fopen(cfgGetVertexShaderPath(), "r");
-    fseek(fptr, 0L, SEEK_END);
-    int length = ftell(fptr);
-    rewind(fptr);
-    char* contents;
-    fgets(contents, length, fptr);
-    fclose(fptr);
+char* getVertexShaderSrc() {
 
-    return contents;
+    char* buffer = 0;
+    long length;
+    FILE* fptr = fopen (cfgGetVertexShaderPath(), "r");
 
+    if(fptr) {
+        fseek(fptr, 0, SEEK_END);
+        length = ftell(fptr);
+        fseek(fptr, 0, SEEK_SET);
+        buffer = malloc(length);
+        if(buffer) {
+            fread(buffer, 1, length, fptr);
+        }
+        fclose(fptr);
+    }
+
+    return buffer;
 }
 
-const char* getFragmentShaderSrc() {
+char* getFragmentShaderSrc() {
 
-    FILE* fptr;
-    fptr = fopen(cfgGetFragmentShaderPath(), "r");
-    fseek(fptr, 0L, SEEK_END);
-    int length = ftell(fptr);
-    rewind(fptr);
-    char* contents;
-    fgets(contents, length, fptr);
-    fclose(fptr);
+    char* buffer = 0;
+    long length;
+    FILE* fptr = fopen (cfgGetFragmentShaderPath(), "r");
 
-    return contents;
+    if(fptr) {
+        fseek(fptr, 0, SEEK_END);
+        length = ftell(fptr);
+        fseek(fptr, 0, SEEK_SET);
+        buffer = malloc(length);
+        if(buffer) {
+            fread(buffer, 1, length, fptr);
+        }
+        fclose(fptr);
+    }
+
+    return buffer;
 
 }
 
@@ -41,5 +53,5 @@ void createTexture(Texture* tex, const char* path) {
 }
 
 void disposeTexture(Texture* tex) {
-    stbi_image_free(&tex->data);
+    stbi_image_free(tex->data);
 }

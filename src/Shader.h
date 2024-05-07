@@ -10,10 +10,7 @@ typedef struct Shader {
 
     int sType;
 
-    const char* vtShaderValue;
     const char* vtShaderSrc;
-
-    const char* frShaderValue;
     const char* frShaderSrc;
 
 } Shader;

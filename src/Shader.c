@@ -1,11 +1,14 @@
 #include <GL/glew.h>
 #include <stdbool.h>
+#include <stdio.h>
 #include "Files.h"
 #include "Shader.h"
 
 void createShader(Shader* shader) {
-    shader->vtShaderValue = getVertexShaderSrc();
-    shader->frShaderValue = getFragmentShaderSrc();
+    shader->vtShaderSrc = getVertexShaderSrc();
+    shader->frShaderSrc = getFragmentShaderSrc();
+
+    printf("%s", shader->vtShaderSrc);
 
     shader->vertexShader = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(shader->vertexShader, 1, &shader->vtShaderSrc, NULL);
