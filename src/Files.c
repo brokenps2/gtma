@@ -55,3 +55,7 @@ void createTexture(Texture* tex, const char* path) {
 void disposeTexture(Texture* tex) {
     stbi_image_free(tex->data);
 }
+
+void createMesh(Mesh* mesh, Vertex* vertices, unsigned int* indices, Texture* textures) {
+
+}

@@ -57,6 +57,10 @@ void initRenderer() {
 
     glfwSetInputMode(getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
+    //
+    //load textures
+    //
+
     glGenTextures(1, &texture.id);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture.id);
@@ -71,9 +75,14 @@ void initRenderer() {
   
     disposeTexture(&texture);
 
+
+    //
+    //generate shit
+    //
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
     glGenBuffers(1, &EBO);
+
 
     glBindVertexArray(VAO);
 
