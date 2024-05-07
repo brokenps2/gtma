@@ -1,11 +1,11 @@
 #pragma once
-#include <string>
 
-void cfgSetPath(std::string newPath);
+void initConfig();
+
+void cfgSetPath(const char* newPath);
 
 int cfgGetResX();
 int cfgGetResY();
-std::string cfgGetTitle();
-std::string cfgGetVertexShaderPath();
-std::string cfgGetFragmentShaderPath();
-void cfgPrintAllValues();
+const char* cfgGetTitle();
+const char* cfgGetVertexShaderPath();
+const char* cfgGetFragmentShaderPath();

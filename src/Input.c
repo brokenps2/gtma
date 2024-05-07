@@ -1,4 +1,6 @@
-#include <iostream>
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
 #include <GLFW/glfw3.h>
 #include "WindowManager.h"
 
@@ -12,7 +14,7 @@ int initialized = 0;
 
 double getMouseX() {
     if(initialized == 0) {
-        std::cout << "err: Mouse used without being initialized" << std::endl;
+        printf("Mouse used without being initialized\n");
         exit(1);
     } else {
         return mouseX;
@@ -21,7 +23,7 @@ double getMouseX() {
 
 double getMouseY() {
     if(initialized == 0) {
-        std::cout << "err: Mouse used without being initialized" << std::endl;
+        printf("err: Mouse used without being initialized\n");
         exit(1);
     } else {
         return mouseY;

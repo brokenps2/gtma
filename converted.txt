@@ -1,0 +1,19 @@
+Renderer.cpp
+Renderer.h
+Shader.cpp
+Shader.h
+WindowManager.cpp
+WindowManager.h
+
+Done:
+    Main.c
+    Camera.c
+    Camera.h
+    Config.c
+    Config.h
+    Files.c
+    Files.h
+    Input.c
+    Input.h
+    Math.c
+    Math.h
