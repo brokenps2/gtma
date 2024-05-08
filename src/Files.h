@@ -1,6 +1,7 @@
 #pragma once
 #include <GL/glew.h>
 #include <cglm/types.h>
+#include <linmath.h>
 
 typedef struct Texture {
     int w;

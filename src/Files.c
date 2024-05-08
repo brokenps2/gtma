@@ -57,5 +57,30 @@ void disposeTexture(Texture* tex) {
 }
 
 void createMesh(Mesh* mesh, Vertex* vertices, unsigned int* indices, Texture* textures) {
+    mesh->vertices = vertices;
+    mesh->indices = indices;
+    mesh->textures = textures;
 
+    glGenVertexArrays(1, &mesh->VAO);
+    glGenBuffers(1, &mesh->VBO);
+    glGenBuffers(1, &mesh->EBO);
+
+    glBindVertexArray(mesh->VAO);
+    glBindBuffer(GL_ARRAY_BUFFER, mesh->VBO);
+
+    glBufferData(GL_ARRAY_BUFFER, sizeof(*vertices), &vertices[0], GL_STATIC_DRAW);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(*indices), &indices[0], GL_STATIC_DRAW);
+
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
+
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
+
+    glEnableVertexAttribArray(2);
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, texCoords));
+
+    glBindVertexArray(0);
 }
