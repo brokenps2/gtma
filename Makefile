@@ -4,7 +4,7 @@ SRC_FILES := $(wildcard $(SRC_DIR)/*.c)
 OBJ_FILES := $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRC_FILES))
 INCLUDES := -Iinclude/
 LDFLAGS := -L/usr/lib -g -l:libglfw.so -lm -lGL -l:libGLEW.so -l:libconfig++.so
-CPPFLAGS := -g -O2 -Wall
+CPPFLAGS := -g -Wall
 
 bin/program: $(OBJ_FILES)
 	gcc $(LDFLAGS) -o $@ $^
