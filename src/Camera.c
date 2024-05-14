@@ -76,8 +76,6 @@ void cameraLook(Camera* cam) {
     if(cam->pitch > 89.0f) cam->pitch = 89.0f;
     if(cam->pitch < -89.0f) cam->pitch = -89.0f;
 
-    printf("%f %f %f    %f     \n", cam->pitch, cam->yaw, cam->pos[2], cam->up[1]);
-
 }
 
 void cameraMove(Camera* cam) {

@@ -42,6 +42,7 @@ Shader shader;
 Texture texture;
 Camera camera;
 vec3 camPos = {0, 0, 0};
+Model model;
 
 void initMatrices() {
 
@@ -54,6 +55,7 @@ void initRenderer() {
     createShader(&shader);
     createTexture(&texture, "bob.png");
     createCamera(&camera, 800, 600, camPos);
+    createModel(&model, "sphere.obj", &texture);
 
     glfwSetInputMode(getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
@@ -76,9 +78,7 @@ void initRenderer() {
     disposeTexture(&texture);
 
 
-    //
-    //generate shit
-    //
+    /*
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
     glGenBuffers(1, &EBO);
@@ -103,14 +103,32 @@ void initRenderer() {
 
     useShader(&shader);
     glUniform1i(glGetUniformLocation(shader.id, "tex0"), 0);
+    */
+
+    glBindVertexArray(model.VAO);
+
+    glBindBuffer(GL_ARRAY_BUFFER, model.VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(model.vertices[0]) * model.vertxCount * 4, model.vertices, GL_STATIC_DRAW);
+    
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, model.EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(model.indices[0]) * model.indexCount * 4, model.indices, GL_STATIC_DRAW);
+
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+
+
+    useShader(&shader);
+
+    deleteModel(&model);
 
 }
 
 void render() {
     useShader(&shader);
     glBindTexture(GL_TEXTURE_2D, texture.id);
-    glBindVertexArray(VAO);
-    glDrawElements(GL_TRIANGLES, sizeof(indices)/sizeof(int), GL_UNSIGNED_INT, 0);
+    glBindVertexArray(model.VAO);
+    glDrawElements(GL_TRIANGLES, model.indexCount, GL_UNSIGNED_INT, 0);
 
     cameraMatrix(&camera, 45.0f, 0.1f, 100.0f, &shader, "camMatrix");
     cameraMove(&camera);

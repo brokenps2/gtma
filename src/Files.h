@@ -11,9 +11,13 @@ typedef struct Texture {
 } Texture;
 
 typedef struct Model {
-    vec3* vertices;
-    vec2* texCoords;
-    vec3* normals;
+    float* vertices;
+    float* texCoords;
+    unsigned int* indices;
+    int indexCount;
+    int vertxCount;
+    int texcoCount;
+    Texture texture;
     unsigned int VAO, VBO, EBO;
 } Model;
 
@@ -24,7 +28,8 @@ char* getFragmentShaderSrc();
 long getVtShaderLen();
 long getFrShaderLen();
 
-void createModel(Model* model, const char* path);
+void createModel(Model* model, const char* path, Texture* texture);
+void deleteModel(Model* model);
 
 void createTexture(Texture* tex, const char* path);
 void disposeTexture(Texture* tex);

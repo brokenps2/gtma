@@ -6,9 +6,6 @@
 #include "Renderer.h"
 #include "Input.h"
 #include "Config.h"
-#include "Files.h"
-
-Model* model;
 
 int main(int argc, char* argv[]) {
 
@@ -29,8 +26,6 @@ int main(int argc, char* argv[]) {
     initRenderer();
     initInput();
 
-    createModel(model, "untitled.obj");
- 
     //initial setup finished, run start tasks here
 
     while(!glfwWindowShouldClose(getWindow())) {

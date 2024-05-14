@@ -8,8 +8,6 @@ void createShader(Shader* shader) {
     shader->vtShaderSrc = getVertexShaderSrc();
     shader->frShaderSrc = getFragmentShaderSrc();
 
-    printf("%s", shader->vtShaderSrc);
-
     shader->vertexShader = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(shader->vertexShader, 1, &shader->vtShaderSrc, NULL);
     glCompileShader(shader->vertexShader);
