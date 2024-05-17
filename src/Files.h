@@ -10,9 +10,13 @@ typedef struct Texture {
 
 } Texture;
 
+typedef struct Vertex {
+    float position[3];
+    float texCoords[2];
+} Vertex;
+
 typedef struct Model {
-    float* vertices;
-    float* texCoords;
+    Vertex* vertices;
     unsigned int* indices;
     int indexCount;
     int vertxCount;

@@ -108,19 +108,17 @@ void initRenderer() {
     glBindVertexArray(model.VAO);
 
     glBindBuffer(GL_ARRAY_BUFFER, model.VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(model.vertices[0]) * model.vertxCount * 4, model.vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, (model.vertxCount) * sizeof(Vertex), model.vertices, GL_STATIC_DRAW);
     
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, model.EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(model.indices[0]) * model.indexCount * 4, model.indices, GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * model.indexCount * 4, model.indices, GL_STATIC_DRAW);
 
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
     glEnableVertexAttribArray(0);
 
 
     useShader(&shader);
-
-    deleteModel(&model);
 
 }
 

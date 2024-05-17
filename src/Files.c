@@ -59,7 +59,20 @@ void createModel(Model* model, const char* path, Texture* texture) {
     model->vertxCount = mesh->position_count;
     model->texcoCount = mesh->texcoord_count;
 
-    model->vertices = mesh->positions;
+    model->vertices = (Vertex*)malloc(((mesh->position_count * 3) + (mesh->texcoord_count * 2)) * sizeof(Vertex));
+
+    //for every vertex (3 position)
+    for(int i = 0; i <= mesh->position_count; i++) {
+        int posArrIdx = i * 3;
+        float tempPos[3];
+        tempPos[0] = mesh->positions[posArrIdx];
+        tempPos[1] = mesh->positions[posArrIdx+1];
+        tempPos[2] = mesh->positions[posArrIdx+2];
+        model->vertices[i].position[0] = tempPos[0];
+        model->vertices[i].position[1] = tempPos[1];
+        model->vertices[i].position[2] = tempPos[2];
+    }
+
 
     model->indices = (unsigned int*)malloc(mesh->index_count * sizeof(unsigned int));
 
@@ -67,18 +80,11 @@ void createModel(Model* model, const char* path, Texture* texture) {
         model->indices[i] = mesh->indices[i].p;
     }
 
-    model->texCoords = mesh->texcoords;
-
     model->texture = *texture;
 
     glGenVertexArrays(1, &model->VAO);
     glGenBuffers(1, &model->VBO);
     glGenBuffers(1, &model->EBO);
-}
-
-void deleteModel(Model* model) {
-    free(model->indices);
-    model->indices = NULL;
 }
 
 void createTexture(Texture* tex, const char* path) {
