@@ -60,25 +60,40 @@ void createModel(Model* model, const char* path, Texture* texture) {
     model->texcoCount = mesh->texcoord_count;
 
     model->vertices = (Vertex*)malloc(((mesh->position_count * 3) + (mesh->texcoord_count * 2)) * sizeof(Vertex));
+    model->indices = (unsigned int*)malloc(model->indexCount * sizeof(unsigned int));
 
-    //for every vertex (3 position)
-    for(int i = 0; i <= mesh->position_count; i++) {
-        int posArrIdx = i * 3;
-        float tempPos[3];
-        tempPos[0] = mesh->positions[posArrIdx];
-        tempPos[1] = mesh->positions[posArrIdx+1];
-        tempPos[2] = mesh->positions[posArrIdx+2];
-        model->vertices[i].position[0] = tempPos[0];
-        model->vertices[i].position[1] = tempPos[1];
-        model->vertices[i].position[2] = tempPos[2];
+    int* vertexMap = (int*)malloc((mesh->position_count * mesh->texcoord_count) * sizeof(int));
+    for (int i = 0; i < mesh->position_count * mesh->texcoord_count; ++i) {
+        vertexMap[i] = -1; // Initialize with -1 indicating an empty slot
     }
 
+    int uniqueVertexCount = 0;
 
-    model->indices = (unsigned int*)malloc(mesh->index_count * sizeof(unsigned int));
+    for (int i = 0; i < model->indexCount; ++i) {
+        unsigned int posIndex = mesh->indices[i].p;
+        unsigned int texIndex = mesh->indices[i].t;
+        int vertexKey = posIndex * mesh->texcoord_count + texIndex;
 
-    for(int i = 0; i <= mesh->index_count; i++) {
-        model->indices[i] = mesh->indices[i].p;
+        if (vertexMap[vertexKey] == -1) {
+
+            Vertex newVertex;
+            newVertex.position[0] = mesh->positions[3 * posIndex + 0];
+            newVertex.position[1] = mesh->positions[3 * posIndex + 1];
+            newVertex.position[2] = mesh->positions[3 * posIndex + 2];
+            newVertex.texCoord[0] = mesh->texcoords[2 * texIndex + 0];
+            newVertex.texCoord[1] = mesh->texcoords[2 * texIndex + 1];
+
+            model->vertices[uniqueVertexCount] = newVertex;
+            vertexMap[vertexKey] = uniqueVertexCount;
+
+            model->indices[i] = uniqueVertexCount;
+            uniqueVertexCount++;
+        } else {
+            model->indices[i] = vertexMap[vertexKey];
+        }
     }
+
+    free(vertexMap);
 
     model->texture = *texture;
 

@@ -12,7 +12,8 @@ typedef struct Texture {
 
 typedef struct Vertex {
     float position[3];
-    float texCoords[2];
+    float color[3];
+    float texCoord[2];
 } Vertex;
 
 typedef struct Model {
