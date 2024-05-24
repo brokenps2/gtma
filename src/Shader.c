@@ -1,4 +1,5 @@
 #include <GL/glew.h>
+#include <cglm/cglm.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include "Files.h"
@@ -37,6 +38,10 @@ void setInt(Shader* shader, const char* name, int value) {
 }
 void setFloat(Shader* shader, const char* name, float value) { 
     glUniform1i(glGetUniformLocation(shader->id, name), value);
+}
+
+void setMatrix(Shader* shader, const char* name, mat4 value) {
+    glUniformMatrix4fv(glGetUniformLocation(shader->id, name), 1, GL_FALSE, (GLfloat*)value);
 }
 
 GLint getBool(Shader* shader, const char* name) {

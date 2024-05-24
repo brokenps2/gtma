@@ -100,7 +100,13 @@ void cameraMove(Camera* cam) {
         cam->pos[2] += (sin(glm_rad(cam->yaw)) * cam->speed) * getDeltaTime();
     }
 
-    if(isKeyDown(GLFW_KEY_LEFT_SHIFT)){
+    if(isKeyDown(GLFW_KEY_LEFT_SHIFT) || cam->speed == 1) {
+        cam->speed = 8;
+    } else {
+        cam->speed = 3;
+    }
+
+    if(isKeyDown(GLFW_KEY_LEFT_CONTROL)){
         cam->pos[1] -= cam->speed * getDeltaTime();
     }
 

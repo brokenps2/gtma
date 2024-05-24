@@ -51,6 +51,6 @@ void updateWindow() {
     glfwSwapBuffers(window);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glViewport(0, 0, (GLint)cfgGetResX(), (GLint)cfgGetResY());
-    glClearColor(glc(0), glc(0), glc(128), 1);
+    glClearColor(glc(0), glc(128), glc(128), 1);
 }
 

@@ -6,106 +6,59 @@
 #include "Shader.h"
 #include "Camera.h"
 #include "WindowManager.h"
-#include "Files.h"
-
-GLfloat vertices[] = {
-    // Position            // Color               // Texture coordinates
-   -0.5f, -0.5f, -0.5f,    0.0f, 0.0f, 1.0f,     0.0f, 0.0f,  // 0
-    0.5f, -0.5f, -0.5f,    0.0f, 1.0f, 0.0f,     1.0f, 0.0f,  // 1
-    0.5f,  0.5f, -0.5f,    0.0f, 0.0f, 1.0f,     1.0f, 1.0f,  // 2
-   -0.5f,  0.5f, -0.5f,    0.0f, 1.0f, 0.0f,     0.0f, 1.0f,  // 3
-   -0.5f, -0.5f,  0.5f,    0.0f, 1.0f, 1.0f,     0.0f, 0.0f,  // 4
-    0.5f, -0.5f,  0.5f,    0.0f, 0.0f, 1.0f,     1.0f, 0.0f,  // 5
-    0.5f,  0.5f,  0.5f,    0.0f, 1.0f, 1.0f,     1.0f, 1.0f,  // 6
-   -0.5f,  0.5f,  0.5f,    0.0f, 0.5f, 0.5f,     0.0f, 1.0f   // 7
-};
-
-// Indices for a cube (using triangles)
-GLuint indices[] = {
-    0, 1, 2,  // Front face
-    2, 3, 0,
-    1, 5, 6,  // Right face
-    6, 2, 1,
-    7, 6, 5,  // Top face
-    5, 4, 7,
-    4, 0, 3,  // Left face
-    3, 7, 4,
-    4, 5, 1,  // Bottom face
-    1, 0, 4,
-    3, 2, 6,  // Back face
-    6, 7, 3
-};
-
-u_int VBO, VAO, EBO;
+#include "Texture.h"
+#include "Models.h"
 
 Shader shader;
-Texture texture;
+Texture bob;
+Texture mtexture;
 Camera camera;
 vec3 camPos = {0, 0, 0};
-Model model;
-
-void initMatrices() {
-
-    //temp stuff????
-
-}
+Object cube;
+Object mario;
 
 void initRenderer() {
 
     createShader(&shader);
-    createTexture(&texture, "colors.png");
     createCamera(&camera, 800, 600, camPos);
-    createModel(&model, "scene.obj", &texture);
+
+    createTexture(&bob, "colors.png");
+    createTexture(&mtexture, "spongebob.png");
+
+    createObject(&cube, &bob, "untitled.obj", 5, 0, 0,    1.5, 1.5, 1.5,    0, 180, 0);
+    createObject(&mario, &mtexture, "spongebob.obj", 0, -1, 0,    3, 3, 3,    0, 0, 0);
 
     glfwSetInputMode(getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-    //
-    //load textures
-    //
+}
 
-    glGenTextures(1, &texture.id);
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, texture.id);
+void renderObject(Object* object) {
+    glBindVertexArray(object->model.VAO);
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glBindBuffer(GL_ARRAY_BUFFER, object->model.VBO);
+    glBufferData(GL_ARRAY_BUFFER, (object->model.vertxCount + object->model.texcoCount) * sizeof(Vertex), object->model.vertices, GL_STATIC_DRAW);
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, texture.w, texture.h, 0, GL_RGB, GL_UNSIGNED_BYTE, texture.data);
-  
-    disposeTexture(&texture);
-
-
-
-    glBindVertexArray(model.VAO);
-
-    glBindBuffer(GL_ARRAY_BUFFER, model.VBO);
-    glBufferData(GL_ARRAY_BUFFER, (model.vertxCount + model.texcoCount) * sizeof(Vertex), model.vertices, GL_STATIC_DRAW);
-    
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, model.EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * model.indexCount * 4, model.indices, GL_STATIC_DRAW);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, object->model.EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * object->model.indexCount * 4, object->model.indices, GL_STATIC_DRAW);
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
     glEnableVertexAttribArray(0);
 
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, color));
-
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, texCoord));
     glEnableVertexAttribArray(2);
 
+    mat4 transformationMatrix;
+    createTransformationMatrix(&transformationMatrix, object);
+    setMatrix(&shader, "transMatrix", transformationMatrix);
 
     useShader(&shader);
 
+    glBindTexture(GL_TEXTURE_2D, object->model.texture.id);
+    
+    glDrawElements(GL_TRIANGLES, object->model.indexCount, GL_UNSIGNED_INT, 0);
 }
 
 void render() {
-    useShader(&shader);
-    glBindTexture(GL_TEXTURE_2D, texture.id);
-    glBindVertexArray(model.VAO);
-    glDrawElements(GL_TRIANGLES, model.indexCount, GL_UNSIGNED_INT, 0);
-
     cameraMatrix(&camera, 45.0f, 0.1f, 100.0f, &shader, "camMatrix");
     cameraMove(&camera);
 
@@ -121,5 +74,8 @@ void render() {
     if(glfwGetKey(getWindow(), GLFW_KEY_DOWN) == GLFW_PRESS) {
         camera.pitch -= 1;
     }
+
+    renderObject(&cube);
+    renderObject(&mario);
 
 }
