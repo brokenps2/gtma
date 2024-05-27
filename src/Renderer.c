@@ -13,7 +13,7 @@ Shader shader;
 Texture bob;
 Texture mtexture;
 Camera camera;
-vec3 camPos = {0, 0, 0};
+vec3 camPos = {0, 3, 0};
 Object cube;
 Object mario;
 
@@ -23,10 +23,10 @@ void initRenderer() {
     createCamera(&camera, 800, 600, camPos);
 
     createTexture(&bob, "colors.png");
-    createTexture(&mtexture, "spongebob.png");
+    createTexture(&mtexture, "mario.png");
 
-    createObject(&cube, &bob, "untitled.obj", 5, 0, 0,    1.5, 1.5, 1.5,    0, 180, 0);
-    createObject(&mario, &mtexture, "spongebob.obj", 0, -1, 0,    3, 3, 3,    0, 0, 0);
+    createObject(&cube, &bob, "scene.obj", 0, 0, 0,    1, 1, 1,    0, 180, 0);
+    createObject(&mario, &mtexture, "mario.obj", 0, 1, 0,    1, 1, 1,    0, 0, 0);
 
     glfwSetInputMode(getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
