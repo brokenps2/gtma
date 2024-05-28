@@ -12,24 +12,35 @@
 #include "Models.h"
 
 Shader shader;
-Texture bob;
-Texture mtexture;
 Camera camera;
-vec3 camPos = {0, 3, 0};
-vec3 lightPos = { 100, 100, 100 };
-Object cube;
-Object mario;
+vec3 camPos = {0, 4, 0};
+vec3 lightPos;
+
+Texture baseColor;
+
+Texture areaTexture;
+Object area;
+
+Texture tableTexture;
+Object table;
+
+Object cone;
+
+Object disco;
 
 void initRenderer() {
 
     createShader(&shader);
     createCamera(&camera, getWindowWidth(), getWindowHeight(), camPos);
 
-    createTexture(&bob, "colors.png");
-    createTexture(&mtexture, "mario.png");
+    createTexture(&baseColor, "basicColors.png");
+    createTexture(&areaTexture, "colors.png");
+    createTexture(&tableTexture, "table.png");
 
-    createObject(&cube, &bob, "scene.obj", 0, 0, 0,    1, 1, 1,    0, 0, 0);
-    createObject(&mario, &mtexture, "mario.obj", 0, 1, 0,    1, 1, 1,    0, 0, 0);
+    createObject(&area, &areaTexture, "scene2.obj", 0, 0, 0,    1, 1, 1,    0, 0, 0);
+    createObject(&table, &tableTexture, "table.obj", 5, 0, -6,    1, 1, 1,    0, 0, 0);
+    createObject(&cone, &baseColor, "cone.obj", 0, 0, 3,    2, 2, 2,    0, 0, 0);
+    createObject(&disco, &baseColor, "disco.obj", -3, 5, -6,    2, 2, 2,    0, 0, 0);
 
     glfwSetInputMode(getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
@@ -87,7 +98,9 @@ void render() {
         printf("mouse lockd\n");
     }
 
-    renderObject(&cube);
-    renderObject(&mario);
+    renderObject(&area);
+    //renderObject(&table);
+    renderObject(&cone);
+    renderObject(&disco);
 
 }

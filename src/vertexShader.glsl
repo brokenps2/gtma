@@ -6,7 +6,7 @@ layout (location = 2) in vec2 texCoord;
 out vec2 outTexCoord;
 out vec3 outLightColor;
 
-uniform vec3 lightPos;
+uniform vec3 lightPos = vec3(90, 90, 90);
 uniform vec3 viewPos;
 uniform vec3 lightColor = vec3(1.0, 1.0, 1.0);
 
@@ -45,6 +45,6 @@ void main(){
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
     vec3 specular = specularStrength * spec * lightColor;
 
-    outLightColor = ambient + diffuse;// + specular;
+    outLightColor = ambient + diffuse + specular;
 
 }
