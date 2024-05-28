@@ -20,7 +20,6 @@ void initWindow() {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 0);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwMakeContextCurrent(window);
-    glfwSetWindowAttrib(window, GLFW_RESIZABLE, false);
     glfwSetWindowPos(window, 800, 200);
 
     const GLenum err = glewInit();
@@ -48,9 +47,10 @@ void updateWindow() {
     currentTime = glfwGetTime();
     deltaTime = currentTime - lastTime;
 
+    //glViewport(0, 0, 800, 600);
+    //TODO: enable resizing
     glfwSwapBuffers(window);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glViewport(0, 0, (GLint)cfgGetResX(), (GLint)cfgGetResY());
-    glClearColor(glc(0), glc(128), glc(128), 1);
+    glClearColor(glc(9), glc(8), glc(22), 1);
 }
 

@@ -7,6 +7,7 @@
 #include "WindowManager.h"
 #include "Input.h"
 #include "Camera.h"
+#include <GLFW/glfw3.h>
 
 
 double oldMouseX = 0, oldMouseY = 0, newMouseX = 0, newMouseY = 0;
@@ -60,21 +61,23 @@ void cameraMatrix(Camera* cam, float fov, float nearPlane, float farPlane, Shade
 }
 
 void cameraLook(Camera* cam) {
- 
-    newMouseX = getMouseX();
-    newMouseY = getMouseY();
 
-    float dx = (float) (newMouseX - oldMouseX) * getDeltaTime();
-    float dy = (float) (newMouseY - oldMouseY) * getDeltaTime();
+    if(glfwGetInputMode(getWindow(), GLFW_CURSOR) == GLFW_CURSOR_DISABLED) {
+        newMouseX = getMouseX();
+        newMouseY = getMouseY();
 
-    cam->yaw += dx * cam->sensitivity;
-    cam->pitch -= dy * cam->sensitivity;
+        float dx = (float) (newMouseX - oldMouseX) * getDeltaTime();
+        float dy = (float) (newMouseY - oldMouseY) * getDeltaTime();
 
-    oldMouseX = newMouseX;
-    oldMouseY = newMouseY;
+        cam->yaw += dx * cam->sensitivity;
+        cam->pitch -= dy * cam->sensitivity;
 
-    if(cam->pitch > 89.0f) cam->pitch = 89.0f;
-    if(cam->pitch < -89.0f) cam->pitch = -89.0f;
+        oldMouseX = newMouseX;
+        oldMouseY = newMouseY;
+
+        if(cam->pitch > 89.0f) cam->pitch = 89.0f;
+        if(cam->pitch < -89.0f) cam->pitch = -89.0f;
+    }
 
 }
 

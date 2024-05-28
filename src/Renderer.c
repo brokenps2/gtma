@@ -1,8 +1,10 @@
+#include <cglm/vec3.h>
 #include <stb_image.h>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <cglm/common.h>
 #include <cglm/types.h>
+#include "Input.h"
 #include "Shader.h"
 #include "Camera.h"
 #include "WindowManager.h"
@@ -14,21 +16,25 @@ Texture bob;
 Texture mtexture;
 Camera camera;
 vec3 camPos = {0, 3, 0};
+vec3 lightPos = { 100, 100, 100 };
 Object cube;
 Object mario;
 
 void initRenderer() {
 
     createShader(&shader);
-    createCamera(&camera, 800, 600, camPos);
+    createCamera(&camera, getWindowWidth(), getWindowHeight(), camPos);
 
     createTexture(&bob, "colors.png");
     createTexture(&mtexture, "mario.png");
 
-    createObject(&cube, &bob, "scene.obj", 0, 0, 0,    1, 1, 1,    0, 180, 0);
+    createObject(&cube, &bob, "scene.obj", 0, 0, 0,    1, 1, 1,    0, 0, 0);
     createObject(&mario, &mtexture, "mario.obj", 0, 1, 0,    1, 1, 1,    0, 0, 0);
 
     glfwSetInputMode(getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+    setVec3(&shader, "viewPos", camera.pos);
+    setVec3(&shader, "lightPos", lightPos);
 
 }
 
@@ -43,6 +49,9 @@ void renderObject(Object* object) {
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
     glEnableVertexAttribArray(0);
+
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
+    glEnableVertexAttribArray(1);
 
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, texCoord));
     glEnableVertexAttribArray(2);
@@ -62,17 +71,20 @@ void render() {
     cameraMatrix(&camera, 45.0f, 0.1f, 100.0f, &shader, "camMatrix");
     cameraMove(&camera);
 
-    if(glfwGetKey(getWindow(), GLFW_KEY_RIGHT) == GLFW_PRESS) {
-        camera.yaw += 1;
+
+    //glm_vec3_copy(camera.pos, lightPos);
+    //setVec3(&shader, "lightPos", lightPos);
+
+
+
+    if(isKeyPressed(GLFW_KEY_ESCAPE) && glfwGetInputMode(getWindow(), GLFW_CURSOR) == GLFW_CURSOR_DISABLED) {
+        glfwSetInputMode(getWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        printf("mouse unlocked\n");
     }
-    if(glfwGetKey(getWindow(), GLFW_KEY_LEFT) == GLFW_PRESS) {
-        camera.yaw -= 1;
-    }
-    if(glfwGetKey(getWindow(), GLFW_KEY_UP) == GLFW_PRESS) {
-        camera.pitch += 1;
-    }
-    if(glfwGetKey(getWindow(), GLFW_KEY_DOWN) == GLFW_PRESS) {
-        camera.pitch -= 1;
+
+    if(isLeftPressed() && glfwGetInputMode(getWindow(), GLFW_CURSOR) == GLFW_CURSOR_NORMAL) {
+        glfwSetInputMode(getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        printf("mouse lockd\n");
     }
 
     renderObject(&cube);

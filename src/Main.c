@@ -23,8 +23,8 @@ int main(int argc, char* argv[]) {
 
     initConfig();
     initWindow();
-    initRenderer();
     initInput();
+    initRenderer();
 
     //initial setup finished, run start tasks here
 
