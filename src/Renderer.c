@@ -4,7 +4,7 @@
 #include <GLFW/glfw3.h>
 #include <cglm/common.h>
 #include <cglm/types.h>
-#include "Config.h"
+#include "Input.h"
 #include "Shader.h"
 #include "Camera.h"
 #include "WindowManager.h"
@@ -37,7 +37,7 @@ Object disco;
 void initRenderer() {
 
     createShader(&shader);
-    createCamera(&camera, cfgGetResX(), cfgGetResY(), camPos);
+    createCamera(&camera, getWindowWidth(), getWindowHeight(), camPos);
 
     createTexture(&baseColor, "basicColors.png");
     createTexture(&areaTexture, "colors.png");
@@ -47,7 +47,7 @@ void initRenderer() {
 
     createObject(&area, &areaTexture, "scene2.obj", 0, 0, 0,    1, 1, 1,    0, 0, 0);
     createObject(&table, &tableTexture, "table.obj", 5, 0, -6,    1, 1, 1,    0, 0, 0);
-    createObject(&mario, &marioTex, "mario.obj", 0, 1, 0,    1, 1, 1,    0, 0, 0);
+    createObject(&mario, &marioTex, "mario.obj", 5, 1, -9,    1, 1, 1,    0, 0, 0);
     createObject(&sky, &skyTex, "sky.obj", 0, 0, 0,    1, 1, 1,    0, 0, 0);
     createObject(&cone, &baseColor, "cone.obj", 1, 2, 7,    2, 2, 2,    0, 0, 0);
     createObject(&disco, &baseColor, "disco.obj", -3, 5, -6,    2, 2, 2,    0, 0, 0);
@@ -114,7 +114,7 @@ void render() {
 
     renderObject(&area);
     renderObject(&table);
-    renderObject(&mario);
+    //renderObject(&mario);
     renderObject(&cone);
     renderObject(&disco);
     renderObject(&sky);

@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <GLFW/glfw3.h>
+#include "Config.h"
 #include "WindowManager.h"
 
 double mouseX;
@@ -91,7 +92,7 @@ int getWindowPosY() {
 void windowResizeCallback(GLFWwindow* window, int width, int height) {
     windowSizeX = width;
     windowSizeY = height;
-    //glViewport(windowPosX, windowPosY, width, height);
+    glViewport(0, 0, windowSizeX, windowSizeY);
 }
 
 void windowMoveCallback(GLFWwindow* window, int xpos, int ypos) {
@@ -134,6 +135,10 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
 
 
 void initInput() {
+
+    windowSizeX = cfgGetResX();
+    windowSizeY = cfgGetResY();
+
     glfwSetKeyCallback(getWindow(), keyCallback);
     glfwSetCursorPosCallback(getWindow(), cursorCallback);
     glfwSetMouseButtonCallback(getWindow(), mouseButtonCallback);

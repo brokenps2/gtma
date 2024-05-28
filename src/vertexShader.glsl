@@ -39,13 +39,13 @@ void main() {
         float diff = max(dot(norm, lightDir), 0.0);
         vec3 diffuse = diff * lightColor;
 
-        float specularStrength = 1.0;
+        float specularStrength = 1.5;
         vec3 viewDir = normalize(viewPos - lPos);
         vec3 reflectDir = reflect(-lightDir, norm);
         float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
         vec3 specular = specularStrength * spec * lightColor;
 
-        outLightColor = ambient + diffuse;// + specular;
+        outLightColor = ambient + diffuse + specular;
     }
 
     gl_Position = camMatrix * transMatrix * vec4(position, 1.0);

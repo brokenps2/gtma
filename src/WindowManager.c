@@ -67,8 +67,6 @@ void updateWindow() {
     currentTime = glfwGetTime();
     deltaTime = currentTime - lastTime;
 
-    //glViewport(0, 0, 800, 600);
-    //TODO: enable resizing
     glfwSwapBuffers(window);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glClearColor(glc(9), glc(8), glc(22), 1);

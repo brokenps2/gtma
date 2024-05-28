@@ -35,7 +35,19 @@ void createCamera(Camera* cam, int width, int height, vec3 pos) {
     cam->sensitivity = 20.0f;
 }
 
+void resizeCamera(Camera* cam, int width, int height) {
+    cam->width = width;
+    cam->height = height;
+}
+
 void cameraMatrix(Camera* cam, float fov, float nearPlane, float farPlane, Shader* shader, const char* uniform) {
+
+    if(cam->width != getWindowWidth()) {
+        cam->width = getWindowWidth();
+    }
+    if(cam->height != getWindowHeight()) {
+        cam->height = getWindowHeight();
+    }
 
     mat4 view;
     mat4 proj;
