@@ -36,6 +36,7 @@ Object disco;
 
 void initRenderer() {
 
+
     createShader(&shader);
     createCamera(&camera, getWindowWidth(), getWindowHeight(), camPos);
 
