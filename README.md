@@ -7,6 +7,8 @@
 <br>
 <h3>to do</h3>
  <ul>
+  <li>shading</li>
+  <li>lighting</li>
   <li>audio</li>
   <li>ui</li>
   <li>physics</li>

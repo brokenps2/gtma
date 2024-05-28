@@ -11,7 +11,7 @@ char* getVertexShaderSrc() {
 
     char* buffer = 0;
     long length;
-    FILE* fptr = fopen (cfgGetVertexShaderPath(), "r");
+    FILE* fptr = fopen(cfgGetVertexShaderPath(), "r");
 
     if(fptr) {
         fseek(fptr, 0, SEEK_END);
@@ -31,7 +31,7 @@ char* getFragmentShaderSrc() {
 
     char* buffer = 0;
     long length;
-    FILE* fptr = fopen (cfgGetFragmentShaderPath(), "r");
+    FILE* fptr = fopen(cfgGetFragmentShaderPath(), "r");
 
     if(fptr) {
         fseek(fptr, 0, SEEK_END);
@@ -48,3 +48,34 @@ char* getFragmentShaderSrc() {
 
 }
 
+char* getFileSrc(const char* path) {
+    char* buffer = 0;
+    long length;
+    FILE* fptr = fopen(path, "r");
+
+    if(fptr) {
+        fseek(fptr, 0, SEEK_END);
+        length = ftell(fptr);
+        fseek(fptr, 0, SEEK_SET);
+        buffer = malloc(length);
+        if(buffer) {
+            fread(buffer, 1, length, fptr);
+        }
+        fclose(fptr);
+    }
+
+    return buffer;
+
+}
+
+long getFileSize(const char* path) {
+    long length;
+    FILE* fptr = fopen(path, "r");
+
+    fseek(fptr, 0, SEEK_END);
+    length = ftell(fptr);
+    fseek(fptr, 0, SEEK_SET);
+
+    fclose(fptr);
+    return length;
+}

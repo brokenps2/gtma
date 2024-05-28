@@ -4,6 +4,7 @@
 #include <GLFW/glfw3.h>
 #include <stdbool.h>
 #include "Config.h"
+#include "Input.h"
 #include "Math.h"
 
 GLFWwindow* window;
@@ -11,7 +12,14 @@ float currentTime = 0;
 float lastTime;
 float deltaTime;
 
+int posX, posY;
+
 void initWindow() {
+
+    const GLFWvidmode* videoMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+
+    posX = (videoMode->width / 2) - (cfgGetResX() / 2);
+    posY = (videoMode->height / 2) - (cfgGetResY() / 2);
  
     const char* ctitle = cfgGetTitle();
 
@@ -20,7 +28,7 @@ void initWindow() {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 0);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwMakeContextCurrent(window);
-    glfwSetWindowPos(window, 800, 200);
+    glfwSetWindowPos(window, posX, posY);
 
     const GLenum err = glewInit();
     glewExperimental = GL_TRUE;
@@ -41,7 +49,19 @@ float getDeltaTime() {
     return deltaTime;
 }
 
+float getTime() {
+    return currentTime;
+}
+
 void updateWindow() {
+
+    if(isKeyPressed(GLFW_KEY_ESCAPE) && glfwGetInputMode(getWindow(), GLFW_CURSOR) == GLFW_CURSOR_DISABLED) {
+        glfwSetInputMode(getWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    }
+
+    if(isLeftPressed() && glfwGetInputMode(getWindow(), GLFW_CURSOR) == GLFW_CURSOR_NORMAL) {
+        glfwSetInputMode(getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    }
 
     lastTime = currentTime;
     currentTime = glfwGetTime();

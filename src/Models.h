@@ -26,6 +26,7 @@ typedef struct Object {
     float yaw;
     float roll;
     vec3 scale;
+    bool lit;
 } Object;
 
 void createModel(Model* model, const char* path, Texture* texture);

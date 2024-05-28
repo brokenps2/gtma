@@ -8,7 +8,7 @@
 
 void createModel(Model* model, const char* path, Texture* texture) {
     
-    fastObjMesh* mesh = fast_obj_read(path);
+    fastObjMesh* mesh = fast_obj_read(path);    
 
     if(!mesh) {
         printf("unable to find model %s\n", path);
@@ -57,7 +57,7 @@ void createModel(Model* model, const char* path, Texture* texture) {
     }
 
     free(vertexMap);
-    fast_obj_destroy(mesh);
+    free(mesh);
     model->texture = *texture;
 
     glGenVertexArrays(1, &model->VAO);
@@ -82,6 +82,8 @@ void createObject(Object* object, Texture* texture, const char* mdlPath, float x
     object->pitch = rx;
     object->yaw = ry;
     object->roll = rz;
+
+    object->lit = true;
 }
 
 void createObjectVec(Object* object, Texture* texture, const char* mdlPath, vec3 pos, vec3 scale, vec3 rot) {

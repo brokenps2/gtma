@@ -44,7 +44,6 @@ void createShader(Shader* shader) {
 
 }
 
-
 void setBool(Shader* shader, const char* name, bool value) {         
     glUniform1i(glGetUniformLocation(shader->id, name), value);
 }

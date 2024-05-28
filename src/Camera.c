@@ -75,8 +75,8 @@ void cameraLook(Camera* cam) {
         oldMouseX = newMouseX;
         oldMouseY = newMouseY;
 
-        if(cam->pitch > 89.0f) cam->pitch = 89.0f;
-        if(cam->pitch < -89.0f) cam->pitch = -89.0f;
+        if(cam->pitch > 89.9f) cam->pitch = 89.9f;
+        if(cam->pitch < -89.9f) cam->pitch = -89.9f;
     }
 
 }

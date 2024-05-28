@@ -4,7 +4,7 @@
 #include <GLFW/glfw3.h>
 #include <cglm/common.h>
 #include <cglm/types.h>
-#include "Input.h"
+#include "Config.h"
 #include "Shader.h"
 #include "Camera.h"
 #include "WindowManager.h"
@@ -24,6 +24,12 @@ Object area;
 Texture tableTexture;
 Object table;
 
+Texture marioTex;
+Object mario;
+
+Texture skyTex;
+Object sky;
+
 Object cone;
 
 Object disco;
@@ -31,19 +37,26 @@ Object disco;
 void initRenderer() {
 
     createShader(&shader);
-    createCamera(&camera, getWindowWidth(), getWindowHeight(), camPos);
+    createCamera(&camera, cfgGetResX(), cfgGetResY(), camPos);
 
     createTexture(&baseColor, "basicColors.png");
     createTexture(&areaTexture, "colors.png");
     createTexture(&tableTexture, "table.png");
+    createTexture(&skyTex, "sky.png");
+    createTexture(&marioTex, "mario.png");
 
     createObject(&area, &areaTexture, "scene2.obj", 0, 0, 0,    1, 1, 1,    0, 0, 0);
     createObject(&table, &tableTexture, "table.obj", 5, 0, -6,    1, 1, 1,    0, 0, 0);
-    createObject(&cone, &baseColor, "cone.obj", 0, 0, 3,    2, 2, 2,    0, 0, 0);
+    createObject(&mario, &marioTex, "mario.obj", 0, 1, 0,    1, 1, 1,    0, 0, 0);
+    createObject(&sky, &skyTex, "sky.obj", 0, 0, 0,    1, 1, 1,    0, 0, 0);
+    createObject(&cone, &baseColor, "cone.obj", 1, 2, 7,    2, 2, 2,    0, 0, 0);
     createObject(&disco, &baseColor, "disco.obj", -3, 5, -6,    2, 2, 2,    0, 0, 0);
+
+    sky.lit = 0;
 
     glfwSetInputMode(getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
+    lightPos[0] = 90;    lightPos[1] = 90;    lightPos[2] = 90;
     setVec3(&shader, "viewPos", camera.pos);
     setVec3(&shader, "lightPos", lightPos);
 
@@ -72,6 +85,7 @@ void renderObject(Object* object) {
     setMatrix(&shader, "transMatrix", transformationMatrix);
 
     useShader(&shader);
+    setBool(&shader, "lightEnabled", object->lit);
 
     glBindTexture(GL_TEXTURE_2D, object->model.texture.id);
     
@@ -88,19 +102,21 @@ void render() {
 
 
 
-    if(isKeyPressed(GLFW_KEY_ESCAPE) && glfwGetInputMode(getWindow(), GLFW_CURSOR) == GLFW_CURSOR_DISABLED) {
-        glfwSetInputMode(getWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-        printf("mouse unlocked\n");
-    }
+    
 
-    if(isLeftPressed() && glfwGetInputMode(getWindow(), GLFW_CURSOR) == GLFW_CURSOR_NORMAL) {
-        glfwSetInputMode(getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-        printf("mouse lockd\n");
-    }
+    disco.yaw += 2 * getDeltaTime();
+
+    cone.roll += 2 * getDeltaTime();
+    cone.yaw += 2 * getDeltaTime();
+    cone.pitch += 2 * getDeltaTime();
+
+    glm_vec3_copy(camera.pos, sky.position);
 
     renderObject(&area);
-    //renderObject(&table);
+    renderObject(&table);
+    renderObject(&mario);
     renderObject(&cone);
     renderObject(&disco);
+    renderObject(&sky);
 
 }
