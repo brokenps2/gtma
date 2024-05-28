@@ -3,6 +3,7 @@
 </p>
 <h2>GTMA</h2>
 <h3>Game/Graphics Toolkit with Minimal Abstraction</h3>
+<img src="demo.png"/>
 <br>
 <h3>to do</h3>
  <ul>
