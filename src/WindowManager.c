@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <time.h>
 #include <stdlib.h>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -39,6 +40,8 @@ void initWindow() {
 
     glViewport(0, 0, cfgGetResX(), cfgGetResY());
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
 }
 
 GLFWwindow* getWindow() {

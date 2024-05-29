@@ -36,22 +36,22 @@ Object disco;
 
 void initRenderer() {
 
-
     createShader(&shader);
     createCamera(&camera, getWindowWidth(), getWindowHeight(), camPos);
 
     createTexture(&baseColor, "basicColors.png");
     createTexture(&areaTexture, "colors.png");
     createTexture(&tableTexture, "table.png");
-    createTexture(&skyTex, "sky.png");
+    createTexture(&skyTex, "night.png");
+
     createTexture(&marioTex, "mario.png");
 
-    createObject(&area, &areaTexture, "scene2.obj", 0, 0, 0,    1, 1, 1,    0, 0, 0);
-    createObject(&table, &tableTexture, "table.obj", 5, 0, -6,    1, 1, 1,    0, 0, 0);
+    createObject(&area, &areaTexture, "specular.obj", 0, 0, 0,    1, 1, 1,    0, 0, 0);
+    createObject(&table, &tableTexture, "table.obj", 5, 0, -3,    1, 1, 1,    0, 0, 0);
     createObject(&mario, &marioTex, "mario.obj", 5, 1, -9,    1, 1, 1,    0, 0, 0);
-    createObject(&sky, &skyTex, "sky.obj", 0, 0, 0,    1, 1, 1,    0, 0, 0);
+    createObject(&sky, &skyTex, "sky.obj", 0, 0, 0,    3, 3, 3,    0, 0, 0);
     createObject(&cone, &baseColor, "cone.obj", 1, 2, 7,    2, 2, 2,    0, 0, 0);
-    createObject(&disco, &baseColor, "disco.obj", -3, 5, -6,    2, 2, 2,    0, 0, 0);
+    createObject(&disco, &baseColor, "disco.obj", -5, 5, 0,    1, 1, 1,    0, 0, 0);
 
     sky.lit = 0;
 
@@ -64,6 +64,7 @@ void initRenderer() {
 }
 
 void renderObject(Object* object) {
+    
     glBindVertexArray(object->model.VAO);
 
     glBindBuffer(GL_ARRAY_BUFFER, object->model.VBO);
@@ -93,23 +94,50 @@ void renderObject(Object* object) {
     glDrawElements(GL_TRIANGLES, object->model.indexCount, GL_UNSIGNED_INT, 0);
 }
 
+int sine = 0;
+int near = 1;
+float fov = 45.0f;
+
 void render() {
-    cameraMatrix(&camera, 45.0f, 0.1f, 100.0f, &shader, "camMatrix");
+    cameraMatrix(&camera, fov, 0.1f, 100.0f, &shader, "camMatrix");
     cameraMove(&camera);
 
+    fov += (sin(getTime()) / 10);
 
-    //glm_vec3_copy(camera.pos, lightPos);
-    //setVec3(&shader, "lightPos", lightPos);
-
-
-
-    
+    sky.yaw += 1 * getDeltaTime();
+    sky.roll += 1 * getDeltaTime();
 
     disco.yaw += 2 * getDeltaTime();
 
     cone.roll += 2 * getDeltaTime();
     cone.yaw += 2 * getDeltaTime();
     cone.pitch += 2 * getDeltaTime();
+
+    disco.scale[0] += (sin(getTime()) / 110);
+    disco.scale[2] += (sin(getTime()) / 110);
+    disco.scale[1] += (cos(getTime()) / 110);
+
+    disco.position[0] += (sin(getTime()) / 20);
+    disco.position[2] += (cos(getTime()) / 20);
+
+    if(isKeyPressed(GLFW_KEY_M)) {
+        sine = !sine;
+        mario.position[1] += 4;
+        table.position[2] += 4;
+    }
+    if(sine) {
+        mario.position[1] += (sin(getTime()) / 50);
+        mario.position[2] += 4 * getDeltaTime();
+
+        table.position[1] += (cos(getTime()) / 50);
+        table.position[2] += 4 * getDeltaTime();
+    } else {
+        mario.position[1] = 2;
+        mario.position[2] = -9;
+
+        //table.position[1] = 0;
+        //table.position[2] = -6;
+    }
 
     glm_vec3_copy(camera.pos, sky.position);
 
