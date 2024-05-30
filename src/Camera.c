@@ -129,12 +129,7 @@ void cameraMove(Camera* cam) {
         cam->pos[1] += cam->speed * getDeltaTime();
     }
 
-    if(isKeyDown(GLFW_KEY_E)) {
-        printf("wahoo!\n");
-    }
-
     cameraLook(cam);
-
 }
 
 void cameraSetPosition(Camera* cam, vec3 npos) {

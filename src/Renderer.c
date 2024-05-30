@@ -42,14 +42,14 @@ void initRenderer() {
     createTexture(&baseColor, "basicColors.png");
     createTexture(&areaTexture, "colors.png");
     createTexture(&tableTexture, "table.png");
-    createTexture(&skyTex, "night.png");
+    createTexture(&skyTex, "sky2.png");
 
     createTexture(&marioTex, "mario.png");
 
-    createObject(&area, &areaTexture, "specular.obj", 0, 0, 0,    1, 1, 1,    0, 0, 0);
+    createObject(&area, &areaTexture, "scene2.obj", 0, 0, 0,    1, 1, 1,    0, 0, 0);
     createObject(&table, &tableTexture, "table.obj", 5, 0, -3,    1, 1, 1,    0, 0, 0);
     createObject(&mario, &marioTex, "mario.obj", 5, 1, -9,    1, 1, 1,    0, 0, 0);
-    createObject(&sky, &skyTex, "sky.obj", 0, 0, 0,    3, 3, 3,    0, 0, 0);
+    createObject(&sky, &skyTex, "sky.obj", 0, 0, 0,    1, 1, 1,    0, 0, 0);
     createObject(&cone, &baseColor, "cone.obj", 1, 2, 7,    2, 2, 2,    0, 0, 0);
     createObject(&disco, &baseColor, "disco.obj", -5, 5, 0,    1, 1, 1,    0, 0, 0);
 
@@ -57,7 +57,6 @@ void initRenderer() {
 
     glfwSetInputMode(getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-    lightPos[0] = 90;    lightPos[1] = 90;    lightPos[2] = 90;
     setVec3(&shader, "viewPos", camera.pos);
     setVec3(&shader, "lightPos", lightPos);
 
@@ -92,20 +91,16 @@ void renderObject(Object* object) {
     glBindTexture(GL_TEXTURE_2D, object->model.texture.id);
     
     glDrawElements(GL_TRIANGLES, object->model.indexCount, GL_UNSIGNED_INT, 0);
+
 }
 
 int sine = 0;
-int near = 1;
-float fov = 45.0f;
 
 void render() {
-    cameraMatrix(&camera, fov, 0.1f, 100.0f, &shader, "camMatrix");
+    cameraMatrix(&camera, 64.0f, 0.1f, 200.0f, &shader, "camMatrix");
     cameraMove(&camera);
 
-    fov += (sin(getTime()) / 10);
-
-    sky.yaw += 1 * getDeltaTime();
-    sky.roll += 1 * getDeltaTime();
+    sky.yaw -= 0.025f * getDeltaTime();
 
     disco.yaw += 2 * getDeltaTime();
 
@@ -135,8 +130,8 @@ void render() {
         mario.position[1] = 2;
         mario.position[2] = -9;
 
-        //table.position[1] = 0;
-        //table.position[2] = -6;
+        table.position[1] = 0;
+        table.position[2] = -6;
     }
 
     glm_vec3_copy(camera.pos, sky.position);
