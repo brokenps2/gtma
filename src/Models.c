@@ -59,6 +59,7 @@ void createModel(Model* model, const char* path, Texture* texture) {
     free(vertexMap);
     free(mesh);
     model->texture = *texture;
+    model->lit = true;
 
     glGenVertexArrays(1, &model->VAO);
     glGenBuffers(1, &model->VBO);
@@ -79,40 +80,16 @@ void createObject(Object* object, Texture* texture, const char* mdlPath, float x
     object->scale[1] = sy;
     object->scale[2] = sz;
 
-    object->pitch = rx;
-    object->yaw = ry;
-    object->roll = rz;
-
-    object->lit = true;
-}
-
-void createObjectVec(Object* object, Texture* texture, const char* mdlPath, vec3 pos, vec3 scale, vec3 rot) {
-    Model model; 
-    createModel(&model, mdlPath, texture);
-
-    object->model = model;
-
-    object->position[0] = pos[0];
-    object->position[1] = pos[1];
-    object->position[2] = pos[2];
-
-    object->scale[0] = scale[0];
-    object->scale[1] = scale[1];
-    object->scale[2] = scale[2];
-
-    object->pitch = rot[0];
-    object->yaw = rot[1];
-    object->roll = rot[2];
+    object->rotation[0] = rx;
+    object->rotation[1] = ry;
+    object->rotation[2] = rz;
 }
 
 void createTransformationMatrix(mat4* matrix, Object* object) {
-    vec3 x = { 1, 0, 0 };
-    vec3 y = { 0, 1, 0 };
-    vec3 z = { 0, 0, 1 };
     glm_mat4_identity(*matrix);
     glm_translate(*matrix, object->position);
-    glm_rotate(*matrix, object->pitch, x);
-    glm_rotate(*matrix, object->yaw, y);
-    glm_rotate(*matrix, object->roll, z);
+    glm_rotate_x(*matrix, object->rotation[0], *matrix);
+    glm_rotate_y(*matrix, object->rotation[1], *matrix);
+    glm_rotate_z(*matrix, object->rotation[2], *matrix);
     glm_scale(*matrix, object->scale);
 }

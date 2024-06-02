@@ -52,6 +52,12 @@ bool isRightDown() {
     return mouse2;
 }
 
+bool isRightPressed() {
+    bool pressed = mouse2;
+    mouse2 = false;
+    return pressed;
+}
+
 void cursorCallback(GLFWwindow* window, double xpos, double ypos) {
     mouseX = xpos;
     mouseY = ypos;

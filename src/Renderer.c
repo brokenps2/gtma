@@ -39,26 +39,7 @@ void initRenderer() {
     createShader(&shader);
     createCamera(&camera, getWindowWidth(), getWindowHeight(), camPos);
 
-    createTexture(&baseColor, "basicColors.png");
-    createTexture(&areaTexture, "colors.png");
-    createTexture(&tableTexture, "table.png");
-    createTexture(&skyTex, "sky2.png");
-
-    createTexture(&marioTex, "mario.png");
-
-    createObject(&area, &areaTexture, "scene2.obj", 0, 0, 0,    1, 1, 1,    0, 0, 0);
-    createObject(&table, &tableTexture, "table.obj", 5, 0, -3,    1, 1, 1,    0, 0, 0);
-    createObject(&mario, &marioTex, "mario.obj", 5, 1, -9,    1, 1, 1,    0, 0, 0);
-    createObject(&sky, &skyTex, "sky.obj", 0, 0, 0,    1, 1, 1,    0, 0, 0);
-    createObject(&cone, &baseColor, "cone.obj", 1, 2, 7,    2, 2, 2,    0, 0, 0);
-    createObject(&disco, &baseColor, "disco.obj", -5, 5, 0,    1, 1, 1,    0, 0, 0);
-
-    sky.lit = 0;
-
     glfwSetInputMode(getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-
-    setVec3(&shader, "viewPos", camera.pos);
-    setVec3(&shader, "lightPos", lightPos);
 
 }
 
@@ -86,7 +67,10 @@ void renderObject(Object* object) {
     setMatrix(&shader, "transMatrix", transformationMatrix);
 
     useShader(&shader);
-    setBool(&shader, "lightEnabled", object->lit);
+    setBool(&shader, "lightEnabled", object->model.lit);
+
+    setVec3(&shader, "viewPos", camera.pos);
+    setVec3(&shader, "lightPos", lightPos);
 
     glBindTexture(GL_TEXTURE_2D, object->model.texture.id);
     
@@ -94,53 +78,7 @@ void renderObject(Object* object) {
 
 }
 
-int sine = 0;
-
 void render() {
     cameraMatrix(&camera, 64.0f, 0.1f, 200.0f, &shader, "camMatrix");
     cameraMove(&camera);
-
-    sky.yaw -= 0.025f * getDeltaTime();
-
-    disco.yaw += 2 * getDeltaTime();
-
-    cone.roll += 2 * getDeltaTime();
-    cone.yaw += 2 * getDeltaTime();
-    cone.pitch += 2 * getDeltaTime();
-
-    disco.scale[0] += (sin(getTime()) / 110);
-    disco.scale[2] += (sin(getTime()) / 110);
-    disco.scale[1] += (cos(getTime()) / 110);
-
-    disco.position[0] += (sin(getTime()) / 20);
-    disco.position[2] += (cos(getTime()) / 20);
-
-    if(isKeyPressed(GLFW_KEY_M)) {
-        sine = !sine;
-        mario.position[1] += 4;
-        table.position[2] += 4;
-    }
-    if(sine) {
-        mario.position[1] += (sin(getTime()) / 50);
-        mario.position[2] += 4 * getDeltaTime();
-
-        table.position[1] += (cos(getTime()) / 50);
-        table.position[2] += 4 * getDeltaTime();
-    } else {
-        mario.position[1] = 2;
-        mario.position[2] = -9;
-
-        table.position[1] = 0;
-        table.position[2] = -6;
-    }
-
-    glm_vec3_copy(camera.pos, sky.position);
-
-    renderObject(&area);
-    renderObject(&table);
-    //renderObject(&mario);
-    renderObject(&cone);
-    renderObject(&disco);
-    renderObject(&sky);
-
 }

@@ -26,8 +26,6 @@ int main(int argc, char* argv[]) {
     initInput();
     initRenderer();
 
-    //initial setup finished, run start tasks here
-
     while(!glfwWindowShouldClose(getWindow())) {
         updateWindow();
 

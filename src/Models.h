@@ -16,17 +16,14 @@ typedef struct Model {
     int texcoCount;
     Texture texture;
     unsigned int VAO, VBO, EBO;
-    int inArrID;
+    bool lit;
 } Model;
 
 typedef struct Object {
     Model model;
     vec3 position;
-    float pitch;
-    float yaw;
-    float roll;
+    vec3 rotation;
     vec3 scale;
-    bool lit;
 } Object;
 
 void createModel(Model* model, const char* path, Texture* texture);
