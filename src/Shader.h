@@ -11,8 +11,8 @@ typedef struct Shader {
 
     int sType;
 
-    const char* vtShaderSrc;
-    const char* frShaderSrc;
+    char* vtShaderSrc;
+    char* frShaderSrc;
 
 } Shader;
 

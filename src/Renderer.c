@@ -13,33 +13,36 @@
 
 Shader shader;
 Camera camera;
-vec3 camPos = {0, 4, 0};
+vec3 camPos = {4, 4, 4};
 vec3 lightPos;
 
-Texture baseColor;
+Texture areaColors;
+Object gtma;
 
-Texture areaTexture;
-Object area;
-
-Texture tableTexture;
 Object table;
 
-Texture marioTex;
-Object mario;
-
-Texture skyTex;
+Texture skyTexture;
 Object sky;
-
-Object cone;
-
-Object disco;
 
 void initRenderer() {
 
     createShader(&shader);
     createCamera(&camera, getWindowWidth(), getWindowHeight(), camPos);
 
+    createTexture(&areaColors, "house.png");
+    createObject(&gtma, &areaColors, "house.obj", 0, 1, 0,    1.5, 1.5, 1.5,    0, 0, 0);
+
+    createObject(&table, &areaColors, "table.obj", 0, 0.3, 0,    1, 1, 1,    0, 0, 0);
+
+    createTexture(&skyTexture, "sky2.png");
+    createObject(&sky, &skyTexture, "sky.obj", 0, 0, 0,    1, 1, 1,    0, 0, 0);
+    sky.model.lit = false;
+
     glfwSetInputMode(getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+    lightPos[0] = -4;
+    lightPos[1] = 4;
+    lightPos[2] = 4;
 
 }
 
@@ -48,10 +51,10 @@ void renderObject(Object* object) {
     glBindVertexArray(object->model.VAO);
 
     glBindBuffer(GL_ARRAY_BUFFER, object->model.VBO);
-    glBufferData(GL_ARRAY_BUFFER, (object->model.vertxCount + object->model.texcoCount) * sizeof(Vertex), object->model.vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, (object->model.postnCount + object->model.indexCount + object->model.normlCount) * sizeof(Vertex), object->model.vertices, GL_STATIC_DRAW);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, object->model.EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * object->model.indexCount * 4, object->model.indices, GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * object->model.indexCount * 3, object->model.indices, GL_STATIC_DRAW);
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
     glEnableVertexAttribArray(0);
@@ -79,6 +82,13 @@ void renderObject(Object* object) {
 }
 
 void render() {
-    cameraMatrix(&camera, 64.0f, 0.1f, 200.0f, &shader, "camMatrix");
+    cameraMatrix(&camera, 67.0f, 0.1f, 200.0f, &shader, "camMatrix");
     cameraMove(&camera);
+    printf("\r%f  %f  %f", camera.pos[0], camera.pos[1], camera.pos[2]);
+    fflush(stdout);
+    glm_vec3_copy(camera.pos, sky.position);
+
+    renderObject(&gtma);
+    renderObject(&table);
+    renderObject(&sky);
 }

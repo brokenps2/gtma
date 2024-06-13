@@ -13,8 +13,10 @@ void createShader(Shader* shader) {
     char infoLog[512];
 
     shader->vertexShader = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(shader->vertexShader, 1, &shader->vtShaderSrc, NULL);
+    glShaderSource(shader->vertexShader, 1, (const char**)&shader->vtShaderSrc, NULL);
     glCompileShader(shader->vertexShader);
+
+    free(shader->vtShaderSrc);
 
     glGetShaderiv(shader->vertexShader, GL_COMPILE_STATUS, &success);
     if(!success) {
@@ -22,9 +24,12 @@ void createShader(Shader* shader) {
         printf("vertex shader compile failed\n%s\n", infoLog);
     };
 
+
     shader->fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(shader->fragmentShader, 1, &shader->frShaderSrc, NULL);
+    glShaderSource(shader->fragmentShader, 1, (const char**)&shader->frShaderSrc, NULL);
     glCompileShader(shader->fragmentShader);
+
+    free(shader->frShaderSrc);
 
     glGetShaderiv(shader->fragmentShader, GL_COMPILE_STATUS, &success);
     if(!success) {

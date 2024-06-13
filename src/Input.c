@@ -1,7 +1,5 @@
-#include <GL/gl.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include <stdbool.h>
+#include <GL/gl.h>
 #include <GLFW/glfw3.h>
 #include "Config.h"
 #include "WindowManager.h"
@@ -18,24 +16,12 @@ bool mouse2;
 bool keys[GLFW_KEY_LAST];
 bool keysPressed[GLFW_KEY_LAST];
 
-int initialized = 0;
-
 double getMouseX() {
-    if(initialized == 0) {
-        printf("Mouse used without being initialized\n");
-        exit(1);
-    } else {
-        return mouseX;
-    }
+    return mouseX;
 }
 
 double getMouseY() {
-    if(initialized == 0) {
-        printf("err: Mouse used without being initialized\n");
-        exit(1);
-    } else {
-        return mouseY;
-    }
+    return mouseY;
 }
 
 bool isLeftDown() {
@@ -141,7 +127,6 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
 
 
 void initInput() {
-
     windowSizeX = cfgGetResX();
     windowSizeY = cfgGetResY();
 
@@ -150,5 +135,4 @@ void initInput() {
     glfwSetMouseButtonCallback(getWindow(), mouseButtonCallback);
     glfwSetWindowSizeCallback(getWindow(), windowResizeCallback);
     glfwSetWindowPosCallback(getWindow(), windowMoveCallback);
-    initialized = 1;
 }

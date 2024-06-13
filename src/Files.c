@@ -8,18 +8,19 @@ long vtShaderLength;
 long frShaderLength;
 
 char* getVertexShaderSrc() {
-
-    char* buffer = 0;
+    char* buffer = NULL;
     long length;
     FILE* fptr = fopen(cfgGetVertexShaderPath(), "r");
 
-    if(fptr) {
+    if (fptr) {
         fseek(fptr, 0, SEEK_END);
         length = ftell(fptr);
         fseek(fptr, 0, SEEK_SET);
-        buffer = malloc(length);
-        if(buffer) {
-            fread(buffer, 1, length, fptr);
+        
+        buffer = malloc(length + 1);
+        if (buffer) {
+            size_t readLength = fread(buffer, 1, length, fptr);
+            buffer[readLength] = '\0';
         }
         fclose(fptr);
     }
@@ -28,24 +29,24 @@ char* getVertexShaderSrc() {
 }
 
 char* getFragmentShaderSrc() {
-
-    char* buffer = 0;
+    char* buffer = NULL;
     long length;
     FILE* fptr = fopen(cfgGetFragmentShaderPath(), "r");
 
-    if(fptr) {
+    if (fptr) {
         fseek(fptr, 0, SEEK_END);
         length = ftell(fptr);
         fseek(fptr, 0, SEEK_SET);
-        buffer = malloc(length);
-        if(buffer) {
-            fread(buffer, 1, length, fptr);
+        
+        buffer = malloc(length + 1);
+        if (buffer) {
+            size_t readLength = fread(buffer, 1, length, fptr);
+            buffer[readLength] = '\0';
         }
         fclose(fptr);
     }
 
     return buffer;
-
 }
 
 char* getFileSrc(const char* path) {
@@ -65,6 +66,7 @@ char* getFileSrc(const char* path) {
     }
 
     return buffer;
+    free(buffer);
 
 }
 

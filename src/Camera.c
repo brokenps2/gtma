@@ -8,6 +8,7 @@
 #include "Input.h"
 #include "Camera.h"
 #include <GLFW/glfw3.h>
+#include <tslib.h>
 
 
 double oldMouseX = 0, oldMouseY = 0, newMouseX = 0, newMouseY = 0;
@@ -32,7 +33,7 @@ void createCamera(Camera* cam, int width, int height, vec3 pos) {
     cam->yaw = 0.0f;
     cam->roll = 0.0f;
     cam->speed = 3.0f;
-    cam->sensitivity = 20.0f;
+    cam->sensitivity = 0.5f;
 }
 
 void resizeCamera(Camera* cam, int width, int height) {
@@ -78,8 +79,8 @@ void cameraLook(Camera* cam) {
         newMouseX = getMouseX();
         newMouseY = getMouseY();
 
-        float dx = (float) (newMouseX - oldMouseX) * getDeltaTime();
-        float dy = (float) (newMouseY - oldMouseY) * getDeltaTime();
+        float dx = (float)(newMouseX - oldMouseX);
+        float dy = (float)(newMouseY - oldMouseY);
 
         cam->yaw += dx * cam->sensitivity;
         cam->pitch -= dy * cam->sensitivity;
@@ -87,8 +88,8 @@ void cameraLook(Camera* cam) {
         oldMouseX = newMouseX;
         oldMouseY = newMouseY;
 
-        if(cam->pitch > 89.9f) cam->pitch = 89.9f;
-        if(cam->pitch < -89.9f) cam->pitch = -89.9f;
+        if(cam->pitch > 89.99f) cam->pitch = 89.99f;
+        if(cam->pitch < -89.99f) cam->pitch = -89.99f;
     }
 
 }
@@ -128,6 +129,10 @@ void cameraMove(Camera* cam) {
     if(isKeyDown(GLFW_KEY_SPACE)) {
         cam->pos[1] += cam->speed * getDeltaTime();
     }
+
+    cam->pos[0] = roundf(cam->pos[0] * 100) / 100;
+    cam->pos[1] = roundf(cam->pos[1] * 100) / 100;
+    cam->pos[2] = roundf(cam->pos[2] * 100) / 100;
 
     cameraLook(cam);
 }

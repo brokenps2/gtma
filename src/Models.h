@@ -12,8 +12,9 @@ typedef struct Model {
     Vertex* vertices;
     unsigned int* indices;
     int indexCount;
-    int vertxCount;
+    int postnCount;
     int texcoCount;
+    int normlCount;
     Texture texture;
     unsigned int VAO, VBO, EBO;
     bool lit;

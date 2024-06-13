@@ -10,7 +10,7 @@ uniform bool lightEnabled;
 
 uniform vec3 lightPos = vec3(90, 90, 90);
 uniform vec3 viewPos;
-uniform vec3 lightColor = vec3(1.0, 1.0, 1.0);
+uniform vec3 lightColor = vec3(2.0, 2.0, 2.0);
 
 uniform mat4 camMatrix;
 uniform mat4 transMatrix;

@@ -17,6 +17,11 @@ int posX, posY;
 
 void initWindow() {
 
+    if (!glfwInit()) {
+        printf("GLFW Init Failed!\n");
+        exit(1);
+    }
+
     const GLFWvidmode* videoMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 
     posX = (videoMode->width / 2) - (cfgGetResX() / 2);
@@ -28,6 +33,7 @@ void initWindow() {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 0);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_FLOATING, GLFW_TRUE);
     glfwMakeContextCurrent(window);
     glfwSetWindowPos(window, posX, posY);
 
@@ -71,6 +77,7 @@ void updateWindow() {
     deltaTime = currentTime - lastTime;
 
     glfwSwapBuffers(window);
+    glFinish();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glClearColor(glc(9), glc(8), glc(22), 1);
 }

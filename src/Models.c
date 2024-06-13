@@ -16,11 +16,12 @@ void createModel(Model* model, const char* path, Texture* texture) {
     }
 
     model->indexCount = mesh->index_count;
-    model->vertxCount = mesh->position_count;
+    model->postnCount = mesh->position_count;
     model->texcoCount = mesh->texcoord_count;
+    model->normlCount = mesh->normal_count;
 
     model->vertices = (Vertex*)malloc(((mesh->position_count * 3) + (mesh->texcoord_count * 2) + (mesh->normal_count * 3)) * sizeof(Vertex));
-    model->indices = (unsigned int*)malloc(model->indexCount * sizeof(unsigned int));
+    model->indices = (unsigned int*)malloc(model->indexCount * 3 * sizeof(unsigned int));
 
     int* vertexMap = (int*)malloc((mesh->position_count * mesh->texcoord_count * mesh->normal_count) * sizeof(int));
     for (int i = 0; i < (mesh->position_count * mesh->texcoord_count) + (mesh->position_count * mesh->normal_count); i++) {
@@ -57,7 +58,7 @@ void createModel(Model* model, const char* path, Texture* texture) {
     }
 
     free(vertexMap);
-    free(mesh);
+    fast_obj_destroy(mesh);
     model->texture = *texture;
     model->lit = true;
 

@@ -9,15 +9,13 @@
 
 int main(int argc, char* argv[]) {
 
-    if (!glfwInit()) {
-        printf("GLFW Init Failed!\n");
-    }
-
     if(argc < 2 || argc > 2) {
         printf("Usage: gtma [config file path]\n");
         printf("this will be handled by the launcher eventually\n");
         exit(1);
     }
+
+    printf("\n");
 
     cfgSetPath(argv[1]);
 
@@ -27,12 +25,12 @@ int main(int argc, char* argv[]) {
     initRenderer();
 
     while(!glfwWindowShouldClose(getWindow())) {
-        updateWindow();
-
-        render();
-
         glfwPollEvents();
+        render();
+        updateWindow();
     }
+
     glfwTerminate();
+    printf("\n");
     return 0;
 }
