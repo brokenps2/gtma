@@ -4,6 +4,7 @@
 #include <GLFW/glfw3.h>
 #include <cglm/common.h>
 #include <cglm/types.h>
+#include "Audio.h"
 #include "Input.h"
 #include "Shader.h"
 #include "Camera.h"
@@ -24,7 +25,12 @@ Object table;
 Texture skyTexture;
 Object sky;
 
+Sound testSound;
+
 void initRenderer() {
+
+    createSound(&testSound, "test.ogg", true, 20);
+    playSound(&testSound);
 
     createShader(&shader);
     createCamera(&camera, getWindowWidth(), getWindowHeight(), camPos);

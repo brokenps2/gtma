@@ -130,6 +130,19 @@ void cameraMove(Camera* cam) {
         cam->pos[1] += cam->speed * getDeltaTime();
     }
 
+    if(isKeyDown(GLFW_KEY_LEFT)) {
+        cam->yaw -= cam->speed * 8 * getDeltaTime();
+    }
+    if(isKeyDown(GLFW_KEY_RIGHT)) {
+        cam->yaw += cam->speed * 8 * getDeltaTime();
+    }
+    if(isKeyDown(GLFW_KEY_UP)) {
+        cam->pitch += cam->speed * 8 * getDeltaTime();
+    }
+    if(isKeyDown(GLFW_KEY_DOWN)) {
+        cam->pitch -= cam->speed * 8 * getDeltaTime();
+    }
+
     cam->pos[0] = roundf(cam->pos[0] * 100) / 100;
     cam->pos[1] = roundf(cam->pos[1] * 100) / 100;
     cam->pos[2] = roundf(cam->pos[2] * 100) / 100;

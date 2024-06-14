@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <GLFW/glfw3.h>
 #include <stdbool.h>
+#include "Audio.h"
 #include "WindowManager.h"
 #include "Renderer.h"
 #include "Input.h"
@@ -22,6 +23,7 @@ int main(int argc, char* argv[]) {
     initConfig();
     initWindow();
     initInput();
+    initAudio();
     initRenderer();
 
     while(!glfwWindowShouldClose(getWindow())) {

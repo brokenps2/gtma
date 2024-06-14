@@ -5,6 +5,7 @@
 
 
 void createTexture(Texture* tex, const char* path) {
+
     stbi_set_flip_vertically_on_load(1);
     tex->data = stbi_load(path, &tex->w, &tex->h, &tex->channels, 0);   
    
@@ -26,6 +27,9 @@ void createTexture(Texture* tex, const char* path) {
 
 
     disposeTexture(tex);
+}
+
+void createAnimatedTexture(Texture** frames, const char* path) {
 }
 
 void disposeTexture(Texture* tex) {
