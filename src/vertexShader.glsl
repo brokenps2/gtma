@@ -10,7 +10,7 @@ uniform bool lightEnabled;
 
 uniform vec3 lightPos = vec3(90, 90, 90);
 uniform vec3 viewPos;
-uniform vec3 lightColor = vec3(2.0, 2.0, 2.0);
+uniform vec3 lightColor = vec3(1.0, 1.0, 1.0);
 
 uniform mat4 camMatrix;
 uniform mat4 transMatrix;
@@ -31,7 +31,7 @@ void main() {
         vec3 lPos = vec3(transMatrix * vec4(position, 1.0));
         vec3 lNormal = mat3(transpose(inverse(transMatrix))) * normal;
 
-        float ambientStrength = 0.07;
+        float ambientStrength = 0.12;
         vec3 ambient = ambientStrength * lightColor;
 
         vec3 norm = normalize(lNormal);
@@ -45,7 +45,7 @@ void main() {
         float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
         vec3 specular = specularStrength * spec * lightColor;
 
-        outLightColor = ambient + diffuse;// + specular;
+        outLightColor = ambient + diffuse + specular;
     }
 
     gl_Position = camMatrix * transMatrix * vec4(position, 1.0);

@@ -1,8 +1,10 @@
 #include <stdlib.h>
 #include <stdbool.h>
-#include <stb_vorbis.c>
+#include <stdio.h>
 #include <AL/al.h>
 #include <AL/alc.h>
+#define DR_WAV_IMPLEMENTATION
+#include <dr_wav.h>
 #include "Audio.h"
 
 ALCcontext* audioContext;
@@ -24,7 +26,7 @@ void initAudio() {
     }
 
     if (!alcMakeContextCurrent(audioContext)) {
-        printf("unable to make context current\n");
+        printf("unable to make AL context current\n");
         alcDestroyContext(audioContext);
         alcCloseDevice(audioDevice);
         exit(1);
@@ -32,9 +34,10 @@ void initAudio() {
 }
 
 void createSound(Sound* sound, const char* path, bool loop, float vol) {
-    short* rawAudioBuffer;
-    int channels, sampleRate;
-    int sampleCount = stb_vorbis_decode_filename(path, &channels, &sampleRate, &rawAudioBuffer);
+    drwav_int16* rawAudioBuffer;
+    unsigned int channels, sampleRate;
+    drwav_uint64 sampleCount;
+    rawAudioBuffer = drwav_open_file_and_read_pcm_frames_s16(path, &channels, &sampleRate, &sampleCount, NULL);
 
     if(!rawAudioBuffer) {
         printf("unable to open audio file\n");
@@ -54,7 +57,7 @@ void createSound(Sound* sound, const char* path, bool loop, float vol) {
     }
 
     alGenBuffers(1, &sound->bufferID);
-    alBufferData(sound->bufferID, format, rawAudioBuffer, sampleCount * channels * sizeof(short), sampleRate);
+    alBufferData(sound->bufferID, format, rawAudioBuffer, sampleCount * channels * sizeof(drwav_int16), sampleRate);
 
     alGenSources(1, &sound->sourceID);
     alSourcei(sound->sourceID, AL_BUFFER, sound->bufferID);

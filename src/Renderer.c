@@ -17,38 +17,48 @@ Camera camera;
 vec3 camPos = {4, 4, 4};
 vec3 lightPos;
 
-Texture areaColors;
-Object gtma;
+Texture tile;
+Object plane;
 
+Texture tableTex;
 Object table;
 
 Texture skyTexture;
 Object sky;
 
+Texture marioTexture;
+Object mario;
+
 Sound testSound;
 
 void initRenderer() {
 
-    createSound(&testSound, "test.ogg", true, 20);
+    createSound(&testSound, "test.wav", true, 20);
     playSound(&testSound);
 
     createShader(&shader);
     createCamera(&camera, getWindowWidth(), getWindowHeight(), camPos);
 
-    createTexture(&areaColors, "house.png");
-    createObject(&gtma, &areaColors, "house.obj", 0, 1, 0,    1.5, 1.5, 1.5,    0, 0, 0);
 
-    createObject(&table, &areaColors, "table.obj", 0, 0.3, 0,    1, 1, 1,    0, 0, 0);
+    createTexture(&tile, "tile.png");
+    createObject(&plane, &tile, "plane.obj", 0, 0, 0,    3, 3, 3,    0, 0, 0);
+
+    createTexture(&tableTex, "table.png");
+    createObject(&table, &tableTex, "table.obj", 0, 0, 0,    1, 1, 1,    0, 0, 0);
 
     createTexture(&skyTexture, "sky2.png");
-    createObject(&sky, &skyTexture, "sky.obj", 0, 0, 0,    1, 1, 1,    0, 0, 0);
+    createObject(&sky, &skyTexture, "sky.obj", 0, 0, 0,    2, 2, 2,    0, 0, 0);
     sky.model.lit = false;
+
+    createTexture(&marioTexture, "mario.png");
+    createObject(&mario, &marioTexture, "mario.obj", -8, 1.2, 8,    1, 1, 1,    0, 0, 0);
+
 
     glfwSetInputMode(getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-    lightPos[0] = -4;
-    lightPos[1] = 4;
-    lightPos[2] = 4;
+    lightPos[0] = 10;
+    lightPos[1] = 10;
+    lightPos[2] = 10;
 
 }
 
@@ -94,7 +104,8 @@ void render() {
     fflush(stdout);
     glm_vec3_copy(camera.pos, sky.position);
 
-    renderObject(&gtma);
     renderObject(&table);
-    renderObject(&sky);
+    renderObject(&plane);
+    //renderObject(&sky);
+    renderObject(&mario);
 }

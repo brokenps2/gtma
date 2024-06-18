@@ -18,7 +18,7 @@ int posX, posY;
 void initWindow() {
 
     if (!glfwInit()) {
-        printf("GLFW Init Failed!\n");
+        printf("GLFW init failed\n");
         exit(1);
     }
 

@@ -32,7 +32,7 @@ void createCamera(Camera* cam, int width, int height, vec3 pos) {
     cam->pitch = 90.0f;
     cam->yaw = 0.0f;
     cam->roll = 0.0f;
-    cam->speed = 3.0f;
+    cam->speed = 8.0f;
     cam->sensitivity = 0.5f;
 }
 
@@ -117,9 +117,9 @@ void cameraMove(Camera* cam) {
     }
 
     if(isKeyDown(GLFW_KEY_LEFT_SHIFT) || cam->speed == 1) {
-        cam->speed = 8;
+        cam->speed = 16;
     } else {
-        cam->speed = 3;
+        cam->speed = 8;
     }
 
     if(isKeyDown(GLFW_KEY_LEFT_CONTROL)){
