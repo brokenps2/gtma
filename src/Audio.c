@@ -111,7 +111,7 @@ void createSound(Sound* sound, const char* path, bool loop, float vol, vec3 posi
 
     alSource3f(sound->sourceID, AL_POSITION, position[0], position[1], position[2]);
 
-    alDistanceModel(AL_LINEAR_DISTANCE);
+    alDistanceModel(AL_LINEAR_DISTANCE_CLAMPED);
 
     alSourcef(sound->sourceID, AL_REFERENCE_DISTANCE, 1.0f);
     alSourcef(sound->sourceID, AL_MAX_DISTANCE, 50.0f);
