@@ -15,6 +15,7 @@
 Shader shader;
 Camera camera;
 vec3 camPos = {4, 4, 4};
+vec3 soundPos = {0, 0, 0};
 vec3 lightPos;
 
 Texture tile;
@@ -29,11 +30,14 @@ Object sky;
 Texture marioTexture;
 Object mario;
 
+Texture radioTexture;
+Object radio;
+
 Sound testSound;
 
 void initRenderer() {
 
-    createSound(&testSound, "test.wav", true, 20);
+    createSound(&testSound, "test.wav", true, 1, soundPos);
     playSound(&testSound);
 
     createShader(&shader);
@@ -51,7 +55,10 @@ void initRenderer() {
     sky.model.lit = false;
 
     createTexture(&marioTexture, "mario.png");
-    createObject(&mario, &marioTexture, "mario.obj", -8, 1.2, 8,    1, 1, 1,    0, 0, 0);
+    createObject(&mario, &marioTexture, "mario.obj", -7, 1.2, 2,    1, 1, 1,    0, 0, 0);
+
+    createTexture(&radioTexture, "radio.png");
+    createObject(&radio, &radioTexture, "radio.obj", 0, 2.5, 0, 1, 1, 1, 0, 200, 0);
 
 
     glfwSetInputMode(getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -104,8 +111,11 @@ void render() {
     fflush(stdout);
     glm_vec3_copy(camera.pos, sky.position);
 
+    updateAudio(camera.pos);
+
     renderObject(&table);
     renderObject(&plane);
     //renderObject(&sky);
+    renderObject(&radio);
     renderObject(&mario);
 }
