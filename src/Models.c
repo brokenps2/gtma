@@ -20,7 +20,7 @@ void createModel(Model* model, const char* path, Texture* texture) {
     model->texcoCount = mesh->texcoord_count;
     model->normlCount = mesh->normal_count;
 
-    model->vertices = (Vertex*)malloc(((mesh->position_count * 3) + (mesh->texcoord_count * 2) + (mesh->normal_count * 3)) * sizeof(Vertex));
+    model->vertices = (Vertex*)malloc((mesh->index_count * sizeof(Vertex)));
     model->indices = (unsigned int*)malloc(model->indexCount * 3 * sizeof(unsigned int));
 
     int* vertexMap = (int*)malloc((mesh->position_count * mesh->texcoord_count * mesh->normal_count) * sizeof(int));

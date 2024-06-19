@@ -33,7 +33,12 @@ Object mario;
 Texture radioTexture;
 Object radio;
 
+Texture baseColor;
+Object disco;
+
 Sound testSound;
+
+time_t t;
 
 void initRenderer() {
 
@@ -45,7 +50,7 @@ void initRenderer() {
 
 
     createTexture(&tile, "tile.png");
-    createObject(&plane, &tile, "plane.obj", 0, 0, 0,    3, 3, 3,    0, 0, 0);
+    createObject(&plane, &tile, "plane.obj", 0, 0, 0,    4, 4, 4,    0, 0, 0);
 
     createTexture(&tableTex, "table.png");
     createObject(&table, &tableTex, "table.obj", 0, 0, 0,    1, 1, 1,    0, 0, 0);
@@ -59,6 +64,9 @@ void initRenderer() {
 
     createTexture(&radioTexture, "radio.png");
     createObject(&radio, &radioTexture, "radio.obj", 0, 2.5, 0, 1, 1, 1, 0, -200, 0);
+
+    createTexture(&baseColor, "basicColors.png");
+    createObject(&disco, &baseColor, "disco.obj", 0, 5, 0, 1, 1, 1, 0, 0, 0);
 
 
     glfwSetInputMode(getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -74,10 +82,10 @@ void renderObject(Object* object) {
     glBindVertexArray(object->model.VAO);
 
     glBindBuffer(GL_ARRAY_BUFFER, object->model.VBO);
-    glBufferData(GL_ARRAY_BUFFER, (object->model.postnCount + object->model.indexCount + object->model.normlCount) * sizeof(Vertex), object->model.vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, (object->model.indexCount) * sizeof(Vertex), object->model.vertices, GL_STATIC_DRAW);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, object->model.EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * object->model.indexCount * 3, object->model.indices, GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * object->model.indexCount, object->model.indices, GL_STATIC_DRAW);
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
     glEnableVertexAttribArray(0);
@@ -115,9 +123,14 @@ void render() {
 
     sky.rotation[1] -= 0.002f;
 
+    disco.position[0] += sin(glfwGetTime()) / 10;
+    disco.position[2] += cos(glfwGetTime()) / 10;
+    disco.rotation[1] += 0.05f;
+
     renderObject(&table);
     renderObject(&plane);
     //renderObject(&sky);
+    renderObject(&disco);
     renderObject(&radio);
     //renderObject(&mario);
 }

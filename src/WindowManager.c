@@ -48,6 +48,7 @@ void initWindow() {
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
+    glClear(GL_COLOR_BUFFER_BIT);
 }
 
 GLFWwindow* getWindow() {
