@@ -6,7 +6,7 @@
 #include <stdbool.h>
 #include "Config.h"
 #include "Input.h"
-#include "Math.h"
+#include "Util.h"
 
 GLFWwindow* window;
 float currentTime = 0;

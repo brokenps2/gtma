@@ -111,10 +111,12 @@ void createSound(Sound* sound, const char* path, bool loop, float vol, vec3 posi
 
     alSource3f(sound->sourceID, AL_POSITION, position[0], position[1], position[2]);
 
-    alDistanceModel(AL_LINEAR_DISTANCE_CLAMPED);
+    alSourcei(sound->sourceID, AL_SEC_OFFSET, 5);
+
+    alDistanceModel(AL_LINEAR_DISTANCE);
 
     alSourcef(sound->sourceID, AL_REFERENCE_DISTANCE, 1.0f);
-    alSourcef(sound->sourceID, AL_MAX_DISTANCE, 50.0f);
+    alSourcef(sound->sourceID, AL_MAX_DISTANCE, 15 * vol);
     alSourcef(sound->sourceID, AL_ROLLOFF_FACTOR, 1.0f);
 
     free(rawAudioBuffer);
@@ -125,8 +127,16 @@ void setSoundPosition(Sound* sound, vec3 position) {
     alSource3f(sound->sourceID, AL_POSITION, position[0], position[1], position[2]);
 }
 
-void updateAudio(vec3 camPos) {
+void updateAudio(vec3 camPos, vec3 cameraDir) {
+    float orient[6];
+    orient[0] = cameraDir[0];
+    orient[1] = cameraDir[1];
+    orient[2] = cameraDir[2];
+    orient[3] = 0;
+    orient[4] = 1;
+    orient[5] = 0;
     alListener3f(AL_POSITION, camPos[0], camPos[1], camPos[2]);
+    alListenerfv(AL_ORIENTATION, orient);
 }
 
 void disposeTrack(Track* track) {
@@ -159,7 +169,37 @@ void playSound(Sound* sound) {
     }
 }
 
+void playSoundFrom(Sound* sound, int seconds) {
+    alSourcei(sound->sourceID, AL_SEC_OFFSET, seconds);
+    int state;
+    alGetSourcei(sound->sourceID, AL_SOURCE_STATE, &state);
+    if(state == AL_STOPPED) {
+        sound->isPlaying = false;
+        alSourcei(sound->sourceID, AL_POSITION, 0);
+    }
+
+    if(!sound->isPlaying) {
+        alSourcePlay(sound->sourceID);
+        sound->isPlaying = true;
+    }
+}
+
 void playTrack(Track* track) {
+    int state;
+    alGetSourcei(track->sourceID, AL_SOURCE_STATE, &state);
+    if(state == AL_STOPPED) {
+        track->isPlaying = false;
+        alSourcei(track->sourceID, AL_POSITION, 0);
+    }
+
+    if(!track->isPlaying) {
+        alSourcePlay(track->sourceID);
+        track->isPlaying = true;
+    }
+}
+
+void playTrackFrom(Track* track, int seconds) {
+    alSourcei(track->sourceID, AL_SEC_OFFSET, seconds);
     int state;
     alGetSourcei(track->sourceID, AL_SOURCE_STATE, &state);
     if(state == AL_STOPPED) {
@@ -175,11 +215,13 @@ void playTrack(Track* track) {
 
 void stopSound(Sound* sound) {
     alSourceStop(sound->sourceID);
+    alSourcei(sound->sourceID, AL_SEC_OFFSET, 0);
     sound->isPlaying = false;
 }
 
 void stopTrack(Track* track) {
     alSourceStop(track->sourceID);
+    alSourcei(track->sourceID, AL_SEC_OFFSET, 0);
     track->isPlaying = false;
 }
 

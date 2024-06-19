@@ -22,8 +22,10 @@ void createSound(Sound* sound, const char* path, bool loop, float vol, vec3 posi
 void disposeSound(Sound* sound);
 void disposeTrack(Track* track);
 void playSound(Sound* sound);
+void playSoundFrom(Sound* sound, int seconds);
 void playTrack(Track* track);
-void updateAudio(vec3 camPos);
+void playTrackFrom(Track* track, int seconds);
+void updateAudio(vec3 camPos, vec3 cameraDir);
 void stopTrack(Track* track);
 void stopSound(Sound* sound);
 void destroyAudio();

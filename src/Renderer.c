@@ -37,8 +37,8 @@ Sound testSound;
 
 void initRenderer() {
 
-    createSound(&testSound, "test.wav", true, 1, soundPos);
-    playSound(&testSound);
+    createSound(&testSound, "test2.wav", true, 2, soundPos);
+    playSoundFrom(&testSound, 5);
 
     createShader(&shader);
     createCamera(&camera, getWindowWidth(), getWindowHeight(), camPos);
@@ -58,14 +58,14 @@ void initRenderer() {
     createObject(&mario, &marioTexture, "mario.obj", -7, 1.2, 2,    1, 1, 1,    0, 0, 0);
 
     createTexture(&radioTexture, "radio.png");
-    createObject(&radio, &radioTexture, "radio.obj", 0, 2.5, 0, 1, 1, 1, 0, 200, 0);
+    createObject(&radio, &radioTexture, "radio.obj", 0, 2.5, 0, 1, 1, 1, 0, -200, 0);
 
 
     glfwSetInputMode(getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-    lightPos[0] = 10;
+    lightPos[0] = -7;
     lightPos[1] = 10;
-    lightPos[2] = 10;
+    lightPos[2] = -10;
 
 }
 
@@ -111,11 +111,13 @@ void render() {
     fflush(stdout);
     glm_vec3_copy(camera.pos, sky.position);
 
-    updateAudio(camera.pos);
+    updateAudio(camera.pos, camera.direction);
+
+    sky.rotation[1] -= 0.002f;
 
     renderObject(&table);
     renderObject(&plane);
     //renderObject(&sky);
     renderObject(&radio);
-    renderObject(&mario);
+    //renderObject(&mario);
 }
