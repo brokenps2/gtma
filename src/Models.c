@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <GL/glew.h>
 #include <fast_obj.h>
+#include <uthash.h>
 #include "Models.h"
 
 void createModel(Model* model, const char* path, Texture* texture) {
@@ -20,14 +21,10 @@ void createModel(Model* model, const char* path, Texture* texture) {
     model->texcoCount = mesh->texcoord_count;
     model->normlCount = mesh->normal_count;
 
-    model->vertices = (Vertex*)malloc((mesh->index_count * sizeof(Vertex)));
+    model->vertices = (Vertex*)malloc((mesh->index_count * sizeof(Vertex) * 3));
     model->indices = (unsigned int*)malloc(model->indexCount * 3 * sizeof(unsigned int));
 
-    int* vertexMap = (int*)malloc((mesh->position_count * mesh->texcoord_count * mesh->normal_count) * sizeof(int));
-    for (int i = 0; i < (mesh->position_count * mesh->texcoord_count) + (mesh->position_count * mesh->normal_count); i++) {
-        vertexMap[i] = -1; // Initialize with -1 indicating an empty slot
-    }
-
+    VertexMapEntry* vertexMap = NULL;
     int uniqueVertexCount = 0;
 
     for (int i = 0; i < model->indexCount; i++) {
@@ -36,7 +33,10 @@ void createModel(Model* model, const char* path, Texture* texture) {
         unsigned int norIndex = mesh->indices[i].n;
         int vertexKey = posIndex * (mesh->texcoord_count + mesh->normal_count) + texIndex;
 
-        if (vertexMap[vertexKey] == -1) {
+        VertexMapEntry* entry;
+        HASH_FIND_INT(vertexMap, &vertexKey, entry);
+
+        if (!entry) {
             Vertex newVertex;
             newVertex.position[0] = mesh->positions[3 * posIndex + 0];
             newVertex.position[1] = mesh->positions[3 * posIndex + 1];
@@ -48,16 +48,26 @@ void createModel(Model* model, const char* path, Texture* texture) {
             newVertex.normal[2] = mesh->normals[3 * norIndex + 2];
 
             model->vertices[uniqueVertexCount] = newVertex;
-            vertexMap[vertexKey] = uniqueVertexCount;
+
+            entry = (VertexMapEntry*)malloc(sizeof(VertexMapEntry));
+            entry->vertexKey = vertexKey;
+            entry->vertexIndex = uniqueVertexCount;
+            HASH_ADD_INT(vertexMap, vertexKey, entry);
 
             model->indices[i] = uniqueVertexCount;
             uniqueVertexCount++;
         } else {
-            model->indices[i] = vertexMap[vertexKey];
+            model->indices[i] = entry->vertexIndex;
         }
     }
 
-    free(vertexMap);
+    // Free the hash map
+    VertexMapEntry *currentEntry, *tmp;
+    HASH_ITER(hh, vertexMap, currentEntry, tmp) {
+        HASH_DEL(vertexMap, currentEntry);
+        free(currentEntry);
+    }
+
     fast_obj_destroy(mesh);
     model->texture = *texture;
     model->lit = true;

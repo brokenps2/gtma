@@ -1,0 +1,2170 @@
+desc: (none)
+cmd: ./program config.cfg
+time_unit: i
+#-----------
+snapshot=0
+#-----------
+time=0
+mem_heap_B=0
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=1
+#-----------
+time=48043779
+mem_heap_B=857706
+mem_heap_extra_B=15686
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=2
+#-----------
+time=82745116
+mem_heap_B=758402
+mem_heap_extra_B=15726
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=3
+#-----------
+time=126322330
+mem_heap_B=736678
+mem_heap_extra_B=15738
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=4
+#-----------
+time=177639038
+mem_heap_B=1747950
+mem_heap_extra_B=53506
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=5
+#-----------
+time=206562013
+mem_heap_B=4684761
+mem_heap_extra_B=75167
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=6
+#-----------
+time=247892373
+mem_heap_B=12766019
+mem_heap_extra_B=137445
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=7
+#-----------
+time=277272458
+mem_heap_B=15172922
+mem_heap_extra_B=137894
+mem_stacks_B=0
+heap_tree=detailed
+n12: 15172922 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n7: 2740250 0x6711ABD: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+  n0: 956051 in 110 places, all below massif's threshold (1.00%)
+  n1: 825040 0x6CBCAF5: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+   n1: 825040 0x6759713: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+    n1: 825040 0x6759ADB: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+     n1: 825040 0x6712C7B: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+      n1: 825040 0x5BB71FF: ??? (in /usr/lib/libGLX_nvidia.so.550.90.07)
+       n1: 825040 0x5BE443A: ??? (in /usr/lib/libGLX_nvidia.so.550.90.07)
+        n1: 825040 0x4FAFE82: InternalMakeCurrentVendor (libglx.c:871)
+         n1: 825040 0x4FB2243: InternalMakeCurrentDispatch (libglx.c:926)
+          n1: 825040 0x4FB6E66: CommonMakeCurrent (libglx.c:1070)
+           n1: 825040 0x48A50AA: makeContextCurrentGLX (glx_context.c:163)
+            n1: 825040 0x488EC29: _glfwRefreshContextAttribs (context.c:363)
+             n1: 825040 0x489F7A7: _glfwCreateWindowX11 (x11_window.c:2017)
+              n1: 825040 0x48947BA: glfwCreateWindow (window.c:247)
+               n1: 825040 0x1345B4: initWindow (WindowManager.c:32)
+                n0: 825040 0x10B659: main (Main.c:24)
+  n1: 307159 0x643819B: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+   n1: 307159 0x5BDDFDF: ??? (in /usr/lib/libGLX_nvidia.so.550.90.07)
+    n1: 307159 0x5BE6DDB: ??? (in /usr/lib/libGLX_nvidia.so.550.90.07)
+     n1: 307159 0x5BB4ADD: ??? (in /usr/lib/libGLX_nvidia.so.550.90.07)
+      n1: 307159 0x5C0E6A1: ??? (in /usr/lib/libGLX_nvidia.so.550.90.07)
+       n1: 307159 0x5BB4012: ??? (in /usr/lib/libGLX_nvidia.so.550.90.07)
+        n1: 307159 0x40053DC: _dl_init (dl-init.c:121)
+         n1: 307159 0x40015C1: _dl_catch_exception (dl-catch.c:211)
+          n1: 307159 0x400C13B: dl_open_worker (dl-open.c:829)
+           n1: 307159 0x4001522: _dl_catch_exception (dl-catch.c:237)
+            n1: 307159 0x400C533: _dl_open (dl-open.c:905)
+             n1: 307159 0x4D869E3: dlopen_doit (dlopen.c:56)
+              n1: 307159 0x4001522: _dl_catch_exception (dl-catch.c:237)
+               n1: 307159 0x4001678: _dl_catch_error (dl-catch.c:256)
+                n1: 307159 0x4D864C2: _dlerror_run (dlerror.c:138)
+                 n1: 307159 0x4D86A9E: dlopen_implementation (dlopen.c:71)
+                  n1: 307159 0x4D86A9E: dlopen@@GLIBC_2.34 (dlopen.c:81)
+                   n1: 307159 0x4FB4BC6: __glXLookupVendorByName (libglxmapping.c:428)
+                    n1: 307159 0x4FB7414: __glXLookupVendorByScreen (libglxmapping.c:572)
+                     n1: 307159 0x4FB81F3: UnknownInlinedFun (libglxmapping.c:606)
+                      n1: 307159 0x4FB81F3: glXQueryExtensionsString (libglx.c:1473)
+                       n1: 307159 0x489FD02: UnknownInlinedFun (glx_context.c:213)
+                        n1: 307159 0x489FD02: UnknownInlinedFun (glx_context.c:366)
+                         n1: 307159 0x489FD02: _glfwCreateWindowX11 (x11_window.c:1971)
+                          n1: 307159 0x48947BA: glfwCreateWindow (window.c:247)
+                           n1: 307159 0x1345B4: initWindow (WindowManager.c:32)
+                            n0: 307159 0x10B659: main (Main.c:24)
+  n1: 171760 0x675C246: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+   n1: 171760 0x6759F95: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+    n1: 171760 0x6712C7B: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+     n1: 171760 0x5BB71FF: ??? (in /usr/lib/libGLX_nvidia.so.550.90.07)
+      n1: 171760 0x5BE443A: ??? (in /usr/lib/libGLX_nvidia.so.550.90.07)
+       n1: 171760 0x4FAFE82: InternalMakeCurrentVendor (libglx.c:871)
+        n1: 171760 0x4FB2243: InternalMakeCurrentDispatch (libglx.c:926)
+         n1: 171760 0x4FB6E66: CommonMakeCurrent (libglx.c:1070)
+          n1: 171760 0x48A50AA: makeContextCurrentGLX (glx_context.c:163)
+           n1: 171760 0x488EC29: _glfwRefreshContextAttribs (context.c:363)
+            n1: 171760 0x489F7A7: _glfwCreateWindowX11 (x11_window.c:2017)
+             n1: 171760 0x48947BA: glfwCreateWindow (window.c:247)
+              n1: 171760 0x1345B4: initWindow (WindowManager.c:32)
+               n0: 171760 0x10B659: main (Main.c:24)
+  n1: 163840 0x6784183: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+   n1: 163840 0x6CBCE86: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+    n1: 163840 0x6759713: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+     n1: 163840 0x6759ADB: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+      n1: 163840 0x6712C7B: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+       n1: 163840 0x5BB71FF: ??? (in /usr/lib/libGLX_nvidia.so.550.90.07)
+        n1: 163840 0x5BE443A: ??? (in /usr/lib/libGLX_nvidia.so.550.90.07)
+         n1: 163840 0x4FAFE82: InternalMakeCurrentVendor (libglx.c:871)
+          n1: 163840 0x4FB2243: InternalMakeCurrentDispatch (libglx.c:926)
+           n1: 163840 0x4FB6E66: CommonMakeCurrent (libglx.c:1070)
+            n1: 163840 0x48A50AA: makeContextCurrentGLX (glx_context.c:163)
+             n1: 163840 0x488EC29: _glfwRefreshContextAttribs (context.c:363)
+              n1: 163840 0x489F7A7: _glfwCreateWindowX11 (x11_window.c:2017)
+               n1: 163840 0x48947BA: glfwCreateWindow (window.c:247)
+                n1: 163840 0x1345B4: initWindow (WindowManager.c:32)
+                 n0: 163840 0x10B659: main (Main.c:24)
+  n1: 159840 0x6CBCAB2: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+   n1: 159840 0x6759713: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+    n1: 159840 0x6759ADB: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+     n1: 159840 0x6712C7B: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+      n1: 159840 0x5BB71FF: ??? (in /usr/lib/libGLX_nvidia.so.550.90.07)
+       n1: 159840 0x5BE443A: ??? (in /usr/lib/libGLX_nvidia.so.550.90.07)
+        n1: 159840 0x4FAFE82: InternalMakeCurrentVendor (libglx.c:871)
+         n1: 159840 0x4FB2243: InternalMakeCurrentDispatch (libglx.c:926)
+          n1: 159840 0x4FB6E66: CommonMakeCurrent (libglx.c:1070)
+           n1: 159840 0x48A50AA: makeContextCurrentGLX (glx_context.c:163)
+            n1: 159840 0x488EC29: _glfwRefreshContextAttribs (context.c:363)
+             n1: 159840 0x489F7A7: _glfwCreateWindowX11 (x11_window.c:2017)
+              n1: 159840 0x48947BA: glfwCreateWindow (window.c:247)
+               n1: 159840 0x1345B4: initWindow (WindowManager.c:32)
+                n0: 159840 0x10B659: main (Main.c:24)
+  n1: 156560 0x5BB80ED: ??? (in /usr/lib/libGLX_nvidia.so.550.90.07)
+   n1: 156560 0x5BB8287: ??? (in /usr/lib/libGLX_nvidia.so.550.90.07)
+    n1: 156560 0x5BE2F07: ??? (in /usr/lib/libGLX_nvidia.so.550.90.07)
+     n1: 156560 0x5BD7785: glXCreateContextAttribsARB (in /usr/lib/libGLX_nvidia.so.550.90.07)
+      n1: 156560 0x4FB763B: glXCreateContextAttribsARB (libglx.c:301)
+       n1: 156560 0x48AADAF: _glfwCreateContextGLX (glx_context.c:585)
+        n1: 156560 0x489F9CD: _glfwCreateWindowX11 (x11_window.c:2003)
+         n1: 156560 0x48947BA: glfwCreateWindow (window.c:247)
+          n1: 156560 0x1345B4: initWindow (WindowManager.c:32)
+           n0: 156560 0x10B659: main (Main.c:24)
+ n5: 2659220 0x6711801: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+  n1: 1638400 0x63D012F: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+   n1: 1638400 0x67638E5: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+    n1: 1638400 0x67127E4: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+     n1: 1638400 0x5BB6EEF: ??? (in /usr/lib/libGLX_nvidia.so.550.90.07)
+      n1: 1638400 0x5BE2A8D: ??? (in /usr/lib/libGLX_nvidia.so.550.90.07)
+       n1: 1638400 0x5BD7785: glXCreateContextAttribsARB (in /usr/lib/libGLX_nvidia.so.550.90.07)
+        n1: 1638400 0x4FB763B: glXCreateContextAttribsARB (libglx.c:301)
+         n1: 1638400 0x48AADAF: _glfwCreateContextGLX (glx_context.c:585)
+          n1: 1638400 0x489F9CD: _glfwCreateWindowX11 (x11_window.c:2003)
+           n1: 1638400 0x48947BA: glfwCreateWindow (window.c:247)
+            n1: 1638400 0x1345B4: initWindow (WindowManager.c:32)
+             n0: 1638400 0x10B659: main (Main.c:24)
+  n0: 312201 in 199 places, all below massif's threshold (1.00%)
+  n1: 262167 0x643B13A: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+   n1: 262167 0x67C8634: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+    n1: 262167 0x67C9C7E: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+     n1: 262167 0x65066CC: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+      n1: 262167 0x64F7793: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+       n1: 262167 0x64F9C91: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+        n1: 262167 0x64FA053: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+         n1: 262167 0x134485: createTexture (Texture.c:25)
+          n1: 262167 0x1207FB: initRenderer (Renderer.c:52)
+           n0: 262167 0x10B66E: main (Main.c:27)
+  n1: 262132 0x5BE2715: ??? (in /usr/lib/libGLX_nvidia.so.550.90.07)
+   n1: 262132 0x5BD7785: glXCreateContextAttribsARB (in /usr/lib/libGLX_nvidia.so.550.90.07)
+    n1: 262132 0x4FB763B: glXCreateContextAttribsARB (libglx.c:301)
+     n1: 262132 0x48AADAF: _glfwCreateContextGLX (glx_context.c:585)
+      n1: 262132 0x489F9CD: _glfwCreateWindowX11 (x11_window.c:2003)
+       n1: 262132 0x48947BA: glfwCreateWindow (window.c:247)
+        n1: 262132 0x1345B4: initWindow (WindowManager.c:32)
+         n0: 262132 0x10B659: main (Main.c:24)
+  n1: 184320 0x678437F: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+   n1: 184320 0x6CBCE86: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+    n1: 184320 0x6759713: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+     n1: 184320 0x6759ADB: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+      n1: 184320 0x6712C7B: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+       n1: 184320 0x5BB71FF: ??? (in /usr/lib/libGLX_nvidia.so.550.90.07)
+        n1: 184320 0x5BE443A: ??? (in /usr/lib/libGLX_nvidia.so.550.90.07)
+         n1: 184320 0x4FAFE82: InternalMakeCurrentVendor (libglx.c:871)
+          n1: 184320 0x4FB2243: InternalMakeCurrentDispatch (libglx.c:926)
+           n1: 184320 0x4FB6E66: CommonMakeCurrent (libglx.c:1070)
+            n1: 184320 0x48A50AA: makeContextCurrentGLX (glx_context.c:163)
+             n1: 184320 0x488EC29: _glfwRefreshContextAttribs (context.c:363)
+              n1: 184320 0x489F7A7: _glfwCreateWindowX11 (x11_window.c:2017)
+               n1: 184320 0x48947BA: glfwCreateWindow (window.c:247)
+                n1: 184320 0x1345B4: initWindow (WindowManager.c:32)
+                 n0: 184320 0x10B659: main (Main.c:24)
+ n1: 2360064 0x12CE86: stbi__malloc (stb_image.h:986)
+  n1: 2360064 0x12CE86: stbi_zlib_decode_malloc_guesssize_headerflag (stb_image.h:4543)
+   n1: 2360064 0x12D394: stbi__parse_png_file (stb_image.h:5204)
+    n1: 2360064 0x12E4F4: stbi__do_png (stb_image.h:5264)
+     n1: 2360064 0x12E4F4: stbi__png_load (stb_image.h:5296)
+      n1: 2360064 0x12E4F4: stbi__load_main (stb_image.h:1146)
+       n1: 2360064 0x131DD3: stbi__load_and_postprocess_8bit (stb_image.h:1262)
+        n1: 2360064 0x131FF4: stbi_load_from_file (stb_image.h:1380)
+         n1: 2360064 0x1343CD: stbi_load (stb_image.h:1370)
+          n2: 2360064 0x1343CD: createTexture (Texture.c:10)
+           n1: 2360064 0x12087F: initRenderer (Renderer.c:55)
+            n0: 2360064 0x10B66E: main (Main.c:27)
+           n0: 0 in 1 place, below massif's threshold (1.00%)
+ n1: 2074176 0x4A99B24: UnknownInlinedFun (almalloc.cpp:23)
+  n1: 2074176 0x4A99B24: UnknownInlinedFun (almalloc.h:100)
+   n1: 2074176 0x4A99B24: UnknownInlinedFun (alloc_traits.h:318)
+    n1: 2074176 0x4A99B24: UnknownInlinedFun (stl_vector.h:378)
+     n1: 2074176 0x4A99B24: UnknownInlinedFun (stl_vector.h:395)
+      n1: 2074176 0x4A99B24: UnknownInlinedFun (stl_vector.h:332)
+       n1: 2074176 0x4A99B24: UnknownInlinedFun (stl_vector.h:566)
+        n1: 2074176 0x4A99B24: UnknownInlinedFun (buffer.cpp:346)
+         n1: 2074176 0x4A99B24: alBufferStorageSOFT (buffer.cpp:769)
+          n1: 2074176 0x1178B8: createSound (Audio.c:101)
+           n1: 2074176 0x12078C: initRenderer (Renderer.c:45)
+            n0: 2074176 0x10B66E: main (Main.c:27)
+ n1: 1949696 0x4B08445: UnknownInlinedFun (almalloc.cpp:23)
+  n1: 1949696 0x4B08445: UnknownInlinedFun (almalloc.h:100)
+   n1: 1949696 0x4B08445: UnknownInlinedFun (alloc_traits.h:318)
+    n1: 1949696 0x4B08445: UnknownInlinedFun (stl_vector.h:378)
+     n1: 1949696 0x4B08445: UnknownInlinedFun (stl_vector.h:395)
+      n1: 1949696 0x4B08445: UnknownInlinedFun (stl_vector.h:332)
+       n1: 1949696 0x4B08445: UnknownInlinedFun (stl_vector.h:552)
+        n1: 1949696 0x4B08445: UnknownInlinedFun (voice.h:262)
+         n1: 1949696 0x4B08445: UnknownInlinedFun (unique_ptr.h:1080)
+          n1: 1949696 0x4B08445: ContextBase::allocVoices(unsigned long) (context.cpp:127)
+           n1: 1949696 0x4AC0B34: UnknownInlinedFun (context.cpp:209)
+            n1: 1949696 0x4AC0B34: alcCreateContext (alc.cpp:3324)
+             n1: 1949696 0x11761D: initAudio (Audio.c:22)
+              n0: 1949696 0x10B667: main (Main.c:26)
+ n0: 1636099 in 427 places, all below massif's threshold (1.00%)
+ n3: 567815 0xC340E80: ???
+  n1: 306183 0xC35E559: ???
+   n1: 306183 0xC07C410: ???
+    n1: 306183 0xC355B09: ???
+     n1: 306183 0xC34EF4E: ???
+      n1: 306183 0xB635AA4: ??? (in /usr/lib/libEGL_nvidia.so.550.90.07)
+       n1: 306183 0xB635B8A: ??? (in /usr/lib/libEGL_nvidia.so.550.90.07)
+        n1: 306183 0xB6AEE95: ??? (in /usr/lib/libEGL_nvidia.so.550.90.07)
+         n1: 306183 0xB633AA7: ??? (in /usr/lib/libEGL_nvidia.so.550.90.07)
+          n1: 306183 0xB648EDC: ??? (in /usr/lib/libEGL_nvidia.so.550.90.07)
+           n1: 306183 0xB49721D: ???
+            n1: 306183 0xB6AC77A: ??? (in /usr/lib/libEGL_nvidia.so.550.90.07)
+             n1: 306183 0xB6AD7FE: ??? (in /usr/lib/libEGL_nvidia.so.550.90.07)
+              n1: 306183 0xB6A343B: ??? (in /usr/lib/libEGL_nvidia.so.550.90.07)
+               n1: 306183 0x4D9034A: __pthread_once_slow.isra.0 (pthread_once.c:116)
+                n1: 306183 0x4D903C8: pthread_once@@GLIBC_2.34 (pthread_once.c:143)
+                 n1: 306183 0xB6A3182: ??? (in /usr/lib/libEGL_nvidia.so.550.90.07)
+                  n1: 306183 0xB6A4E74: ??? (in /usr/lib/libEGL_nvidia.so.550.90.07)
+                   n1: 306183 0xB633A92: ??? (in /usr/lib/libEGL_nvidia.so.550.90.07)
+                    n1: 306183 0xB64E6CC: ??? (in /usr/lib/libEGL_nvidia.so.550.90.07)
+                     n1: 306183 0x528D3B9: UnknownInlinedFun (libeglvendor.c:201)
+                      n1: 306183 0x528D3B9: UnknownInlinedFun (libeglvendor.c:562)
+                       n1: 306183 0x528D3B9: LoadVendorFromConfigFile.isra.0 (libeglvendor.c:334)
+                        n1: 306183 0x528DA64: UnknownInlinedFun (libeglvendor.c:121)
+                         n1: 306183 0x528DA64: LoadVendors (libeglvendor.c:68)
+                          n1: 306183 0x4D9034A: __pthread_once_slow.isra.0 (pthread_once.c:116)
+                           n1: 306183 0x4D903C8: pthread_once@@GLIBC_2.34 (pthread_once.c:143)
+                            n1: 306183 0x528BF0A: UnknownInlinedFun (libeglvendor.c:139)
+                             n1: 306183 0x528BF0A: UnknownInlinedFun (libeglmapping.c:62)
+                              n1: 306183 0x528BF0A: UnknownInlinedFun (libegl.c:1174)
+                               n1: 306183 0x528BF0A: eglGetProcAddress (libegl.c:1153)
+                                n1: 306183 0x4CA81C3: glewInit (in /usr/lib/libGLEW.so.2.2.0)
+                                 n1: 306183 0x13461D: initWindow (WindowManager.c:40)
+                                  n0: 306183 0x10B659: main (Main.c:24)
+  n2: 198248 0xC34B229: ???
+   n1: 162176 0xC348FCD: ???
+    n0: 162176 in 3 places, all below massif's threshold (1.00%)
+   n0: 36072 in 7 places, all below massif's threshold (1.00%)
+  n0: 63384 in 12 places, all below massif's threshold (1.00%)
+ n1: 314928 0x52FDAF5: UnknownInlinedFun (imLcPrs.c:674)
+  n1: 314928 0x52FDAF5: parsestringfile (imLcPrs.c:739)
+   n1: 314928 0x52FFD21: UnknownInlinedFun (imLcIm.c:610)
+    n1: 314928 0x52FFD21: _XimLocalOpenIM (imLcIm.c:700)
+     n2: 314928 0x52F8F6F: _XimOpenIM (imInt.c:229)
+      n1: 314928 0x4898CF2: UnknownInlinedFun (x11_init.c:473)
+       n1: 314928 0x4898CF2: inputMethodInstantiateCallback (x11_init.c:466)
+        n1: 314928 0x52FB27C: _XimRegisterIMInstantiateCallback (imInsClbk.c:220)
+         n1: 314928 0x52E1C7E: XRegisterIMInstantiateCallback (IMWrap.c:177)
+          n1: 314928 0x489E919: _glfwInitX11 (x11_init.c:1544)
+           n1: 314928 0x48940B1: glfwInit (init.c:405)
+            n1: 314928 0x13452A: initWindow (WindowManager.c:20)
+             n0: 314928 0x10B659: main (Main.c:24)
+      n0: 0 in 1 place, below massif's threshold (1.00%)
+ n1: 262144 0x12DBAA: stbi__parse_png_file (stb_image.h:5188)
+  n1: 262144 0x12E4F4: stbi__do_png (stb_image.h:5264)
+   n1: 262144 0x12E4F4: stbi__png_load (stb_image.h:5296)
+    n1: 262144 0x12E4F4: stbi__load_main (stb_image.h:1146)
+     n1: 262144 0x131DD3: stbi__load_and_postprocess_8bit (stb_image.h:1262)
+      n1: 262144 0x131FF4: stbi_load_from_file (stb_image.h:1380)
+       n1: 262144 0x1343CD: stbi_load (stb_image.h:1370)
+        n2: 262144 0x1343CD: createTexture (Texture.c:10)
+         n1: 262144 0x12087F: initRenderer (Renderer.c:55)
+          n0: 262144 0x10B66E: main (Main.c:27)
+         n0: 0 in 1 place, below massif's threshold (1.00%)
+ n1: 241664 0x4F261CB: UnknownInlinedFun (entry_common.c:89)
+  n1: 241664 0x4F261CB: stubStartPatch (stub.c:225)
+   n1: 241664 0x4F268F1: PatchEntrypoints.isra.0 (GLdispatch.c:538)
+    n1: 241664 0x4F26B54: __glDispatchMakeCurrent (GLdispatch.c:593)
+     n1: 241664 0x4FB21C5: InternalMakeCurrentDispatch (libglx.c:917)
+      n1: 241664 0x4FB6E66: CommonMakeCurrent (libglx.c:1070)
+       n1: 241664 0x48A50AA: makeContextCurrentGLX (glx_context.c:163)
+        n1: 241664 0x488EC29: _glfwRefreshContextAttribs (context.c:363)
+         n1: 241664 0x489F7A7: _glfwCreateWindowX11 (x11_window.c:2017)
+          n1: 241664 0x48947BA: glfwCreateWindow (window.c:247)
+           n1: 241664 0x1345B4: initWindow (WindowManager.c:32)
+            n0: 241664 0x10B659: main (Main.c:24)
+ n1: 184384 0x4B0833C: UnknownInlinedFun (almalloc.cpp:23)
+  n1: 184384 0x4B0833C: UnknownInlinedFun (effectslot.h:49)
+   n1: 184384 0x4B0833C: UnknownInlinedFun (voice.h:275)
+    n1: 184384 0x4B0833C: UnknownInlinedFun (unique_ptr.h:1080)
+     n1: 184384 0x4B0833C: ContextBase::allocVoices(unsigned long) (context.cpp:127)
+      n1: 184384 0x4AC0B34: UnknownInlinedFun (context.cpp:209)
+       n1: 184384 0x4AC0B34: alcCreateContext (alc.cpp:3324)
+        n1: 184384 0x11761D: initAudio (Audio.c:22)
+         n0: 184384 0x10B667: main (Main.c:26)
+ n1: 182482 0x4FB3E05: UnknownInlinedFun (libglx.c:1778)
+  n1: 182482 0x4FB3E05: UnknownInlinedFun (libglx.c:1824)
+   n1: 182482 0x4FB3E05: glXGetProcAddress (libglx.c:1799)
+    n0: 182482 in 1939 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=8
+#-----------
+time=324147548
+mem_heap_B=15390636
+mem_heap_extra_B=138084
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=9
+#-----------
+time=382448017
+mem_heap_B=16081068
+mem_heap_extra_B=138108
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=10
+#-----------
+time=426041961
+mem_heap_B=16728428
+mem_heap_extra_B=138108
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=11
+#-----------
+time=476719197
+mem_heap_B=18019780
+mem_heap_extra_B=138156
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=12
+#-----------
+time=510855342
+mem_heap_B=19518980
+mem_heap_extra_B=138132
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=13
+#-----------
+time=572021516
+mem_heap_B=43913960
+mem_heap_extra_B=207848
+mem_stacks_B=0
+heap_tree=detailed
+n10: 43913960 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 20038752 0x11D8F9: createModel (Models.c:24)
+  n2: 20038752 0x11F1D9: createObject (Models.c:82)
+   n1: 20001888 0x1208E6: initRenderer (Renderer.c:56)
+    n0: 20001888 0x10B66E: main (Main.c:27)
+   n0: 36864 in 1 place, below massif's threshold (1.00%)
+ n2: 5870055 0x1192A0: memory_realloc (fast_obj.h:244)
+  n4: 5869888 0x119362: array_realloc (fast_obj.h:281)
+   n1: 3495560 0x11A623: parse_face (fast_obj.h:782)
+    n1: 3495560 0x11C661: parse_buffer (fast_obj.h:1287)
+     n1: 3495560 0x11D541: fast_obj_read_with_callbacks (fast_obj.h:1527)
+      n1: 3495560 0x11CC7F: fast_obj_read (fast_obj.h:1404)
+       n1: 3495560 0x11D85D: createModel (Models.c:12)
+        n2: 3495560 0x11F1D9: createObject (Models.c:82)
+         n1: 3495560 0x1208E6: initRenderer (Renderer.c:56)
+          n0: 3495560 0x10B66E: main (Main.c:27)
+         n0: 0 in 1 place, below massif's threshold (1.00%)
+   n1: 1165192 0x11A384: parse_normal (fast_obj.h:721)
+    n1: 1165192 0x11C618: parse_buffer (fast_obj.h:1272)
+     n1: 1165192 0x11D541: fast_obj_read_with_callbacks (fast_obj.h:1527)
+      n1: 1165192 0x11CC7F: fast_obj_read (fast_obj.h:1404)
+       n1: 1165192 0x11D85D: createModel (Models.c:12)
+        n1: 1165192 0x11F1D9: createObject (Models.c:82)
+         n1: 1165192 0x1208E6: initRenderer (Renderer.c:56)
+          n0: 1165192 0x10B66E: main (Main.c:27)
+   n0: 691304 in 8 places, all below massif's threshold (1.00%)
+   n1: 517832 0x119F68: parse_vertex (fast_obj.h:670)
+    n1: 517832 0x11C5E6: parse_buffer (fast_obj.h:1264)
+     n1: 517832 0x11D541: fast_obj_read_with_callbacks (fast_obj.h:1527)
+      n1: 517832 0x11CC7F: fast_obj_read (fast_obj.h:1404)
+       n1: 517832 0x11D85D: createModel (Models.c:12)
+        n2: 517832 0x11F1D9: createObject (Models.c:82)
+         n1: 517832 0x1208E6: initRenderer (Renderer.c:56)
+          n0: 517832 0x10B66E: main (Main.c:27)
+         n0: 0 in 1 place, below massif's threshold (1.00%)
+  n0: 167 in 3 places, all below massif's threshold (1.00%)
+ n3: 5018531 0x6711801: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+  n1: 2621486 0x643B13A: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+   n1: 2621486 0x67C8634: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+    n1: 2621486 0x67C9C7E: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+     n1: 2621486 0x65066CC: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+      n1: 2621486 0x64F7793: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+       n1: 2621486 0x64F9C91: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+        n1: 2621486 0x64FA053: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+         n2: 2621486 0x134485: createTexture (Texture.c:25)
+          n1: 2359319 0x12087F: initRenderer (Renderer.c:55)
+           n0: 2359319 0x10B66E: main (Main.c:27)
+          n0: 262167 in 1 place, below massif's threshold (1.00%)
+  n1: 1638400 0x63D012F: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+   n1: 1638400 0x67638E5: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+    n1: 1638400 0x67127E4: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+     n1: 1638400 0x5BB6EEF: ??? (in /usr/lib/libGLX_nvidia.so.550.90.07)
+      n1: 1638400 0x5BE2A8D: ??? (in /usr/lib/libGLX_nvidia.so.550.90.07)
+       n1: 1638400 0x5BD7785: glXCreateContextAttribsARB (in /usr/lib/libGLX_nvidia.so.550.90.07)
+        n1: 1638400 0x4FB763B: glXCreateContextAttribsARB (libglx.c:301)
+         n1: 1638400 0x48AADAF: _glfwCreateContextGLX (glx_context.c:585)
+          n1: 1638400 0x489F9CD: _glfwCreateWindowX11 (x11_window.c:2003)
+           n1: 1638400 0x48947BA: glfwCreateWindow (window.c:247)
+            n1: 1638400 0x1345B4: initWindow (WindowManager.c:32)
+             n0: 1638400 0x10B659: main (Main.c:24)
+  n0: 758645 in 202 places, all below massif's threshold (1.00%)
+ n2: 2744238 0x6711ABD: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+  n0: 1919198 in 115 places, all below massif's threshold (1.00%)
+  n1: 825040 0x6CBCAF5: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+   n1: 825040 0x6759713: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+    n1: 825040 0x6759ADB: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+     n1: 825040 0x6712C7B: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+      n1: 825040 0x5BB71FF: ??? (in /usr/lib/libGLX_nvidia.so.550.90.07)
+       n1: 825040 0x5BE443A: ??? (in /usr/lib/libGLX_nvidia.so.550.90.07)
+        n1: 825040 0x4FAFE82: InternalMakeCurrentVendor (libglx.c:871)
+         n1: 825040 0x4FB2243: InternalMakeCurrentDispatch (libglx.c:926)
+          n1: 825040 0x4FB6E66: CommonMakeCurrent (libglx.c:1070)
+           n1: 825040 0x48A50AA: makeContextCurrentGLX (glx_context.c:163)
+            n1: 825040 0x488EC29: _glfwRefreshContextAttribs (context.c:363)
+             n1: 825040 0x489F7A7: _glfwCreateWindowX11 (x11_window.c:2017)
+              n1: 825040 0x48947BA: glfwCreateWindow (window.c:247)
+               n1: 825040 0x1345B4: initWindow (WindowManager.c:32)
+                n0: 825040 0x10B659: main (Main.c:24)
+ n0: 2611965 in 430 places, all below massif's threshold (1.00%)
+ n1: 2504844 0x11D924: createModel (Models.c:25)
+  n2: 2504844 0x11F1D9: createObject (Models.c:82)
+   n1: 2500236 0x1208E6: initRenderer (Renderer.c:56)
+    n0: 2500236 0x10B66E: main (Main.c:27)
+   n0: 4608 in 1 place, below massif's threshold (1.00%)
+ n1: 2074176 0x4A99B24: UnknownInlinedFun (almalloc.cpp:23)
+  n1: 2074176 0x4A99B24: UnknownInlinedFun (almalloc.h:100)
+   n1: 2074176 0x4A99B24: UnknownInlinedFun (alloc_traits.h:318)
+    n1: 2074176 0x4A99B24: UnknownInlinedFun (stl_vector.h:378)
+     n1: 2074176 0x4A99B24: UnknownInlinedFun (stl_vector.h:395)
+      n1: 2074176 0x4A99B24: UnknownInlinedFun (stl_vector.h:332)
+       n1: 2074176 0x4A99B24: UnknownInlinedFun (stl_vector.h:566)
+        n1: 2074176 0x4A99B24: UnknownInlinedFun (buffer.cpp:346)
+         n1: 2074176 0x4A99B24: alBufferStorageSOFT (buffer.cpp:769)
+          n1: 2074176 0x1178B8: createSound (Audio.c:101)
+           n1: 2074176 0x12078C: initRenderer (Renderer.c:45)
+            n0: 2074176 0x10B66E: main (Main.c:27)
+ n1: 1949696 0x4B08445: UnknownInlinedFun (almalloc.cpp:23)
+  n1: 1949696 0x4B08445: UnknownInlinedFun (almalloc.h:100)
+   n1: 1949696 0x4B08445: UnknownInlinedFun (alloc_traits.h:318)
+    n1: 1949696 0x4B08445: UnknownInlinedFun (stl_vector.h:378)
+     n1: 1949696 0x4B08445: UnknownInlinedFun (stl_vector.h:395)
+      n1: 1949696 0x4B08445: UnknownInlinedFun (stl_vector.h:332)
+       n1: 1949696 0x4B08445: UnknownInlinedFun (stl_vector.h:552)
+        n1: 1949696 0x4B08445: UnknownInlinedFun (voice.h:262)
+         n1: 1949696 0x4B08445: UnknownInlinedFun (unique_ptr.h:1080)
+          n1: 1949696 0x4B08445: ContextBase::allocVoices(unsigned long) (context.cpp:127)
+           n1: 1949696 0x4AC0B34: UnknownInlinedFun (context.cpp:209)
+            n1: 1949696 0x4AC0B34: alcCreateContext (alc.cpp:3324)
+             n1: 1949696 0x11761D: initAudio (Audio.c:22)
+              n0: 1949696 0x10B667: main (Main.c:26)
+ n1: 567815 0xC340E80: ???
+  n0: 567815 in 14 places, all below massif's threshold (1.00%)
+ n1: 533888 0x11E249: createModel (Models.c:52)
+  n2: 533888 0x11F1D9: createObject (Models.c:82)
+   n1: 533888 0x1208E6: initRenderer (Renderer.c:56)
+    n0: 533888 0x10B66E: main (Main.c:27)
+   n0: 0 in 1 place, below massif's threshold (1.00%)
+#-----------
+snapshot=14
+#-----------
+time=629329803
+mem_heap_B=45773288
+mem_heap_extra_B=419776
+mem_stacks_B=0
+heap_tree=detailed
+n10: 45773288 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 20038752 0x11D8F9: createModel (Models.c:24)
+  n2: 20038752 0x11F1D9: createObject (Models.c:82)
+   n1: 20001888 0x1208E6: initRenderer (Renderer.c:56)
+    n0: 20001888 0x10B66E: main (Main.c:27)
+   n0: 36864 in 1 place, below massif's threshold (1.00%)
+ n2: 5870055 0x1192A0: memory_realloc (fast_obj.h:244)
+  n4: 5869888 0x119362: array_realloc (fast_obj.h:281)
+   n1: 3495560 0x11A623: parse_face (fast_obj.h:782)
+    n1: 3495560 0x11C661: parse_buffer (fast_obj.h:1287)
+     n1: 3495560 0x11D541: fast_obj_read_with_callbacks (fast_obj.h:1527)
+      n1: 3495560 0x11CC7F: fast_obj_read (fast_obj.h:1404)
+       n1: 3495560 0x11D85D: createModel (Models.c:12)
+        n2: 3495560 0x11F1D9: createObject (Models.c:82)
+         n1: 3495560 0x1208E6: initRenderer (Renderer.c:56)
+          n0: 3495560 0x10B66E: main (Main.c:27)
+         n0: 0 in 1 place, below massif's threshold (1.00%)
+   n1: 1165192 0x11A384: parse_normal (fast_obj.h:721)
+    n1: 1165192 0x11C618: parse_buffer (fast_obj.h:1272)
+     n1: 1165192 0x11D541: fast_obj_read_with_callbacks (fast_obj.h:1527)
+      n1: 1165192 0x11CC7F: fast_obj_read (fast_obj.h:1404)
+       n1: 1165192 0x11D85D: createModel (Models.c:12)
+        n1: 1165192 0x11F1D9: createObject (Models.c:82)
+         n1: 1165192 0x1208E6: initRenderer (Renderer.c:56)
+          n0: 1165192 0x10B66E: main (Main.c:27)
+   n0: 691304 in 8 places, all below massif's threshold (1.00%)
+   n1: 517832 0x119F68: parse_vertex (fast_obj.h:670)
+    n1: 517832 0x11C5E6: parse_buffer (fast_obj.h:1264)
+     n1: 517832 0x11D541: fast_obj_read_with_callbacks (fast_obj.h:1527)
+      n1: 517832 0x11CC7F: fast_obj_read (fast_obj.h:1404)
+       n1: 517832 0x11D85D: createModel (Models.c:12)
+        n2: 517832 0x11F1D9: createObject (Models.c:82)
+         n1: 517832 0x1208E6: initRenderer (Renderer.c:56)
+          n0: 517832 0x10B66E: main (Main.c:27)
+         n0: 0 in 1 place, below massif's threshold (1.00%)
+  n0: 167 in 3 places, all below massif's threshold (1.00%)
+ n3: 5018531 0x6711801: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+  n1: 2621486 0x643B13A: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+   n1: 2621486 0x67C8634: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+    n1: 2621486 0x67C9C7E: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+     n1: 2621486 0x65066CC: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+      n1: 2621486 0x64F7793: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+       n1: 2621486 0x64F9C91: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+        n1: 2621486 0x64FA053: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+         n2: 2621486 0x134485: createTexture (Texture.c:25)
+          n1: 2359319 0x12087F: initRenderer (Renderer.c:55)
+           n0: 2359319 0x10B66E: main (Main.c:27)
+          n0: 262167 in 1 place, below massif's threshold (1.00%)
+  n1: 1638400 0x63D012F: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+   n1: 1638400 0x67638E5: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+    n1: 1638400 0x67127E4: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+     n1: 1638400 0x5BB6EEF: ??? (in /usr/lib/libGLX_nvidia.so.550.90.07)
+      n1: 1638400 0x5BE2A8D: ??? (in /usr/lib/libGLX_nvidia.so.550.90.07)
+       n1: 1638400 0x5BD7785: glXCreateContextAttribsARB (in /usr/lib/libGLX_nvidia.so.550.90.07)
+        n1: 1638400 0x4FB763B: glXCreateContextAttribsARB (libglx.c:301)
+         n1: 1638400 0x48AADAF: _glfwCreateContextGLX (glx_context.c:585)
+          n1: 1638400 0x489F9CD: _glfwCreateWindowX11 (x11_window.c:2003)
+           n1: 1638400 0x48947BA: glfwCreateWindow (window.c:247)
+            n1: 1638400 0x1345B4: initWindow (WindowManager.c:32)
+             n0: 1638400 0x10B659: main (Main.c:24)
+  n0: 758645 in 202 places, all below massif's threshold (1.00%)
+ n0: 2775805 in 430 places, all below massif's threshold (1.00%)
+ n2: 2744238 0x6711ABD: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+  n0: 1919198 in 115 places, all below massif's threshold (1.00%)
+  n1: 825040 0x6CBCAF5: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+   n1: 825040 0x6759713: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+    n1: 825040 0x6759ADB: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+     n1: 825040 0x6712C7B: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+      n1: 825040 0x5BB71FF: ??? (in /usr/lib/libGLX_nvidia.so.550.90.07)
+       n1: 825040 0x5BE443A: ??? (in /usr/lib/libGLX_nvidia.so.550.90.07)
+        n1: 825040 0x4FAFE82: InternalMakeCurrentVendor (libglx.c:871)
+         n1: 825040 0x4FB2243: InternalMakeCurrentDispatch (libglx.c:926)
+          n1: 825040 0x4FB6E66: CommonMakeCurrent (libglx.c:1070)
+           n1: 825040 0x48A50AA: makeContextCurrentGLX (glx_context.c:163)
+            n1: 825040 0x488EC29: _glfwRefreshContextAttribs (context.c:363)
+             n1: 825040 0x489F7A7: _glfwCreateWindowX11 (x11_window.c:2017)
+              n1: 825040 0x48947BA: glfwCreateWindow (window.c:247)
+               n1: 825040 0x1345B4: initWindow (WindowManager.c:32)
+                n0: 825040 0x10B659: main (Main.c:24)
+ n1: 2504844 0x11D924: createModel (Models.c:25)
+  n2: 2504844 0x11F1D9: createObject (Models.c:82)
+   n1: 2500236 0x1208E6: initRenderer (Renderer.c:56)
+    n0: 2500236 0x10B66E: main (Main.c:27)
+   n0: 4608 in 1 place, below massif's threshold (1.00%)
+ n1: 2229376 0x11E249: createModel (Models.c:52)
+  n2: 2229376 0x11F1D9: createObject (Models.c:82)
+   n1: 2229376 0x1208E6: initRenderer (Renderer.c:56)
+    n0: 2229376 0x10B66E: main (Main.c:27)
+   n0: 0 in 1 place, below massif's threshold (1.00%)
+ n1: 2074176 0x4A99B24: UnknownInlinedFun (almalloc.cpp:23)
+  n1: 2074176 0x4A99B24: UnknownInlinedFun (almalloc.h:100)
+   n1: 2074176 0x4A99B24: UnknownInlinedFun (alloc_traits.h:318)
+    n1: 2074176 0x4A99B24: UnknownInlinedFun (stl_vector.h:378)
+     n1: 2074176 0x4A99B24: UnknownInlinedFun (stl_vector.h:395)
+      n1: 2074176 0x4A99B24: UnknownInlinedFun (stl_vector.h:332)
+       n1: 2074176 0x4A99B24: UnknownInlinedFun (stl_vector.h:566)
+        n1: 2074176 0x4A99B24: UnknownInlinedFun (buffer.cpp:346)
+         n1: 2074176 0x4A99B24: alBufferStorageSOFT (buffer.cpp:769)
+          n1: 2074176 0x1178B8: createSound (Audio.c:101)
+           n1: 2074176 0x12078C: initRenderer (Renderer.c:45)
+            n0: 2074176 0x10B66E: main (Main.c:27)
+ n1: 1949696 0x4B08445: UnknownInlinedFun (almalloc.cpp:23)
+  n1: 1949696 0x4B08445: UnknownInlinedFun (almalloc.h:100)
+   n1: 1949696 0x4B08445: UnknownInlinedFun (alloc_traits.h:318)
+    n1: 1949696 0x4B08445: UnknownInlinedFun (stl_vector.h:378)
+     n1: 1949696 0x4B08445: UnknownInlinedFun (stl_vector.h:395)
+      n1: 1949696 0x4B08445: UnknownInlinedFun (stl_vector.h:332)
+       n1: 1949696 0x4B08445: UnknownInlinedFun (stl_vector.h:552)
+        n1: 1949696 0x4B08445: UnknownInlinedFun (voice.h:262)
+         n1: 1949696 0x4B08445: UnknownInlinedFun (unique_ptr.h:1080)
+          n1: 1949696 0x4B08445: ContextBase::allocVoices(unsigned long) (context.cpp:127)
+           n1: 1949696 0x4AC0B34: UnknownInlinedFun (context.cpp:209)
+            n1: 1949696 0x4AC0B34: alcCreateContext (alc.cpp:3324)
+             n1: 1949696 0x11761D: initAudio (Audio.c:22)
+              n0: 1949696 0x10B667: main (Main.c:26)
+ n1: 567815 0xC340E80: ???
+  n0: 567815 in 14 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=15
+#-----------
+time=667134132
+mem_heap_B=40030646
+mem_heap_extra_B=141162
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=16
+#-----------
+time=698606888
+mem_heap_B=48189863
+mem_heap_extra_B=142721
+mem_stacks_B=0
+heap_tree=peak
+n8: 48189863 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 20616480 0x11D8F9: createModel (Models.c:24)
+  n2: 20616480 0x11F1D9: createObject (Models.c:82)
+   n1: 20001888 0x1208E6: initRenderer (Renderer.c:56)
+    n0: 20001888 0x10B66E: main (Main.c:27)
+   n0: 614592 in 5 places, all below massif's threshold (1.00%)
+ n3: 15122457 0x6711801: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+  n2: 12724992 0x643B13A: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+   n1: 7500850 0x6419C8F: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+    n2: 7500850 0x641A35F: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+     n1: 6667367 0x120BDB: renderObject (Renderer.c:85)
+      n1: 6667367 0x120FDB: render (Renderer.c:135)
+       n0: 6667367 0x10B683: main (Main.c:31)
+     n1: 833483 0x120C22: renderObject (Renderer.c:88)
+      n1: 833483 0x120FDB: render (Renderer.c:135)
+       n0: 833483 0x10B683: main (Main.c:31)
+   n1: 5224142 0x67C8634: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+    n1: 5224142 0x67C9C7E: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+     n1: 5224142 0x65066CC: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+      n1: 5224142 0x64F7793: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+       n1: 5224142 0x64F9C91: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+        n2: 5224142 0x64FA053: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+         n3: 3735644 0x134485: createTexture (Texture.c:25)
+          n1: 2359319 0x12087F: initRenderer (Renderer.c:55)
+           n0: 2359319 0x10B66E: main (Main.c:27)
+          n1: 1048599 0x120A1A: initRenderer (Renderer.c:65)
+           n0: 1048599 0x10B66E: main (Main.c:27)
+          n0: 327726 in 2 places, all below massif's threshold (1.00%)
+         n2: 1488498 0x1344C2: createTexture (Texture.c:23)
+          n1: 1488439 0x12098E: initRenderer (Renderer.c:62)
+           n0: 1488439 0x10B66E: main (Main.c:27)
+          n0: 59 in 1 place, below massif's threshold (1.00%)
+  n1: 1638400 0x63D012F: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+   n1: 1638400 0x67638E5: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+    n1: 1638400 0x67127E4: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+     n1: 1638400 0x5BB6EEF: ??? (in /usr/lib/libGLX_nvidia.so.550.90.07)
+      n1: 1638400 0x5BE2A8D: ??? (in /usr/lib/libGLX_nvidia.so.550.90.07)
+       n1: 1638400 0x5BD7785: glXCreateContextAttribsARB (in /usr/lib/libGLX_nvidia.so.550.90.07)
+        n1: 1638400 0x4FB763B: glXCreateContextAttribsARB (libglx.c:301)
+         n1: 1638400 0x48AADAF: _glfwCreateContextGLX (glx_context.c:585)
+          n1: 1638400 0x489F9CD: _glfwCreateWindowX11 (x11_window.c:2003)
+           n1: 1638400 0x48947BA: glfwCreateWindow (window.c:247)
+            n1: 1638400 0x1345B4: initWindow (WindowManager.c:32)
+             n0: 1638400 0x10B659: main (Main.c:24)
+  n0: 759065 in 204 places, all below massif's threshold (1.00%)
+ n2: 2767438 0x6711ABD: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+  n0: 1942398 in 116 places, all below massif's threshold (1.00%)
+  n1: 825040 0x6CBCAF5: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+   n1: 825040 0x6759713: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+    n1: 825040 0x6759ADB: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+     n1: 825040 0x6712C7B: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+      n1: 825040 0x5BB71FF: ??? (in /usr/lib/libGLX_nvidia.so.550.90.07)
+       n1: 825040 0x5BE443A: ??? (in /usr/lib/libGLX_nvidia.so.550.90.07)
+        n1: 825040 0x4FAFE82: InternalMakeCurrentVendor (libglx.c:871)
+         n1: 825040 0x4FB2243: InternalMakeCurrentDispatch (libglx.c:926)
+          n1: 825040 0x4FB6E66: CommonMakeCurrent (libglx.c:1070)
+           n1: 825040 0x48A50AA: makeContextCurrentGLX (glx_context.c:163)
+            n1: 825040 0x488EC29: _glfwRefreshContextAttribs (context.c:363)
+             n1: 825040 0x489F7A7: _glfwCreateWindowX11 (x11_window.c:2017)
+              n1: 825040 0x48947BA: glfwCreateWindow (window.c:247)
+               n1: 825040 0x1345B4: initWindow (WindowManager.c:32)
+                n0: 825040 0x10B659: main (Main.c:24)
+ n1: 2577060 0x11D924: createModel (Models.c:25)
+  n2: 2577060 0x11F1D9: createObject (Models.c:82)
+   n1: 2500236 0x1208E6: initRenderer (Renderer.c:56)
+    n0: 2500236 0x10B66E: main (Main.c:27)
+   n0: 76824 in 5 places, all below massif's threshold (1.00%)
+ n0: 2514741 in 432 places, all below massif's threshold (1.00%)
+ n1: 2074176 0x4A99B24: UnknownInlinedFun (almalloc.cpp:23)
+  n1: 2074176 0x4A99B24: UnknownInlinedFun (almalloc.h:100)
+   n1: 2074176 0x4A99B24: UnknownInlinedFun (alloc_traits.h:318)
+    n1: 2074176 0x4A99B24: UnknownInlinedFun (stl_vector.h:378)
+     n1: 2074176 0x4A99B24: UnknownInlinedFun (stl_vector.h:395)
+      n1: 2074176 0x4A99B24: UnknownInlinedFun (stl_vector.h:332)
+       n1: 2074176 0x4A99B24: UnknownInlinedFun (stl_vector.h:566)
+        n1: 2074176 0x4A99B24: UnknownInlinedFun (buffer.cpp:346)
+         n1: 2074176 0x4A99B24: alBufferStorageSOFT (buffer.cpp:769)
+          n1: 2074176 0x1178B8: createSound (Audio.c:101)
+           n1: 2074176 0x12078C: initRenderer (Renderer.c:45)
+            n0: 2074176 0x10B66E: main (Main.c:27)
+ n1: 1949696 0x4B08445: UnknownInlinedFun (almalloc.cpp:23)
+  n1: 1949696 0x4B08445: UnknownInlinedFun (almalloc.h:100)
+   n1: 1949696 0x4B08445: UnknownInlinedFun (alloc_traits.h:318)
+    n1: 1949696 0x4B08445: UnknownInlinedFun (stl_vector.h:378)
+     n1: 1949696 0x4B08445: UnknownInlinedFun (stl_vector.h:395)
+      n1: 1949696 0x4B08445: UnknownInlinedFun (stl_vector.h:332)
+       n1: 1949696 0x4B08445: UnknownInlinedFun (stl_vector.h:552)
+        n1: 1949696 0x4B08445: UnknownInlinedFun (voice.h:262)
+         n1: 1949696 0x4B08445: UnknownInlinedFun (unique_ptr.h:1080)
+          n1: 1949696 0x4B08445: ContextBase::allocVoices(unsigned long) (context.cpp:127)
+           n1: 1949696 0x4AC0B34: UnknownInlinedFun (context.cpp:209)
+            n1: 1949696 0x4AC0B34: alcCreateContext (alc.cpp:3324)
+             n1: 1949696 0x11761D: initAudio (Audio.c:22)
+              n0: 1949696 0x10B667: main (Main.c:26)
+ n1: 567815 0xC340E80: ???
+  n0: 567815 in 14 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=17
+#-----------
+time=761675808
+mem_heap_B=48264881
+mem_heap_extra_B=143255
+mem_stacks_B=0
+heap_tree=detailed
+n8: 48264881 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 20616480 0x11D8F9: createModel (Models.c:24)
+  n2: 20616480 0x11F1D9: createObject (Models.c:82)
+   n1: 20001888 0x1208E6: initRenderer (Renderer.c:56)
+    n0: 20001888 0x10B66E: main (Main.c:27)
+   n0: 614592 in 5 places, all below massif's threshold (1.00%)
+ n3: 15184443 0x6711801: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+  n2: 12767970 0x643B13A: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+   n1: 7543828 0x6419C8F: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+    n2: 7543828 0x641A35F: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+     n2: 6705404 0x120BDB: renderObject (Renderer.c:85)
+      n1: 6667367 0x120FDB: render (Renderer.c:135)
+       n0: 6667367 0x10B683: main (Main.c:31)
+      n0: 38037 in 3 places, all below massif's threshold (1.00%)
+     n2: 838424 0x120C22: renderObject (Renderer.c:88)
+      n1: 833483 0x120FDB: render (Renderer.c:135)
+       n0: 833483 0x10B683: main (Main.c:31)
+      n0: 4941 in 3 places, all below massif's threshold (1.00%)
+   n1: 5224142 0x67C8634: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+    n1: 5224142 0x67C9C7E: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+     n1: 5224142 0x65066CC: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+      n1: 5224142 0x64F7793: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+       n1: 5224142 0x64F9C91: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+        n2: 5224142 0x64FA053: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+         n3: 3735644 0x134485: createTexture (Texture.c:25)
+          n1: 2359319 0x12087F: initRenderer (Renderer.c:55)
+           n0: 2359319 0x10B66E: main (Main.c:27)
+          n1: 1048599 0x120A1A: initRenderer (Renderer.c:65)
+           n0: 1048599 0x10B66E: main (Main.c:27)
+          n0: 327726 in 2 places, all below massif's threshold (1.00%)
+         n2: 1488498 0x1344C2: createTexture (Texture.c:23)
+          n1: 1488439 0x12098E: initRenderer (Renderer.c:62)
+           n0: 1488439 0x10B66E: main (Main.c:27)
+          n0: 59 in 1 place, below massif's threshold (1.00%)
+  n1: 1638400 0x63D012F: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+   n1: 1638400 0x67638E5: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+    n1: 1638400 0x67127E4: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+     n1: 1638400 0x5BB6EEF: ??? (in /usr/lib/libGLX_nvidia.so.550.90.07)
+      n1: 1638400 0x5BE2A8D: ??? (in /usr/lib/libGLX_nvidia.so.550.90.07)
+       n1: 1638400 0x5BD7785: glXCreateContextAttribsARB (in /usr/lib/libGLX_nvidia.so.550.90.07)
+        n1: 1638400 0x4FB763B: glXCreateContextAttribsARB (libglx.c:301)
+         n1: 1638400 0x48AADAF: _glfwCreateContextGLX (glx_context.c:585)
+          n1: 1638400 0x489F9CD: _glfwCreateWindowX11 (x11_window.c:2003)
+           n1: 1638400 0x48947BA: glfwCreateWindow (window.c:247)
+            n1: 1638400 0x1345B4: initWindow (WindowManager.c:32)
+             n0: 1638400 0x10B659: main (Main.c:24)
+  n0: 778073 in 212 places, all below massif's threshold (1.00%)
+ n2: 2780470 0x6711ABD: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+  n0: 1955430 in 119 places, all below massif's threshold (1.00%)
+  n1: 825040 0x6CBCAF5: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+   n1: 825040 0x6759713: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+    n1: 825040 0x6759ADB: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+     n1: 825040 0x6712C7B: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+      n1: 825040 0x5BB71FF: ??? (in /usr/lib/libGLX_nvidia.so.550.90.07)
+       n1: 825040 0x5BE443A: ??? (in /usr/lib/libGLX_nvidia.so.550.90.07)
+        n1: 825040 0x4FAFE82: InternalMakeCurrentVendor (libglx.c:871)
+         n1: 825040 0x4FB2243: InternalMakeCurrentDispatch (libglx.c:926)
+          n1: 825040 0x4FB6E66: CommonMakeCurrent (libglx.c:1070)
+           n1: 825040 0x48A50AA: makeContextCurrentGLX (glx_context.c:163)
+            n1: 825040 0x488EC29: _glfwRefreshContextAttribs (context.c:363)
+             n1: 825040 0x489F7A7: _glfwCreateWindowX11 (x11_window.c:2017)
+              n1: 825040 0x48947BA: glfwCreateWindow (window.c:247)
+               n1: 825040 0x1345B4: initWindow (WindowManager.c:32)
+                n0: 825040 0x10B659: main (Main.c:24)
+ n1: 2577060 0x11D924: createModel (Models.c:25)
+  n2: 2577060 0x11F1D9: createObject (Models.c:82)
+   n1: 2500236 0x1208E6: initRenderer (Renderer.c:56)
+    n0: 2500236 0x10B66E: main (Main.c:27)
+   n0: 76824 in 5 places, all below massif's threshold (1.00%)
+ n0: 2514741 in 432 places, all below massif's threshold (1.00%)
+ n1: 2074176 0x4A99B24: UnknownInlinedFun (almalloc.cpp:23)
+  n1: 2074176 0x4A99B24: UnknownInlinedFun (almalloc.h:100)
+   n1: 2074176 0x4A99B24: UnknownInlinedFun (alloc_traits.h:318)
+    n1: 2074176 0x4A99B24: UnknownInlinedFun (stl_vector.h:378)
+     n1: 2074176 0x4A99B24: UnknownInlinedFun (stl_vector.h:395)
+      n1: 2074176 0x4A99B24: UnknownInlinedFun (stl_vector.h:332)
+       n1: 2074176 0x4A99B24: UnknownInlinedFun (stl_vector.h:566)
+        n1: 2074176 0x4A99B24: UnknownInlinedFun (buffer.cpp:346)
+         n1: 2074176 0x4A99B24: alBufferStorageSOFT (buffer.cpp:769)
+          n1: 2074176 0x1178B8: createSound (Audio.c:101)
+           n1: 2074176 0x12078C: initRenderer (Renderer.c:45)
+            n0: 2074176 0x10B66E: main (Main.c:27)
+ n1: 1949696 0x4B08445: UnknownInlinedFun (almalloc.cpp:23)
+  n1: 1949696 0x4B08445: UnknownInlinedFun (almalloc.h:100)
+   n1: 1949696 0x4B08445: UnknownInlinedFun (alloc_traits.h:318)
+    n1: 1949696 0x4B08445: UnknownInlinedFun (stl_vector.h:378)
+     n1: 1949696 0x4B08445: UnknownInlinedFun (stl_vector.h:395)
+      n1: 1949696 0x4B08445: UnknownInlinedFun (stl_vector.h:332)
+       n1: 1949696 0x4B08445: UnknownInlinedFun (stl_vector.h:552)
+        n1: 1949696 0x4B08445: UnknownInlinedFun (voice.h:262)
+         n1: 1949696 0x4B08445: UnknownInlinedFun (unique_ptr.h:1080)
+          n1: 1949696 0x4B08445: ContextBase::allocVoices(unsigned long) (context.cpp:127)
+           n1: 1949696 0x4AC0B34: UnknownInlinedFun (context.cpp:209)
+            n1: 1949696 0x4AC0B34: alcCreateContext (alc.cpp:3324)
+             n1: 1949696 0x11761D: initAudio (Audio.c:22)
+              n0: 1949696 0x10B667: main (Main.c:26)
+ n1: 567815 0xC340E80: ???
+  n0: 567815 in 14 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=18
+#-----------
+time=799970573
+mem_heap_B=48264673
+mem_heap_extra_B=143247
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=19
+#-----------
+time=838139570
+mem_heap_B=48264673
+mem_heap_extra_B=143247
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=20
+#-----------
+time=882751234
+mem_heap_B=48264673
+mem_heap_extra_B=143247
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=21
+#-----------
+time=913199293
+mem_heap_B=48264673
+mem_heap_extra_B=143247
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=22
+#-----------
+time=963772574
+mem_heap_B=48264673
+mem_heap_extra_B=143247
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=23
+#-----------
+time=994080022
+mem_heap_B=48264673
+mem_heap_extra_B=143247
+mem_stacks_B=0
+heap_tree=detailed
+n8: 48264673 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 20616480 0x11D8F9: createModel (Models.c:24)
+  n2: 20616480 0x11F1D9: createObject (Models.c:82)
+   n1: 20001888 0x1208E6: initRenderer (Renderer.c:56)
+    n0: 20001888 0x10B66E: main (Main.c:27)
+   n0: 614592 in 5 places, all below massif's threshold (1.00%)
+ n3: 15184443 0x6711801: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+  n2: 12767970 0x643B13A: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+   n1: 7543828 0x6419C8F: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+    n2: 7543828 0x641A35F: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+     n2: 6705404 0x120BDB: renderObject (Renderer.c:85)
+      n1: 6667367 0x120FDB: render (Renderer.c:135)
+       n0: 6667367 0x10B683: main (Main.c:31)
+      n0: 38037 in 3 places, all below massif's threshold (1.00%)
+     n2: 838424 0x120C22: renderObject (Renderer.c:88)
+      n1: 833483 0x120FDB: render (Renderer.c:135)
+       n0: 833483 0x10B683: main (Main.c:31)
+      n0: 4941 in 3 places, all below massif's threshold (1.00%)
+   n1: 5224142 0x67C8634: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+    n1: 5224142 0x67C9C7E: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+     n1: 5224142 0x65066CC: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+      n1: 5224142 0x64F7793: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+       n1: 5224142 0x64F9C91: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+        n2: 5224142 0x64FA053: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+         n3: 3735644 0x134485: createTexture (Texture.c:25)
+          n1: 2359319 0x12087F: initRenderer (Renderer.c:55)
+           n0: 2359319 0x10B66E: main (Main.c:27)
+          n1: 1048599 0x120A1A: initRenderer (Renderer.c:65)
+           n0: 1048599 0x10B66E: main (Main.c:27)
+          n0: 327726 in 2 places, all below massif's threshold (1.00%)
+         n2: 1488498 0x1344C2: createTexture (Texture.c:23)
+          n1: 1488439 0x12098E: initRenderer (Renderer.c:62)
+           n0: 1488439 0x10B66E: main (Main.c:27)
+          n0: 59 in 1 place, below massif's threshold (1.00%)
+  n1: 1638400 0x63D012F: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+   n1: 1638400 0x67638E5: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+    n1: 1638400 0x67127E4: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+     n1: 1638400 0x5BB6EEF: ??? (in /usr/lib/libGLX_nvidia.so.550.90.07)
+      n1: 1638400 0x5BE2A8D: ??? (in /usr/lib/libGLX_nvidia.so.550.90.07)
+       n1: 1638400 0x5BD7785: glXCreateContextAttribsARB (in /usr/lib/libGLX_nvidia.so.550.90.07)
+        n1: 1638400 0x4FB763B: glXCreateContextAttribsARB (libglx.c:301)
+         n1: 1638400 0x48AADAF: _glfwCreateContextGLX (glx_context.c:585)
+          n1: 1638400 0x489F9CD: _glfwCreateWindowX11 (x11_window.c:2003)
+           n1: 1638400 0x48947BA: glfwCreateWindow (window.c:247)
+            n1: 1638400 0x1345B4: initWindow (WindowManager.c:32)
+             n0: 1638400 0x10B659: main (Main.c:24)
+  n0: 778073 in 212 places, all below massif's threshold (1.00%)
+ n2: 2780262 0x6711ABD: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+  n0: 1955222 in 119 places, all below massif's threshold (1.00%)
+  n1: 825040 0x6CBCAF5: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+   n1: 825040 0x6759713: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+    n1: 825040 0x6759ADB: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+     n1: 825040 0x6712C7B: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+      n1: 825040 0x5BB71FF: ??? (in /usr/lib/libGLX_nvidia.so.550.90.07)
+       n1: 825040 0x5BE443A: ??? (in /usr/lib/libGLX_nvidia.so.550.90.07)
+        n1: 825040 0x4FAFE82: InternalMakeCurrentVendor (libglx.c:871)
+         n1: 825040 0x4FB2243: InternalMakeCurrentDispatch (libglx.c:926)
+          n1: 825040 0x4FB6E66: CommonMakeCurrent (libglx.c:1070)
+           n1: 825040 0x48A50AA: makeContextCurrentGLX (glx_context.c:163)
+            n1: 825040 0x488EC29: _glfwRefreshContextAttribs (context.c:363)
+             n1: 825040 0x489F7A7: _glfwCreateWindowX11 (x11_window.c:2017)
+              n1: 825040 0x48947BA: glfwCreateWindow (window.c:247)
+               n1: 825040 0x1345B4: initWindow (WindowManager.c:32)
+                n0: 825040 0x10B659: main (Main.c:24)
+ n1: 2577060 0x11D924: createModel (Models.c:25)
+  n2: 2577060 0x11F1D9: createObject (Models.c:82)
+   n1: 2500236 0x1208E6: initRenderer (Renderer.c:56)
+    n0: 2500236 0x10B66E: main (Main.c:27)
+   n0: 76824 in 5 places, all below massif's threshold (1.00%)
+ n0: 2514741 in 432 places, all below massif's threshold (1.00%)
+ n1: 2074176 0x4A99B24: UnknownInlinedFun (almalloc.cpp:23)
+  n1: 2074176 0x4A99B24: UnknownInlinedFun (almalloc.h:100)
+   n1: 2074176 0x4A99B24: UnknownInlinedFun (alloc_traits.h:318)
+    n1: 2074176 0x4A99B24: UnknownInlinedFun (stl_vector.h:378)
+     n1: 2074176 0x4A99B24: UnknownInlinedFun (stl_vector.h:395)
+      n1: 2074176 0x4A99B24: UnknownInlinedFun (stl_vector.h:332)
+       n1: 2074176 0x4A99B24: UnknownInlinedFun (stl_vector.h:566)
+        n1: 2074176 0x4A99B24: UnknownInlinedFun (buffer.cpp:346)
+         n1: 2074176 0x4A99B24: alBufferStorageSOFT (buffer.cpp:769)
+          n1: 2074176 0x1178B8: createSound (Audio.c:101)
+           n1: 2074176 0x12078C: initRenderer (Renderer.c:45)
+            n0: 2074176 0x10B66E: main (Main.c:27)
+ n1: 1949696 0x4B08445: UnknownInlinedFun (almalloc.cpp:23)
+  n1: 1949696 0x4B08445: UnknownInlinedFun (almalloc.h:100)
+   n1: 1949696 0x4B08445: UnknownInlinedFun (alloc_traits.h:318)
+    n1: 1949696 0x4B08445: UnknownInlinedFun (stl_vector.h:378)
+     n1: 1949696 0x4B08445: UnknownInlinedFun (stl_vector.h:395)
+      n1: 1949696 0x4B08445: UnknownInlinedFun (stl_vector.h:332)
+       n1: 1949696 0x4B08445: UnknownInlinedFun (stl_vector.h:552)
+        n1: 1949696 0x4B08445: UnknownInlinedFun (voice.h:262)
+         n1: 1949696 0x4B08445: UnknownInlinedFun (unique_ptr.h:1080)
+          n1: 1949696 0x4B08445: ContextBase::allocVoices(unsigned long) (context.cpp:127)
+           n1: 1949696 0x4AC0B34: UnknownInlinedFun (context.cpp:209)
+            n1: 1949696 0x4AC0B34: alcCreateContext (alc.cpp:3324)
+             n1: 1949696 0x11761D: initAudio (Audio.c:22)
+              n0: 1949696 0x10B667: main (Main.c:26)
+ n1: 567815 0xC340E80: ???
+  n0: 567815 in 14 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=24
+#-----------
+time=1054449537
+mem_heap_B=48264673
+mem_heap_extra_B=143247
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=25
+#-----------
+time=1084743807
+mem_heap_B=48275273
+mem_heap_extra_B=143743
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=26
+#-----------
+time=1124739919
+mem_heap_B=48274241
+mem_heap_extra_B=143767
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=27
+#-----------
+time=1185607064
+mem_heap_B=48274217
+mem_heap_extra_B=143751
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=28
+#-----------
+time=1225808020
+mem_heap_B=48274241
+mem_heap_extra_B=143767
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=29
+#-----------
+time=1256534542
+mem_heap_B=48274241
+mem_heap_extra_B=143767
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=30
+#-----------
+time=1296654335
+mem_heap_B=48274241
+mem_heap_extra_B=143751
+mem_stacks_B=0
+heap_tree=detailed
+n8: 48274241 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 20616480 0x11D8F9: createModel (Models.c:24)
+  n2: 20616480 0x11F1D9: createObject (Models.c:82)
+   n1: 20001888 0x1208E6: initRenderer (Renderer.c:56)
+    n0: 20001888 0x10B66E: main (Main.c:27)
+   n0: 614592 in 5 places, all below massif's threshold (1.00%)
+ n3: 15184443 0x6711801: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+  n2: 12767970 0x643B13A: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+   n1: 7543828 0x6419C8F: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+    n2: 7543828 0x641A35F: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+     n2: 6705404 0x120BDB: renderObject (Renderer.c:85)
+      n1: 6667367 0x120FDB: render (Renderer.c:135)
+       n0: 6667367 0x10B683: main (Main.c:31)
+      n0: 38037 in 3 places, all below massif's threshold (1.00%)
+     n2: 838424 0x120C22: renderObject (Renderer.c:88)
+      n1: 833483 0x120FDB: render (Renderer.c:135)
+       n0: 833483 0x10B683: main (Main.c:31)
+      n0: 4941 in 3 places, all below massif's threshold (1.00%)
+   n1: 5224142 0x67C8634: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+    n1: 5224142 0x67C9C7E: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+     n1: 5224142 0x65066CC: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+      n1: 5224142 0x64F7793: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+       n1: 5224142 0x64F9C91: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+        n2: 5224142 0x64FA053: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+         n3: 3735644 0x134485: createTexture (Texture.c:25)
+          n1: 2359319 0x12087F: initRenderer (Renderer.c:55)
+           n0: 2359319 0x10B66E: main (Main.c:27)
+          n1: 1048599 0x120A1A: initRenderer (Renderer.c:65)
+           n0: 1048599 0x10B66E: main (Main.c:27)
+          n0: 327726 in 2 places, all below massif's threshold (1.00%)
+         n2: 1488498 0x1344C2: createTexture (Texture.c:23)
+          n1: 1488439 0x12098E: initRenderer (Renderer.c:62)
+           n0: 1488439 0x10B66E: main (Main.c:27)
+          n0: 59 in 1 place, below massif's threshold (1.00%)
+  n1: 1638400 0x63D012F: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+   n1: 1638400 0x67638E5: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+    n1: 1638400 0x67127E4: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+     n1: 1638400 0x5BB6EEF: ??? (in /usr/lib/libGLX_nvidia.so.550.90.07)
+      n1: 1638400 0x5BE2A8D: ??? (in /usr/lib/libGLX_nvidia.so.550.90.07)
+       n1: 1638400 0x5BD7785: glXCreateContextAttribsARB (in /usr/lib/libGLX_nvidia.so.550.90.07)
+        n1: 1638400 0x4FB763B: glXCreateContextAttribsARB (libglx.c:301)
+         n1: 1638400 0x48AADAF: _glfwCreateContextGLX (glx_context.c:585)
+          n1: 1638400 0x489F9CD: _glfwCreateWindowX11 (x11_window.c:2003)
+           n1: 1638400 0x48947BA: glfwCreateWindow (window.c:247)
+            n1: 1638400 0x1345B4: initWindow (WindowManager.c:32)
+             n0: 1638400 0x10B659: main (Main.c:24)
+  n0: 778073 in 212 places, all below massif's threshold (1.00%)
+ n2: 2780262 0x6711ABD: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+  n0: 1955222 in 119 places, all below massif's threshold (1.00%)
+  n1: 825040 0x6CBCAF5: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+   n1: 825040 0x6759713: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+    n1: 825040 0x6759ADB: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+     n1: 825040 0x6712C7B: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+      n1: 825040 0x5BB71FF: ??? (in /usr/lib/libGLX_nvidia.so.550.90.07)
+       n1: 825040 0x5BE443A: ??? (in /usr/lib/libGLX_nvidia.so.550.90.07)
+        n1: 825040 0x4FAFE82: InternalMakeCurrentVendor (libglx.c:871)
+         n1: 825040 0x4FB2243: InternalMakeCurrentDispatch (libglx.c:926)
+          n1: 825040 0x4FB6E66: CommonMakeCurrent (libglx.c:1070)
+           n1: 825040 0x48A50AA: makeContextCurrentGLX (glx_context.c:163)
+            n1: 825040 0x488EC29: _glfwRefreshContextAttribs (context.c:363)
+             n1: 825040 0x489F7A7: _glfwCreateWindowX11 (x11_window.c:2017)
+              n1: 825040 0x48947BA: glfwCreateWindow (window.c:247)
+               n1: 825040 0x1345B4: initWindow (WindowManager.c:32)
+                n0: 825040 0x10B659: main (Main.c:24)
+ n1: 2577060 0x11D924: createModel (Models.c:25)
+  n2: 2577060 0x11F1D9: createObject (Models.c:82)
+   n1: 2500236 0x1208E6: initRenderer (Renderer.c:56)
+    n0: 2500236 0x10B66E: main (Main.c:27)
+   n0: 76824 in 5 places, all below massif's threshold (1.00%)
+ n0: 2524309 in 438 places, all below massif's threshold (1.00%)
+ n1: 2074176 0x4A99B24: UnknownInlinedFun (almalloc.cpp:23)
+  n1: 2074176 0x4A99B24: UnknownInlinedFun (almalloc.h:100)
+   n1: 2074176 0x4A99B24: UnknownInlinedFun (alloc_traits.h:318)
+    n1: 2074176 0x4A99B24: UnknownInlinedFun (stl_vector.h:378)
+     n1: 2074176 0x4A99B24: UnknownInlinedFun (stl_vector.h:395)
+      n1: 2074176 0x4A99B24: UnknownInlinedFun (stl_vector.h:332)
+       n1: 2074176 0x4A99B24: UnknownInlinedFun (stl_vector.h:566)
+        n1: 2074176 0x4A99B24: UnknownInlinedFun (buffer.cpp:346)
+         n1: 2074176 0x4A99B24: alBufferStorageSOFT (buffer.cpp:769)
+          n1: 2074176 0x1178B8: createSound (Audio.c:101)
+           n1: 2074176 0x12078C: initRenderer (Renderer.c:45)
+            n0: 2074176 0x10B66E: main (Main.c:27)
+ n1: 1949696 0x4B08445: UnknownInlinedFun (almalloc.cpp:23)
+  n1: 1949696 0x4B08445: UnknownInlinedFun (almalloc.h:100)
+   n1: 1949696 0x4B08445: UnknownInlinedFun (alloc_traits.h:318)
+    n1: 1949696 0x4B08445: UnknownInlinedFun (stl_vector.h:378)
+     n1: 1949696 0x4B08445: UnknownInlinedFun (stl_vector.h:395)
+      n1: 1949696 0x4B08445: UnknownInlinedFun (stl_vector.h:332)
+       n1: 1949696 0x4B08445: UnknownInlinedFun (stl_vector.h:552)
+        n1: 1949696 0x4B08445: UnknownInlinedFun (voice.h:262)
+         n1: 1949696 0x4B08445: UnknownInlinedFun (unique_ptr.h:1080)
+          n1: 1949696 0x4B08445: ContextBase::allocVoices(unsigned long) (context.cpp:127)
+           n1: 1949696 0x4AC0B34: UnknownInlinedFun (context.cpp:209)
+            n1: 1949696 0x4AC0B34: alcCreateContext (alc.cpp:3324)
+             n1: 1949696 0x11761D: initAudio (Audio.c:22)
+              n0: 1949696 0x10B667: main (Main.c:26)
+ n1: 567815 0xC340E80: ???
+  n0: 567815 in 14 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=31
+#-----------
+time=1327588220
+mem_heap_B=48275481
+mem_heap_extra_B=143751
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=32
+#-----------
+time=1368461430
+mem_heap_B=48275273
+mem_heap_extra_B=143743
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=33
+#-----------
+time=1419046628
+mem_heap_B=48274241
+mem_heap_extra_B=143767
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=34
+#-----------
+time=1478744306
+mem_heap_B=48274241
+mem_heap_extra_B=143767
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=35
+#-----------
+time=1538156493
+mem_heap_B=48275273
+mem_heap_extra_B=143743
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=36
+#-----------
+time=1597837368
+mem_heap_B=48274241
+mem_heap_extra_B=143783
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=37
+#-----------
+time=1642564983
+mem_heap_B=48274241
+mem_heap_extra_B=143767
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=38
+#-----------
+time=1672446689
+mem_heap_B=48274241
+mem_heap_extra_B=143767
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=39
+#-----------
+time=1717188244
+mem_heap_B=48274241
+mem_heap_extra_B=143767
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=40
+#-----------
+time=1746971245
+mem_heap_B=48274241
+mem_heap_extra_B=143767
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=41
+#-----------
+time=1806501546
+mem_heap_B=48274241
+mem_heap_extra_B=143767
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=42
+#-----------
+time=1836295256
+mem_heap_B=48274217
+mem_heap_extra_B=143751
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=43
+#-----------
+time=1880948862
+mem_heap_B=48274241
+mem_heap_extra_B=143767
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=44
+#-----------
+time=1910703945
+mem_heap_B=48274241
+mem_heap_extra_B=143767
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=45
+#-----------
+time=1955365762
+mem_heap_B=48274241
+mem_heap_extra_B=143767
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=46
+#-----------
+time=2014914290
+mem_heap_B=48274241
+mem_heap_extra_B=143767
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=47
+#-----------
+time=2059551331
+mem_heap_B=48274241
+mem_heap_extra_B=143767
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=48
+#-----------
+time=2104172579
+mem_heap_B=48274241
+mem_heap_extra_B=143767
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=49
+#-----------
+time=2133944632
+mem_heap_B=48274241
+mem_heap_extra_B=143767
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=50
+#-----------
+time=2163453571
+mem_heap_B=48274241
+mem_heap_extra_B=143767
+mem_stacks_B=0
+heap_tree=detailed
+n8: 48274241 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 20616480 0x11D8F9: createModel (Models.c:24)
+  n2: 20616480 0x11F1D9: createObject (Models.c:82)
+   n1: 20001888 0x1208E6: initRenderer (Renderer.c:56)
+    n0: 20001888 0x10B66E: main (Main.c:27)
+   n0: 614592 in 5 places, all below massif's threshold (1.00%)
+ n3: 15184443 0x6711801: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+  n2: 12767970 0x643B13A: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+   n1: 7543828 0x6419C8F: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+    n2: 7543828 0x641A35F: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+     n2: 6705404 0x120BDB: renderObject (Renderer.c:85)
+      n1: 6667367 0x120FDB: render (Renderer.c:135)
+       n0: 6667367 0x10B683: main (Main.c:31)
+      n0: 38037 in 3 places, all below massif's threshold (1.00%)
+     n2: 838424 0x120C22: renderObject (Renderer.c:88)
+      n1: 833483 0x120FDB: render (Renderer.c:135)
+       n0: 833483 0x10B683: main (Main.c:31)
+      n0: 4941 in 3 places, all below massif's threshold (1.00%)
+   n1: 5224142 0x67C8634: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+    n1: 5224142 0x67C9C7E: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+     n1: 5224142 0x65066CC: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+      n1: 5224142 0x64F7793: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+       n1: 5224142 0x64F9C91: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+        n2: 5224142 0x64FA053: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+         n3: 3735644 0x134485: createTexture (Texture.c:25)
+          n1: 2359319 0x12087F: initRenderer (Renderer.c:55)
+           n0: 2359319 0x10B66E: main (Main.c:27)
+          n1: 1048599 0x120A1A: initRenderer (Renderer.c:65)
+           n0: 1048599 0x10B66E: main (Main.c:27)
+          n0: 327726 in 2 places, all below massif's threshold (1.00%)
+         n2: 1488498 0x1344C2: createTexture (Texture.c:23)
+          n1: 1488439 0x12098E: initRenderer (Renderer.c:62)
+           n0: 1488439 0x10B66E: main (Main.c:27)
+          n0: 59 in 1 place, below massif's threshold (1.00%)
+  n1: 1638400 0x63D012F: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+   n1: 1638400 0x67638E5: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+    n1: 1638400 0x67127E4: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+     n1: 1638400 0x5BB6EEF: ??? (in /usr/lib/libGLX_nvidia.so.550.90.07)
+      n1: 1638400 0x5BE2A8D: ??? (in /usr/lib/libGLX_nvidia.so.550.90.07)
+       n1: 1638400 0x5BD7785: glXCreateContextAttribsARB (in /usr/lib/libGLX_nvidia.so.550.90.07)
+        n1: 1638400 0x4FB763B: glXCreateContextAttribsARB (libglx.c:301)
+         n1: 1638400 0x48AADAF: _glfwCreateContextGLX (glx_context.c:585)
+          n1: 1638400 0x489F9CD: _glfwCreateWindowX11 (x11_window.c:2003)
+           n1: 1638400 0x48947BA: glfwCreateWindow (window.c:247)
+            n1: 1638400 0x1345B4: initWindow (WindowManager.c:32)
+             n0: 1638400 0x10B659: main (Main.c:24)
+  n0: 778073 in 212 places, all below massif's threshold (1.00%)
+ n2: 2780262 0x6711ABD: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+  n0: 1955222 in 119 places, all below massif's threshold (1.00%)
+  n1: 825040 0x6CBCAF5: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+   n1: 825040 0x6759713: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+    n1: 825040 0x6759ADB: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+     n1: 825040 0x6712C7B: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+      n1: 825040 0x5BB71FF: ??? (in /usr/lib/libGLX_nvidia.so.550.90.07)
+       n1: 825040 0x5BE443A: ??? (in /usr/lib/libGLX_nvidia.so.550.90.07)
+        n1: 825040 0x4FAFE82: InternalMakeCurrentVendor (libglx.c:871)
+         n1: 825040 0x4FB2243: InternalMakeCurrentDispatch (libglx.c:926)
+          n1: 825040 0x4FB6E66: CommonMakeCurrent (libglx.c:1070)
+           n1: 825040 0x48A50AA: makeContextCurrentGLX (glx_context.c:163)
+            n1: 825040 0x488EC29: _glfwRefreshContextAttribs (context.c:363)
+             n1: 825040 0x489F7A7: _glfwCreateWindowX11 (x11_window.c:2017)
+              n1: 825040 0x48947BA: glfwCreateWindow (window.c:247)
+               n1: 825040 0x1345B4: initWindow (WindowManager.c:32)
+                n0: 825040 0x10B659: main (Main.c:24)
+ n1: 2577060 0x11D924: createModel (Models.c:25)
+  n2: 2577060 0x11F1D9: createObject (Models.c:82)
+   n1: 2500236 0x1208E6: initRenderer (Renderer.c:56)
+    n0: 2500236 0x10B66E: main (Main.c:27)
+   n0: 76824 in 5 places, all below massif's threshold (1.00%)
+ n0: 2524309 in 438 places, all below massif's threshold (1.00%)
+ n1: 2074176 0x4A99B24: UnknownInlinedFun (almalloc.cpp:23)
+  n1: 2074176 0x4A99B24: UnknownInlinedFun (almalloc.h:100)
+   n1: 2074176 0x4A99B24: UnknownInlinedFun (alloc_traits.h:318)
+    n1: 2074176 0x4A99B24: UnknownInlinedFun (stl_vector.h:378)
+     n1: 2074176 0x4A99B24: UnknownInlinedFun (stl_vector.h:395)
+      n1: 2074176 0x4A99B24: UnknownInlinedFun (stl_vector.h:332)
+       n1: 2074176 0x4A99B24: UnknownInlinedFun (stl_vector.h:566)
+        n1: 2074176 0x4A99B24: UnknownInlinedFun (buffer.cpp:346)
+         n1: 2074176 0x4A99B24: alBufferStorageSOFT (buffer.cpp:769)
+          n1: 2074176 0x1178B8: createSound (Audio.c:101)
+           n1: 2074176 0x12078C: initRenderer (Renderer.c:45)
+            n0: 2074176 0x10B66E: main (Main.c:27)
+ n1: 1949696 0x4B08445: UnknownInlinedFun (almalloc.cpp:23)
+  n1: 1949696 0x4B08445: UnknownInlinedFun (almalloc.h:100)
+   n1: 1949696 0x4B08445: UnknownInlinedFun (alloc_traits.h:318)
+    n1: 1949696 0x4B08445: UnknownInlinedFun (stl_vector.h:378)
+     n1: 1949696 0x4B08445: UnknownInlinedFun (stl_vector.h:395)
+      n1: 1949696 0x4B08445: UnknownInlinedFun (stl_vector.h:332)
+       n1: 1949696 0x4B08445: UnknownInlinedFun (stl_vector.h:552)
+        n1: 1949696 0x4B08445: UnknownInlinedFun (voice.h:262)
+         n1: 1949696 0x4B08445: UnknownInlinedFun (unique_ptr.h:1080)
+          n1: 1949696 0x4B08445: ContextBase::allocVoices(unsigned long) (context.cpp:127)
+           n1: 1949696 0x4AC0B34: UnknownInlinedFun (context.cpp:209)
+            n1: 1949696 0x4AC0B34: alcCreateContext (alc.cpp:3324)
+             n1: 1949696 0x11761D: initAudio (Audio.c:22)
+              n0: 1949696 0x10B667: main (Main.c:26)
+ n1: 567815 0xC340E80: ???
+  n0: 567815 in 14 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=51
+#-----------
+time=2193166459
+mem_heap_B=48274241
+mem_heap_extra_B=143767
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=52
+#-----------
+time=2222927407
+mem_heap_B=48274241
+mem_heap_extra_B=143767
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=53
+#-----------
+time=2252709962
+mem_heap_B=48274241
+mem_heap_extra_B=143767
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=54
+#-----------
+time=2282456482
+mem_heap_B=48274241
+mem_heap_extra_B=143767
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=55
+#-----------
+time=2312168077
+mem_heap_B=48274241
+mem_heap_extra_B=143767
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=56
+#-----------
+time=2341875693
+mem_heap_B=48274241
+mem_heap_extra_B=143767
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=57
+#-----------
+time=2371529227
+mem_heap_B=48274241
+mem_heap_extra_B=143767
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=58
+#-----------
+time=2401242242
+mem_heap_B=48274241
+mem_heap_extra_B=143767
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=59
+#-----------
+time=2430990277
+mem_heap_B=48274241
+mem_heap_extra_B=143767
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=60
+#-----------
+time=2460716297
+mem_heap_B=48274241
+mem_heap_extra_B=143767
+mem_stacks_B=0
+heap_tree=detailed
+n8: 48274241 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 20616480 0x11D8F9: createModel (Models.c:24)
+  n2: 20616480 0x11F1D9: createObject (Models.c:82)
+   n1: 20001888 0x1208E6: initRenderer (Renderer.c:56)
+    n0: 20001888 0x10B66E: main (Main.c:27)
+   n0: 614592 in 5 places, all below massif's threshold (1.00%)
+ n3: 15184443 0x6711801: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+  n2: 12767970 0x643B13A: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+   n1: 7543828 0x6419C8F: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+    n2: 7543828 0x641A35F: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+     n2: 6705404 0x120BDB: renderObject (Renderer.c:85)
+      n1: 6667367 0x120FDB: render (Renderer.c:135)
+       n0: 6667367 0x10B683: main (Main.c:31)
+      n0: 38037 in 3 places, all below massif's threshold (1.00%)
+     n2: 838424 0x120C22: renderObject (Renderer.c:88)
+      n1: 833483 0x120FDB: render (Renderer.c:135)
+       n0: 833483 0x10B683: main (Main.c:31)
+      n0: 4941 in 3 places, all below massif's threshold (1.00%)
+   n1: 5224142 0x67C8634: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+    n1: 5224142 0x67C9C7E: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+     n1: 5224142 0x65066CC: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+      n1: 5224142 0x64F7793: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+       n1: 5224142 0x64F9C91: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+        n2: 5224142 0x64FA053: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+         n3: 3735644 0x134485: createTexture (Texture.c:25)
+          n1: 2359319 0x12087F: initRenderer (Renderer.c:55)
+           n0: 2359319 0x10B66E: main (Main.c:27)
+          n1: 1048599 0x120A1A: initRenderer (Renderer.c:65)
+           n0: 1048599 0x10B66E: main (Main.c:27)
+          n0: 327726 in 2 places, all below massif's threshold (1.00%)
+         n2: 1488498 0x1344C2: createTexture (Texture.c:23)
+          n1: 1488439 0x12098E: initRenderer (Renderer.c:62)
+           n0: 1488439 0x10B66E: main (Main.c:27)
+          n0: 59 in 1 place, below massif's threshold (1.00%)
+  n1: 1638400 0x63D012F: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+   n1: 1638400 0x67638E5: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+    n1: 1638400 0x67127E4: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+     n1: 1638400 0x5BB6EEF: ??? (in /usr/lib/libGLX_nvidia.so.550.90.07)
+      n1: 1638400 0x5BE2A8D: ??? (in /usr/lib/libGLX_nvidia.so.550.90.07)
+       n1: 1638400 0x5BD7785: glXCreateContextAttribsARB (in /usr/lib/libGLX_nvidia.so.550.90.07)
+        n1: 1638400 0x4FB763B: glXCreateContextAttribsARB (libglx.c:301)
+         n1: 1638400 0x48AADAF: _glfwCreateContextGLX (glx_context.c:585)
+          n1: 1638400 0x489F9CD: _glfwCreateWindowX11 (x11_window.c:2003)
+           n1: 1638400 0x48947BA: glfwCreateWindow (window.c:247)
+            n1: 1638400 0x1345B4: initWindow (WindowManager.c:32)
+             n0: 1638400 0x10B659: main (Main.c:24)
+  n0: 778073 in 212 places, all below massif's threshold (1.00%)
+ n2: 2780262 0x6711ABD: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+  n0: 1955222 in 119 places, all below massif's threshold (1.00%)
+  n1: 825040 0x6CBCAF5: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+   n1: 825040 0x6759713: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+    n1: 825040 0x6759ADB: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+     n1: 825040 0x6712C7B: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+      n1: 825040 0x5BB71FF: ??? (in /usr/lib/libGLX_nvidia.so.550.90.07)
+       n1: 825040 0x5BE443A: ??? (in /usr/lib/libGLX_nvidia.so.550.90.07)
+        n1: 825040 0x4FAFE82: InternalMakeCurrentVendor (libglx.c:871)
+         n1: 825040 0x4FB2243: InternalMakeCurrentDispatch (libglx.c:926)
+          n1: 825040 0x4FB6E66: CommonMakeCurrent (libglx.c:1070)
+           n1: 825040 0x48A50AA: makeContextCurrentGLX (glx_context.c:163)
+            n1: 825040 0x488EC29: _glfwRefreshContextAttribs (context.c:363)
+             n1: 825040 0x489F7A7: _glfwCreateWindowX11 (x11_window.c:2017)
+              n1: 825040 0x48947BA: glfwCreateWindow (window.c:247)
+               n1: 825040 0x1345B4: initWindow (WindowManager.c:32)
+                n0: 825040 0x10B659: main (Main.c:24)
+ n1: 2577060 0x11D924: createModel (Models.c:25)
+  n2: 2577060 0x11F1D9: createObject (Models.c:82)
+   n1: 2500236 0x1208E6: initRenderer (Renderer.c:56)
+    n0: 2500236 0x10B66E: main (Main.c:27)
+   n0: 76824 in 5 places, all below massif's threshold (1.00%)
+ n0: 2524309 in 438 places, all below massif's threshold (1.00%)
+ n1: 2074176 0x4A99B24: UnknownInlinedFun (almalloc.cpp:23)
+  n1: 2074176 0x4A99B24: UnknownInlinedFun (almalloc.h:100)
+   n1: 2074176 0x4A99B24: UnknownInlinedFun (alloc_traits.h:318)
+    n1: 2074176 0x4A99B24: UnknownInlinedFun (stl_vector.h:378)
+     n1: 2074176 0x4A99B24: UnknownInlinedFun (stl_vector.h:395)
+      n1: 2074176 0x4A99B24: UnknownInlinedFun (stl_vector.h:332)
+       n1: 2074176 0x4A99B24: UnknownInlinedFun (stl_vector.h:566)
+        n1: 2074176 0x4A99B24: UnknownInlinedFun (buffer.cpp:346)
+         n1: 2074176 0x4A99B24: alBufferStorageSOFT (buffer.cpp:769)
+          n1: 2074176 0x1178B8: createSound (Audio.c:101)
+           n1: 2074176 0x12078C: initRenderer (Renderer.c:45)
+            n0: 2074176 0x10B66E: main (Main.c:27)
+ n1: 1949696 0x4B08445: UnknownInlinedFun (almalloc.cpp:23)
+  n1: 1949696 0x4B08445: UnknownInlinedFun (almalloc.h:100)
+   n1: 1949696 0x4B08445: UnknownInlinedFun (alloc_traits.h:318)
+    n1: 1949696 0x4B08445: UnknownInlinedFun (stl_vector.h:378)
+     n1: 1949696 0x4B08445: UnknownInlinedFun (stl_vector.h:395)
+      n1: 1949696 0x4B08445: UnknownInlinedFun (stl_vector.h:332)
+       n1: 1949696 0x4B08445: UnknownInlinedFun (stl_vector.h:552)
+        n1: 1949696 0x4B08445: UnknownInlinedFun (voice.h:262)
+         n1: 1949696 0x4B08445: UnknownInlinedFun (unique_ptr.h:1080)
+          n1: 1949696 0x4B08445: ContextBase::allocVoices(unsigned long) (context.cpp:127)
+           n1: 1949696 0x4AC0B34: UnknownInlinedFun (context.cpp:209)
+            n1: 1949696 0x4AC0B34: alcCreateContext (alc.cpp:3324)
+             n1: 1949696 0x11761D: initAudio (Audio.c:22)
+              n0: 1949696 0x10B667: main (Main.c:26)
+ n1: 567815 0xC340E80: ???
+  n0: 567815 in 14 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=61
+#-----------
+time=2490441434
+mem_heap_B=48274241
+mem_heap_extra_B=143767
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=62
+#-----------
+time=2520184623
+mem_heap_B=48274241
+mem_heap_extra_B=143767
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=63
+#-----------
+time=2549948510
+mem_heap_B=48274241
+mem_heap_extra_B=143767
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=64
+#-----------
+time=2579670376
+mem_heap_B=48274241
+mem_heap_extra_B=143767
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=65
+#-----------
+time=2609363801
+mem_heap_B=48274241
+mem_heap_extra_B=143767
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=66
+#-----------
+time=2639242167
+mem_heap_B=48274241
+mem_heap_extra_B=143767
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=67
+#-----------
+time=2669091180
+mem_heap_B=48274241
+mem_heap_extra_B=143767
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=68
+#-----------
+time=2698971406
+mem_heap_B=48274241
+mem_heap_extra_B=143751
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=69
+#-----------
+time=2728868793
+mem_heap_B=48274241
+mem_heap_extra_B=143767
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=70
+#-----------
+time=2757963948
+mem_heap_B=48275273
+mem_heap_extra_B=143743
+mem_stacks_B=0
+heap_tree=detailed
+n8: 48275273 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 20616480 0x11D8F9: createModel (Models.c:24)
+  n2: 20616480 0x11F1D9: createObject (Models.c:82)
+   n1: 20001888 0x1208E6: initRenderer (Renderer.c:56)
+    n0: 20001888 0x10B66E: main (Main.c:27)
+   n0: 614592 in 5 places, all below massif's threshold (1.00%)
+ n3: 15184435 0x6711801: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+  n2: 12767970 0x643B13A: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+   n1: 7543828 0x6419C8F: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+    n2: 7543828 0x641A35F: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+     n2: 6705404 0x120BDB: renderObject (Renderer.c:85)
+      n1: 6667367 0x120FDB: render (Renderer.c:135)
+       n0: 6667367 0x10B683: main (Main.c:31)
+      n0: 38037 in 3 places, all below massif's threshold (1.00%)
+     n2: 838424 0x120C22: renderObject (Renderer.c:88)
+      n1: 833483 0x120FDB: render (Renderer.c:135)
+       n0: 833483 0x10B683: main (Main.c:31)
+      n0: 4941 in 3 places, all below massif's threshold (1.00%)
+   n1: 5224142 0x67C8634: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+    n1: 5224142 0x67C9C7E: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+     n1: 5224142 0x65066CC: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+      n1: 5224142 0x64F7793: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+       n1: 5224142 0x64F9C91: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+        n2: 5224142 0x64FA053: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+         n3: 3735644 0x134485: createTexture (Texture.c:25)
+          n1: 2359319 0x12087F: initRenderer (Renderer.c:55)
+           n0: 2359319 0x10B66E: main (Main.c:27)
+          n1: 1048599 0x120A1A: initRenderer (Renderer.c:65)
+           n0: 1048599 0x10B66E: main (Main.c:27)
+          n0: 327726 in 2 places, all below massif's threshold (1.00%)
+         n2: 1488498 0x1344C2: createTexture (Texture.c:23)
+          n1: 1488439 0x12098E: initRenderer (Renderer.c:62)
+           n0: 1488439 0x10B66E: main (Main.c:27)
+          n0: 59 in 1 place, below massif's threshold (1.00%)
+  n1: 1638400 0x63D012F: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+   n1: 1638400 0x67638E5: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+    n1: 1638400 0x67127E4: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+     n1: 1638400 0x5BB6EEF: ??? (in /usr/lib/libGLX_nvidia.so.550.90.07)
+      n1: 1638400 0x5BE2A8D: ??? (in /usr/lib/libGLX_nvidia.so.550.90.07)
+       n1: 1638400 0x5BD7785: glXCreateContextAttribsARB (in /usr/lib/libGLX_nvidia.so.550.90.07)
+        n1: 1638400 0x4FB763B: glXCreateContextAttribsARB (libglx.c:301)
+         n1: 1638400 0x48AADAF: _glfwCreateContextGLX (glx_context.c:585)
+          n1: 1638400 0x489F9CD: _glfwCreateWindowX11 (x11_window.c:2003)
+           n1: 1638400 0x48947BA: glfwCreateWindow (window.c:247)
+            n1: 1638400 0x1345B4: initWindow (WindowManager.c:32)
+             n0: 1638400 0x10B659: main (Main.c:24)
+  n0: 778065 in 212 places, all below massif's threshold (1.00%)
+ n2: 2781302 0x6711ABD: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+  n0: 1956262 in 119 places, all below massif's threshold (1.00%)
+  n1: 825040 0x6CBCAF5: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+   n1: 825040 0x6759713: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+    n1: 825040 0x6759ADB: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+     n1: 825040 0x6712C7B: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+      n1: 825040 0x5BB71FF: ??? (in /usr/lib/libGLX_nvidia.so.550.90.07)
+       n1: 825040 0x5BE443A: ??? (in /usr/lib/libGLX_nvidia.so.550.90.07)
+        n1: 825040 0x4FAFE82: InternalMakeCurrentVendor (libglx.c:871)
+         n1: 825040 0x4FB2243: InternalMakeCurrentDispatch (libglx.c:926)
+          n1: 825040 0x4FB6E66: CommonMakeCurrent (libglx.c:1070)
+           n1: 825040 0x48A50AA: makeContextCurrentGLX (glx_context.c:163)
+            n1: 825040 0x488EC29: _glfwRefreshContextAttribs (context.c:363)
+             n1: 825040 0x489F7A7: _glfwCreateWindowX11 (x11_window.c:2017)
+              n1: 825040 0x48947BA: glfwCreateWindow (window.c:247)
+               n1: 825040 0x1345B4: initWindow (WindowManager.c:32)
+                n0: 825040 0x10B659: main (Main.c:24)
+ n1: 2577060 0x11D924: createModel (Models.c:25)
+  n2: 2577060 0x11F1D9: createObject (Models.c:82)
+   n1: 2500236 0x1208E6: initRenderer (Renderer.c:56)
+    n0: 2500236 0x10B66E: main (Main.c:27)
+   n0: 76824 in 5 places, all below massif's threshold (1.00%)
+ n0: 2524309 in 438 places, all below massif's threshold (1.00%)
+ n1: 2074176 0x4A99B24: UnknownInlinedFun (almalloc.cpp:23)
+  n1: 2074176 0x4A99B24: UnknownInlinedFun (almalloc.h:100)
+   n1: 2074176 0x4A99B24: UnknownInlinedFun (alloc_traits.h:318)
+    n1: 2074176 0x4A99B24: UnknownInlinedFun (stl_vector.h:378)
+     n1: 2074176 0x4A99B24: UnknownInlinedFun (stl_vector.h:395)
+      n1: 2074176 0x4A99B24: UnknownInlinedFun (stl_vector.h:332)
+       n1: 2074176 0x4A99B24: UnknownInlinedFun (stl_vector.h:566)
+        n1: 2074176 0x4A99B24: UnknownInlinedFun (buffer.cpp:346)
+         n1: 2074176 0x4A99B24: alBufferStorageSOFT (buffer.cpp:769)
+          n1: 2074176 0x1178B8: createSound (Audio.c:101)
+           n1: 2074176 0x12078C: initRenderer (Renderer.c:45)
+            n0: 2074176 0x10B66E: main (Main.c:27)
+ n1: 1949696 0x4B08445: UnknownInlinedFun (almalloc.cpp:23)
+  n1: 1949696 0x4B08445: UnknownInlinedFun (almalloc.h:100)
+   n1: 1949696 0x4B08445: UnknownInlinedFun (alloc_traits.h:318)
+    n1: 1949696 0x4B08445: UnknownInlinedFun (stl_vector.h:378)
+     n1: 1949696 0x4B08445: UnknownInlinedFun (stl_vector.h:395)
+      n1: 1949696 0x4B08445: UnknownInlinedFun (stl_vector.h:332)
+       n1: 1949696 0x4B08445: UnknownInlinedFun (stl_vector.h:552)
+        n1: 1949696 0x4B08445: UnknownInlinedFun (voice.h:262)
+         n1: 1949696 0x4B08445: UnknownInlinedFun (unique_ptr.h:1080)
+          n1: 1949696 0x4B08445: ContextBase::allocVoices(unsigned long) (context.cpp:127)
+           n1: 1949696 0x4AC0B34: UnknownInlinedFun (context.cpp:209)
+            n1: 1949696 0x4AC0B34: alcCreateContext (alc.cpp:3324)
+             n1: 1949696 0x11761D: initAudio (Audio.c:22)
+              n0: 1949696 0x10B667: main (Main.c:26)
+ n1: 567815 0xC340E80: ???
+  n0: 567815 in 14 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=71
+#-----------
+time=2787405823
+mem_heap_B=48275273
+mem_heap_extra_B=143743
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=72
+#-----------
+time=2816371263
+mem_heap_B=48275273
+mem_heap_extra_B=143743
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=73
+#-----------
+time=2845320764
+mem_heap_B=48274465
+mem_heap_extra_B=143759
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=74
+#-----------
+time=2874682012
+mem_heap_B=48274241
+mem_heap_extra_B=143751
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=75
+#-----------
+time=2904484668
+mem_heap_B=48274241
+mem_heap_extra_B=143751
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=76
+#-----------
+time=2934287250
+mem_heap_B=48274241
+mem_heap_extra_B=143767
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=77
+#-----------
+time=2964216429
+mem_heap_B=48274241
+mem_heap_extra_B=143751
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=78
+#-----------
+time=2994071867
+mem_heap_B=48274241
+mem_heap_extra_B=143767
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=79
+#-----------
+time=3023990117
+mem_heap_B=48274241
+mem_heap_extra_B=143767
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=80
+#-----------
+time=3053776588
+mem_heap_B=48274241
+mem_heap_extra_B=143767
+mem_stacks_B=0
+heap_tree=detailed
+n8: 48274241 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 20616480 0x11D8F9: createModel (Models.c:24)
+  n2: 20616480 0x11F1D9: createObject (Models.c:82)
+   n1: 20001888 0x1208E6: initRenderer (Renderer.c:56)
+    n0: 20001888 0x10B66E: main (Main.c:27)
+   n0: 614592 in 5 places, all below massif's threshold (1.00%)
+ n3: 15184443 0x6711801: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+  n2: 12767970 0x643B13A: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+   n1: 7543828 0x6419C8F: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+    n2: 7543828 0x641A35F: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+     n2: 6705404 0x120BDB: renderObject (Renderer.c:85)
+      n1: 6667367 0x120FDB: render (Renderer.c:135)
+       n0: 6667367 0x10B683: main (Main.c:31)
+      n0: 38037 in 3 places, all below massif's threshold (1.00%)
+     n2: 838424 0x120C22: renderObject (Renderer.c:88)
+      n1: 833483 0x120FDB: render (Renderer.c:135)
+       n0: 833483 0x10B683: main (Main.c:31)
+      n0: 4941 in 3 places, all below massif's threshold (1.00%)
+   n1: 5224142 0x67C8634: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+    n1: 5224142 0x67C9C7E: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+     n1: 5224142 0x65066CC: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+      n1: 5224142 0x64F7793: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+       n1: 5224142 0x64F9C91: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+        n2: 5224142 0x64FA053: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+         n3: 3735644 0x134485: createTexture (Texture.c:25)
+          n1: 2359319 0x12087F: initRenderer (Renderer.c:55)
+           n0: 2359319 0x10B66E: main (Main.c:27)
+          n1: 1048599 0x120A1A: initRenderer (Renderer.c:65)
+           n0: 1048599 0x10B66E: main (Main.c:27)
+          n0: 327726 in 2 places, all below massif's threshold (1.00%)
+         n2: 1488498 0x1344C2: createTexture (Texture.c:23)
+          n1: 1488439 0x12098E: initRenderer (Renderer.c:62)
+           n0: 1488439 0x10B66E: main (Main.c:27)
+          n0: 59 in 1 place, below massif's threshold (1.00%)
+  n1: 1638400 0x63D012F: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+   n1: 1638400 0x67638E5: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+    n1: 1638400 0x67127E4: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+     n1: 1638400 0x5BB6EEF: ??? (in /usr/lib/libGLX_nvidia.so.550.90.07)
+      n1: 1638400 0x5BE2A8D: ??? (in /usr/lib/libGLX_nvidia.so.550.90.07)
+       n1: 1638400 0x5BD7785: glXCreateContextAttribsARB (in /usr/lib/libGLX_nvidia.so.550.90.07)
+        n1: 1638400 0x4FB763B: glXCreateContextAttribsARB (libglx.c:301)
+         n1: 1638400 0x48AADAF: _glfwCreateContextGLX (glx_context.c:585)
+          n1: 1638400 0x489F9CD: _glfwCreateWindowX11 (x11_window.c:2003)
+           n1: 1638400 0x48947BA: glfwCreateWindow (window.c:247)
+            n1: 1638400 0x1345B4: initWindow (WindowManager.c:32)
+             n0: 1638400 0x10B659: main (Main.c:24)
+  n0: 778073 in 212 places, all below massif's threshold (1.00%)
+ n2: 2780262 0x6711ABD: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+  n0: 1955222 in 119 places, all below massif's threshold (1.00%)
+  n1: 825040 0x6CBCAF5: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+   n1: 825040 0x6759713: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+    n1: 825040 0x6759ADB: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+     n1: 825040 0x6712C7B: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+      n1: 825040 0x5BB71FF: ??? (in /usr/lib/libGLX_nvidia.so.550.90.07)
+       n1: 825040 0x5BE443A: ??? (in /usr/lib/libGLX_nvidia.so.550.90.07)
+        n1: 825040 0x4FAFE82: InternalMakeCurrentVendor (libglx.c:871)
+         n1: 825040 0x4FB2243: InternalMakeCurrentDispatch (libglx.c:926)
+          n1: 825040 0x4FB6E66: CommonMakeCurrent (libglx.c:1070)
+           n1: 825040 0x48A50AA: makeContextCurrentGLX (glx_context.c:163)
+            n1: 825040 0x488EC29: _glfwRefreshContextAttribs (context.c:363)
+             n1: 825040 0x489F7A7: _glfwCreateWindowX11 (x11_window.c:2017)
+              n1: 825040 0x48947BA: glfwCreateWindow (window.c:247)
+               n1: 825040 0x1345B4: initWindow (WindowManager.c:32)
+                n0: 825040 0x10B659: main (Main.c:24)
+ n1: 2577060 0x11D924: createModel (Models.c:25)
+  n2: 2577060 0x11F1D9: createObject (Models.c:82)
+   n1: 2500236 0x1208E6: initRenderer (Renderer.c:56)
+    n0: 2500236 0x10B66E: main (Main.c:27)
+   n0: 76824 in 5 places, all below massif's threshold (1.00%)
+ n0: 2524309 in 438 places, all below massif's threshold (1.00%)
+ n1: 2074176 0x4A99B24: UnknownInlinedFun (almalloc.cpp:23)
+  n1: 2074176 0x4A99B24: UnknownInlinedFun (almalloc.h:100)
+   n1: 2074176 0x4A99B24: UnknownInlinedFun (alloc_traits.h:318)
+    n1: 2074176 0x4A99B24: UnknownInlinedFun (stl_vector.h:378)
+     n1: 2074176 0x4A99B24: UnknownInlinedFun (stl_vector.h:395)
+      n1: 2074176 0x4A99B24: UnknownInlinedFun (stl_vector.h:332)
+       n1: 2074176 0x4A99B24: UnknownInlinedFun (stl_vector.h:566)
+        n1: 2074176 0x4A99B24: UnknownInlinedFun (buffer.cpp:346)
+         n1: 2074176 0x4A99B24: alBufferStorageSOFT (buffer.cpp:769)
+          n1: 2074176 0x1178B8: createSound (Audio.c:101)
+           n1: 2074176 0x12078C: initRenderer (Renderer.c:45)
+            n0: 2074176 0x10B66E: main (Main.c:27)
+ n1: 1949696 0x4B08445: UnknownInlinedFun (almalloc.cpp:23)
+  n1: 1949696 0x4B08445: UnknownInlinedFun (almalloc.h:100)
+   n1: 1949696 0x4B08445: UnknownInlinedFun (alloc_traits.h:318)
+    n1: 1949696 0x4B08445: UnknownInlinedFun (stl_vector.h:378)
+     n1: 1949696 0x4B08445: UnknownInlinedFun (stl_vector.h:395)
+      n1: 1949696 0x4B08445: UnknownInlinedFun (stl_vector.h:332)
+       n1: 1949696 0x4B08445: UnknownInlinedFun (stl_vector.h:552)
+        n1: 1949696 0x4B08445: UnknownInlinedFun (voice.h:262)
+         n1: 1949696 0x4B08445: UnknownInlinedFun (unique_ptr.h:1080)
+          n1: 1949696 0x4B08445: ContextBase::allocVoices(unsigned long) (context.cpp:127)
+           n1: 1949696 0x4AC0B34: UnknownInlinedFun (context.cpp:209)
+            n1: 1949696 0x4AC0B34: alcCreateContext (alc.cpp:3324)
+             n1: 1949696 0x11761D: initAudio (Audio.c:22)
+              n0: 1949696 0x10B667: main (Main.c:26)
+ n1: 567815 0xC340E80: ???
+  n0: 567815 in 14 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=81
+#-----------
+time=3083724760
+mem_heap_B=48274241
+mem_heap_extra_B=143767
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=82
+#-----------
+time=3113700260
+mem_heap_B=48274241
+mem_heap_extra_B=143767
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=83
+#-----------
+time=3142641338
+mem_heap_B=48275273
+mem_heap_extra_B=143743
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=84
+#-----------
+time=3171673936
+mem_heap_B=48275273
+mem_heap_extra_B=143743
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=85
+#-----------
+time=3200610715
+mem_heap_B=48274241
+mem_heap_extra_B=143767
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=86
+#-----------
+time=3230492433
+mem_heap_B=48274241
+mem_heap_extra_B=143767
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=87
+#-----------
+time=3260610452
+mem_heap_B=48274241
+mem_heap_extra_B=143767
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=88
+#-----------
+time=3289542054
+mem_heap_B=48275273
+mem_heap_extra_B=143743
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=89
+#-----------
+time=3318768848
+mem_heap_B=48275481
+mem_heap_extra_B=143751
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=90
+#-----------
+time=3347695605
+mem_heap_B=48274241
+mem_heap_extra_B=143767
+mem_stacks_B=0
+heap_tree=detailed
+n8: 48274241 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 20616480 0x11D8F9: createModel (Models.c:24)
+  n2: 20616480 0x11F1D9: createObject (Models.c:82)
+   n1: 20001888 0x1208E6: initRenderer (Renderer.c:56)
+    n0: 20001888 0x10B66E: main (Main.c:27)
+   n0: 614592 in 5 places, all below massif's threshold (1.00%)
+ n3: 15184443 0x6711801: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+  n2: 12767970 0x643B13A: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+   n1: 7543828 0x6419C8F: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+    n2: 7543828 0x641A35F: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+     n2: 6705404 0x120BDB: renderObject (Renderer.c:85)
+      n1: 6667367 0x120FDB: render (Renderer.c:135)
+       n0: 6667367 0x10B683: main (Main.c:31)
+      n0: 38037 in 3 places, all below massif's threshold (1.00%)
+     n2: 838424 0x120C22: renderObject (Renderer.c:88)
+      n1: 833483 0x120FDB: render (Renderer.c:135)
+       n0: 833483 0x10B683: main (Main.c:31)
+      n0: 4941 in 3 places, all below massif's threshold (1.00%)
+   n1: 5224142 0x67C8634: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+    n1: 5224142 0x67C9C7E: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+     n1: 5224142 0x65066CC: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+      n1: 5224142 0x64F7793: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+       n1: 5224142 0x64F9C91: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+        n2: 5224142 0x64FA053: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+         n3: 3735644 0x134485: createTexture (Texture.c:25)
+          n1: 2359319 0x12087F: initRenderer (Renderer.c:55)
+           n0: 2359319 0x10B66E: main (Main.c:27)
+          n1: 1048599 0x120A1A: initRenderer (Renderer.c:65)
+           n0: 1048599 0x10B66E: main (Main.c:27)
+          n0: 327726 in 2 places, all below massif's threshold (1.00%)
+         n2: 1488498 0x1344C2: createTexture (Texture.c:23)
+          n1: 1488439 0x12098E: initRenderer (Renderer.c:62)
+           n0: 1488439 0x10B66E: main (Main.c:27)
+          n0: 59 in 1 place, below massif's threshold (1.00%)
+  n1: 1638400 0x63D012F: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+   n1: 1638400 0x67638E5: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+    n1: 1638400 0x67127E4: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+     n1: 1638400 0x5BB6EEF: ??? (in /usr/lib/libGLX_nvidia.so.550.90.07)
+      n1: 1638400 0x5BE2A8D: ??? (in /usr/lib/libGLX_nvidia.so.550.90.07)
+       n1: 1638400 0x5BD7785: glXCreateContextAttribsARB (in /usr/lib/libGLX_nvidia.so.550.90.07)
+        n1: 1638400 0x4FB763B: glXCreateContextAttribsARB (libglx.c:301)
+         n1: 1638400 0x48AADAF: _glfwCreateContextGLX (glx_context.c:585)
+          n1: 1638400 0x489F9CD: _glfwCreateWindowX11 (x11_window.c:2003)
+           n1: 1638400 0x48947BA: glfwCreateWindow (window.c:247)
+            n1: 1638400 0x1345B4: initWindow (WindowManager.c:32)
+             n0: 1638400 0x10B659: main (Main.c:24)
+  n0: 778073 in 212 places, all below massif's threshold (1.00%)
+ n2: 2780262 0x6711ABD: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+  n0: 1955222 in 119 places, all below massif's threshold (1.00%)
+  n1: 825040 0x6CBCAF5: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+   n1: 825040 0x6759713: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+    n1: 825040 0x6759ADB: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+     n1: 825040 0x6712C7B: ??? (in /usr/lib/libnvidia-glcore.so.550.90.07)
+      n1: 825040 0x5BB71FF: ??? (in /usr/lib/libGLX_nvidia.so.550.90.07)
+       n1: 825040 0x5BE443A: ??? (in /usr/lib/libGLX_nvidia.so.550.90.07)
+        n1: 825040 0x4FAFE82: InternalMakeCurrentVendor (libglx.c:871)
+         n1: 825040 0x4FB2243: InternalMakeCurrentDispatch (libglx.c:926)
+          n1: 825040 0x4FB6E66: CommonMakeCurrent (libglx.c:1070)
+           n1: 825040 0x48A50AA: makeContextCurrentGLX (glx_context.c:163)
+            n1: 825040 0x488EC29: _glfwRefreshContextAttribs (context.c:363)
+             n1: 825040 0x489F7A7: _glfwCreateWindowX11 (x11_window.c:2017)
+              n1: 825040 0x48947BA: glfwCreateWindow (window.c:247)
+               n1: 825040 0x1345B4: initWindow (WindowManager.c:32)
+                n0: 825040 0x10B659: main (Main.c:24)
+ n1: 2577060 0x11D924: createModel (Models.c:25)
+  n2: 2577060 0x11F1D9: createObject (Models.c:82)
+   n1: 2500236 0x1208E6: initRenderer (Renderer.c:56)
+    n0: 2500236 0x10B66E: main (Main.c:27)
+   n0: 76824 in 5 places, all below massif's threshold (1.00%)
+ n0: 2524309 in 438 places, all below massif's threshold (1.00%)
+ n1: 2074176 0x4A99B24: UnknownInlinedFun (almalloc.cpp:23)
+  n1: 2074176 0x4A99B24: UnknownInlinedFun (almalloc.h:100)
+   n1: 2074176 0x4A99B24: UnknownInlinedFun (alloc_traits.h:318)
+    n1: 2074176 0x4A99B24: UnknownInlinedFun (stl_vector.h:378)
+     n1: 2074176 0x4A99B24: UnknownInlinedFun (stl_vector.h:395)
+      n1: 2074176 0x4A99B24: UnknownInlinedFun (stl_vector.h:332)
+       n1: 2074176 0x4A99B24: UnknownInlinedFun (stl_vector.h:566)
+        n1: 2074176 0x4A99B24: UnknownInlinedFun (buffer.cpp:346)
+         n1: 2074176 0x4A99B24: alBufferStorageSOFT (buffer.cpp:769)
+          n1: 2074176 0x1178B8: createSound (Audio.c:101)
+           n1: 2074176 0x12078C: initRenderer (Renderer.c:45)
+            n0: 2074176 0x10B66E: main (Main.c:27)
+ n1: 1949696 0x4B08445: UnknownInlinedFun (almalloc.cpp:23)
+  n1: 1949696 0x4B08445: UnknownInlinedFun (almalloc.h:100)
+   n1: 1949696 0x4B08445: UnknownInlinedFun (alloc_traits.h:318)
+    n1: 1949696 0x4B08445: UnknownInlinedFun (stl_vector.h:378)
+     n1: 1949696 0x4B08445: UnknownInlinedFun (stl_vector.h:395)
+      n1: 1949696 0x4B08445: UnknownInlinedFun (stl_vector.h:332)
+       n1: 1949696 0x4B08445: UnknownInlinedFun (stl_vector.h:552)
+        n1: 1949696 0x4B08445: UnknownInlinedFun (voice.h:262)
+         n1: 1949696 0x4B08445: UnknownInlinedFun (unique_ptr.h:1080)
+          n1: 1949696 0x4B08445: ContextBase::allocVoices(unsigned long) (context.cpp:127)
+           n1: 1949696 0x4AC0B34: UnknownInlinedFun (context.cpp:209)
+            n1: 1949696 0x4AC0B34: alcCreateContext (alc.cpp:3324)
+             n1: 1949696 0x11761D: initAudio (Audio.c:22)
+              n0: 1949696 0x10B667: main (Main.c:26)
+ n1: 567815 0xC340E80: ???
+  n0: 567815 in 14 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=91
+#-----------
+time=3377677276
+mem_heap_B=48274217
+mem_heap_extra_B=143751
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=92
+#-----------
+time=3407663122
+mem_heap_B=48274241
+mem_heap_extra_B=143767
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=93
+#-----------
+time=3437639188
+mem_heap_B=48274241
+mem_heap_extra_B=143767
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=94
+#-----------
+time=3467594426
+mem_heap_B=48274241
+mem_heap_extra_B=143767
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=95
+#-----------
+time=3497537298
+mem_heap_B=48274241
+mem_heap_extra_B=143767
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=96
+#-----------
+time=3526634104
+mem_heap_B=48275273
+mem_heap_extra_B=143743
+mem_stacks_B=0
+heap_tree=empty

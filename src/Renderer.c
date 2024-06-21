@@ -50,23 +50,23 @@ void initRenderer() {
 
 
     createTexture(&tile, "tile.png");
-    createObject(&plane, &tile, "plane.obj", 0, 0, 0,    4, 4, 4,    0, 0, 0);
+    //createObject(&plane, &tile, "plane.obj", 0, 0, 0,    4, 4, 4,    0, 0, 0);
 
     createTexture(&tableTex, "table.png");
-    createObject(&table, &tableTex, "table.obj", 0, 0, 0,    1, 1, 1,    0, 0, 0);
+    //createObject(&table, &tableTex, "stanford-bunny.obj", 0, 0, 0,    8, 8, 8,    0, 0, 0);
 
     createTexture(&skyTexture, "sky2.png");
-    createObject(&sky, &skyTexture, "sky.obj", 0, 0, 0,    2, 2, 2,    0, 0, 0);
+    //createObject(&sky, &skyTexture, "sky.obj", 0, 0, 0,    2, 2, 2,    0, 0, 0);
     sky.model.lit = false;
 
     createTexture(&marioTexture, "mario.png");
-    createObject(&mario, &marioTexture, "mario.obj", -7, 1.2, 2,    1, 1, 1,    0, 0, 0);
+    //createObject(&mario, &marioTexture, "mario.obj", -7, 1.2, 2,    1, 1, 1,    0, 0, 0);
 
     createTexture(&radioTexture, "radio.png");
-    createObject(&radio, &radioTexture, "radio.obj", 0, 2.5, 0, 1, 1, 1, 0, -200, 0);
+    //createObject(&radio, &radioTexture, "radio.obj", 0, 2.5, 0, 1, 1, 1, 0, -200, 0);
 
     createTexture(&baseColor, "basicColors.png");
-    createObject(&disco, &baseColor, "disco.obj", 0, 5, 0, 1, 1, 1, 0, 0, 0);
+    //createObject(&disco, &baseColor, "disco.obj", 0, 5, 0, 1, 1, 1, 0, 0, 0);
 
 
     glfwSetInputMode(getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -107,9 +107,14 @@ void renderObject(Object* object) {
     setVec3(&shader, "lightPos", lightPos);
 
     glBindTexture(GL_TEXTURE_2D, object->model.texture.id);
-    
-    glDrawElements(GL_TRIANGLES, object->model.indexCount, GL_UNSIGNED_INT, 0);
 
+    if(isKeyDown(GLFW_KEY_Q)) {
+        glDrawElements(GL_QUADS, object->model.indexCount, GL_UNSIGNED_INT, 0);
+    } else {
+        glDrawElements(GL_TRIANGLES, object->model.indexCount, GL_UNSIGNED_INT, 0);
+
+    }
+    
 }
 
 void render() {

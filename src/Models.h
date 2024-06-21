@@ -1,5 +1,6 @@
 #pragma once
 #include <cglm/cglm.h>
+#include <uthash.h>
 #include "Texture.h"
 
 typedef struct Vertex {
@@ -26,6 +27,12 @@ typedef struct Object {
     vec3 rotation;
     vec3 scale;
 } Object;
+
+typedef struct VertexMapEntry {
+    int vertexKey;
+    int vertexIndex;
+    UT_hash_handle hh;
+} VertexMapEntry;
 
 void createModel(Model* model, const char* path, Texture* texture);
 void createObject(Object* object, Texture* texture, const char* mdlPath, float x, float y, float z, float sx, float sy, float sz, float rx, float ry, float rz);
