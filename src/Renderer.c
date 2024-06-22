@@ -18,23 +18,27 @@ vec3 camPos = {4, 4, 4};
 vec3 soundPos = {0, 0, 0};
 vec3 lightPos;
 
+float frameVertices[] = {
+    -1.0f,  1.0f,  0.0f, 1.0f,
+    -1.0f, -1.0f,  0.0f, 0.0f,
+    1.0f, -1.0f,  1.0f, 0.0f,
+
+    -1.0f,  1.0f,  0.0f, 1.0f,
+    1.0f, -1.0f,  1.0f, 0.0f,
+    1.0f,  1.0f,  1.0f, 1.0f
+};
+
+unsigned int fbo;
+unsigned int rbo;
+unsigned int textureColorbuffer;
+unsigned int pvao;
+unsigned int pvbo;
+
 Texture tile;
 Object plane;
 
-Texture tableTex;
-Object table;
-
-Texture skyTexture;
-Object sky;
-
-Texture marioTexture;
-Object mario;
-
-Texture radioTexture;
-Object radio;
-
-Texture baseColor;
-Object disco;
+Object screen;
+Texture screentex;
 
 Sound testSound;
 
@@ -42,32 +46,41 @@ time_t t;
 
 void initRenderer() {
 
+    glGenVertexArrays(1, &pvao);
+    glGenBuffers(1, &pvbo);
+    glBindVertexArray(pvao);
+    glBindBuffer(GL_ARRAY_BUFFER, pvbo);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(frameVertices), frameVertices, GL_STATIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(2);
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+
+    glGenFramebuffers(1, &fbo);
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glGenTextures(1, &textureColorbuffer);
+    glBindTexture(GL_TEXTURE_2D, textureColorbuffer);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 512, 384, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureColorbuffer, 0);
+
+    glGenRenderbuffers(1, &rbo);
+    glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, 512, 384);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
+    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    }
+
     createSound(&testSound, "test2.wav", true, 2, soundPos);
     playSoundFrom(&testSound, 5);
 
     createShader(&shader);
     createCamera(&camera, getWindowWidth(), getWindowHeight(), camPos);
 
-
     createTexture(&tile, "tile.png");
-    //createObject(&plane, &tile, "plane.obj", 0, 0, 0,    4, 4, 4,    0, 0, 0);
-
-    createTexture(&tableTex, "table.png");
-    //createObject(&table, &tableTex, "stanford-bunny.obj", 0, 0, 0,    8, 8, 8,    0, 0, 0);
-
-    createTexture(&skyTexture, "sky2.png");
-    //createObject(&sky, &skyTexture, "sky.obj", 0, 0, 0,    2, 2, 2,    0, 0, 0);
-    sky.model.lit = false;
-
-    createTexture(&marioTexture, "mario.png");
-    //createObject(&mario, &marioTexture, "mario.obj", -7, 1.2, 2,    1, 1, 1,    0, 0, 0);
-
-    createTexture(&radioTexture, "radio.png");
-    //createObject(&radio, &radioTexture, "radio.obj", 0, 2.5, 0, 1, 1, 1, 0, -200, 0);
-
-    createTexture(&baseColor, "basicColors.png");
-    //createObject(&disco, &baseColor, "disco.obj", 0, 5, 0, 1, 1, 1, 0, 0, 0);
-
+    createObject(&plane, &tile, "plane.obj", 0, 0, 0,    4, 4, 4,    0, 0, 0);
 
     glfwSetInputMode(getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
@@ -77,7 +90,25 @@ void initRenderer() {
 
 }
 
+void renderScreen() {
+
+    glViewport(0, 0, getWindowWidth(), getWindowHeight());
+
+    glDisable(GL_DEPTH_TEST);
+    useShader(&shader);
+    setBool(&shader, "frame", true);
+    glBindVertexArray(pvao);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glBindTexture(GL_TEXTURE_2D, textureColorbuffer);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+
+}
+
 void renderObject(Object* object) {
+
+    glViewport(0, 0, 512, 384);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
     
     glBindVertexArray(object->model.VAO);
 
@@ -97,45 +128,32 @@ void renderObject(Object* object) {
     glEnableVertexAttribArray(2);
 
     mat4 transformationMatrix;
-    createTransformationMatrix(&transformationMatrix, object);
+    loadTransformationMatrix(&transformationMatrix, object);
     setMatrix(&shader, "transMatrix", transformationMatrix);
 
     useShader(&shader);
     setBool(&shader, "lightEnabled", object->model.lit);
+    setBool(&shader, "frame", false);
 
     setVec3(&shader, "viewPos", camera.pos);
     setVec3(&shader, "lightPos", lightPos);
 
     glBindTexture(GL_TEXTURE_2D, object->model.texture.id);
 
-    if(isKeyDown(GLFW_KEY_Q)) {
-        glDrawElements(GL_QUADS, object->model.indexCount, GL_UNSIGNED_INT, 0);
-    } else {
-        glDrawElements(GL_TRIANGLES, object->model.indexCount, GL_UNSIGNED_INT, 0);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    }
-    
+    glDrawElements(GL_TRIANGLES, object->model.indexCount, GL_UNSIGNED_INT, 0);
+
 }
 
 void render() {
+
     cameraMatrix(&camera, 67.0f, 0.1f, 200.0f, &shader, "camMatrix");
     cameraMove(&camera);
     printf("\r%f  %f  %f", camera.pos[0], camera.pos[1], camera.pos[2]);
     fflush(stdout);
-    glm_vec3_copy(camera.pos, sky.position);
 
     updateAudio(camera.pos, camera.direction);
-
-    sky.rotation[1] -= 0.002f;
-
-    disco.position[0] += sin(glfwGetTime()) / 10;
-    disco.position[2] += cos(glfwGetTime()) / 10;
-    disco.rotation[1] += 0.05f;
-
-    renderObject(&table);
     renderObject(&plane);
-    //renderObject(&sky);
-    renderObject(&disco);
-    renderObject(&radio);
-    //renderObject(&mario);
+    renderScreen();
 }

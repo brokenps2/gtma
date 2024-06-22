@@ -19,6 +19,8 @@ typedef struct Camera {
     float speed;
     float sensitivity;
 
+    vec3 scale; // for collision
+
 } Camera;
 
 

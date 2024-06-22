@@ -96,7 +96,7 @@ void createObject(Object* object, Texture* texture, const char* mdlPath, float x
     object->rotation[2] = rz;
 }
 
-void createTransformationMatrix(mat4* matrix, Object* object) {
+void loadTransformationMatrix(mat4* matrix, Object* object) {
     glm_mat4_identity(*matrix);
     glm_translate(*matrix, object->position);
     glm_rotate_x(*matrix, object->rotation[0], *matrix);

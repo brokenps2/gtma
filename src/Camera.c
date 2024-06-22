@@ -34,6 +34,10 @@ void createCamera(Camera* cam, int width, int height, vec3 pos) {
     cam->roll = 0.0f;
     cam->speed = 8.0f;
     cam->sensitivity = 0.5f;
+
+    cam->scale[0] = 1;
+    cam->scale[1] = 1;
+    cam->scale[2] = 1;
 }
 
 void resizeCamera(Camera* cam, int width, int height) {
