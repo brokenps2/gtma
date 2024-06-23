@@ -94,6 +94,17 @@ void cameraLook(Camera* cam) {
 
         if(cam->pitch > 89.99f) cam->pitch = 89.99f;
         if(cam->pitch < -89.99f) cam->pitch = -89.99f;
+
+        if(cam->yaw < 0) cam->yaw = 360 + cam->yaw;
+        if(cam->roll < 0) cam->roll = 360 + cam->roll;
+
+        if(cam->yaw >= 360) cam->yaw = cam->yaw - 360;
+        if(cam->yaw <= -360) cam->yaw = cam->yaw + 360;
+
+        if(cam->roll >= 360) cam->roll = cam->roll - 360;
+        if(cam->roll <= -360) cam->roll = cam->roll + 360;
+
+
     }
 
 }
@@ -106,8 +117,8 @@ void cameraMove(Camera* cam) {
     }
 
     if(isKeyDown(GLFW_KEY_A)) {
-        cam->pos[0] += (sin(glm_rad(cam->yaw)) * cam->speed) * getDeltaTime();
-        cam->pos[2] -= (cos(glm_rad(cam->yaw)) * cam->speed) * getDeltaTime();
+        cam->pos[0] += (sin(glm_rad(cam->yaw)) * cam->speed) / 80;
+        cam->pos[2] -= (cos(glm_rad(cam->yaw)) * cam->speed) / 80;
     }
 
     if(isKeyDown(GLFW_KEY_D)) {

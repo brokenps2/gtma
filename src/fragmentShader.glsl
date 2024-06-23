@@ -20,7 +20,7 @@ void main() {
             fragColor = texture(tex0, outTexCoord);
         }
     } else {
-        vec3 col = vec3(texture(screenTexture, outTexCoord));
+        vec3 col = vec3(texture(screenTexture, outTexCoord)).rgb;
         fragColor = vec4(col, 1.0);
     }
 

@@ -34,6 +34,9 @@ unsigned int textureColorbuffer;
 unsigned int pvao;
 unsigned int pvbo;
 
+int virtualWidth = 512;
+int virtualHeight = 384;
+
 Texture tile;
 Object plane;
 
@@ -72,14 +75,14 @@ void initRenderer() {
     glBindFramebuffer(GL_FRAMEBUFFER, fbo);
     glGenTextures(1, &textureColorbuffer);
     glBindTexture(GL_TEXTURE_2D, textureColorbuffer);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 512, 384, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, virtualWidth, virtualHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureColorbuffer, 0);
 
     glGenRenderbuffers(1, &rbo);
     glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, 512, 384);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, virtualWidth, virtualHeight);
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -105,7 +108,7 @@ void initRenderer() {
     createObject(&mario, &marioTexture, "mario.obj", -7, 1.2, 2,    1, 1, 1,    0, 0, 0);
 
     createTexture(&radioTexture, "radio.png");
-    createObject(&radio, &radioTexture, "radio.obj", 0, 2.5, 0, 1, 1, 1, 0, -200, 0);
+    createObject(&radio, &radioTexture, "radio.obj", 0, 2.5, 0, 1, 1, 1, 0, 0.25, 0);
 
     createTexture(&baseColor, "basicColors.png");
     createObject(&disco, &baseColor, "disco.obj", 0, 5, 0, 1, 1, 1, 0, 0, 0);
@@ -113,9 +116,9 @@ void initRenderer() {
 
     glfwSetInputMode(getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-    lightPos[0] = -7;
-    lightPos[1] = 10;
-    lightPos[2] = -10;
+    lightPos[0] = 200;
+    lightPos[1] = 200;
+    lightPos[2] = -200;
 
 }
 
@@ -136,7 +139,6 @@ void renderScreen() {
 
 void renderObject(Object* object) {
 
-    glViewport(0, 0, 512, 384);
 
     glEnable(GL_DEPTH_TEST);
 
@@ -179,20 +181,48 @@ void render() {
 
     cameraMatrix(&camera, 67.0f, 0.1f, 200.0f, &shader, "camMatrix");
     cameraMove(&camera);
-    printf("\r%f  %f  %f", camera.pos[0], camera.pos[1], camera.pos[2]);
+    printf("\r%f  %f  %f     %f", camera.pos[0], camera.pos[1], camera.pos[2], radio.rotation[1]);
     fflush(stdout);
+    glm_vec3_copy(camera.pos, sky.position);
+    sky.rotation[1] += 0.0002;
 
     disco.position[0] += sin(glfwGetTime()) / 10;
     disco.position[2] += cos(glfwGetTime()) / 10;
     disco.rotation[1] += 0.02;
 
+    if(isKeyDown(GLFW_KEY_0)) {
+        radio.rotation[1] += 2;
+    }
+    if(isKeyDown(GLFW_KEY_9)) {
+        radio.rotation[1] -= 2;
+    }
+
     updateAudio(camera.pos, camera.direction);
 
+    glViewport(0, 0, virtualWidth, virtualHeight);
+
     renderObject(&table);
-    renderObject(&plane);
     renderObject(&disco);
     renderObject(&radio);
+    renderObject(&sky);
+    renderObject(&plane);
 
     renderScreen();
 
+}
+
+int getVirtualWidth() {
+    return virtualWidth;
+}
+
+int getVirtualHeight() {
+    return virtualHeight;
+}
+
+void setVirtualWidth(int width) {
+    virtualWidth = width;
+}
+
+void setVirtualHeight(int height) {
+    virtualHeight = height;
 }

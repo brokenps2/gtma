@@ -1,3 +1,4 @@
+#include <cglm/util.h>
 #define FAST_OBJ_IMPLEMENTATION
 #include <cglm/affine.h>
 #include <cglm/affine-pre.h>
@@ -97,10 +98,25 @@ void createObject(Object* object, Texture* texture, const char* mdlPath, float x
 }
 
 void loadTransformationMatrix(mat4* matrix, Object* object) {
+
+    if(object->rotation[0] < 0) object->rotation[0] = 360 + object->rotation[0];
+    if(object->rotation[1] < 0) object->rotation[1] = 360 + object->rotation[1];
+    if(object->rotation[2] < 0) object->rotation[2] = 360 + object->rotation[2];
+
+    if(object->rotation[0] >= 360) object->rotation[0] = object->rotation[0] - 360;
+    if(object->rotation[0] <= -360) object->rotation[0] = object->rotation[0] + 360;
+
+    if(object->rotation[1] >= 360) object->rotation[1] = object->rotation[1] - 360;
+    if(object->rotation[1] <= -360) object->rotation[1] = object->rotation[1] + 360;
+
+    if(object->rotation[2] >= 360) object->rotation[2] = object->rotation[2] - 360;
+    if(object->rotation[2] <= -360) object->rotation[2] = object->rotation[2] + 360;
+
     glm_mat4_identity(*matrix);
     glm_translate(*matrix, object->position);
-    glm_rotate_x(*matrix, object->rotation[0], *matrix);
-    glm_rotate_y(*matrix, object->rotation[1], *matrix);
-    glm_rotate_z(*matrix, object->rotation[2], *matrix);
+    glm_rotate_x(*matrix, glm_rad(object->rotation[0]), *matrix);
+    glm_rotate_y(*matrix, glm_rad(object->rotation[1]), *matrix);
+    glm_rotate_z(*matrix, glm_rad(object->rotation[2]), *matrix);
+
     glm_scale(*matrix, object->scale);
 }
