@@ -54,28 +54,14 @@ const char* cfgGetTitle() {
 
 }
 
+const char* cfgGetResLoc() {
 
-const char* cfgGetVertexShaderPath() {
-  
-    const char* vs;
-    
-    if(config_lookup_string(&cfg, "vtShaderPath", &vs)) {
-        return vs;
+    char* pathToResLoc;
+
+    if(config_lookup_string(&cfg, "resources", (const char**)&pathToResLoc)) {
+        return pathToResLoc;
     } else {
-        printf("vtShaderPath setting not found, please set vertex shader path in configuration file.\n");
+        printf("No resource directory specified in config file, exiting.\n");
         exit(1);
     }
-}
-
-const char* cfgGetFragmentShaderPath() {
-
-    const char* fs;
-  
-    if(config_lookup_string(&cfg, "frShaderPath", &fs)) {
-        return fs;
-    } else {
-        printf("frShaderPath setting not found, please set fragment shader path in configuration file.\n");
-        exit(1);
-    }
-
 }

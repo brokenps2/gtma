@@ -1,4 +1,3 @@
-#include <cglm/util.h>
 #define FAST_OBJ_IMPLEMENTATION
 #include <cglm/affine.h>
 #include <cglm/affine-pre.h>
@@ -62,7 +61,6 @@ void createModel(Model* model, const char* path, Texture* texture) {
         }
     }
 
-    // Free the hash map
     VertexMapEntry *currentEntry, *tmp;
     HASH_ITER(hh, vertexMap, currentEntry, tmp) {
         HASH_DEL(vertexMap, currentEntry);

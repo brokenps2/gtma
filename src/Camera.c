@@ -117,8 +117,8 @@ void cameraMove(Camera* cam) {
     }
 
     if(isKeyDown(GLFW_KEY_A)) {
-        cam->pos[0] += (sin(glm_rad(cam->yaw)) * cam->speed) / 80;
-        cam->pos[2] -= (cos(glm_rad(cam->yaw)) * cam->speed) / 80;
+        cam->pos[0] += (sin(glm_rad(cam->yaw)) * cam->speed) * getDeltaTime();
+        cam->pos[2] -= (cos(glm_rad(cam->yaw)) * cam->speed) * getDeltaTime();
     }
 
     if(isKeyDown(GLFW_KEY_D)) {

@@ -7,5 +7,4 @@ void cfgSetPath(const char* newPath);
 int cfgGetResX();
 int cfgGetResY();
 const char* cfgGetTitle();
-const char* cfgGetVertexShaderPath();
-const char* cfgGetFragmentShaderPath();
+const char* cfgGetResLoc();

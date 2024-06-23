@@ -88,30 +88,30 @@ void initRenderer() {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 
-    createSound(&testSound, "test2.wav", true, 2, soundPos);
+    createSound(&testSound, res("/audio/test2.wav"), true, 2, soundPos);
     playSoundFrom(&testSound, 5);
 
     createShader(&shader);
     createCamera(&camera, getWindowWidth(), getWindowHeight(), camPos);
 
-    createTexture(&tile, "tile.png");
-    createObject(&plane, &tile, "plane.obj", 0, 0, 0,    4, 4, 4,    0, 0, 0);
+    createTexture(&tile, res("/images/tile.png"));
+    createObject(&plane, &tile, res("/models/plane.obj"), 0, 0, 0,    4, 4, 4,    0, 0, 0);
 
-    createTexture(&tableTex, "table.png");
-    createObject(&table, &tableTex, "table.obj", 0, 0, 0,    1, 1, 1,    0, 0, 0);
+    createTexture(&tableTex, res("/images/table.png"));
+    createObject(&table, &tableTex, res("/models/table.obj"), 0, 0, 0,    1, 1, 1,    0, 0, 0);
 
-    createTexture(&skyTexture, "sky2.png");
-    createObject(&sky, &skyTexture, "sky.obj", 0, 0, 0,    2, 2, 2,    0, 0, 0);
+    createTexture(&skyTexture, res("/images/sky2.png"));
+    createObject(&sky, &skyTexture, res("/models/sky.obj"), 0, 0, 0,    2.9, 2.9, 2.9,    0, 0, 0);
     sky.model.lit = false;
 
-    createTexture(&marioTexture, "mario.png");
-    createObject(&mario, &marioTexture, "mario.obj", -7, 1.2, 2,    1, 1, 1,    0, 0, 0);
+    createTexture(&marioTexture, res("/images/mario.png"));
+    createObject(&mario, &marioTexture, res("/models/mario.obj"), -7, 1.2, 2,    1, 1, 1,    0, 0, 0);
 
-    createTexture(&radioTexture, "radio.png");
-    createObject(&radio, &radioTexture, "radio.obj", 0, 2.5, 0, 1, 1, 1, 0, 0.25, 0);
+    createTexture(&radioTexture, res("/images/radio.png"));
+    createObject(&radio, &radioTexture, res("/models/radio.obj"), 0, 2.5, 0,    1, 1, 1,    0, 70, 0);
 
-    createTexture(&baseColor, "basicColors.png");
-    createObject(&disco, &baseColor, "disco.obj", 0, 5, 0, 1, 1, 1, 0, 0, 0);
+    createTexture(&baseColor, res("/images/basicColors.png"));
+    createObject(&disco, &baseColor, res("/models/disco.obj"), 0, 5, 0,    2, 2, 2,    0, 0, 0);
 
 
     glfwSetInputMode(getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -184,11 +184,11 @@ void render() {
     printf("\r%f  %f  %f     %f", camera.pos[0], camera.pos[1], camera.pos[2], radio.rotation[1]);
     fflush(stdout);
     glm_vec3_copy(camera.pos, sky.position);
-    sky.rotation[1] += 0.0002;
+    sky.rotation[1] += 0.02;
 
-    disco.position[0] += sin(glfwGetTime()) / 10;
-    disco.position[2] += cos(glfwGetTime()) / 10;
-    disco.rotation[1] += 0.02;
+    disco.position[0] += (sin(glfwGetTime()) / 10) * 2;
+    disco.position[2] += (cos(glfwGetTime()) / 10) * 2;
+    disco.rotation[1] += 3.5;
 
     if(isKeyDown(GLFW_KEY_0)) {
         radio.rotation[1] += 2;

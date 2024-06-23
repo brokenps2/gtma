@@ -1,16 +1,30 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <GL/glew.h>
+#include <string.h>
 #include "Files.h"
 #include "Config.h"
 
 long vtShaderLength;
 long frShaderLength;
 
+const char* res(const char* path) {
+    const char* resLoc = cfgGetResLoc();
+    
+    char* fullPath = malloc(strlen(resLoc) + strlen(path) + 1);
+    
+    if(fullPath) {
+        snprintf(fullPath, strlen(resLoc) + strlen(path) + 1, "%s%s", resLoc, path);
+    }
+    
+    return fullPath;
+}
+
 char* getVertexShaderSrc() {
+
     char* buffer = NULL;
     long length;
-    FILE* fptr = fopen(cfgGetVertexShaderPath(), "r");
+    FILE* fptr = fopen(res("/shaders/vertexShader.glsl"), "r");
 
     if (fptr) {
         fseek(fptr, 0, SEEK_END);
@@ -29,9 +43,10 @@ char* getVertexShaderSrc() {
 }
 
 char* getFragmentShaderSrc() {
+
     char* buffer = NULL;
     long length;
-    FILE* fptr = fopen(cfgGetFragmentShaderPath(), "r");
+    FILE* fptr = fopen(res("/shaders/fragmentShader.glsl"), "r");
 
     if (fptr) {
         fseek(fptr, 0, SEEK_END);

@@ -1,5 +1,7 @@
 #pragma once
 
+const char* res(const char* path);
+
 char* getVertexShaderSrc();
 char* getFragmentShaderSrc();
 
