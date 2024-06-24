@@ -5,11 +5,12 @@
 #include <GL/glew.h>
 #include <fast_obj.h>
 #include <uthash.h>
+#include "Files.h"
 #include "Models.h"
 
 void createModel(Model* model, const char* path, Texture* texture) {
     
-    fastObjMesh* mesh = fast_obj_read(path);    
+    fastObjMesh* mesh = fast_obj_read(res(path));    
 
     if(!mesh) {
         printf("unable to find model %s\n", path);

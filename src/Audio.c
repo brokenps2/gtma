@@ -7,6 +7,7 @@
 #include <dr_wav.h>
 #include <cglm/vec3.h>
 #include "Audio.h"
+#include "Files.h"
 
 ALCcontext* audioContext;
 ALCdevice* audioDevice;
@@ -38,7 +39,7 @@ void createTrack(Track* track, const char* path, bool loop, float vol) {
     drwav_int16* rawAudioBuffer;
     unsigned int channels, sampleRate;
     drwav_uint64 sampleCount;
-    rawAudioBuffer = drwav_open_file_and_read_pcm_frames_s16(path, &channels, &sampleRate, &sampleCount, NULL);
+    rawAudioBuffer = drwav_open_file_and_read_pcm_frames_s16(res(path), &channels, &sampleRate, &sampleCount, NULL);
 
     if(!rawAudioBuffer) {
         printf("unable to open audio file\n");
@@ -78,7 +79,7 @@ void createSound(Sound* sound, const char* path, bool loop, float vol, vec3 posi
     drwav_int16* rawAudioBuffer;
     unsigned int channels, sampleRate;
     drwav_uint64 sampleCount;
-    rawAudioBuffer = drwav_open_file_and_read_pcm_frames_s16(path, &channels, &sampleRate, &sampleCount, NULL);
+    rawAudioBuffer = drwav_open_file_and_read_pcm_frames_s16(res(path), &channels, &sampleRate, &sampleCount, NULL);
 
     if(!rawAudioBuffer) {
         printf("unable to open audio file\n");

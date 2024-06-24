@@ -20,9 +20,9 @@ uniform mat4 transMatrix;
 vec4 snap(vec4 vertex, vec2 resolution) {
 
     vec4 snappedPos = vertex;
-    snappedPos.xyz = vertex.xyz / vertex.w; // convert to normalised device coordinates (NDC)
-    snappedPos.xy = floor(resolution * snappedPos.xy) / resolution; // snap the vertex to the lower-resolution grid
-    snappedPos.xyz *= vertex.w; // convert back to projection-space
+    snappedPos.xyz = vertex.xyz / vertex.w;
+    snappedPos.xy = floor(resolution * snappedPos.xy) / resolution;
+    snappedPos.xyz *= vertex.w;
     return snappedPos;
 
 }
@@ -34,7 +34,7 @@ void main() {
             vec3 lPos = vec3(transMatrix * vec4(position, 1.0));
             vec3 lNormal = mat3(transpose(inverse(transMatrix))) * normal;
 
-            float ambientStrength = 0.12;
+            float ambientStrength = 0.05;
             vec3 ambient = ambientStrength * lightColor;
 
             vec3 norm = normalize(lNormal);
@@ -48,11 +48,11 @@ void main() {
             float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
             vec3 specular = specularStrength * spec * lightColor;
 
-            outLightColor = ambient + diffuse + specular;
+            outLightColor = ambient + diffuse;// + specular;
         }
 
         gl_Position = camMatrix * transMatrix * vec4(position, 1.0);
-        gl_Position = snap(gl_Position, vec2(256, 192));
+        gl_Position = snap(gl_Position, vec2(128, 96));
         outTexCoord = texCoord;
     } else {
         outTexCoord = texCoord;

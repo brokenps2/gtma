@@ -76,7 +76,17 @@ void updateWindow() {
     currentTime = glfwGetTime();
     deltaTime = currentTime - lastTime;
 
-    glfwSwapBuffers(window);
+    double sleepTime = 1.0/60 - deltaTime;
+    if (sleepTime > 0) {
+        struct timespec ts;
+        ts.tv_sec = (time_t)sleepTime;
+        ts.tv_nsec = (long)((sleepTime - ts.tv_sec) * 1e9);
+        nanosleep(&ts, NULL);
+        glfwSwapBuffers(window);
+    }
+
+    lastTime = glfwGetTime();
+
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glClearColor(glc(9), glc(8), glc(22), 1);
 }

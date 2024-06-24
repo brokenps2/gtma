@@ -34,8 +34,8 @@ unsigned int textureColorbuffer;
 unsigned int pvao;
 unsigned int pvbo;
 
-int virtualWidth = 512;
-int virtualHeight = 384;
+int virtualWidth = 800;
+int virtualHeight = 480;
 
 Texture tile;
 Object plane;
@@ -88,37 +88,37 @@ void initRenderer() {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 
-    createSound(&testSound, res("/audio/test2.wav"), true, 2, soundPos);
+    createSound(&testSound, "audio/test2.wav", true, 2, soundPos);
     playSoundFrom(&testSound, 5);
 
     createShader(&shader);
     createCamera(&camera, getWindowWidth(), getWindowHeight(), camPos);
 
-    createTexture(&tile, res("/images/tile.png"));
-    createObject(&plane, &tile, res("/models/plane.obj"), 0, 0, 0,    4, 4, 4,    0, 0, 0);
+    createTexture(&tile, "images/tile.png");
+    createObject(&plane, &tile, "models/plane.obj", 0, 0, 0,    4, 4, 4,    0, 0, 0);
 
-    createTexture(&tableTex, res("/images/table.png"));
-    createObject(&table, &tableTex, res("/models/table.obj"), 0, 0, 0,    1, 1, 1,    0, 0, 0);
+    createTexture(&tableTex, "images/table.png");
+    createObject(&table, &tableTex, "models/table.obj", 0, 0, 0,    1, 1, 1,    0, 0, 0);
 
-    createTexture(&skyTexture, res("/images/sky2.png"));
-    createObject(&sky, &skyTexture, res("/models/sky.obj"), 0, 0, 0,    2.9, 2.9, 2.9,    0, 0, 0);
+    createTexture(&skyTexture, "images/sky2.png");
+    createObject(&sky, &skyTexture, "models/sky.obj", 0, 0, 0,    2.9, 2.9, 2.9,    0, 0, 0);
     sky.model.lit = false;
 
-    createTexture(&marioTexture, res("/images/mario.png"));
-    createObject(&mario, &marioTexture, res("/models/mario.obj"), -7, 1.2, 2,    1, 1, 1,    0, 0, 0);
+    createTexture(&marioTexture, "images/mario.png");
+    createObject(&mario, &marioTexture, "models/mario.obj", -7, 1.2, 2,    1, 1, 1,    0, 0, 0);
 
-    createTexture(&radioTexture, res("/images/radio.png"));
-    createObject(&radio, &radioTexture, res("/models/radio.obj"), 0, 2.5, 0,    1, 1, 1,    0, 70, 0);
+    createTexture(&radioTexture, "images/radio.png");
+    createObject(&radio, &radioTexture, "models/radio.obj", 0, 2.5, 0,    1, 1, 1,    0, 70, 0);
 
-    createTexture(&baseColor, res("/images/basicColors.png"));
-    createObject(&disco, &baseColor, res("/models/disco.obj"), 0, 5, 0,    2, 2, 2,    0, 0, 0);
+    createTexture(&baseColor, "images/basicColors.png");
+    createObject(&disco, &baseColor, "models/disco.obj", 0, 5, 0,    2, 2, 2,    0, 0, 0);
 
 
     glfwSetInputMode(getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-    lightPos[0] = 200;
-    lightPos[1] = 200;
-    lightPos[2] = -200;
+    lightPos[0] = -7;
+    lightPos[1] = 8;
+    lightPos[2] = -7;
 
 }
 
@@ -138,7 +138,6 @@ void renderScreen() {
 }
 
 void renderObject(Object* object) {
-
 
     glEnable(GL_DEPTH_TEST);
 
@@ -188,7 +187,7 @@ void render() {
 
     disco.position[0] += (sin(glfwGetTime()) / 10) * 2;
     disco.position[2] += (cos(glfwGetTime()) / 10) * 2;
-    disco.rotation[1] += 3.5;
+    disco.rotation[1] += 1.5;
 
     if(isKeyDown(GLFW_KEY_0)) {
         radio.rotation[1] += 2;
@@ -204,7 +203,6 @@ void render() {
     renderObject(&table);
     renderObject(&disco);
     renderObject(&radio);
-    renderObject(&sky);
     renderObject(&plane);
 
     renderScreen();

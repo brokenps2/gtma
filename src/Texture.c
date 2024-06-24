@@ -2,12 +2,13 @@
 #include <stb_image.h>
 #include <GL/glew.h>
 #include "Texture.h"
+#include "Files.h"
 
 
 void createTexture(Texture* tex, const char* path) {
 
     stbi_set_flip_vertically_on_load(1);
-    tex->data = stbi_load(path, &tex->w, &tex->h, &tex->channels, 0);   
+    tex->data = stbi_load(res(path), &tex->w, &tex->h, &tex->channels, 0);   
    
     glGenTextures(1, &tex->id);
     glActiveTexture(GL_TEXTURE0);
