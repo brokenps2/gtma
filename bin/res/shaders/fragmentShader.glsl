@@ -11,6 +11,11 @@ uniform sampler2D tex0;
 uniform sampler2D screenTexture;
 uniform bool lightEnabled;
 
+vec3 greyscale(vec3 color, float str) {
+    float g = dot(color, vec3(0.299, 0.587, 0.114));
+    return mix(color, vec3(g), str);
+}
+
 void main() {
 
     if(!frame) {
@@ -21,6 +26,7 @@ void main() {
         }
     } else {
         vec3 col = vec3(texture(screenTexture, outTexCoord)).rgb;
+        
         fragColor = vec4(col, 1.0);
     }
 

@@ -8,6 +8,8 @@
 <h3>to do</h3>
  <ul>
   <li>ui</li>
+  <li>animation</li>
+  <li>scene management</li>
   <li>physics</li>
   <li>networking</li>
   <li>server</li>

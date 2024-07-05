@@ -34,7 +34,7 @@ void main() {
             vec3 lPos = vec3(transMatrix * vec4(position, 1.0));
             vec3 lNormal = mat3(transpose(inverse(transMatrix))) * normal;
 
-            float ambientStrength = 0.05;
+            float ambientStrength = 0.1;
             vec3 ambient = ambientStrength * lightColor;
 
             vec3 norm = normalize(lNormal);

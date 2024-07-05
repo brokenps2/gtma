@@ -34,7 +34,7 @@ unsigned int textureColorbuffer;
 unsigned int pvao;
 unsigned int pvbo;
 
-int virtualWidth = 800;
+int virtualWidth = 640;
 int virtualHeight = 480;
 
 Texture tile;
@@ -54,6 +54,9 @@ Object radio;
 
 Texture baseColor;
 Object disco;
+
+Texture spectTex;
+Object spect;
 
 Sound testSound;
 
@@ -105,7 +108,7 @@ void initRenderer() {
     sky.model.lit = false;
 
     createTexture(&marioTexture, "images/mario.png");
-    createObject(&mario, &marioTexture, "models/mario.obj", -7, 1.2, 2,    1, 1, 1,    0, 0, 0);
+    createObject(&mario, &marioTexture, "models/mario.obj", 7, 1.2, -3,    1, 1, 1,    0, 0, 0);
 
     createTexture(&radioTexture, "images/radio.png");
     createObject(&radio, &radioTexture, "models/radio.obj", 0, 2.5, 0,    1, 1, 1,    0, 70, 0);
@@ -113,16 +116,22 @@ void initRenderer() {
     createTexture(&baseColor, "images/basicColors.png");
     createObject(&disco, &baseColor, "models/disco.obj", 0, 5, 0,    2, 2, 2,    0, 0, 0);
 
+    createTexture(&spectTex, "images/spect.png");
+    createObject(&spect, &spectTex, "models/spect.obj", -5, 3, 5,    1, 1, 1,    0, 0, 0);
+
 
     glfwSetInputMode(getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-    lightPos[0] = -7;
-    lightPos[1] = 8;
-    lightPos[2] = -7;
+    lightPos[0] = 20;
+    lightPos[1] = 20;
+    lightPos[2] = 20;
 
 }
 
 void renderScreen() {
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glClear(GL_COLOR_BUFFER_BIT);
 
     glViewport(0, 0, getWindowWidth(), getWindowHeight());
 
@@ -130,7 +139,6 @@ void renderScreen() {
     useShader(&shader);
     setBool(&shader, "frame", true);
     glBindVertexArray(pvao);
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glBindTexture(GL_TEXTURE_2D, textureColorbuffer);
     glDrawArrays(GL_TRIANGLES, 0, 6);
     glBindFramebuffer(GL_FRAMEBUFFER, fbo);
@@ -202,7 +210,9 @@ void render() {
 
     renderObject(&table);
     renderObject(&disco);
+    //renderObject(&mario);
     renderObject(&radio);
+    //renderObject(&spect);
     renderObject(&plane);
 
     renderScreen();

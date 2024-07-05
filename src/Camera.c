@@ -4,6 +4,7 @@
 #include <cglm/types.h>
 #include <cglm/common.h>
 #include <math.h>
+#include "Shader.h"
 #include "WindowManager.h"
 #include "Input.h"
 #include "Camera.h"
@@ -29,10 +30,10 @@ void createCamera(Camera* cam, int width, int height, vec3 pos) {
     cam->pos[1] = pos[1];
     cam->pos[2] = pos[2];
 
-    cam->pitch = 90.0f;
+    cam->pitch = 0.0f;
     cam->yaw = 0.0f;
     cam->roll = 0.0f;
-    cam->speed = 8.0f;
+    cam->speed = 0.0f;
     cam->sensitivity = 0.5f;
 
     cam->scale[0] = 1;
@@ -74,7 +75,7 @@ void cameraMatrix(Camera* cam, float fov, float nearPlane, float farPlane, Shade
     mat4 camCross;
     glm_mat4_mul(proj, view, camCross);
 
-    glUniformMatrix4fv(glGetUniformLocation(shader->id, uniform), 1, GL_FALSE, (GLfloat*)camCross);
+    setMatrix(shader, uniform, camCross);
 }
 
 void cameraLook(Camera* cam) {
@@ -111,24 +112,35 @@ void cameraLook(Camera* cam) {
 
 void cameraMove(Camera* cam) {
 
+    float accel = 0.5;
+    float maxSpeed = 5;
+
     if(isKeyDown(GLFW_KEY_S)) {
+        cam->speed += accel * getDeltaTime();
         cam->pos[0] += (-cos(glm_rad(cam->yaw)) * cam->speed) * getDeltaTime();
         cam->pos[2] -= (sin(glm_rad(cam->yaw)) * cam->speed) * getDeltaTime();
     }
 
     if(isKeyDown(GLFW_KEY_A)) {
+        cam->speed += accel * getDeltaTime();
         cam->pos[0] += (sin(glm_rad(cam->yaw)) * cam->speed) * getDeltaTime();
         cam->pos[2] -= (cos(glm_rad(cam->yaw)) * cam->speed) * getDeltaTime();
     }
 
     if(isKeyDown(GLFW_KEY_D)) {
+        cam->speed += accel * getDeltaTime();
         cam->pos[0] -= (sin(glm_rad(cam->yaw)) * cam->speed) * getDeltaTime();
         cam->pos[2] += (cos(glm_rad(cam->yaw)) * cam->speed) * getDeltaTime();
     }
 
     if(isKeyDown(GLFW_KEY_W)) {
+        cam->speed += accel * getDeltaTime();
         cam->pos[0] -= (-cos(glm_rad(cam->yaw)) * cam->speed) * getDeltaTime();
         cam->pos[2] += (sin(glm_rad(cam->yaw)) * cam->speed) * getDeltaTime();
+    }
+
+    if(cam->speed > maxSpeed) {
+        cam->speed = maxSpeed;
     }
 
     if(isKeyDown(GLFW_KEY_LEFT_SHIFT) || cam->speed == 1) {
