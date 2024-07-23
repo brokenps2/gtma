@@ -1,7 +1,5 @@
 #version 330 core
 
-uniform bool frame;
-
 out vec4 fragColor;
   
 in vec2 outTexCoord;

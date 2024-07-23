@@ -1,10 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "Renderer.h"
 #include <GLFW/glfw3.h>
 #include <stdbool.h>
 #include "Audio.h"
+#include "Scene.h"
 #include "WindowManager.h"
-#include "Renderer.h"
 #include "Input.h"
 #include "Config.h"
 
@@ -25,9 +26,11 @@ int main(int argc, char* argv[]) {
     initInput();
     initAudio();
     initRenderer();
+    initScene();
 
     while(!glfwWindowShouldClose(getWindow())) {
         render();
+        updateScene();
         updateWindow();
         glfwPollEvents();
     }

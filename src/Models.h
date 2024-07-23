@@ -26,7 +26,14 @@ typedef struct Object {
     vec3 position;
     vec3 rotation;
     vec3 scale;
+    int packID;
+    bool inPack;
 } Object;
+
+typedef struct ObjectPack {
+    Object** objects;
+    int objectCount;
+} ObjectPack;
 
 typedef struct VertexMapEntry {
     int vertexKey;
@@ -36,5 +43,6 @@ typedef struct VertexMapEntry {
 
 void createModel(Model* model, const char* path, Texture* texture);
 void createObject(Object* object, Texture* texture, const char* mdlPath, float x, float y, float z, float sx, float sy, float sz, float rx, float ry, float rz);
+void createObjectPack(ObjectPack* pack);
 void loadTransformationMatrix(mat4* matrix, Object* object);
 void deleteModel(Model* model);
