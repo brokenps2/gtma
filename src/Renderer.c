@@ -34,9 +34,6 @@ unsigned int textureColorbuffer;
 unsigned int pvao;
 unsigned int pvbo;
 
-int virtualWidth = 640;
-int virtualHeight = 480;
-
 Texture tile;
 Object plane;
 
@@ -64,35 +61,10 @@ time_t t;
 
 void initRenderer() {
 
-    glGenVertexArrays(1, &pvao);
-    glGenBuffers(1, &pvbo);
-    glBindVertexArray(pvao);
-    glBindBuffer(GL_ARRAY_BUFFER, pvbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(frameVertices), frameVertices, GL_STATIC_DRAW);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(2);
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
-
-    glGenFramebuffers(1, &fbo);
-    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-    glGenTextures(1, &textureColorbuffer);
-    glBindTexture(GL_TEXTURE_2D, textureColorbuffer);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, virtualWidth, virtualHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureColorbuffer, 0);
-
-    glGenRenderbuffers(1, &rbo);
-    glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, virtualWidth, virtualHeight);
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
-    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    }
+    glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_TRUE);
 
     createSound(&testSound, "audio/test2.wav", true, 2, soundPos);
-    playSoundFrom(&testSound, 5);
+    //playSoundFrom(&testSound, 5);
 
     createShader(&shader);
     createCamera(&camera, getWindowWidth(), getWindowHeight(), camPos);
@@ -125,23 +97,6 @@ void initRenderer() {
     lightPos[0] = 20;
     lightPos[1] = 20;
     lightPos[2] = 20;
-
-}
-
-void renderScreen() {
-
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    glClear(GL_COLOR_BUFFER_BIT);
-
-    glViewport(0, 0, getWindowWidth(), getWindowHeight());
-
-    glDisable(GL_DEPTH_TEST);
-    useShader(&shader);
-    setBool(&shader, "frame", true);
-    glBindVertexArray(pvao);
-    glBindTexture(GL_TEXTURE_2D, textureColorbuffer);
-    glDrawArrays(GL_TRIANGLES, 0, 6);
-    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 
 }
 
@@ -206,8 +161,6 @@ void render() {
 
     updateAudio(camera.pos, camera.direction);
 
-    glViewport(0, 0, virtualWidth, virtualHeight);
-
     renderObject(&table);
     renderObject(&disco);
     //renderObject(&mario);
@@ -215,22 +168,4 @@ void render() {
     //renderObject(&spect);
     renderObject(&plane);
 
-    renderScreen();
-
-}
-
-int getVirtualWidth() {
-    return virtualWidth;
-}
-
-int getVirtualHeight() {
-    return virtualHeight;
-}
-
-void setVirtualWidth(int width) {
-    virtualWidth = width;
-}
-
-void setVirtualHeight(int height) {
-    virtualHeight = height;
 }

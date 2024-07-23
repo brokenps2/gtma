@@ -29,35 +29,29 @@ vec4 snap(vec4 vertex, vec2 resolution) {
 
 void main() {
 
-    if(!frame) {
-        if(lightEnabled) {
-            vec3 lPos = vec3(transMatrix * vec4(position, 1.0));
-            vec3 lNormal = mat3(transpose(inverse(transMatrix))) * normal;
+    if(lightEnabled) {
+        vec3 lPos = vec3(transMatrix * vec4(position, 1.0));
+        vec3 lNormal = mat3(transpose(inverse(transMatrix))) * normal;
 
-            float ambientStrength = 0.1;
-            vec3 ambient = ambientStrength * lightColor;
+        float ambientStrength = 0.1;
+        vec3 ambient = ambientStrength * lightColor;
 
-            vec3 norm = normalize(lNormal);
-            vec3 lightDir = normalize(lightPos - lPos);
-            float diff = max(dot(norm, lightDir), 0.0);
-            vec3 diffuse = diff * lightColor;
+        vec3 norm = normalize(lNormal);
+        vec3 lightDir = normalize(lightPos - lPos);
+        float diff = max(dot(norm, lightDir), 0.0);
+        vec3 diffuse = diff * lightColor;
 
-            float specularStrength = 0.5;
-            vec3 viewDir = normalize(viewPos - lPos);
-            vec3 reflectDir = reflect(-lightDir, norm);
-            float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
-            vec3 specular = specularStrength * spec * lightColor;
+        float specularStrength = 0.5;
+        vec3 viewDir = normalize(viewPos - lPos);
+        vec3 reflectDir = reflect(-lightDir, norm);
+        float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
+        vec3 specular = specularStrength * spec * lightColor;
 
-            outLightColor = ambient + diffuse;// + specular;
-        }
-
-        gl_Position = camMatrix * transMatrix * vec4(position, 1.0);
-        gl_Position = snap(gl_Position, vec2(128, 96));
-        outTexCoord = texCoord;
-    } else {
-        outTexCoord = texCoord;
-        gl_Position = vec4(position.x, position.y, 0.0, 1.0); 
+        outLightColor = ambient + diffuse;// + specular;
     }
 
+    gl_Position = camMatrix * transMatrix * vec4(position, 1.0);
+    gl_Position = snap(gl_Position, vec2(320, 240));
+    outTexCoord = texCoord;
 
 }
