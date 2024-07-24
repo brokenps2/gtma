@@ -65,3 +65,27 @@ const char* cfgGetResLoc() {
         exit(1);
     }
 }
+
+const char* cfgLookupString(const char* key) {
+    const char* value;
+    
+    if(config_lookup_string(&cfg, key, &value)) {
+        return value;
+    } else {
+        printf("setting '%s' not found.\n", key);
+        exit(1);
+    }
+
+}
+
+int cfgLookupInt(const char* key) {
+    int value;
+    
+    if(config_lookup_int(&cfg, key, &value)) {
+        return value;
+    } else {
+        printf("setting '%s' not found.\n", key);
+        exit(1);
+    }
+
+}

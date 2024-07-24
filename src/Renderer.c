@@ -4,8 +4,8 @@
 #include <GLFW/glfw3.h>
 #include <cglm/common.h>
 #include <cglm/types.h>
-#include "Audio.h"
-#include "Input.h"
+#include <stdio.h>
+#include <string.h>
 #include "Shader.h"
 #include "Camera.h"
 #include "WindowManager.h"
@@ -17,15 +17,17 @@ vec3 lightPos;
 
 Camera renderCamera;
 
-ObjectPack pack;
+ObjectPack objPack;
+PointLightPack lightPack;
 
 void initRenderer() {
+
+    objPack.objectCount = 0;
+    lightPack.lightCount = 0;
 
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_TRUE);
 
     glfwSetInputMode(getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-
-    createObjectPack(&pack);
 
     createShader(&shader);
 
@@ -41,79 +43,160 @@ void setCamera(Camera* cam) {
 
 void addObject(Object* obj) {
     if(!obj->inPack) {
-        if(pack.objectCount != 0) {
-            ObjectPack tempPack = pack;
-            pack.objects = malloc((pack.objectCount + 1) * sizeof(Object*));
+        if(objPack.objectCount != 0) {
+            ObjectPack tempPack = objPack;
+            objPack.objects = malloc((objPack.objectCount + 1) * sizeof(Object*));
             for(int i = 0; i <= tempPack.objectCount - 1; i++) {
-                pack.objects[i] = tempPack.objects[i];
+                objPack.objects[i] = tempPack.objects[i];
             }
         } else {
-            pack.objects = malloc((pack.objectCount + 1) * sizeof(Object*));
+            objPack.objects = malloc((objPack.objectCount + 1) * sizeof(Object*));
         }
-        pack.objects[pack.objectCount] = obj;
-        obj->packID = pack.objectCount;
-        pack.objectCount++;
+        objPack.objects[objPack.objectCount] = obj;
+        obj->packID = 0;//objPack.objectCount;
+        objPack.objectCount++;
         obj->inPack = true;
     }
 }
 
+void addLight(PointLight* light) {
+    if(!light->inPack) {
+        if(lightPack.lightCount != 0) {
+            PointLightPack tempPack = lightPack;
+            lightPack.lights = malloc((lightPack.lightCount + 1) * sizeof(Object*));
+            for(int i = 0; i <= tempPack.lightCount - 1; i++) {
+                lightPack.lights[i] = tempPack.lights[i];
+            }
+        } else {
+            lightPack.lights = malloc((lightPack.lightCount + 1) * sizeof(PointLight*));
+        }
+        lightPack.lights[lightPack.lightCount] = light;
+        light->packID = lightPack.lightCount;
+        lightPack.lightCount++;
+        light->inPack = true;
+    }
+}
+
 void removeObject(Object* obj) {
-    if (obj == NULL || pack.objectCount == 0) {
+    if (obj == NULL || objPack.objectCount == 0) {
         return;
     }
     int id = obj->packID;
-    if (id < 0 || id >= pack.objectCount || pack.objects[id] != obj) {
+    if (id < 0 || id >= objPack.objectCount || objPack.objects[id] != obj) {
         return;
     }
-    for (int i = id; i < pack.objectCount - 1; i++) {
-        pack.objects[i] = pack.objects[i + 1];
-        pack.objects[i]->packID = i;
+    for (int i = id; i < objPack.objectCount - 1; i++) {
+        objPack.objects[i] = objPack.objects[i + 1];
+        objPack.objects[i]->packID = i;
     }
-    pack.objectCount--;
-    if (pack.objectCount > 0) {
-        pack.objects = realloc(pack.objects, pack.objectCount * sizeof(Object*));
+    objPack.objectCount--;
+    if (objPack.objectCount > 0) {
+        objPack.objects = realloc(objPack.objects, objPack.objectCount * sizeof(Object*));
     } else {
-        free(pack.objects);
-        pack.objects = NULL;
+        free(objPack.objects);
+        objPack.objects = NULL;
     }
     obj->inPack = false;
+}
+
+void removeLight(PointLight* light) {
+    if (light == NULL || lightPack.lightCount == 0) {
+        return;
+    }
+    int id = light->packID;
+    if (id < 0 || id >= lightPack.lightCount || lightPack.lights[id] != light) {
+        return;
+    }
+    for (int i = id; i < lightPack.lightCount - 1; i++) {
+        lightPack.lights[i] = lightPack.lights[i + 1];
+        lightPack.lights[i]->packID = i;
+    }
+    lightPack.lightCount--;
+    if (lightPack.lightCount > 0) {
+        lightPack.lights = realloc(lightPack.lights, lightPack.lightCount * sizeof(PointLight*));
+    } else {
+        free(lightPack.lights);
+        lightPack.lights = NULL;
+    }
+    light->inPack = false;
 }
 
 void render() {
 
     glEnable(GL_DEPTH_TEST);
+    useShader(&shader);
 
+    for(int i = 0; i <= lightPack.lightCount - 1; i++) {
 
-    for(int i = 0; i <= pack.objectCount - 1; i++) {
-        if(pack.objects[i]->packID != 3000) {
+        char posStr[512];
+        char colStr[512];
+        char actStr[512];
+        char conStr[512];
+        char linStr[512];
+        char quaStr[512];
 
-            glBindVertexArray(pack.objects[i]->model.VAO);
-
-            glBindBuffer(GL_ARRAY_BUFFER, pack.objects[i]->model.VBO);
-            glBufferData(GL_ARRAY_BUFFER, (pack.objects[i]->model.indexCount) * sizeof(Vertex), pack.objects[i]->model.vertices, GL_STATIC_DRAW);
-
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, pack.objects[i]->model.EBO);
-            glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * pack.objects[i]->model.indexCount, pack.objects[i]->model.indices, GL_STATIC_DRAW);
-
-            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
-            glEnableVertexAttribArray(0);
-            glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
-            glEnableVertexAttribArray(1);
-            glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, texCoord));
-            glEnableVertexAttribArray(2);
-
-            mat4 transformationMatrix;
-            loadTransformationMatrix(&transformationMatrix, pack.objects[i]);
-            setMatrix(&shader, "transMatrix", transformationMatrix);
-
-            useShader(&shader);
-            setBool(&shader, "lightEnabled", pack.objects[i]->model.lit);
-            setVec3(&shader, "viewPos", renderCamera.pos);
-            setVec3(&shader, "lightPos", lightPos);
-            glBindTexture(GL_TEXTURE_2D, pack.objects[i]->model.texture.id);
-            glDrawElements(GL_TRIANGLES, pack.objects[i]->model.indexCount, GL_UNSIGNED_INT, 0);
-
+        if(i != 0) {
+            memset(posStr, 0, strlen(posStr));
+            memset(colStr, 0, strlen(colStr));
+            memset(actStr, 0, strlen(actStr));
+            memset(conStr, 0, strlen(conStr));
+            memset(linStr, 0, strlen(linStr));
+            memset(quaStr, 0, strlen(quaStr));
         }
+
+        strcpy(posStr, "pointLights[");
+        sprintf(posStr + strlen(posStr), "%i", i);
+        strcat(posStr, "]");
+        strcat(posStr, ".position");
+        posStr[strlen(posStr) + 1] = '\0';
+
+        strcat(colStr, "pointLights[");
+        sprintf(colStr + strlen(colStr), "%i", i);
+        strcat(colStr, "]");
+        strcat(colStr, ".color");
+        colStr[strlen(colStr) + 1] = '\0';
+
+        strcpy(actStr, "pointLights[");
+        sprintf(actStr + strlen(actStr), "%i", i);
+        strcat(actStr, "]");
+        strcat(actStr, ".active");
+        actStr[strlen(actStr) + 1] = '\0';
+
+        setVec3(&shader, posStr, lightPack.lights[i]->position);
+        setVec3(&shader, colStr, lightPack.lights[i]->color);
+        setBool(&shader, actStr, lightPack.lights[i]->active);
+
+        setInt(&shader, "actualLightCount", lightPack.lightCount);
+    }
+
+    for(int i = 0; i <= objPack.objectCount - 1; i++) {
+        if(objPack.objects[i]->packID == 3000) {
+            break;
+        }
+
+        glBindVertexArray(objPack.objects[i]->model.VAO);
+
+        glBindBuffer(GL_ARRAY_BUFFER, objPack.objects[i]->model.VBO);
+        glBufferData(GL_ARRAY_BUFFER, (objPack.objects[i]->model.indexCount) * sizeof(Vertex), objPack.objects[i]->model.vertices, GL_STATIC_DRAW);
+
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, objPack.objects[i]->model.EBO);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * objPack.objects[i]->model.indexCount, objPack.objects[i]->model.indices, GL_STATIC_DRAW);
+
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
+        glEnableVertexAttribArray(1);
+        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, texCoord));
+        glEnableVertexAttribArray(2);
+
+        mat4 transformationMatrix;
+        loadTransformationMatrix(&transformationMatrix, objPack.objects[i]);
+        setMatrix(&shader, "transMatrix", transformationMatrix);
+        setBool(&shader, "lightEnabled", objPack.objects[i]->model.lit);
+        setVec3(&shader, "viewPos", renderCamera.pos);
+        glBindTexture(GL_TEXTURE_2D, objPack.objects[i]->model.texture.id);
+        glDrawElements(GL_TRIANGLES, objPack.objects[i]->model.indexCount, GL_UNSIGNED_INT, 0);
+
     }
 
 }

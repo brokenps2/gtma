@@ -29,7 +29,6 @@ int main(int argc, char* argv[]) {
     initScene();
 
     while(!glfwWindowShouldClose(getWindow())) {
-        render();
         updateScene();
         updateWindow();
         glfwPollEvents();

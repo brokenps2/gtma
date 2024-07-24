@@ -5,6 +5,7 @@
 #include <GLFW/glfw3.h>
 #include <stdbool.h>
 #include "Config.h"
+#include "Renderer.h"
 #include "Input.h"
 #include "Util.h"
 
@@ -76,16 +77,8 @@ void updateWindow() {
     currentTime = glfwGetTime();
     deltaTime = currentTime - lastTime;
 
-    double sleepTime = 1.0/60 - deltaTime;
-    if (sleepTime > 0) {
-        struct timespec ts;
-        ts.tv_sec = (time_t)sleepTime;
-        ts.tv_nsec = (long)((sleepTime - ts.tv_sec) * 1e9);
-        nanosleep(&ts, NULL);
-        glfwSwapBuffers(window);
-    }
-
-    lastTime = glfwGetTime();
+    render();
+    glfwSwapBuffers(window);
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glClearColor(glc(9), glc(8), glc(22), 1);

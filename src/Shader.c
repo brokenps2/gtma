@@ -49,6 +49,18 @@ void createShader(Shader* shader) {
 
 }
 
+void createPointLight(PointLight* light, float x, float y, float z, float r, float g, float b) {
+    light->position[0] = x;
+    light->position[1] = y;
+    light->position[2] = z;
+
+    light->color[0] = r;
+    light->color[1] = g;
+    light->color[2] = b;
+    
+    light->active = true;
+}
+
 void setBool(Shader* shader, const char* name, bool value) {         
     glUniform1i(glGetUniformLocation(shader->id, name), value);
 }

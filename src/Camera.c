@@ -4,13 +4,12 @@
 #include <cglm/types.h>
 #include <cglm/common.h>
 #include <math.h>
+#include "Config.h"
 #include "Shader.h"
 #include "WindowManager.h"
 #include "Input.h"
 #include "Camera.h"
 #include <GLFW/glfw3.h>
-#include <tslib.h>
-
 
 double oldMouseX = 0, oldMouseY = 0, newMouseX = 0, newMouseY = 0;
 
@@ -33,8 +32,8 @@ void createCamera(Camera* cam, int width, int height, vec3 pos) {
     cam->pitch = 0.0f;
     cam->yaw = 0.0f;
     cam->roll = 0.0f;
-    cam->speed = 0.0f;
-    cam->sensitivity = 0.5f;
+    cam->speed = cfgLookupInt("playerSpeed");
+    cam->sensitivity = (float)cfgLookupInt("mouseSensitivity") / 40;
 
     cam->scale[0] = 1;
     cam->scale[1] = 1;
@@ -104,8 +103,6 @@ void cameraLook(Camera* cam) {
 
         if(cam->roll >= 360) cam->roll = cam->roll - 360;
         if(cam->roll <= -360) cam->roll = cam->roll + 360;
-
-
     }
 
 }

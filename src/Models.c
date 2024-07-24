@@ -96,10 +96,6 @@ void createObject(Object* object, Texture* texture, const char* mdlPath, float x
     object->rotation[2] = rz;
 }
 
-void createObjectPack(ObjectPack* pack) {
-    pack->objectCount = 0;
-}
-
 void loadTransformationMatrix(mat4* matrix, Object* object) {
 
     if(object->rotation[0] < 0) object->rotation[0] = 360 + object->rotation[0];

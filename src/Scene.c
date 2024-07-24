@@ -3,6 +3,7 @@
 #include "Input.h"
 #include "Models.h"
 #include "Renderer.h"
+#include "Shader.h"
 #include "Texture.h"
 
 Camera camera;
@@ -32,6 +33,9 @@ Object spect;
 
 Sound testSound;
 
+PointLight light1;
+PointLight light2;
+PointLight light3;
 
 void initScene() {
     createSound(&testSound, "audio/test2.wav", true, 2, soundPos);
@@ -40,7 +44,7 @@ void initScene() {
     createCamera(&camera, getWindowWidth(), getWindowHeight(), camPos);
 
     createTexture(&tile, "images/tile.png");
-    createObject(&plane, &tile, "models/plane.obj", 0, 0, 0,    4, 4, 4,    0, 0, 0);
+    createObject(&plane, &tile, "models/plane.obj", 0, 0, 0,    8, 8, 8,    0, 0, 0);
 
     createTexture(&tableTex, "images/table.png");
     createObject(&table, &tableTex, "models/table.obj", 0, 0, 0,    1, 1, 1,    0, 0, 0);
@@ -61,10 +65,16 @@ void initScene() {
     createTexture(&spectTex, "images/spect.png");
     createObject(&spect, &spectTex, "models/spect.obj", -5, 3, 5,    1, 1, 1,    0, 0, 0);
 
+    createPointLight(&light1, 20, 20, 20, 0.6, 0.6, 0.6);
+    createPointLight(&light2, 0, 5, 0, 1, 1, 1);
+    createPointLight(&light3, 0, 5, 0, 1, 1, 1);
+
+    //addObject(&sky);
     addObject(&plane);
     addObject(&radio);
     addObject(&mario);
     addObject(&table);
+    addLight(&light1);
 }
 
 void updateScene() {
@@ -80,12 +90,6 @@ void updateScene() {
 
     if(isKeyDown(GLFW_KEY_0)) {
         radio.rotation[1] += 2;
-    }
-    if(isKeyPressed(GLFW_KEY_M)) {
-        removeObject(&mario);
-    }
-    if(isKeyPressed(GLFW_KEY_C)) {
-        addObject(&mario);
     }
     if(isKeyDown(GLFW_KEY_9)) {
         radio.rotation[1] -= 2;
