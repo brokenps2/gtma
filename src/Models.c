@@ -1,85 +1,120 @@
 #define FAST_OBJ_IMPLEMENTATION
+#define CGLTF_IMPLEMENTATION
 #include <cglm/affine.h>
 #include <cglm/affine-pre.h>
-#include <stdlib.h>
 #include <GL/glew.h>
+#include <cgltf.h>
+#include <stb_image.h>
 #include <fast_obj.h>
-#include <uthash.h>
-#include "Files.h"
 #include "Models.h"
+#include "Files.h"
 
-void createModel(Model* model, const char* path, Texture* texture) {
-    
-    fastObjMesh* mesh = fast_obj_read(res(path));    
+void loadTextureFromMemory(Texture* texture, const unsigned char* buffer, size_t size) {
+    stbi_set_flip_vertically_on_load(0);
+    texture->data = stbi_load_from_memory(buffer, size, &texture->w, &texture->h, &texture->channels, 0);
+    if (!texture->data) {
+        printf("Failed to load texture from memory\n");
+        return;
+    }
+    glGenTextures(1, &texture->id);
+    glBindTexture(GL_TEXTURE_2D, texture->id);
+    glTexImage2D(GL_TEXTURE_2D, 0, texture->channels == 4 ? GL_RGBA : GL_RGB, texture->w, texture->h, 0, texture->channels == 4 ? GL_RGBA : GL_RGB, GL_UNSIGNED_BYTE, texture->data);
+    glGenerateMipmap(GL_TEXTURE_2D);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    stbi_image_free(texture->data);
+}
 
-    if(!mesh) {
-        printf("unable to find model %s\n", path);
+void createModel(Model* model, const char* path) {
+    cgltf_options options = {0};
+    cgltf_data* data = NULL;
+    cgltf_result result = cgltf_parse_file(&options, res(path), &data);
+
+    if (result != cgltf_result_success) {
+        printf("failed to load GLTF file\n");
         exit(1);
     }
 
-    model->indexCount = mesh->index_count;
-    model->postnCount = mesh->position_count;
-    model->texcoCount = mesh->texcoord_count;
-    model->normlCount = mesh->normal_count;
+    result = cgltf_load_buffers(&options, data, res(path));
+    if (result != cgltf_result_success) {
+        printf("failed to load GLTF buffers\n");
+        cgltf_free(data);
+        exit(1);
+    }
 
-    model->vertices = (Vertex*)malloc((mesh->index_count * sizeof(Vertex) * 3));
-    model->indices = (unsigned int*)malloc(model->indexCount * 3 * sizeof(unsigned int));
+    cgltf_mesh* mesh = data->meshes;
+    if (mesh->primitives_count == 0) {
+        printf("no primitives in mesh\n");
+        cgltf_free(data);
+        exit(1);
+    }
 
-    VertexMapEntry* vertexMap = NULL;
-    int uniqueVertexCount = 0;
+    cgltf_primitive* primitive = &mesh->primitives[0];
+    if (primitive->type != cgltf_primitive_type_triangles) {
+        printf("only triangle primitives are supported\n");
+        cgltf_free(data);
+        exit(1);
+    }
 
-    for (int i = 0; i < model->indexCount; i++) {
-        unsigned int posIndex = mesh->indices[i].p;
-        unsigned int texIndex = mesh->indices[i].t;
-        unsigned int norIndex = mesh->indices[i].n;
-        int vertexKey = posIndex * (mesh->texcoord_count + mesh->normal_count) + texIndex;
+    size_t vertexCount = primitive->attributes[0].data->count;
+    model->vertices = (Vertex*)malloc(vertexCount * sizeof(Vertex));
 
-        VertexMapEntry* entry;
-        HASH_FIND_INT(vertexMap, &vertexKey, entry);
+    for (size_t i = 0; i < primitive->attributes_count; ++i) {
+        cgltf_attribute* attr = &primitive->attributes[i];
+        cgltf_accessor* accessor = attr->data;
 
-        if (!entry) {
-            Vertex newVertex;
-            newVertex.position[0] = mesh->positions[3 * posIndex + 0];
-            newVertex.position[1] = mesh->positions[3 * posIndex + 1];
-            newVertex.position[2] = mesh->positions[3 * posIndex + 2];
-            newVertex.texCoord[0] = mesh->texcoords[2 * texIndex + 0];
-            newVertex.texCoord[1] = mesh->texcoords[2 * texIndex + 1];
-            newVertex.normal[0] = mesh->normals[3 * norIndex + 0];
-            newVertex.normal[1] = mesh->normals[3 * norIndex + 1];
-            newVertex.normal[2] = mesh->normals[3 * norIndex + 2];
-
-            model->vertices[uniqueVertexCount] = newVertex;
-
-            entry = (VertexMapEntry*)malloc(sizeof(VertexMapEntry));
-            entry->vertexKey = vertexKey;
-            entry->vertexIndex = uniqueVertexCount;
-            HASH_ADD_INT(vertexMap, vertexKey, entry);
-
-            model->indices[i] = uniqueVertexCount;
-            uniqueVertexCount++;
-        } else {
-            model->indices[i] = entry->vertexIndex;
+        if (attr->type == cgltf_attribute_type_position) {
+            model->postnCount = (int)vertexCount;
+            for (size_t j = 0; j < vertexCount; ++j) {
+                cgltf_accessor_read_float(accessor, j, model->vertices[j].position, 3);
+            }
+        } else if (attr->type == cgltf_attribute_type_normal) {
+            model->normlCount = (int)vertexCount;
+            for (size_t j = 0; j < vertexCount; ++j) {
+                cgltf_accessor_read_float(accessor, j, model->vertices[j].normal, 3);
+            }
+        } else if (attr->type == cgltf_attribute_type_texcoord) {
+            model->texcoCount = (int)vertexCount;
+            for (size_t j = 0; j < vertexCount; ++j) {
+                cgltf_accessor_read_float(accessor, j, model->vertices[j].texCoord, 2);
+            }
         }
     }
 
-    VertexMapEntry *currentEntry, *tmp;
-    HASH_ITER(hh, vertexMap, currentEntry, tmp) {
-        HASH_DEL(vertexMap, currentEntry);
-        free(currentEntry);
+    cgltf_accessor* indices = primitive->indices;
+    size_t indexCount = indices->count;
+    model->indices = (unsigned int*)malloc(indexCount * sizeof(unsigned int));
+    for (size_t i = 0; i < indexCount; ++i) {
+        model->indices[i] = (unsigned int)cgltf_accessor_read_index(indices, i);
+    }
+    model->indexCount = (int)indexCount;
+
+    if (primitive->material && primitive->material->pbr_metallic_roughness.base_color_texture.texture) {
+        cgltf_texture* gltfTexture = primitive->material->pbr_metallic_roughness.base_color_texture.texture;
+        cgltf_image* image = gltfTexture->image;
+        if (image->buffer_view && image->buffer_view->buffer->data) {
+            const unsigned char* buffer = (const unsigned char*)image->buffer_view->buffer->data + image->buffer_view->offset;
+            size_t bufferSize = image->buffer_view->size;
+            loadTextureFromMemory(&model->texture, buffer, bufferSize);
+        }
+    } else if (primitive->material && primitive->material->normal_texture.texture) {
+        cgltf_texture* gltfTexture = primitive->material->normal_texture.texture;
+        cgltf_image* image = gltfTexture->image;
+        if (image->buffer_view && image->buffer_view->buffer->data) {
+            const unsigned char* buffer = (const unsigned char*)image->buffer_view->buffer->data + image->buffer_view->offset;
+            size_t bufferSize = image->buffer_view->size;
+            loadTextureFromMemory(&model->texture, buffer, bufferSize);
+        }
     }
 
-    fast_obj_destroy(mesh);
-    model->texture = *texture;
-    model->lit = true;
-
-    glGenVertexArrays(1, &model->VAO);
-    glGenBuffers(1, &model->VBO);
-    glGenBuffers(1, &model->EBO);
+    cgltf_free(data);
 }
 
-void createObject(Object* object, Texture* texture, const char* mdlPath, float x, float y, float z, float sx, float sy, float sz, float rx, float ry, float rz) {
+void createObject(Object* object, const char* mdlPath, float x, float y, float z, float sx, float sy, float sz, float rx, float ry, float rz) {
     Model model; 
-    createModel(&model, mdlPath, texture);
+    createModel(&model, mdlPath);
 
     object->model = model;
 

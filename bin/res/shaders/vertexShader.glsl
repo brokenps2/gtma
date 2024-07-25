@@ -7,6 +7,7 @@ struct PointLight {
     vec3 position;
     vec3 color;
     bool active;
+    bool sunMode;
 };
 
 uniform PointLight pointLights[32]; //remember this incase I somehow need more
@@ -27,7 +28,7 @@ vec3 calcPointLight(PointLight light) {
     vec3 lPos = vec3(transMatrix * vec4(position, 1.0));
     vec3 lNormal = mat3(transpose(inverse(transMatrix))) * normal;
 
-    vec3 ambient = vec3(0.1);
+    vec3 ambient = vec3(0.05);
 
     vec3 norm = normalize(lNormal);
     vec3 lightDir = normalize(light.position - lPos);
@@ -40,6 +41,15 @@ vec3 calcPointLight(PointLight light) {
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
     vec3 specular = specularStrength * spec * light.color;
 
+    if(!light.sunMode) {
+        float distance    = length(light.position - position);
+        float attenuation = 1.0 / (1.0f + 0.007f * distance + 
+  		    0.0002f * (distance * distance));
+
+        diffuse  *= attenuation;
+        specular *= attenuation;
+    }
+    
     vec3 lightColor = ambient + diffuse + specular;
     
     if(!light.active) {

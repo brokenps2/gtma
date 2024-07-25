@@ -20,6 +20,7 @@ typedef struct PointLight {
     vec3 position;
     vec3 color;
     bool active;
+    bool sunMode;
     int packID;
     bool inPack;
 } PointLight;

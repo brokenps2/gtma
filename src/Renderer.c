@@ -13,7 +13,6 @@
 #include "Models.h"
 
 Shader shader;
-vec3 lightPos;
 
 Camera renderCamera;
 
@@ -30,11 +29,6 @@ void initRenderer() {
     glfwSetInputMode(getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     createShader(&shader);
-
-    lightPos[0] = 20;
-    lightPos[1] = 20;
-    lightPos[2] = 20;
-
 }
 
 void setCamera(Camera* cam) {
@@ -131,17 +125,13 @@ void render() {
         char posStr[512];
         char colStr[512];
         char actStr[512];
-        char conStr[512];
-        char linStr[512];
-        char quaStr[512];
+        char sunStr[512];
 
         if(i != 0) {
             memset(posStr, 0, strlen(posStr));
             memset(colStr, 0, strlen(colStr));
             memset(actStr, 0, strlen(actStr));
-            memset(conStr, 0, strlen(conStr));
-            memset(linStr, 0, strlen(linStr));
-            memset(quaStr, 0, strlen(quaStr));
+            memset(sunStr, 0, strlen(sunStr));
         }
 
         strcpy(posStr, "pointLights[");
@@ -150,7 +140,7 @@ void render() {
         strcat(posStr, ".position");
         posStr[strlen(posStr) + 1] = '\0';
 
-        strcat(colStr, "pointLights[");
+        strcpy(colStr, "pointLights[");
         sprintf(colStr + strlen(colStr), "%i", i);
         strcat(colStr, "]");
         strcat(colStr, ".color");
@@ -162,25 +152,33 @@ void render() {
         strcat(actStr, ".active");
         actStr[strlen(actStr) + 1] = '\0';
 
+        strcpy(sunStr, "pointLights[");
+        sprintf(sunStr + strlen(sunStr), "%i", i);
+        strcat(sunStr, "]");
+        strcat(sunStr, ".sunMode");
+        sunStr[strlen(sunStr) + 1] = '\0';
+
         setVec3(&shader, posStr, lightPack.lights[i]->position);
         setVec3(&shader, colStr, lightPack.lights[i]->color);
         setBool(&shader, actStr, lightPack.lights[i]->active);
+        setBool(&shader, sunStr, lightPack.lights[i]->sunMode);
 
         setInt(&shader, "actualLightCount", lightPack.lightCount);
     }
-
-    for(int i = 0; i <= objPack.objectCount - 1; i++) {
-        if(objPack.objects[i]->packID == 3000) {
+ for (int i = 0; i < objPack.objectCount; i++) {
+        if (objPack.objects[i]->packID == 3000) {
             break;
         }
 
-        glBindVertexArray(objPack.objects[i]->model.VAO);
+        Model* model = &objPack.objects[i]->model;
 
-        glBindBuffer(GL_ARRAY_BUFFER, objPack.objects[i]->model.VBO);
-        glBufferData(GL_ARRAY_BUFFER, (objPack.objects[i]->model.indexCount) * sizeof(Vertex), objPack.objects[i]->model.vertices, GL_STATIC_DRAW);
+        glBindVertexArray(model->VAO);
 
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, objPack.objects[i]->model.EBO);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * objPack.objects[i]->model.indexCount, objPack.objects[i]->model.indices, GL_STATIC_DRAW);
+        glBindBuffer(GL_ARRAY_BUFFER, model->VBO);
+        glBufferData(GL_ARRAY_BUFFER, model->postnCount * sizeof(Vertex), model->vertices, GL_STATIC_DRAW);
+
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, model->EBO);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, model->indexCount * sizeof(unsigned int), model->indices, GL_STATIC_DRAW);
 
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
         glEnableVertexAttribArray(0);
@@ -192,13 +190,12 @@ void render() {
         mat4 transformationMatrix;
         loadTransformationMatrix(&transformationMatrix, objPack.objects[i]);
         setMatrix(&shader, "transMatrix", transformationMatrix);
-        setBool(&shader, "lightEnabled", objPack.objects[i]->model.lit);
+        setBool(&shader, "lightEnabled", model->lit);
         setVec3(&shader, "viewPos", renderCamera.pos);
-        glBindTexture(GL_TEXTURE_2D, objPack.objects[i]->model.texture.id);
-        glDrawElements(GL_TRIANGLES, objPack.objects[i]->model.indexCount, GL_UNSIGNED_INT, 0);
 
+        glBindTexture(GL_TEXTURE_2D, model->texture.id);
+        glDrawElements(GL_TRIANGLES, model->indexCount, GL_UNSIGNED_INT, 0);
     }
-
 }
 
 Shader* getShader() {

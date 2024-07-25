@@ -41,8 +41,8 @@ typedef struct VertexMapEntry {
     UT_hash_handle hh;
 } VertexMapEntry;
 
-void createModel(Model* model, const char* path, Texture* texture);
-void createObject(Object* object, Texture* texture, const char* mdlPath, float x, float y, float z, float sx, float sy, float sz, float rx, float ry, float rz);
+void createModel(Model* model, const char* path);
+void createObject(Object* object, const char* mdlPath, float x, float y, float z, float sx, float sy, float sz, float rx, float ry, float rz);
 void createObjectPack(ObjectPack* pack);
 void loadTransformationMatrix(mat4* matrix, Object* object);
 void deleteModel(Model* model);

@@ -58,6 +58,8 @@ void createPointLight(PointLight* light, float x, float y, float z, float r, flo
     light->color[1] = g;
     light->color[2] = b;
     
+    light->sunMode = false;
+
     light->active = true;
 }
 
