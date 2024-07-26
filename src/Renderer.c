@@ -165,7 +165,8 @@ void render() {
 
         setInt(&shader, "actualLightCount", lightPack.lightCount);
     }
- for (int i = 0; i < objPack.objectCount; i++) {
+
+    for (int i = 0; i < objPack.objectCount; i++) {
         if (objPack.objects[i]->packID == 3000) {
             break;
         }

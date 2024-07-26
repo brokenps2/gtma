@@ -109,6 +109,12 @@ void createModel(Model* model, const char* path) {
         }
     }
 
+    model->lit = true;
+
+    glGenVertexArrays(1, &model->VAO);
+    glGenBuffers(1, &model->VBO);
+    glGenBuffers(1, &model->EBO);
+
     cgltf_free(data);
 }
 

@@ -42,10 +42,10 @@ void initScene() {
     createPointLight(&light4, -50, 20, 0, 1, 1, 1);
     light4.sunMode = true;
 
-    //addObject(&plane);
-    addObject(&castle);
+    addObject(&plane);
+    //addObject(&castle);
     //addObject(&mario);
-    addObject(&sky);
+    //addObject(&sky);
     addLight(&light1);
     addLight(&light2);
     addLight(&light3);
@@ -61,8 +61,8 @@ void updateScene() {
     glm_vec3_copy(camera.pos, sky.position);
     sky.rotation[1] += 0.02;
 
-    printf("\r%f  %f  %f", camera.pos[0], camera.pos[1], camera.pos[2]);
-    fflush(stdout);
+    //printf("\r%f  %f  %f", camera.pos[0], camera.pos[1], camera.pos[2]);
+    //fflush(stdout);
 
     updateAudio(camera.pos, camera.direction);
 
