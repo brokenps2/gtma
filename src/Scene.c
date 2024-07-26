@@ -10,9 +10,9 @@ vec3 camPos = {4, 4, 4};
 vec3 soundPos = {0, 0, 0};
 
 Object plane;
-Object castle;
+Object table;
 Object mario;
-Object sky;
+Object radio;
 
 Sound testSound;
 
@@ -28,10 +28,9 @@ void initScene() {
     createCamera(&camera, getWindowWidth(), getWindowHeight(), camPos);
 
     createObject(&plane, "models/plane.glb", 0, 0, 0,    10, 10, 10,    0, 0, 0);
-    createObject(&castle, "models/castle.glb", 0, 0, 0,    5, 5, 5,    0, 0, 0);
+    createObject(&table, "models/table.glb", 0, 0, 0,    5, 5, 5,    0, 0, 0);
     createObject(&mario, "models/mario.glb", 0, 0, 0,    1, 1, 1,    0, 0, 0);
-    createObject(&sky, "models/sky.glb", 0, 0, 0,    2.9, 2.9, 2.9,    0, 0, 0);
-    sky.model.lit = false;
+    createObject(&radio, "models/radio.glb", 0, 0, 0,    2.9, 2.9, 2.9,    0, 0, 0);
 
     createPointLight(&light1, 0, 20, 50, 0.6, 0.6, 0.6);
     light1.sunMode = true;
@@ -43,9 +42,9 @@ void initScene() {
     light4.sunMode = true;
 
     addObject(&plane);
-    //addObject(&castle);
-    //addObject(&mario);
-    //addObject(&sky);
+    addObject(&table);
+    addObject(&mario);
+    addObject(&radio);
     addLight(&light1);
     addLight(&light2);
     addLight(&light3);
@@ -58,8 +57,8 @@ void updateScene() {
     cameraMatrix(&camera, 67.0f, 0.1f, 200.0f, getShader(), "camMatrix");
     cameraMove(&camera);
 
-    glm_vec3_copy(camera.pos, sky.position);
-    sky.rotation[1] += 0.02;
+    glm_vec3_copy(camera.pos, radio.position);
+    radio.rotation[1] += 0.02;
 
     //printf("\r%f  %f  %f", camera.pos[0], camera.pos[1], camera.pos[2]);
     //fflush(stdout);

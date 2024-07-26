@@ -44,52 +44,71 @@ void createModel(Model* model, const char* path) {
         exit(1);
     }
 
-    cgltf_mesh* mesh = data->meshes;
-    if (mesh->primitives_count == 0) {
-        printf("no primitives in mesh\n");
-        cgltf_free(data);
-        exit(1);
-    }
-
-    cgltf_primitive* primitive = &mesh->primitives[0];
+    cgltf_primitive* primitive = &data->meshes[0].primitives[0];
     if (primitive->type != cgltf_primitive_type_triangles) {
         printf("only triangle primitives are supported\n");
         cgltf_free(data);
         exit(1);
     }
 
-    size_t vertexCount = primitive->attributes[0].data->count;
-    model->vertices = (Vertex*)malloc(vertexCount * sizeof(Vertex));
-
-    for (size_t i = 0; i < primitive->attributes_count; ++i) {
-        cgltf_attribute* attr = &primitive->attributes[i];
-        cgltf_accessor* accessor = attr->data;
-
-        if (attr->type == cgltf_attribute_type_position) {
-            model->postnCount = (int)vertexCount;
-            for (size_t j = 0; j < vertexCount; ++j) {
-                cgltf_accessor_read_float(accessor, j, model->vertices[j].position, 3);
-            }
-        } else if (attr->type == cgltf_attribute_type_normal) {
-            model->normlCount = (int)vertexCount;
-            for (size_t j = 0; j < vertexCount; ++j) {
-                cgltf_accessor_read_float(accessor, j, model->vertices[j].normal, 3);
-            }
-        } else if (attr->type == cgltf_attribute_type_texcoord) {
-            model->texcoCount = (int)vertexCount;
-            for (size_t j = 0; j < vertexCount; ++j) {
-                cgltf_accessor_read_float(accessor, j, model->vertices[j].texCoord, 2);
-            }
+    size_t totalVertexCount = 0;
+    size_t totalIndexCount = 0;
+    for (size_t i = 0; i < data->meshes_count; ++i) {
+        cgltf_mesh* mesh = &data->meshes[i];
+        for (size_t j = 0; j < mesh->primitives_count; ++j) {
+            cgltf_primitive* primitive = &mesh->primitives[j];
+            totalVertexCount += primitive->attributes[0].data->count;
+            totalIndexCount += primitive->indices->count;
         }
     }
 
-    cgltf_accessor* indices = primitive->indices;
-    size_t indexCount = indices->count;
-    model->indices = (unsigned int*)malloc(indexCount * sizeof(unsigned int));
-    for (size_t i = 0; i < indexCount; ++i) {
-        model->indices[i] = (unsigned int)cgltf_accessor_read_index(indices, i);
+    model->vertices = (Vertex*)malloc(totalVertexCount * sizeof(Vertex));
+    model->indices = (unsigned int*)malloc(totalIndexCount * sizeof(unsigned int));
+
+    size_t vertexOffset = 0;
+    size_t indexOffset = 0;
+
+    for (size_t i = 0; i < data->meshes_count; ++i) {
+        cgltf_mesh* mesh = &data->meshes[i];
+        for (size_t j = 0; j < mesh->primitives_count; ++j) {
+            cgltf_primitive* primitive = &mesh->primitives[j];
+
+            size_t vertexCount = primitive->attributes[0].data->count;
+            size_t indexCount = primitive->indices->count;
+
+            for (size_t k = 0; k < primitive->attributes_count; ++k) {
+                cgltf_attribute* attr = &primitive->attributes[k];
+                cgltf_accessor* accessor = attr->data;
+
+                if (attr->type == cgltf_attribute_type_position) {
+                    for (size_t l = 0; l < vertexCount; ++l) {
+                        cgltf_accessor_read_float(accessor, l, model->vertices[vertexOffset + l].position, 3);
+                    }
+                } else if (attr->type == cgltf_attribute_type_normal) {
+                    for (size_t l = 0; l < vertexCount; ++l) {
+                        cgltf_accessor_read_float(accessor, l, model->vertices[vertexOffset + l].normal, 3);
+                    }
+                } else if (attr->type == cgltf_attribute_type_texcoord) {
+                    for (size_t l = 0; l < vertexCount; ++l) {
+                        cgltf_accessor_read_float(accessor, l, model->vertices[vertexOffset + l].texCoord, 2);
+                    }
+                }
+            }
+
+            cgltf_accessor* indices = primitive->indices;
+            for (size_t l = 0; l < indexCount; ++l) {
+                model->indices[indexOffset + l] = (unsigned int)(cgltf_accessor_read_index(indices, l) + vertexOffset);
+            }
+
+            vertexOffset += vertexCount;
+            indexOffset += indexCount;
+        }
     }
-    model->indexCount = (int)indexCount;
+
+    model->postnCount = (int)totalVertexCount;
+    model->normlCount = (int)totalVertexCount;
+    model->texcoCount = (int)totalVertexCount;
+    model->indexCount = (int)totalIndexCount;
 
     if (primitive->material && primitive->material->pbr_metallic_roughness.base_color_texture.texture) {
         cgltf_texture* gltfTexture = primitive->material->pbr_metallic_roughness.base_color_texture.texture;
