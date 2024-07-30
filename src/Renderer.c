@@ -199,6 +199,11 @@ void render() {
     }
 }
 
+void disposeRenderer() {
+    free(objPack.objects);
+    free(lightPack.lights);
+}
+
 Shader* getShader() {
     return &shader;
 }

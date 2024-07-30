@@ -4,9 +4,9 @@ SRC_FILES := $(wildcard $(SRC_DIR)/*.c)
 OBJ_FILES := $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRC_FILES))
 INCLUDES := -Iinclude/
 LDFLAGS := -L/usr/lib -g -l:libglfw.so -lm -lGL -lopenal -l:libGLEW.so -l:libconfig.so
-CPPFLAGS := -Wall -Wextra -g
+CPPFLAGS := -Wall -g -O2
 
-bin/program: $(OBJ_FILES)
+bin/gtma: $(OBJ_FILES)
 	gcc $(LDFLAGS) -o $@ $^
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c

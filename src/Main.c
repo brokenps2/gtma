@@ -34,6 +34,9 @@ int main(int argc, char* argv[]) {
         glfwPollEvents();
     }
 
+    disposeRenderer();
+    disposeScene();
+
     glfwTerminate();
     printf("\n");
     return 0;

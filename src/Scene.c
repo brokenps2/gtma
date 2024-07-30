@@ -28,9 +28,9 @@ void initScene() {
     createCamera(&camera, getWindowWidth(), getWindowHeight(), camPos);
 
     createObject(&plane, "models/plane.glb", 0, 0, 0,    10, 10, 10,    0, 0, 0);
-    createObject(&table, "models/table.glb", 0, 0, 0,    5, 5, 5,    0, 0, 0);
-    createObject(&mario, "models/mario.glb", 0, 0, 0,    1, 1, 1,    0, 0, 0);
-    createObject(&radio, "models/radio.glb", 0, 0, 0,    2.9, 2.9, 2.9,    0, 0, 0);
+    createObject(&table, "models/table.glb", 0, 0, 0,    1, 1, 1,    0, 0, 0);
+    createObject(&mario, "models/mario.glb", 7, 1.2, -3,    1, 1, 1,    0, 0, 0);
+    createObject(&radio, "models/radio.glb", 0, 2.5, 0,    1, 1, 1,    0, 70, 0);
 
     createPointLight(&light1, 0, 20, 50, 0.6, 0.6, 0.6);
     light1.sunMode = true;
@@ -47,8 +47,8 @@ void initScene() {
     addObject(&radio);
     addLight(&light1);
     addLight(&light2);
-    addLight(&light3);
-    addLight(&light4);
+    //addLight(&light3);
+    //addLight(&light4);
 
 
 }
@@ -57,12 +57,16 @@ void updateScene() {
     cameraMatrix(&camera, 67.0f, 0.1f, 200.0f, getShader(), "camMatrix");
     cameraMove(&camera);
 
-    glm_vec3_copy(camera.pos, radio.position);
-    radio.rotation[1] += 0.02;
-
-    //printf("\r%f  %f  %f", camera.pos[0], camera.pos[1], camera.pos[2]);
-    //fflush(stdout);
+    printf("\r%f  %f  %f", camera.pos[0], camera.pos[1], camera.pos[2]);
+    fflush(stdout);
 
     updateAudio(camera.pos, camera.direction);
 
+}
+
+void disposeScene() {
+    destroyObject(&plane);
+    destroyObject(&table);
+    destroyObject(&mario);
+    destroyObject(&radio);
 }

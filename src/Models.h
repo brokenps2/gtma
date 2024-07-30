@@ -42,7 +42,9 @@ typedef struct VertexMapEntry {
 } VertexMapEntry;
 
 void createModel(Model* model, const char* path);
+float getPositionHeight(Model* model, float x, float z);
 void createObject(Object* object, const char* mdlPath, float x, float y, float z, float sx, float sy, float sz, float rx, float ry, float rz);
 void createObjectPack(ObjectPack* pack);
+void destroyObject(Object* object);
 void loadTransformationMatrix(mat4* matrix, Object* object);
 void deleteModel(Model* model);

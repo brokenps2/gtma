@@ -9,5 +9,6 @@ void addObject(Object* obj);
 void addLight(PointLight* light);
 void removeObject(Object* obj);
 void removeLight(PointLight* light);
+void disposeRenderer();
 Shader* getShader();
 void render();

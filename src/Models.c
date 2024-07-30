@@ -24,7 +24,6 @@ void loadTextureFromMemory(Texture* texture, const unsigned char* buffer, size_t
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    stbi_image_free(texture->data);
 }
 
 void createModel(Model* model, const char* path) {
@@ -135,6 +134,12 @@ void createModel(Model* model, const char* path) {
     glGenBuffers(1, &model->EBO);
 
     cgltf_free(data);
+}
+
+void destroyObject(Object* object) {
+    free(object->model.vertices);
+    free(object->model.indices);
+    stbi_image_free(object->model.texture.data);
 }
 
 void createObject(Object* object, const char* mdlPath, float x, float y, float z, float sx, float sy, float sz, float rx, float ry, float rz) {

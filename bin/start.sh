@@ -1,3 +1,3 @@
 #!/bin/sh
 
-./program config.conf
+/home/eli/gtma/bin/gtma config.conf

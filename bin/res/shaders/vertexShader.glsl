@@ -43,14 +43,14 @@ vec3 calcPointLight(PointLight light) {
 
     if(!light.sunMode) {
         float distance    = length(light.position - position);
-        float attenuation = 1.0 / (1.0f + 0.007f * distance + 
-  		    0.0002f * (distance * distance));
+        float attenuation = 1.0 / (1.0f + 0f * distance + 
+  		    0.00001f * (distance * distance));
 
         diffuse  *= attenuation;
         specular *= attenuation;
     }
     
-    vec3 lightColor = ambient + diffuse + specular;
+    vec3 lightColor = ambient + diffuse;// + specular;
     
     if(!light.active) {
         return ambient;

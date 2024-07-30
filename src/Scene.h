@@ -2,3 +2,4 @@
 
 void initScene();
 void updateScene();
+void disposeScene();
