@@ -49,6 +49,50 @@ void createShader(Shader* shader) {
 
 }
 
+void createScreenShader(Shader* shader) {
+    shader->vtShaderSrc = getFileSrc(res("/shaders/screenVertexShader.glsl"));
+    shader->frShaderSrc = getFileSrc(res("/shaders/screenFragmentShader.glsl"));
+
+    int success;
+    char infoLog[512];
+
+    shader->vertexShader = glCreateShader(GL_VERTEX_SHADER);
+    glShaderSource(shader->vertexShader, 1, (const char**)&shader->vtShaderSrc, NULL);
+    glCompileShader(shader->vertexShader);
+
+    free(shader->vtShaderSrc);
+
+    glGetShaderiv(shader->vertexShader, GL_COMPILE_STATUS, &success);
+    if(!success) {
+        glGetShaderInfoLog(shader->vertexShader, 512, NULL, infoLog);
+        printf("vertex shader compile failed\n%s\n", infoLog);
+    };
+
+
+    shader->fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+    glShaderSource(shader->fragmentShader, 1, (const char**)&shader->frShaderSrc, NULL);
+    glCompileShader(shader->fragmentShader);
+
+    free(shader->frShaderSrc);
+
+    glGetShaderiv(shader->fragmentShader, GL_COMPILE_STATUS, &success);
+    if(!success) {
+        glGetShaderInfoLog(shader->fragmentShader, 512, NULL, infoLog);
+        printf("fragment shader compile failed\n%s\n", infoLog);
+    };
+
+    shader->id = glCreateProgram();
+
+    glAttachShader(shader->id, shader->vertexShader);
+    glAttachShader(shader->id, shader->fragmentShader);
+
+    glLinkProgram(shader->id);
+
+    glDeleteShader(shader->vertexShader);
+    glDeleteShader(shader->fragmentShader);
+
+}
+
 void createPointLight(PointLight* light, float x, float y, float z, float r, float g, float b) {
     light->position[0] = x;
     light->position[1] = y;

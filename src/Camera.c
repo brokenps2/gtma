@@ -25,9 +25,9 @@ void createCamera(Camera* cam, int width, int height, vec3 pos) {
     cam->up[1] = 1.0f;
     cam->up[2] = 0.0f;
 
-    cam->pos[0] = pos[0];
-    cam->pos[1] = pos[1];
-    cam->pos[2] = pos[2];
+    cam->position[0] = pos[0];
+    cam->position[1] = pos[1];
+    cam->position[2] = pos[2];
 
     cam->pitch = 0.0f;
     cam->yaw = 0.0f;
@@ -35,9 +35,7 @@ void createCamera(Camera* cam, int width, int height, vec3 pos) {
     cam->speed = cfgLookupInt("playerSpeed");
     cam->sensitivity = (float)cfgLookupInt("mouseSensitivity") / 40;
 
-    cam->scale[0] = 1;
-    cam->scale[1] = 1;
-    cam->scale[2] = 1;
+    cam->radius = 1;
 }
 
 void resizeCamera(Camera* cam, int width, int height) {
@@ -66,9 +64,9 @@ void cameraMatrix(Camera* cam, float fov, float nearPlane, float farPlane, Shade
     glm_normalize_to(cam->direction, cam->front);
 
     vec3 cent;
-    glm_vec3_add(cam->pos, cam->front, cent);
+    glm_vec3_add(cam->position, cam->front, cent);
 
-    glm_lookat(cam->pos, cent, cam->up, view);
+    glm_lookat(cam->position, cent, cam->up, view);
     glm_perspective(glm_rad(fov), ((float)cam->width / (float)cam->height), nearPlane, farPlane, proj);
 
     mat4 camCross;
@@ -114,26 +112,26 @@ void cameraMove(Camera* cam) {
 
     if(isKeyDown(GLFW_KEY_S)) {
         cam->speed += accel * getDeltaTime();
-        cam->pos[0] += (-cos(glm_rad(cam->yaw)) * cam->speed) * getDeltaTime();
-        cam->pos[2] -= (sin(glm_rad(cam->yaw)) * cam->speed) * getDeltaTime();
+        cam->position[0] += (-cos(glm_rad(cam->yaw)) * cam->speed) * getDeltaTime();
+        cam->position[2] -= (sin(glm_rad(cam->yaw)) * cam->speed) * getDeltaTime();
     }
 
     if(isKeyDown(GLFW_KEY_A)) {
         cam->speed += accel * getDeltaTime();
-        cam->pos[0] += (sin(glm_rad(cam->yaw)) * cam->speed) * getDeltaTime();
-        cam->pos[2] -= (cos(glm_rad(cam->yaw)) * cam->speed) * getDeltaTime();
+        cam->position[0] += (sin(glm_rad(cam->yaw)) * cam->speed) * getDeltaTime();
+        cam->position[2] -= (cos(glm_rad(cam->yaw)) * cam->speed) * getDeltaTime();
     }
 
     if(isKeyDown(GLFW_KEY_D)) {
         cam->speed += accel * getDeltaTime();
-        cam->pos[0] -= (sin(glm_rad(cam->yaw)) * cam->speed) * getDeltaTime();
-        cam->pos[2] += (cos(glm_rad(cam->yaw)) * cam->speed) * getDeltaTime();
+        cam->position[0] -= (sin(glm_rad(cam->yaw)) * cam->speed) * getDeltaTime();
+        cam->position[2] += (cos(glm_rad(cam->yaw)) * cam->speed) * getDeltaTime();
     }
 
     if(isKeyDown(GLFW_KEY_W)) {
         cam->speed += accel * getDeltaTime();
-        cam->pos[0] -= (-cos(glm_rad(cam->yaw)) * cam->speed) * getDeltaTime();
-        cam->pos[2] += (sin(glm_rad(cam->yaw)) * cam->speed) * getDeltaTime();
+        cam->position[0] -= (-cos(glm_rad(cam->yaw)) * cam->speed) * getDeltaTime();
+        cam->position[2] += (sin(glm_rad(cam->yaw)) * cam->speed) * getDeltaTime();
     }
 
     if(cam->speed > maxSpeed) {
@@ -147,11 +145,11 @@ void cameraMove(Camera* cam) {
     }
 
     if(isKeyDown(GLFW_KEY_LEFT_CONTROL)){
-        cam->pos[1] -= cam->speed * getDeltaTime();
+        cam->position[1] -= cam->speed * getDeltaTime();
     }
 
     if(isKeyDown(GLFW_KEY_SPACE)) {
-        cam->pos[1] += cam->speed * getDeltaTime();
+        cam->position[1] += cam->speed * getDeltaTime();
     }
 
     if(isKeyDown(GLFW_KEY_LEFT)) {
@@ -167,21 +165,21 @@ void cameraMove(Camera* cam) {
         cam->pitch -= cam->speed * 8 * getDeltaTime();
     }
 
-    cam->pos[0] = roundf(cam->pos[0] * 100) / 100;
-    cam->pos[1] = roundf(cam->pos[1] * 100) / 100;
-    cam->pos[2] = roundf(cam->pos[2] * 100) / 100;
+    cam->position[0] = roundf(cam->position[0] * 100) / 100;
+    cam->position[1] = roundf(cam->position[1] * 100) / 100;
+    cam->position[2] = roundf(cam->position[2] * 100) / 100;
 
     cameraLook(cam);
 }
 
 void cameraSetPosition(Camera* cam, vec3 npos) {
-    cam->pos[0] = npos[0];
-    cam->pos[1] = npos[1];
-    cam->pos[2] = npos[2];
+    cam->position[0] = npos[0];
+    cam->position[1] = npos[1];
+    cam->position[2] = npos[2];
 }
 
 void cameraIncPosition(Camera* cam, vec3 inc) {
-    cam->pos[0] += inc[0];
-    cam->pos[1] += inc[1];
-    cam->pos[2] += inc[2];   
+    cam->position[0] += inc[0];
+    cam->position[1] += inc[1];
+    cam->position[2] += inc[2];   
 }

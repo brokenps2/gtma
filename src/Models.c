@@ -1,3 +1,4 @@
+#include <cglm/mat4.h>
 #define FAST_OBJ_IMPLEMENTATION
 #define CGLTF_IMPLEMENTATION
 #include <cglm/affine.h>
@@ -8,23 +9,6 @@
 #include <fast_obj.h>
 #include "Models.h"
 #include "Files.h"
-
-void loadTextureFromMemory(Texture* texture, const unsigned char* buffer, size_t size) {
-    stbi_set_flip_vertically_on_load(0);
-    texture->data = stbi_load_from_memory(buffer, size, &texture->w, &texture->h, &texture->channels, 0);
-    if (!texture->data) {
-        printf("Failed to load texture from memory\n");
-        return;
-    }
-    glGenTextures(1, &texture->id);
-    glBindTexture(GL_TEXTURE_2D, texture->id);
-    glTexImage2D(GL_TEXTURE_2D, 0, texture->channels == 4 ? GL_RGBA : GL_RGB, texture->w, texture->h, 0, texture->channels == 4 ? GL_RGBA : GL_RGB, GL_UNSIGNED_BYTE, texture->data);
-    glGenerateMipmap(GL_TEXTURE_2D);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-}
 
 void createModel(Model* model, const char* path) {
     cgltf_options options = {0};

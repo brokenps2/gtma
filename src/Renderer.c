@@ -6,15 +6,38 @@
 #include <cglm/types.h>
 #include <stdio.h>
 #include <string.h>
+#include "Input.h"
 #include "Shader.h"
 #include "Camera.h"
 #include "WindowManager.h"
 #include "Texture.h"
 #include "Models.h"
 
+float screenVertices[] = {
+    -1.0f,  1.0f,  0.0f, 1.0f,
+    -1.0f, -1.0f,  0.0f, 0.0f,
+    1.0f, -1.0f,  1.0f, 0.0f,
+
+    -1.0f,  1.0f,  0.0f, 1.0f,
+    1.0f, -1.0f,  1.0f, 0.0f,
+    1.0f,  1.0f,  1.0f, 1.0f
+};
+
 Shader shader;
+Shader screenShader;
 
 Camera renderCamera;
+
+int renderWidth = 640;
+int renderHeight = 480;
+
+unsigned int FBO;
+unsigned int renderTexture;
+unsigned int RBO;
+unsigned int sVAO;
+unsigned int sVBO;
+
+bool fboCompletion = false;
 
 ObjectPack objPack;
 PointLightPack lightPack;
@@ -24,11 +47,47 @@ void initRenderer() {
     objPack.objectCount = 0;
     lightPack.lightCount = 0;
 
-    glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_TRUE);
-
     glfwSetInputMode(getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     createShader(&shader);
+    setInt(&shader, "tex0", 0);
+    createScreenShader(&screenShader);
+    setInt(&shader, "screenTexture", 0);
+
+    glGenVertexArrays(1, &sVAO);
+    glGenBuffers(1, &sVBO);
+    glBindVertexArray(sVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, sVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(screenVertices), screenVertices, GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+
+    glGenFramebuffers(1, &FBO);
+    glBindFramebuffer(GL_FRAMEBUFFER, FBO);
+
+    glGenTextures(1, &renderTexture);
+    glBindTexture(GL_TEXTURE_2D, renderTexture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, renderWidth, renderHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, renderTexture, 0);
+
+    glGenRenderbuffers(1, &RBO);
+    glBindRenderbuffer(GL_RENDERBUFFER, RBO);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, renderWidth, renderHeight);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, RBO);
+
+    if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+        printf("framebuffer object incomplete for some reason, no post processing will be applied.\n");
+        fboCompletion = false;
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    } else {
+        fboCompletion = true;
+    }
+
+
 }
 
 void setCamera(Camera* cam) {
@@ -47,7 +106,7 @@ void addObject(Object* obj) {
             objPack.objects = malloc((objPack.objectCount + 1) * sizeof(Object*));
         }
         objPack.objects[objPack.objectCount] = obj;
-        obj->packID = 0;//objPack.objectCount;
+        obj->packID = objPack.objectCount;
         objPack.objectCount++;
         obj->inPack = true;
     }
@@ -117,9 +176,6 @@ void removeLight(PointLight* light) {
 
 void render() {
 
-    glEnable(GL_DEPTH_TEST);
-    useShader(&shader);
-
     for(int i = 0; i <= lightPack.lightCount - 1; i++) {
 
         char posStr[512];
@@ -166,7 +222,15 @@ void render() {
         setInt(&shader, "actualLightCount", lightPack.lightCount);
     }
 
-    for (int i = 0; i < objPack.objectCount; i++) {
+    glBindFramebuffer(GL_FRAMEBUFFER, FBO);
+    glEnable(GL_DEPTH_TEST);
+    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    useShader(&shader);
+
+    for (int i = 0; i < objPack.objectCount; i++) {    
+
         if (objPack.objects[i]->packID == 3000) {
             break;
         }
@@ -192,16 +256,28 @@ void render() {
         loadTransformationMatrix(&transformationMatrix, objPack.objects[i]);
         setMatrix(&shader, "transMatrix", transformationMatrix);
         setBool(&shader, "lightEnabled", model->lit);
-        setVec3(&shader, "viewPos", renderCamera.pos);
+        setVec3(&shader, "viewPos", renderCamera.position);
 
         glBindTexture(GL_TEXTURE_2D, model->texture.id);
         glDrawElements(GL_TRIANGLES, model->indexCount, GL_UNSIGNED_INT, 0);
+
     }
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glViewport(0, 0, getWindowWidth(), getWindowHeight());
+    glDisable(GL_DEPTH_TEST);
+    glClearColor(1, 1, 1, 1);
+    glClear(GL_COLOR_BUFFER_BIT);
+    useShader(&screenShader);
+    glBindVertexArray(sVAO);
+    glBindTexture(GL_TEXTURE_2D, renderTexture);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
 }
 
 void disposeRenderer() {
     free(objPack.objects);
     free(lightPack.lights);
+    glDeleteFramebuffers(1, &FBO);
 }
 
 Shader* getShader() {

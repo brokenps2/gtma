@@ -80,7 +80,7 @@ void updateWindow() {
     render();
     glfwSwapBuffers(window);
 
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glClearColor(glc(9), glc(8), glc(22), 1);
+    //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    //glClearColor(glc(9), glc(8), glc(22), 1);
 }
 

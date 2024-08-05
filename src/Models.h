@@ -47,4 +47,5 @@ void createObject(Object* object, const char* mdlPath, float x, float y, float z
 void createObjectPack(ObjectPack* pack);
 void destroyObject(Object* object);
 void loadTransformationMatrix(mat4* matrix, Object* object);
+void transformVertex(mat4* matrix, vec3 vertex);
 void deleteModel(Model* model);

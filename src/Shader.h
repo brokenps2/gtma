@@ -31,6 +31,7 @@ typedef struct PointLightPack {
 } PointLightPack;
 
 void createShader(Shader* shader);
+void createScreenShader(Shader* shader);
 void useShader(Shader* shader);
 
 void setBool(Shader* shader, const char* name, bool value);

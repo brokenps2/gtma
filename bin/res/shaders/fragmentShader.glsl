@@ -6,7 +6,6 @@ in vec2 outTexCoord;
 in vec3 outLightColor;
 
 uniform sampler2D tex0;
-uniform sampler2D screenTexture;
 uniform bool lightEnabled;
 
 vec3 greyscale(vec3 color, float str) {

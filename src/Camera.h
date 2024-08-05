@@ -5,7 +5,7 @@
 
 
 typedef struct Camera {
-    vec3 pos;
+    vec3 position;
     vec3 front;
     vec3 up;
     vec3 direction;
@@ -19,7 +19,7 @@ typedef struct Camera {
     float speed;
     float sensitivity;
 
-    vec3 scale; // for collision
+    float radius;
 
 } Camera;
 
