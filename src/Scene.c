@@ -16,6 +16,8 @@ Object mario;
 Object radio;
 Object sky;
 
+Object yard;
+
 Sound testSound;
 
 PointLight light1;
@@ -25,7 +27,7 @@ PointLight light4;
 
 void initScene() {
     createSound(&testSound, "audio/test2.wav", true, 2, soundPos);
-    playSoundFrom(&testSound, 5);
+    //playSoundFrom(&testSound, 5);
 
     createCamera(&camera, getWindowWidth(), getWindowHeight(), camPos);
     setCamera(&camera);
@@ -35,7 +37,12 @@ void initScene() {
     createObject(&mario, "models/mario.glb", 7, 1.2, -3, 1, 1, 1,    0, 0, 0);
     createObject(&radio, "models/radio.glb", 0, 2.5, 0,  1, 1, 1,    0, 70, 0);
     createObject(&sky,   "models/sky.glb",   3, 3, 3,    2.5, 2.5, 2.5,    0, 0, 0);
-    sky.model.lit = false;
+
+    createObject(&yard, "models/yard.glb", 0, 0, 0, 8, 8, 8, 0, 0, 0);
+
+    for(int i=0; i < sky.model.meshCount; i++) {
+        sky.model.meshes[i].lit = false;
+    }
 
     createPointLight(&light1, 0, 200, 500, 0.6, 0.6, 0.6);
     light1.sunMode = true;
@@ -46,11 +53,12 @@ void initScene() {
     createPointLight(&light4, -500, 200, 0, 1, 1, 1);
     light4.sunMode = true;
 
-    addObject(&plane);
-    addObject(&table);
-    addObject(&mario);
-    addObject(&radio);
+    //addObject(&plane);
+    //addObject(&table);
+    //addObject(&mario);
+    //addObject(&radio);
     addObject(&sky);
+    addObject(&yard);
     addLight(&light1);
     addLight(&light2);
     addLight(&light3);

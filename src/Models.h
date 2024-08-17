@@ -6,10 +6,12 @@
 typedef struct Vertex {
     float position[3];
     float normal[3];
+    float color[4];
     float texCoord[2];
+    bool colored;
 } Vertex;
 
-typedef struct Model {
+typedef struct Mesh {
     Vertex* vertices;
     unsigned int* indices;
     int indexCount;
@@ -17,8 +19,17 @@ typedef struct Model {
     int texcoCount;
     int normlCount;
     Texture texture;
-    unsigned int VAO, VBO, EBO;
     bool lit;
+    unsigned int VAO, VBO, EBO;
+} Mesh;
+
+typedef struct Model {
+    Mesh* meshes;
+    int meshCount;
+    int totalIndexCount;
+    int totalPosCount;
+    int totalUVCount;
+    int totalNormalCound;
 } Model;
 
 typedef struct Object {

@@ -1,4 +1,4 @@
-#include <cglm/mat4.h>
+#include <time.h>
 #define FAST_OBJ_IMPLEMENTATION
 #define CGLTF_IMPLEMENTATION
 #include <cglm/affine.h>
@@ -27,104 +27,145 @@ void createModel(Model* model, const char* path) {
         exit(1);
     }
 
-    cgltf_primitive* primitive = &data->meshes[0].primitives[0];
-    if (primitive->type != cgltf_primitive_type_triangles) {
-        printf("only triangle primitives are supported\n");
-        cgltf_free(data);
-        exit(1);
-    }
+    model->meshCount = (int)data->meshes_count;
+    model->meshes = (Mesh*)malloc(model->meshCount * sizeof(Mesh));
 
-    size_t totalVertexCount = 0;
-    size_t totalIndexCount = 0;
-    for (size_t i = 0; i < data->meshes_count; ++i) {
-        cgltf_mesh* mesh = &data->meshes[i];
-        for (size_t j = 0; j < mesh->primitives_count; ++j) {
-            cgltf_primitive* primitive = &mesh->primitives[j];
+    for (size_t i = 0; i < data->meshes_count; i++) {
+        cgltf_mesh* gltfMesh = &data->meshes[i];
+        Mesh* mesh = &model->meshes[i];
+
+        size_t totalVertexCount = 0;
+        size_t totalIndexCount = 0;
+
+        for (size_t j = 0; j < gltfMesh->primitives_count; j++) {
+            cgltf_primitive* primitive = &gltfMesh->primitives[j];
             totalVertexCount += primitive->attributes[0].data->count;
             totalIndexCount += primitive->indices->count;
         }
-    }
 
-    model->vertices = (Vertex*)malloc(totalVertexCount * sizeof(Vertex));
-    model->indices = (unsigned int*)malloc(totalIndexCount * sizeof(unsigned int));
+        mesh->vertices = (Vertex*)malloc(totalVertexCount * sizeof(Vertex));
+        mesh->indices = (unsigned int*)malloc(totalIndexCount * sizeof(unsigned int));
 
-    size_t vertexOffset = 0;
-    size_t indexOffset = 0;
+        mesh->indexCount = (int)totalIndexCount;
+        mesh->postnCount = (int)totalVertexCount;
+        mesh->texcoCount = (int)totalVertexCount;
+        mesh->normlCount = (int)totalVertexCount;
 
-    for (size_t i = 0; i < data->meshes_count; ++i) {
-        cgltf_mesh* mesh = &data->meshes[i];
-        for (size_t j = 0; j < mesh->primitives_count; ++j) {
-            cgltf_primitive* primitive = &mesh->primitives[j];
+        size_t vertexOffset = 0;
+        size_t indexOffset = 0;
+
+        for (size_t j = 0; j < gltfMesh->primitives_count; j++) {
+            cgltf_primitive* primitive = &gltfMesh->primitives[j];
 
             size_t vertexCount = primitive->attributes[0].data->count;
             size_t indexCount = primitive->indices->count;
 
-            for (size_t k = 0; k < primitive->attributes_count; ++k) {
+            for (size_t k = 0; k < primitive->attributes_count; k++) {
                 cgltf_attribute* attr = &primitive->attributes[k];
                 cgltf_accessor* accessor = attr->data;
 
+                for(size_t l = 0; l < vertexCount; l++) {
+                    mesh->vertices[vertexOffset + l].color[0] = 1;
+                    mesh->vertices[vertexOffset + l].color[1] = 1;
+                    mesh->vertices[vertexOffset + l].color[2] = 1;
+                    mesh->vertices[vertexOffset + l].color[3] = 1;
+                }
+
                 if (attr->type == cgltf_attribute_type_position) {
-                    for (size_t l = 0; l < vertexCount; ++l) {
-                        cgltf_accessor_read_float(accessor, l, model->vertices[vertexOffset + l].position, 3);
+                    for (size_t l = 0; l < vertexCount; l++) {
+                        cgltf_accessor_read_float(accessor, l, mesh->vertices[vertexOffset + l].position, 3);
                     }
                 } else if (attr->type == cgltf_attribute_type_normal) {
-                    for (size_t l = 0; l < vertexCount; ++l) {
-                        cgltf_accessor_read_float(accessor, l, model->vertices[vertexOffset + l].normal, 3);
+                    for (size_t l = 0; l < vertexCount; l++) {
+                        cgltf_accessor_read_float(accessor, l, mesh->vertices[vertexOffset + l].normal, 3);
                     }
                 } else if (attr->type == cgltf_attribute_type_texcoord) {
-                    for (size_t l = 0; l < vertexCount; ++l) {
-                        cgltf_accessor_read_float(accessor, l, model->vertices[vertexOffset + l].texCoord, 2);
+                    for (size_t l = 0; l < vertexCount; l++) {
+                        cgltf_accessor_read_float(accessor, l, mesh->vertices[vertexOffset + l].texCoord, 2);
                     }
-                }
+                } else if (attr->type == cgltf_attribute_type_color) {
+                    for(size_t l = 0; l < vertexCount; l++) {
+                        cgltf_accessor_read_float(accessor, l, mesh->vertices[vertexOffset + l].color, 4);
+                    }
+                } 
             }
 
             cgltf_accessor* indices = primitive->indices;
-            for (size_t l = 0; l < indexCount; ++l) {
-                model->indices[indexOffset + l] = (unsigned int)(cgltf_accessor_read_index(indices, l) + vertexOffset);
+            for (size_t l = 0; l < indexCount; l++) {
+                mesh->indices[indexOffset + l] = (unsigned int)(cgltf_accessor_read_index(indices, l) + vertexOffset);
             }
 
             vertexOffset += vertexCount;
             indexOffset += indexCount;
         }
-    }
 
-    model->postnCount = (int)totalVertexCount;
-    model->normlCount = (int)totalVertexCount;
-    model->texcoCount = (int)totalVertexCount;
-    model->indexCount = (int)totalIndexCount;
+        model->totalPosCount += mesh->postnCount;
+        model->totalNormalCound += mesh->normlCount;
+        model->totalUVCount += mesh->texcoCount;
+        model->totalIndexCount += mesh->indexCount;
 
-    if (primitive->material && primitive->material->pbr_metallic_roughness.base_color_texture.texture) {
-        cgltf_texture* gltfTexture = primitive->material->pbr_metallic_roughness.base_color_texture.texture;
-        cgltf_image* image = gltfTexture->image;
-        if (image->buffer_view && image->buffer_view->buffer->data) {
-            const unsigned char* buffer = (const unsigned char*)image->buffer_view->buffer->data + image->buffer_view->offset;
-            size_t bufferSize = image->buffer_view->size;
-            loadTextureFromMemory(&model->texture, buffer, bufferSize);
+        mesh->lit = true;
+
+        if (gltfMesh->primitives_count > 0) {
+            cgltf_primitive* firstPrimitive = &gltfMesh->primitives[0];
+            cgltf_texture* gltfTexture = NULL;
+
+            if (firstPrimitive->material) {
+                if (firstPrimitive->material->pbr_metallic_roughness.base_color_texture.texture) {
+                    gltfTexture = firstPrimitive->material->pbr_metallic_roughness.base_color_texture.texture;
+                } else if (firstPrimitive->material->normal_texture.texture) {
+                    gltfTexture = firstPrimitive->material->normal_texture.texture;
+                }
+            }
+
+            if (gltfTexture && gltfTexture->image && gltfTexture->image->buffer_view && gltfTexture->image->buffer_view->buffer->data) {
+                const unsigned char* buffer = (const unsigned char*)gltfTexture->image->buffer_view->buffer->data + gltfTexture->image->buffer_view->offset;
+                size_t bufferSize = gltfTexture->image->buffer_view->size;
+                loadTextureFromMemory(&mesh->texture, buffer, bufferSize); //this might be causing a lot of memory to be used but its probably not a problem since
+                                                                           //we just went from the entire model having one texture to each mesh having a texture
+                }
         }
-    } else if (primitive->material && primitive->material->normal_texture.texture) {
-        cgltf_texture* gltfTexture = primitive->material->normal_texture.texture;
-        cgltf_image* image = gltfTexture->image;
-        if (image->buffer_view && image->buffer_view->buffer->data) {
-            const unsigned char* buffer = (const unsigned char*)image->buffer_view->buffer->data + image->buffer_view->offset;
-            size_t bufferSize = image->buffer_view->size;
-            loadTextureFromMemory(&model->texture, buffer, bufferSize);
-        }
+
+        glGenVertexArrays(1, &mesh->VAO);
+        glGenBuffers(1, &mesh->VBO);
+        glGenBuffers(1, &mesh->EBO);
+
+        glBindVertexArray(mesh->VAO);
+
+        glBindBuffer(GL_ARRAY_BUFFER, mesh->VBO);
+        glBufferData(GL_ARRAY_BUFFER, mesh->postnCount * sizeof(Vertex), mesh->vertices, GL_STATIC_DRAW);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->EBO);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh->indexCount * sizeof(unsigned int), mesh->indices, GL_STATIC_DRAW);
+
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
+        glEnableVertexAttribArray(1);
+        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, texCoord));
+        glEnableVertexAttribArray(2);
+        glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, color));
+        glEnableVertexAttribArray(3);
+
+        model->meshes[i] = *mesh;
     }
-
-    model->lit = true;
-
-    glGenVertexArrays(1, &model->VAO);
-    glGenBuffers(1, &model->VBO);
-    glGenBuffers(1, &model->EBO);
 
     cgltf_free(data);
 }
 
+
 void destroyObject(Object* object) {
-    free(object->model.vertices);
-    free(object->model.indices);
-    stbi_image_free(object->model.texture.data);
+    for(int i = 0; i < object->model.meshCount; i++) {
+        Mesh mesh = object->model.meshes[i];
+        free(mesh.vertices);
+        free(mesh.indices);
+        stbi_image_free(mesh.texture.data);
+        glDeleteVertexArrays(1, &mesh.VAO);
+        glDeleteBuffers(1, &mesh.VBO);
+        glDeleteBuffers(1, &mesh.EBO);
+        glDeleteTextures(1, &mesh.texture.id);
+    }
 }
+
 
 void createObject(Object* object, const char* mdlPath, float x, float y, float z, float sx, float sy, float sz, float rx, float ry, float rz) {
     Model model; 

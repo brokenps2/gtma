@@ -6,7 +6,6 @@
 #include <cglm/types.h>
 #include <stdio.h>
 #include <string.h>
-#include "Input.h"
 #include "Shader.h"
 #include "Camera.h"
 #include "WindowManager.h"
@@ -25,7 +24,6 @@ float screenVertices[] = {
 
 Shader shader;
 Shader screenShader;
-
 Camera renderCamera;
 
 int renderWidth = 640;
@@ -36,8 +34,6 @@ unsigned int renderTexture;
 unsigned int RBO;
 unsigned int sVAO;
 unsigned int sVBO;
-
-bool fboCompletion = false;
 
 ObjectPack objPack;
 PointLightPack lightPack;
@@ -50,9 +46,8 @@ void initRenderer() {
     glfwSetInputMode(getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     createShader(&shader);
-    setInt(&shader, "tex0", 0);
+
     createScreenShader(&screenShader);
-    setInt(&shader, "screenTexture", 0);
 
     glGenVertexArrays(1, &sVAO);
     glGenBuffers(1, &sVBO);
@@ -61,8 +56,8 @@ void initRenderer() {
     glBufferData(GL_ARRAY_BUFFER, sizeof(screenVertices), screenVertices, GL_STATIC_DRAW);
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
-    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+    glEnableVertexAttribArray(2);
 
     glGenFramebuffers(1, &FBO);
     glBindFramebuffer(GL_FRAMEBUFFER, FBO);
@@ -81,12 +76,8 @@ void initRenderer() {
 
     if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
         printf("framebuffer object incomplete for some reason, no post processing will be applied.\n");
-        fboCompletion = false;
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    } else {
-        fboCompletion = true;
     }
-
 
 }
 
@@ -178,39 +169,37 @@ void render() {
 
     for(int i = 0; i <= lightPack.lightCount - 1; i++) {
 
+        char ati[256];
         char posStr[512];
         char colStr[512];
         char actStr[512];
         char sunStr[512];
 
         if(i != 0) {
+            memset(ati, 0, strlen(ati));
             memset(posStr, 0, strlen(posStr));
             memset(colStr, 0, strlen(colStr));
             memset(actStr, 0, strlen(actStr));
             memset(sunStr, 0, strlen(sunStr));
         }
 
-        strcpy(posStr, "pointLights[");
-        sprintf(posStr + strlen(posStr), "%i", i);
-        strcat(posStr, "]");
+        strcpy(ati, "pointLights[");
+        sprintf(ati + strlen(ati), "%i", i);
+        strcat(ati, "]");
+
+        strcpy(posStr, ati);
         strcat(posStr, ".position");
         posStr[strlen(posStr) + 1] = '\0';
 
-        strcpy(colStr, "pointLights[");
-        sprintf(colStr + strlen(colStr), "%i", i);
-        strcat(colStr, "]");
+        strcpy(colStr, ati);
         strcat(colStr, ".color");
         colStr[strlen(colStr) + 1] = '\0';
 
-        strcpy(actStr, "pointLights[");
-        sprintf(actStr + strlen(actStr), "%i", i);
-        strcat(actStr, "]");
+        strcpy(actStr, ati);
         strcat(actStr, ".active");
         actStr[strlen(actStr) + 1] = '\0';
 
-        strcpy(sunStr, "pointLights[");
-        sprintf(sunStr + strlen(sunStr), "%i", i);
-        strcat(sunStr, "]");
+        strcpy(sunStr, ati);
         strcat(sunStr, ".sunMode");
         sunStr[strlen(sunStr) + 1] = '\0';
 
@@ -222,56 +211,50 @@ void render() {
         setInt(&shader, "actualLightCount", lightPack.lightCount);
     }
 
-    glBindFramebuffer(GL_FRAMEBUFFER, FBO);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glEnable(GL_DEPTH_TEST);
-    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     useShader(&shader);
+    setInt(&shader, "tex0", 0);
 
-    for (int i = 0; i < objPack.objectCount; i++) {    
-
-        if (objPack.objects[i]->packID == 3000) {
-            break;
-        }
+    for (int i = 0; i < objPack.objectCount; i++) {
 
         Model* model = &objPack.objects[i]->model;
 
-        glBindVertexArray(model->VAO);
-
-        glBindBuffer(GL_ARRAY_BUFFER, model->VBO);
-        glBufferData(GL_ARRAY_BUFFER, model->postnCount * sizeof(Vertex), model->vertices, GL_STATIC_DRAW);
-
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, model->EBO);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, model->indexCount * sizeof(unsigned int), model->indices, GL_STATIC_DRAW);
-
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
-        glEnableVertexAttribArray(0);
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
-        glEnableVertexAttribArray(1);
-        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, texCoord));
-        glEnableVertexAttribArray(2);
-
-        mat4 transformationMatrix;
-        loadTransformationMatrix(&transformationMatrix, objPack.objects[i]);
-        setMatrix(&shader, "transMatrix", transformationMatrix);
-        setBool(&shader, "lightEnabled", model->lit);
-        setVec3(&shader, "viewPos", renderCamera.position);
-
-        glBindTexture(GL_TEXTURE_2D, model->texture.id);
-        glDrawElements(GL_TRIANGLES, model->indexCount, GL_UNSIGNED_INT, 0);
+        for(int j = 0; j < model->meshCount; j++) {
+            Mesh mesh = model->meshes[j];
+            glBindVertexArray(mesh.VAO);
+            glBindBuffer(GL_ARRAY_BUFFER, mesh.VBO);
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.EBO);
+            mat4 transformationMatrix;
+            loadTransformationMatrix(&transformationMatrix, objPack.objects[i]);
+            setMatrix(&shader, "transMatrix", transformationMatrix);
+            setBool(&shader, "lightEnabled", mesh.lit);
+            setVec3(&shader, "viewPos", renderCamera.position);
+            
+            glBindTexture(GL_TEXTURE_2D, mesh.texture.id);
+            glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);
+            
+        }
 
     }
 
+    /*
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    glViewport(0, 0, getWindowWidth(), getWindowHeight());
     glDisable(GL_DEPTH_TEST);
-    glClearColor(1, 1, 1, 1);
+    glClearColor(0, 0, 0, 0);
     glClear(GL_COLOR_BUFFER_BIT);
     useShader(&screenShader);
+    //mat4 transformationMatrix;
+    //loadTransformationMatrix(&transformationMatrix, &test);
+    //setMatrix(&shader, "transMatrix", transformationMatrix);
     glBindVertexArray(sVAO);
     glBindTexture(GL_TEXTURE_2D, renderTexture);
     glDrawArrays(GL_TRIANGLES, 0, 6);
+    */
+
 }
 
 void disposeRenderer() {

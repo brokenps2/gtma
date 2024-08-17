@@ -65,7 +65,7 @@ void createScreenShader(Shader* shader) {
     glGetShaderiv(shader->vertexShader, GL_COMPILE_STATUS, &success);
     if(!success) {
         glGetShaderInfoLog(shader->vertexShader, 512, NULL, infoLog);
-        printf("vertex shader compile failed\n%s\n", infoLog);
+        printf("screen vertex shader compile failed\n%s\n", infoLog);
     };
 
 
@@ -78,7 +78,7 @@ void createScreenShader(Shader* shader) {
     glGetShaderiv(shader->fragmentShader, GL_COMPILE_STATUS, &success);
     if(!success) {
         glGetShaderInfoLog(shader->fragmentShader, 512, NULL, infoLog);
-        printf("fragment shader compile failed\n%s\n", infoLog);
+        printf("screen fragment shader compile failed\n%s\n", infoLog);
     };
 
     shader->id = glCreateProgram();
