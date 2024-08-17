@@ -6,6 +6,7 @@
 #include <cglm/types.h>
 #include <stdio.h>
 #include <string.h>
+#include "Input.h"
 #include "Shader.h"
 #include "Camera.h"
 #include "WindowManager.h"
@@ -26,8 +27,8 @@ Shader shader;
 Shader screenShader;
 Camera renderCamera;
 
-int renderWidth = 640;
-int renderHeight = 480;
+int renderWidth = 512;
+int renderHeight = 384;
 
 unsigned int FBO;
 unsigned int renderTexture;
@@ -211,13 +212,15 @@ void render() {
         setInt(&shader, "actualLightCount", lightPack.lightCount);
     }
 
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glBindFramebuffer(GL_FRAMEBUFFER, FBO);
     glEnable(GL_DEPTH_TEST);
+    glViewport(0, 0, renderWidth, renderHeight);
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     useShader(&shader);
     setInt(&shader, "tex0", 0);
+    setBool(&shader, "frame", false);
 
     for (int i = 0; i < objPack.objectCount; i++) {
 
@@ -241,19 +244,17 @@ void render() {
 
     }
 
-    /*
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glViewport(0, 0, getWindowWidth(), getWindowHeight());
     glDisable(GL_DEPTH_TEST);
-    glClearColor(0, 0, 0, 0);
+    glClearColor(1, 0, 0, 0);
     glClear(GL_COLOR_BUFFER_BIT);
-    useShader(&screenShader);
-    //mat4 transformationMatrix;
-    //loadTransformationMatrix(&transformationMatrix, &test);
-    //setMatrix(&shader, "transMatrix", transformationMatrix);
+    useShader(&shader);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    setBool(&shader, "frame", true);
     glBindVertexArray(sVAO);
     glBindTexture(GL_TEXTURE_2D, renderTexture);
     glDrawArrays(GL_TRIANGLES, 0, 6);
-    */
 
 }
 

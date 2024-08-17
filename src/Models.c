@@ -1,3 +1,4 @@
+#include "Texture.h"
 #include <time.h>
 #define FAST_OBJ_IMPLEMENTATION
 #define CGLTF_IMPLEMENTATION
@@ -116,13 +117,11 @@ void createModel(Model* model, const char* path) {
                     gltfTexture = firstPrimitive->material->normal_texture.texture;
                 }
             }
-
             if (gltfTexture && gltfTexture->image && gltfTexture->image->buffer_view && gltfTexture->image->buffer_view->buffer->data) {
                 const unsigned char* buffer = (const unsigned char*)gltfTexture->image->buffer_view->buffer->data + gltfTexture->image->buffer_view->offset;
                 size_t bufferSize = gltfTexture->image->buffer_view->size;
                 loadTextureFromMemory(&mesh->texture, buffer, bufferSize); //this might be causing a lot of memory to be used but its probably not a problem since
-                                                                           //we just went from the entire model having one texture to each mesh having a texture
-                }
+            }
         }
 
         glGenVertexArrays(1, &mesh->VAO);

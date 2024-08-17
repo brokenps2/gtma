@@ -104,8 +104,8 @@ void cameraLook(Camera* cam) {
 
 }
 
-float maxSpeed = 3;
-float accel = 0.35f;
+float maxSpeed = 5;
+float accel = 24;
 float forwardVelocity = 0;
 float backwardVelocity = 0;
 float leftVelocity = 0;
@@ -114,25 +114,25 @@ float rightVelocity = 0;
 void cameraMove(Camera* cam) {
 
     if(isKeyDown(GLFW_KEY_W)) {
-        forwardVelocity += accel;
+        forwardVelocity += accel * getDeltaTime();
         if(forwardVelocity > maxSpeed) {
             forwardVelocity = maxSpeed;
         }
     } 
     if(isKeyDown(GLFW_KEY_S)) {
-        backwardVelocity += accel;
+        backwardVelocity += accel * getDeltaTime();
         if(backwardVelocity > maxSpeed) {
             backwardVelocity = maxSpeed;
         }
     }
     if(isKeyDown(GLFW_KEY_A)) {
-        leftVelocity += accel;
+        leftVelocity += accel * getDeltaTime();
         if(leftVelocity > maxSpeed) {
             leftVelocity = maxSpeed;
         }
     }
     if(isKeyDown(GLFW_KEY_D)) {
-        rightVelocity += accel;
+        rightVelocity += accel * getDeltaTime();
         if(rightVelocity > maxSpeed) {
             rightVelocity = maxSpeed;
         }
@@ -142,7 +142,7 @@ void cameraMove(Camera* cam) {
 
     if(!isKeyDown(GLFW_KEY_W)) {
         if(forwardVelocity != 0) {
-            forwardVelocity -= accel;
+            forwardVelocity -= accel * getDeltaTime();
             if(forwardVelocity < 0) {
                 forwardVelocity = 0;
             }
@@ -150,7 +150,7 @@ void cameraMove(Camera* cam) {
     }
     if(!isKeyDown(GLFW_KEY_S)) {
         if(backwardVelocity != 0) {
-            backwardVelocity -= accel;
+            backwardVelocity -= accel * getDeltaTime();
             if(backwardVelocity < 0) {
                 backwardVelocity = 0;
             }
@@ -158,7 +158,7 @@ void cameraMove(Camera* cam) {
     }
     if(!isKeyDown(GLFW_KEY_A)) {
         if(leftVelocity != 0) {
-            leftVelocity -= accel;
+            leftVelocity -= accel * getDeltaTime();
             if(leftVelocity < 0) {
                 leftVelocity = 0;
             }
@@ -166,7 +166,7 @@ void cameraMove(Camera* cam) {
     }
     if(!isKeyDown(GLFW_KEY_D)) {
          if(rightVelocity != 0) {
-            rightVelocity -= accel;
+            rightVelocity -= accel * getDeltaTime();
             if(rightVelocity < 0) {
                 rightVelocity = 0;
             }
@@ -186,9 +186,9 @@ void cameraMove(Camera* cam) {
     cam->position[2] += (cos(glm_rad(cam->yaw)) * rightVelocity) * getDeltaTime();
 
     if(isKeyDown(GLFW_KEY_LEFT_SHIFT)) {
-        maxSpeed = 16;
+        maxSpeed = 10;
     } else {
-        maxSpeed = 8;
+        maxSpeed = 5;
     }
 
     if(isKeyDown(GLFW_KEY_LEFT_CONTROL)){

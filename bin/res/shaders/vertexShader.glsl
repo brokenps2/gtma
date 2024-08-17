@@ -20,6 +20,8 @@ out vec3 outLightColor;
 
 uniform bool lightEnabled;
 
+uniform bool frame = false;
+
 uniform vec3 viewPos;
 
 uniform mat4 camMatrix;
@@ -72,6 +74,12 @@ vec4 snap(vec4 vertex, vec2 resolution) {
 }
 
 void main() {
+
+    if(frame) {
+        gl_Position = vec4(position, 1.0);
+        outTexCoord = texCoord;
+        return;
+    }
 
     vec3 totalLight = vec3(0.0);
     int activeLights = 0;

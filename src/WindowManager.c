@@ -4,6 +4,7 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <stdbool.h>
+#include <unistd.h>
 #include "Config.h"
 #include "Renderer.h"
 #include "Input.h"
@@ -34,10 +35,8 @@ void initWindow() {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 0);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_FLOATING, GLFW_TRUE);
-    glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
     glfwMakeContextCurrent(window);
     glfwSetWindowPos(window, posX, posY);
-    //glfwSwapInterval(0);
     
     #ifdef linux
 
@@ -69,11 +68,14 @@ float getTime() {
 }
 
 void updateWindow() {
+    double currentTime = glfwGetTime();
+    deltaTime = currentTime - lastTime;
+    lastTime = currentTime;
 
-    deltaTime = glfwGetTime() - lastTime;
-    lastTime = glfwGetTime();
     printf("\rFPS: %f      %f", 1/deltaTime, deltaTime);
     fflush(stdout);
+
+    glfwSwapBuffers(window);
 
     if(isKeyPressed(GLFW_KEY_ESCAPE) && glfwGetInputMode(getWindow(), GLFW_CURSOR) == GLFW_CURSOR_DISABLED) {
         glfwSetInputMode(getWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
@@ -84,7 +86,11 @@ void updateWindow() {
     }
 
     render();
-    glfwSwapBuffers(window);
-    
-}
 
+    double frameTime = 1.0 / 60.0;  // 30 FPS = 1/30 seconds per frame
+    double timeToSleep = frameTime - (glfwGetTime() - lastTime);
+
+    if (timeToSleep > 0) {
+        usleep(timeToSleep * 1e6);
+    }
+}

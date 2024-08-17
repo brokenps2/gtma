@@ -35,7 +35,7 @@ void initScene() {
     createObject(&plane, "models/plane.glb", 0, 0, 0,    8, 8, 8,    0, 0, 0);
     createObject(&table, "models/table.glb", 0, 0, 0,    1, 1, 1,    0, 0, 0);
     createObject(&mario, "models/mario.glb", 7, 1.2, -3, 1, 1, 1,    0, 0, 0);
-    createObject(&radio, "models/radio.glb", 0, 2.5, 0,  1, 1, 1,    0, 70, 0);
+    createObject(&radio, "models/radio.glb", 8, 2.2, 6,  0.5, 0.5, 0.5,    0, 0, 0);
     createObject(&sky,   "models/sky.glb",   3, 3, 3,    2.5, 2.5, 2.5,    0, 0, 0);
 
     createObject(&yard, "models/yard.glb", 0, 0, 0, 8, 8, 8, 0, 0, 0);
@@ -46,22 +46,22 @@ void initScene() {
 
     createPointLight(&light1, 0, 200, 500, 0.6, 0.6, 0.6);
     light1.sunMode = true;
-    createPointLight(&light2, 500, 200, 0, 1, 1, 1);
+    createPointLight(&light2, 500, 200, 0, 0.3, 0.3, 0.3);
     light2.sunMode = true;
     createPointLight(&light3, 0, 200, -500, 1, 1, 1);
     light3.sunMode = true;
-    createPointLight(&light4, -500, 200, 0, 1, 1, 1);
+    createPointLight(&light4, -500, 200, 0, 0.3, 0.3, 0.3);
     light4.sunMode = true;
 
     //addObject(&plane);
     //addObject(&table);
     //addObject(&mario);
     //addObject(&radio);
-    addObject(&sky);
+    //addObject(&sky);
     addObject(&yard);
-    addLight(&light1);
+    //addLight(&light1);
     addLight(&light2);
-    addLight(&light3);
+    //addLight(&light3);
     addLight(&light4);
 
 
@@ -84,5 +84,6 @@ void disposeScene() {
     destroyObject(&plane);
     destroyObject(&table);
     destroyObject(&mario);
-    destroyObject(&radio);
+    //destroyObject(&radio);
+    destroyObject(&yard);
 }
