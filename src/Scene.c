@@ -73,8 +73,8 @@ void updateScene() {
 
     glm_vec3_copy(camera.position, sky.position);
 
-    printf("\r%f  %f  %f", camera.position[0], camera.position[1], camera.position[2]);
-    fflush(stdout);
+    //printf("\r%f  %f  %f", camera.position[0], camera.position[1], camera.position[2]);
+    //fflush(stdout);
 
     updateAudio(camera.position, camera.direction);
 

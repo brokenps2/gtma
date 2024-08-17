@@ -3,7 +3,7 @@
 out vec4 fragColor;
   
 in vec2 outTexCoord;
-in vec4 outColor;
+in vec3 outColor;
 in vec3 outLightColor;
 
 uniform sampler2D tex0;
@@ -17,9 +17,9 @@ vec3 greyscale(vec3 color, float str) {
 void main() {
 
     if(lightEnabled) {
-        fragColor = texture(tex0, outTexCoord) * outColor * vec4(outLightColor, 1.0);
+        fragColor = texture(tex0, outTexCoord) * vec4(outColor, 1.0) * vec4(outLightColor, 1.0);
     } else {
-        fragColor = texture(tex0, outTexCoord) * outColor;
+        fragColor = texture(tex0, outTexCoord) * vec4(outColor, 1.0);
     }
 
 }

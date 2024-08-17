@@ -2,7 +2,7 @@
 layout (location = 0) in vec3 position;
 layout (location = 1) in vec3 normal;
 layout (location = 2) in vec2 texCoord;
-layout (location = 3) in vec4 color;
+layout (location = 3) in vec3 color;
 
 struct PointLight {    
     vec3 position;
@@ -15,7 +15,7 @@ uniform PointLight pointLights[32]; //remember this incase I somehow need more
 uniform int actualLightCount = 0;
 
 out vec2 outTexCoord;
-out vec4 outColor;
+out vec3 outColor;
 out vec3 outLightColor;
 
 uniform bool lightEnabled;
@@ -73,8 +73,6 @@ vec4 snap(vec4 vertex, vec2 resolution) {
 
 void main() {
 
-    vec4 vtxColor = color;
-
     vec3 totalLight = vec3(0.0);
     int activeLights = 0;
 
@@ -96,7 +94,7 @@ void main() {
 
     gl_Position = camMatrix * transMatrix * vec4(position, 1.0);
     gl_Position = snap(gl_Position, vec2(320, 240));
-    outColor = vtxColor;
+    outColor = color;
     outTexCoord = texCoord;
 
 }

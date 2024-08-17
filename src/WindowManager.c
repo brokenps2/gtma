@@ -7,11 +7,10 @@
 #include "Config.h"
 #include "Renderer.h"
 #include "Input.h"
-#include "Util.h"
 
 GLFWwindow* window;
 float currentTime = 0;
-float lastTime;
+float lastTime = 0;
 float deltaTime;
 
 int posX, posY;
@@ -35,8 +34,14 @@ void initWindow() {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 0);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_FLOATING, GLFW_TRUE);
+    glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
     glfwMakeContextCurrent(window);
     glfwSetWindowPos(window, posX, posY);
+    //glfwSwapInterval(0);
+    
+    #ifdef linux
+
+    #endif
 
     const GLenum err = glewInit();
     glewExperimental = GL_TRUE;
@@ -65,6 +70,11 @@ float getTime() {
 
 void updateWindow() {
 
+    deltaTime = glfwGetTime() - lastTime;
+    lastTime = glfwGetTime();
+    printf("\rFPS: %f      %f", 1/deltaTime, deltaTime);
+    fflush(stdout);
+
     if(isKeyPressed(GLFW_KEY_ESCAPE) && glfwGetInputMode(getWindow(), GLFW_CURSOR) == GLFW_CURSOR_DISABLED) {
         glfwSetInputMode(getWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     }
@@ -73,14 +83,8 @@ void updateWindow() {
         glfwSetInputMode(getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     }
 
-    lastTime = currentTime;
-    currentTime = glfwGetTime();
-    deltaTime = currentTime - lastTime;
-
     render();
     glfwSwapBuffers(window);
-
-    //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    //glClearColor(glc(9), glc(8), glc(22), 1);
+    
 }
 

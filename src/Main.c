@@ -29,9 +29,9 @@ int main(int argc, char* argv[]) {
     initScene();
 
     while(!glfwWindowShouldClose(getWindow())) {
+        glfwPollEvents();
         updateScene();
         updateWindow();
-        glfwPollEvents();
     }
 
     disposeRenderer();

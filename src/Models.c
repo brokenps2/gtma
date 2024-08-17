@@ -68,7 +68,6 @@ void createModel(Model* model, const char* path) {
                     mesh->vertices[vertexOffset + l].color[0] = 1;
                     mesh->vertices[vertexOffset + l].color[1] = 1;
                     mesh->vertices[vertexOffset + l].color[2] = 1;
-                    mesh->vertices[vertexOffset + l].color[3] = 1;
                 }
 
                 if (attr->type == cgltf_attribute_type_position) {
@@ -85,7 +84,7 @@ void createModel(Model* model, const char* path) {
                     }
                 } else if (attr->type == cgltf_attribute_type_color) {
                     for(size_t l = 0; l < vertexCount; l++) {
-                        cgltf_accessor_read_float(accessor, l, mesh->vertices[vertexOffset + l].color, 4);
+                        cgltf_accessor_read_float(accessor, l, mesh->vertices[vertexOffset + l].color, 3);
                     }
                 } 
             }

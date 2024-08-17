@@ -32,7 +32,6 @@ void createCamera(Camera* cam, int width, int height, vec3 pos) {
     cam->pitch = 0.0f;
     cam->yaw = 0.0f;
     cam->roll = 0.0f;
-    cam->speed = cfgLookupInt("playerSpeed");
     cam->sensitivity = (float)cfgLookupInt("mouseSensitivity") / 40;
 
     cam->radius = 1;
@@ -105,64 +104,112 @@ void cameraLook(Camera* cam) {
 
 }
 
+float maxSpeed = 3;
+float accel = 0.35f;
+float forwardVelocity = 0;
+float backwardVelocity = 0;
+float leftVelocity = 0;
+float rightVelocity = 0;
+
 void cameraMove(Camera* cam) {
 
-    float accel = 0.5;
-    float maxSpeed = 5;
-
-    if(isKeyDown(GLFW_KEY_S)) {
-        cam->speed += accel * getDeltaTime();
-        cam->position[0] += (-cos(glm_rad(cam->yaw)) * cam->speed) * getDeltaTime();
-        cam->position[2] -= (sin(glm_rad(cam->yaw)) * cam->speed) * getDeltaTime();
-    }
-
-    if(isKeyDown(GLFW_KEY_A)) {
-        cam->speed += accel * getDeltaTime();
-        cam->position[0] += (sin(glm_rad(cam->yaw)) * cam->speed) * getDeltaTime();
-        cam->position[2] -= (cos(glm_rad(cam->yaw)) * cam->speed) * getDeltaTime();
-    }
-
-    if(isKeyDown(GLFW_KEY_D)) {
-        cam->speed += accel * getDeltaTime();
-        cam->position[0] -= (sin(glm_rad(cam->yaw)) * cam->speed) * getDeltaTime();
-        cam->position[2] += (cos(glm_rad(cam->yaw)) * cam->speed) * getDeltaTime();
-    }
-
     if(isKeyDown(GLFW_KEY_W)) {
-        cam->speed += accel * getDeltaTime();
-        cam->position[0] -= (-cos(glm_rad(cam->yaw)) * cam->speed) * getDeltaTime();
-        cam->position[2] += (sin(glm_rad(cam->yaw)) * cam->speed) * getDeltaTime();
+        forwardVelocity += accel;
+        if(forwardVelocity > maxSpeed) {
+            forwardVelocity = maxSpeed;
+        }
+    } 
+    if(isKeyDown(GLFW_KEY_S)) {
+        backwardVelocity += accel;
+        if(backwardVelocity > maxSpeed) {
+            backwardVelocity = maxSpeed;
+        }
+    }
+    if(isKeyDown(GLFW_KEY_A)) {
+        leftVelocity += accel;
+        if(leftVelocity > maxSpeed) {
+            leftVelocity = maxSpeed;
+        }
+    }
+    if(isKeyDown(GLFW_KEY_D)) {
+        rightVelocity += accel;
+        if(rightVelocity > maxSpeed) {
+            rightVelocity = maxSpeed;
+        }
     }
 
-    if(cam->speed > maxSpeed) {
-        cam->speed = maxSpeed;
+
+
+    if(!isKeyDown(GLFW_KEY_W)) {
+        if(forwardVelocity != 0) {
+            forwardVelocity -= accel;
+            if(forwardVelocity < 0) {
+                forwardVelocity = 0;
+            }
+        }
+    }
+    if(!isKeyDown(GLFW_KEY_S)) {
+        if(backwardVelocity != 0) {
+            backwardVelocity -= accel;
+            if(backwardVelocity < 0) {
+                backwardVelocity = 0;
+            }
+        }
+    }
+    if(!isKeyDown(GLFW_KEY_A)) {
+        if(leftVelocity != 0) {
+            leftVelocity -= accel;
+            if(leftVelocity < 0) {
+                leftVelocity = 0;
+            }
+        }
+    }
+    if(!isKeyDown(GLFW_KEY_D)) {
+         if(rightVelocity != 0) {
+            rightVelocity -= accel;
+            if(rightVelocity < 0) {
+                rightVelocity = 0;
+            }
+        }
     }
 
-    if(isKeyDown(GLFW_KEY_LEFT_SHIFT) || cam->speed == 1) {
-        cam->speed = 16;
+    cam->position[0] -= (-cos(glm_rad(cam->yaw)) * forwardVelocity) * getDeltaTime();
+    cam->position[2] += (sin(glm_rad(cam->yaw)) * forwardVelocity) * getDeltaTime();
+
+    cam->position[0] += (-cos(glm_rad(cam->yaw)) * backwardVelocity) * getDeltaTime();
+    cam->position[2] -= (sin(glm_rad(cam->yaw)) * backwardVelocity) * getDeltaTime();
+
+    cam->position[0] += (sin(glm_rad(cam->yaw)) * leftVelocity) * getDeltaTime();
+    cam->position[2] -= (cos(glm_rad(cam->yaw)) * leftVelocity) * getDeltaTime();
+
+    cam->position[0] -= (sin(glm_rad(cam->yaw)) * rightVelocity) * getDeltaTime();
+    cam->position[2] += (cos(glm_rad(cam->yaw)) * rightVelocity) * getDeltaTime();
+
+    if(isKeyDown(GLFW_KEY_LEFT_SHIFT)) {
+        maxSpeed = 16;
     } else {
-        cam->speed = 8;
+        maxSpeed = 8;
     }
 
     if(isKeyDown(GLFW_KEY_LEFT_CONTROL)){
-        cam->position[1] -= cam->speed * getDeltaTime();
+        cam->position[1] -= 8 * getDeltaTime();
     }
 
     if(isKeyDown(GLFW_KEY_SPACE)) {
-        cam->position[1] += cam->speed * getDeltaTime();
+        cam->position[1] += 8 * getDeltaTime();
     }
 
     if(isKeyDown(GLFW_KEY_LEFT)) {
-        cam->yaw -= cam->speed * 8 * getDeltaTime();
+        cam->yaw -= 64 * getDeltaTime();
     }
     if(isKeyDown(GLFW_KEY_RIGHT)) {
-        cam->yaw += cam->speed * 8 * getDeltaTime();
+        cam->yaw += 64 * getDeltaTime();
     }
     if(isKeyDown(GLFW_KEY_UP)) {
-        cam->pitch += cam->speed * 8 * getDeltaTime();
+        cam->pitch += 64 * getDeltaTime();
     }
     if(isKeyDown(GLFW_KEY_DOWN)) {
-        cam->pitch -= cam->speed * 8 * getDeltaTime();
+        cam->pitch -= 64 * getDeltaTime();
     }
 
     cam->position[0] = roundf(cam->position[0] * 100) / 100;

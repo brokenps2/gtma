@@ -16,7 +16,6 @@ typedef struct Camera {
 
     int width;
     int height;
-    float speed;
     float sensitivity;
 
     float radius;
