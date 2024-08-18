@@ -27,8 +27,8 @@ Shader shader;
 Shader screenShader;
 Camera renderCamera;
 
-int renderWidth = 512;
-int renderHeight = 384;
+int renderWidth = 640;
+int renderHeight = 480;
 
 unsigned int FBO;
 unsigned int renderTexture;

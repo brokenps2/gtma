@@ -14,6 +14,8 @@ float currentTime = 0;
 float lastTime = 0;
 float deltaTime;
 
+double frameTime;
+
 int posX, posY;
 
 void initWindow() {
@@ -27,6 +29,8 @@ void initWindow() {
 
     posX = (videoMode->width / 2) - (cfgGetResX() / 2);
     posY = (videoMode->height / 2) - (cfgGetResY() / 2);
+    
+    frameTime = 1.0f / 144.0f;
  
     const char* ctitle = cfgGetTitle();
 
@@ -72,9 +76,6 @@ void updateWindow() {
     deltaTime = currentTime - lastTime;
     lastTime = currentTime;
 
-    printf("\rFPS: %f      %f", 1/deltaTime, deltaTime);
-    fflush(stdout);
-
     glfwSwapBuffers(window);
 
     if(isKeyPressed(GLFW_KEY_ESCAPE) && glfwGetInputMode(getWindow(), GLFW_CURSOR) == GLFW_CURSOR_DISABLED) {
@@ -87,7 +88,6 @@ void updateWindow() {
 
     render();
 
-    double frameTime = 1.0 / 60.0;  // 30 FPS = 1/30 seconds per frame
     double timeToSleep = frameTime - (glfwGetTime() - lastTime);
 
     if (timeToSleep > 0) {

@@ -6,5 +6,3 @@ float glc(float color) {
     glcolor = color/255;
     return glcolor;
 }
-
-

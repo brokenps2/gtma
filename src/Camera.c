@@ -32,7 +32,7 @@ void createCamera(Camera* cam, int width, int height, vec3 pos) {
     cam->pitch = 0.0f;
     cam->yaw = 0.0f;
     cam->roll = 0.0f;
-    cam->sensitivity = (float)cfgLookupInt("mouseSensitivity") / 40;
+    cam->sensitivity = (float)cfgLookupInt("mouseSensitivity") / 100;
 
     cam->radius = 1;
 }
@@ -104,8 +104,8 @@ void cameraLook(Camera* cam) {
 
 }
 
-float maxSpeed = 5;
-float accel = 24;
+float maxSpeed = 12;
+float accel = 42;
 float forwardVelocity = 0;
 float backwardVelocity = 0;
 float leftVelocity = 0;
@@ -186,9 +186,9 @@ void cameraMove(Camera* cam) {
     cam->position[2] += (cos(glm_rad(cam->yaw)) * rightVelocity) * getDeltaTime();
 
     if(isKeyDown(GLFW_KEY_LEFT_SHIFT)) {
-        maxSpeed = 10;
+        maxSpeed = 18;
     } else {
-        maxSpeed = 5;
+        maxSpeed = 12;
     }
 
     if(isKeyDown(GLFW_KEY_LEFT_CONTROL)){
@@ -197,19 +197,6 @@ void cameraMove(Camera* cam) {
 
     if(isKeyDown(GLFW_KEY_SPACE)) {
         cam->position[1] += 8 * getDeltaTime();
-    }
-
-    if(isKeyDown(GLFW_KEY_LEFT)) {
-        cam->yaw -= 64 * getDeltaTime();
-    }
-    if(isKeyDown(GLFW_KEY_RIGHT)) {
-        cam->yaw += 64 * getDeltaTime();
-    }
-    if(isKeyDown(GLFW_KEY_UP)) {
-        cam->pitch += 64 * getDeltaTime();
-    }
-    if(isKeyDown(GLFW_KEY_DOWN)) {
-        cam->pitch -= 64 * getDeltaTime();
     }
 
     cam->position[0] = roundf(cam->position[0] * 100) / 100;
