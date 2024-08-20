@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "Menus.h"
 #include "Renderer.h"
 #include <GLFW/glfw3.h>
 #include <stdbool.h>
@@ -26,15 +27,18 @@ int main(int argc, char* argv[]) {
     initInput();
     initAudio();
     initRenderer();
+    initUI();
     initScene();
 
     while(!glfwWindowShouldClose(getWindow())) {
         glfwPollEvents();
         updateScene();
+        updateUI();
         updateWindow();
     }
 
     disposeRenderer();
+    disposeUI();
     disposeScene();
 
     glfwTerminate();

@@ -1,6 +1,7 @@
 #include "Audio.h"
 #include "Camera.h"
 #include "Input.h"
+#include "Menus.h"
 #include "Models.h"
 #include "Renderer.h"
 #include "Shader.h"
@@ -38,7 +39,7 @@ void initScene() {
     createObject(&mario, "models/mario.glb", 7, 1.2, -3, 1, 1, 1,    0, 0, 0);
     createObject(&sky,   "models/sky.glb",   3, 3, 3,    2.5, 2.5, 2.5,    0, 0, 0);
 
-    createObject(&yard, "models/plane.glb", 0, 0, 0, 10, 10, 10, 0, 0, 0);
+    createObject(&yard, "models/yard.glb", 0, 0, 0, 10, 10, 10, 0, 0, 0);
 
     for(int i=0; i < sky.model.meshCount; i++) {
         sky.model.meshes[i].lit = false;
@@ -53,11 +54,12 @@ void initScene() {
     createPointLight(&light4, -20, 8, 0, 0.6, 0.6, 0.6);
     light4.sunMode = false;
 
-    addObject(&table);
+    //addObject(&table);
     addObject(&yard);
-    //addLight(&light1);
-    //addLight(&light2);
-    //addLight(&light3);
+    addObject(&sky);
+    addLight(&light1);
+    addLight(&light2);
+    addLight(&light3);
     addLight(&light4);
 
 
@@ -65,7 +67,9 @@ void initScene() {
 
 void updateScene() {
     cameraMatrix(&camera, 67.0f, 0.1f, 200.0f, getShader(), "camMatrix");
-    cameraMove(&camera);
+    if(!getIOPtr()->WantCaptureMouse) {
+        cameraMove(&camera);
+    }
 
     glm_vec3_copy(camera.position, sky.position);
 
@@ -76,8 +80,8 @@ void updateScene() {
 
     //glm_vec3_copy(light4.position, table.position);
     
-    light4.position[0] += (sin(glfwGetTime())) / 8;
-    light4.position[2] += (cos(glfwGetTime())) / 8;
+    //light4.position[0] += (sin(glfwGetTime())) / 8;
+    //light4.position[2] += (cos(glfwGetTime())) / 8;
 
 }
 
@@ -85,5 +89,6 @@ void disposeScene() {
     destroyObject(&plane);
     destroyObject(&table);
     destroyObject(&mario);
+    destroyObject(&sky);
     destroyObject(&yard);
 }

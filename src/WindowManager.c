@@ -82,10 +82,6 @@ void updateWindow() {
         glfwSetInputMode(getWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     }
 
-    if(isLeftPressed() && glfwGetInputMode(getWindow(), GLFW_CURSOR) == GLFW_CURSOR_NORMAL) {
-        glfwSetInputMode(getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-    }
-
     render();
 
     double timeToSleep = frameTime - (glfwGetTime() - lastTime);
