@@ -1,4 +1,5 @@
 #include "WindowManager.h"
+#include "Files.h"
 #define CIMGUI_DEFINE_ENUMS_AND_STRUCTS
 #define CIMGUI_USE_GLFW
 #define CIMGUI_USE_OPENGL3
@@ -21,8 +22,9 @@ void initUI() {
     ImGui_ImplGlfw_InitForOpenGL(getWindow(), true);
     ImGui_ImplOpenGL3_Init(glslVersion);
 
-    igStyleColorsDark(NULL);
-    ImFontAtlas_AddFontDefault(ioptr->Fonts, NULL);
+    igStyleColorsLight(NULL);
+
+    ImFontAtlas_AddFontFromFileTTF(ioptr->Fonts, res("fonts/Terminus.ttf"), 15, NULL, NULL);
 }
 
 ImVec4 clearColor;
@@ -32,9 +34,21 @@ void updateUI() {
     ImGui_ImplGlfw_NewFrame();
     igNewFrame();
 
+    if (igBeginMainMenuBar()) {
+        if (igBeginMenu("File", true)) {
+            if (igMenuItemEx("New", NULL, NULL, NULL, true)) { 
+            }
+            igEndMenu();
+        }
+        igEndMainMenuBar();
+    }
+
+
     {
 
       igBegin("Menu", NULL, 0);
+      ImVec4 menuCol = {1, 0, 0, 1};
+      igPushStyleColor_Vec4(ImGuiCol_TitleBgActive, menuCol);
 
       ImVec2 buttonSize = {0, 0};
       if(igButton("Lock Mouse", buttonSize) && glfwGetInputMode(getWindow(), GLFW_CURSOR) == GLFW_CURSOR_NORMAL) {
@@ -43,6 +57,9 @@ void updateUI() {
         
       igText("Average frame time: %.3f ms/frame (%.1f FPS)",
              1000.0f / igGetIO()->Framerate, igGetIO()->Framerate);
+
+      igPopStyleColor(1);
+
       igEnd();
     }
 
