@@ -59,7 +59,7 @@ void applyNodeTransform(cgltf_node* node, mat4 parentTransform, mat4 outTransfor
 
     glm_mat4_mul(parentTransform, localTransform, outTransform);
 }
-void createModel(Model* model, const char* path) {
+void gtmaCreateModel(Model* model, const char* path) {
     cgltf_options options = {0};
     cgltf_data* data = NULL;
     cgltf_result result = cgltf_parse_file(&options, res(path), &data);
@@ -182,7 +182,7 @@ void createModel(Model* model, const char* path) {
                 if (gltfTexture && gltfTexture->image && gltfTexture->image->buffer_view && gltfTexture->image->buffer_view->buffer->data) {
                     const unsigned char* buffer = (const unsigned char*)gltfTexture->image->buffer_view->buffer->data + gltfTexture->image->buffer_view->offset;
                     size_t bufferSize = gltfTexture->image->buffer_view->size;
-                    loadTextureFromMemory(&mesh->texture, buffer, bufferSize); 
+                    gtmaLoadTextureFromMemory(&mesh->texture, buffer, bufferSize); 
                 }
             }
 
@@ -213,7 +213,7 @@ void createModel(Model* model, const char* path) {
     cgltf_free(data);
 }
 
-void destroyObject(Object* object) {
+void gtmaDeleteObject(Object* object) {
     for(int i = 0; i < object->model.meshCount; i++) {
         Mesh mesh = object->model.meshes[i];
         free(mesh.vertices);
@@ -227,9 +227,9 @@ void destroyObject(Object* object) {
 }
 
 
-void createObject(Object* object, const char* mdlPath, float x, float y, float z, float sx, float sy, float sz, float rx, float ry, float rz) {
+void gtmaCreateObject(Object* object, const char* mdlPath, float x, float y, float z, float sx, float sy, float sz, float rx, float ry, float rz) {
     Model model; 
-    createModel(&model, mdlPath);
+    gtmaCreateModel(&model, mdlPath);
 
     object->model = model;
 

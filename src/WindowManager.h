@@ -2,8 +2,8 @@
 
 typedef struct GLFWwindow GLFWwindow;
 
-void initWindow();
-void updateWindow();
+void gtmaInitWindow();
+void gtmaUpdateWindow();
 float getTime();
 float getDeltaTime();
 GLFWwindow* getWindow();

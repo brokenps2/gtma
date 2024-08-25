@@ -1,6 +1,6 @@
 #pragma once
 
-void initConfig();
+void gtmaInitConfig();
 
 void cfgSetPath(const char* newPath);
 

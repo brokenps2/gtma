@@ -3,12 +3,12 @@
 #include "Models.h"
 #include "Shader.h"
 
-void initRenderer();
-void setCamera(Camera* cam);
-void addObject(Object* obj);
-void addLight(PointLight* light);
-void removeObject(Object* obj);
-void removeLight(PointLight* light);
-void disposeRenderer();
-Shader* getShader();
-void render();
+void gtmaInitRenderer();
+void gtmaSetRenderCamera(Camera* cam);
+void gtmaAddObject(Object* obj);
+void gtmaAddLight(PointLight* light);
+void gtmaRemoveObject(Object* obj);
+void gtmaRemoveLight(PointLight* light);
+void gtmaCloseRenderer();
+Shader* gtmaGetShader();
+void gtmaRender();

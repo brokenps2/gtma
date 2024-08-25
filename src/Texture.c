@@ -5,7 +5,7 @@
 #include "Files.h"
 
 
-void createTexture(Texture* tex, const char* path) {
+void gtmaCreateTexture(Texture* tex, const char* path) {
 
     stbi_set_flip_vertically_on_load(1);
     tex->data = stbi_load(res(path), &tex->w, &tex->h, &tex->channels, 0);   
@@ -31,7 +31,7 @@ void createTexture(Texture* tex, const char* path) {
 
 }
 
-void loadTextureFromMemory(Texture* texture, const unsigned char* buffer, size_t size) {
+void gtmaLoadTextureFromMemory(Texture* texture, const unsigned char* buffer, size_t size) {
     stbi_set_flip_vertically_on_load(0);
     texture->data = stbi_load_from_memory(buffer, size, &texture->w, &texture->h, &texture->channels, 0);
     if (!texture->data) {
@@ -48,9 +48,6 @@ void loadTextureFromMemory(Texture* texture, const unsigned char* buffer, size_t
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 }
 
-void createAnimatedTexture(Texture** frames, const char* path) {
-}
-
-void disposeTexture(Texture* tex) {
+void gtmaDeleteTexture(Texture* tex) {
     stbi_image_free(tex->data);
 }

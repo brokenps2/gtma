@@ -5,7 +5,7 @@
 const char* path;
 config_t cfg;
 
-void initConfig() {
+void gtmaInitConfig() {
     config_init(&cfg);
     if(!config_read_file(&cfg, path)) {
         printf("Unable to read config file\n");

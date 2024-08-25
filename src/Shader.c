@@ -5,7 +5,7 @@
 #include "Files.h"
 #include "Shader.h"
 
-void createShader(Shader* shader) {
+void gtmaCreateShader(Shader* shader) {
     shader->vtShaderSrc = getVertexShaderSrc();
     shader->frShaderSrc = getFragmentShaderSrc();
 
@@ -49,7 +49,7 @@ void createShader(Shader* shader) {
 
 }
 
-void createScreenShader(Shader* shader) {
+void gtmaCreateScreenShader(Shader* shader) {
     shader->vtShaderSrc = getFileSrc(res("/shaders/screenVertexShader.glsl"));
     shader->frShaderSrc = getFileSrc(res("/shaders/screenFragmentShader.glsl"));
 
@@ -93,7 +93,7 @@ void createScreenShader(Shader* shader) {
 
 }
 
-void createPointLight(PointLight* light, float x, float y, float z, float r, float g, float b) {
+void gtmaCreatePointLight(PointLight* light, float x, float y, float z, float r, float g, float b) {
     light->position[0] = x;
     light->position[1] = y;
     light->position[2] = z;
@@ -107,32 +107,32 @@ void createPointLight(PointLight* light, float x, float y, float z, float r, flo
     light->active = true;
 }
 
-void setBool(Shader* shader, const char* name, bool value) {         
+void gtmaSetBool(Shader* shader, const char* name, bool value) {         
     glUniform1i(glGetUniformLocation(shader->id, name), value);
 }
-void setInt(Shader* shader, const char* name, int value) { 
+void gtmaSetInt(Shader* shader, const char* name, int value) { 
     glUniform1i(glGetUniformLocation(shader->id, name), value);
 }
-void setFloat(Shader* shader, const char* name, float value) { 
+void gtmaSetFloat(Shader* shader, const char* name, float value) { 
     glUniform1i(glGetUniformLocation(shader->id, name), value);
 }
-void setMatrix(Shader* shader, const char* name, mat4 value) {
+void gtmaSetMatrix(Shader* shader, const char* name, mat4 value) {
     glUniformMatrix4fv(glGetUniformLocation(shader->id, name), 1, GL_FALSE, (GLfloat*)value);
 }
-void setVec3(Shader* shader, const char* name, vec3 value) {
+void gtmaSetVec3(Shader* shader, const char* name, vec3 value) {
     glUniform3f(glGetUniformLocation(shader->id, name), value[0], value[1], value[2]);
 }
 
-GLint getBool(Shader* shader, const char* name) {
+GLint gtmaGetBool(Shader* shader, const char* name) {
     return glGetUniformLocation(shader->id, name);
 }
-GLint getInt(Shader* shader, const char* name) {
+GLint gtmaGetInt(Shader* shader, const char* name) {
     return glGetUniformLocation(shader->id, name);
 }
-GLfloat getFloat(Shader* shader, const char* name) {
+GLfloat gtmaGetFloat(Shader* shader, const char* name) {
     return glGetUniformLocation(shader->id, name);
 }
 
-void useShader(Shader* shader) {
+void gtmaUseShader(Shader* shader) {
     glUseProgram(shader->id);
 }

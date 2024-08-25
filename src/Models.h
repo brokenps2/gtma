@@ -52,11 +52,9 @@ typedef struct VertexMapEntry {
     UT_hash_handle hh;
 } VertexMapEntry;
 
-void createModel(Model* model, const char* path);
-float getPositionHeight(Model* model, float x, float z);
-void createObject(Object* object, const char* mdlPath, float x, float y, float z, float sx, float sy, float sz, float rx, float ry, float rz);
-void createObjectPack(ObjectPack* pack);
-void destroyObject(Object* object);
-void loadTransformationMatrix(mat4* matrix, Object* object);
-void transformVertex(mat4* matrix, vec3 vertex);
-void deleteModel(Model* model);
+void gtmaCreateModel(Model* model, const char* path);
+void gtmaCreateObject(Object* object, const char* mdlPath, float x, float y, float z, float sx, float sy, float sz, float rx, float ry, float rz);
+void gtmaCreateObjectPack(ObjectPack* pack);
+void gtmaDeleteObject(Object* object);
+void gtmaLoadTransformationMatrix(mat4* matrix, Object* object);
+void gtmaDeleteModel(Model* model);

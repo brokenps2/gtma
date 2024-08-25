@@ -2,7 +2,7 @@
 #define CIMGUI_DEFINE_ENUMS_AND_STRUCTS
 #include <cimgui.h>
 
-void initUI();
-void updateUI();
+void gtmaInitUI();
+void gtmaUpdateUI();
 ImGuiIO* getIOPtr();
-void disposeUI();
+void gtmaCloseUI();

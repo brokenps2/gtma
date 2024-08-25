@@ -24,7 +24,6 @@ float screenVertices[] = {
 };
 
 Shader shader;
-Shader screenShader;
 Camera renderCamera;
 
 int renderWidth = 640;
@@ -39,16 +38,14 @@ unsigned int sVBO;
 ObjectPack objPack;
 PointLightPack lightPack;
 
-void initRenderer() {
+void gtmaInitRenderer() {
 
     objPack.objectCount = 0;
     lightPack.lightCount = 0;
 
     glfwSetInputMode(getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-    createShader(&shader);
-
-    createScreenShader(&screenShader);
+    gtmaCreateShader(&shader);
 
     glGenVertexArrays(1, &sVAO);
     glGenBuffers(1, &sVBO);
@@ -82,11 +79,11 @@ void initRenderer() {
 
 }
 
-void setCamera(Camera* cam) {
+void gtmaSetRenderCamera(Camera* cam) {
     renderCamera = *cam;
 }
 
-void addObject(Object* obj) {
+void gtmaAddObject(Object* obj) {
     if(!obj->inPack) {
         if(objPack.objectCount != 0) {
             ObjectPack tempPack = objPack;
@@ -104,7 +101,7 @@ void addObject(Object* obj) {
     }
 }
 
-void addLight(PointLight* light) {
+void gtmaAddLight(PointLight* light) {
     if(!light->inPack) {
         if(lightPack.lightCount != 0) {
             PointLightPack tempPack = lightPack;
@@ -122,7 +119,7 @@ void addLight(PointLight* light) {
     }
 }
 
-void removeObject(Object* obj) {
+void gtmaRemoveObject(Object* obj) {
     if (obj == NULL || objPack.objectCount == 0) {
         return;
     }
@@ -144,7 +141,7 @@ void removeObject(Object* obj) {
     obj->inPack = false;
 }
 
-void removeLight(PointLight* light) {
+void gtmaRemoveLight(PointLight* light) {
     if (light == NULL || lightPack.lightCount == 0) {
         return;
     }
@@ -166,7 +163,7 @@ void removeLight(PointLight* light) {
     light->inPack = false;
 }
 
-void render() {
+void gtmaRender() {
 
     for(int i = 0; i <= lightPack.lightCount - 1; i++) {
 
@@ -204,12 +201,12 @@ void render() {
         strcat(sunStr, ".sunMode");
         sunStr[strlen(sunStr) + 1] = '\0';
 
-        setVec3(&shader, posStr, lightPack.lights[i]->position);
-        setVec3(&shader, colStr, lightPack.lights[i]->color);
-        setBool(&shader, actStr, lightPack.lights[i]->active);
-        setBool(&shader, sunStr, lightPack.lights[i]->sunMode);
+        gtmaSetVec3(&shader, posStr, lightPack.lights[i]->position);
+        gtmaSetVec3(&shader, colStr, lightPack.lights[i]->color);
+        gtmaSetBool(&shader, actStr, lightPack.lights[i]->active);
+        gtmaSetBool(&shader, sunStr, lightPack.lights[i]->sunMode);
 
-        setInt(&shader, "actualLightCount", lightPack.lightCount);
+        gtmaSetInt(&shader, "actualLightCount", lightPack.lightCount);
     }
 
     glBindFramebuffer(GL_FRAMEBUFFER, FBO);
@@ -218,9 +215,9 @@ void render() {
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    useShader(&shader);
-    setInt(&shader, "tex0", 0);
-    setBool(&shader, "frame", false);
+    gtmaUseShader(&shader);
+    gtmaSetInt(&shader, "tex0", 0);
+    gtmaSetBool(&shader, "frame", false);
 
     for (int i = 0; i < objPack.objectCount; i++) {
 
@@ -233,9 +230,9 @@ void render() {
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.EBO);
             mat4 transformationMatrix;
             loadTransformationMatrix(&transformationMatrix, objPack.objects[i]);
-            setMatrix(&shader, "transMatrix", transformationMatrix);
-            setBool(&shader, "lightEnabled", mesh.lit);
-            setVec3(&shader, "viewPos", renderCamera.position);
+            gtmaSetMatrix(&shader, "transMatrix", transformationMatrix);
+            gtmaSetBool(&shader, "lightEnabled", mesh.lit);
+            gtmaSetVec3(&shader, "viewPos", renderCamera.position);
             
             glBindTexture(GL_TEXTURE_2D, mesh.texture.id);
             glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);
@@ -249,22 +246,22 @@ void render() {
     glDisable(GL_DEPTH_TEST);
     glClearColor(1, 0, 0, 0);
     glClear(GL_COLOR_BUFFER_BIT);
-    useShader(&shader);
+    gtmaUseShader(&shader);
     glBindTexture(GL_TEXTURE_2D, 0);
-    setBool(&shader, "frame", true);
+    gtmaSetBool(&shader, "frame", true);
     glBindVertexArray(sVAO);
     glBindTexture(GL_TEXTURE_2D, renderTexture);
     glDrawArrays(GL_TRIANGLES, 0, 6);
 
 }
 
-void disposeRenderer() {
+void gtmaCloseRenderer() {
     free(objPack.objects);
     free(lightPack.lights);
     glDeleteFramebuffers(1, &FBO);
 }
 
-Shader* getShader() {
+Shader* gtmaGetShader() {
     return &shader;
 }
 

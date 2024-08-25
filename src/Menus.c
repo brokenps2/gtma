@@ -9,7 +9,7 @@
 
 ImGuiIO* ioptr;
 
-void initUI() {
+void gtmaInitUI() {
     #if __APPLE__
         const char *glslVersion = "#version 150";
     #else
@@ -29,7 +29,7 @@ void initUI() {
 
 ImVec4 clearColor;
 
-void updateUI() {
+void gtmaUpdateUI() {
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     igNewFrame();
@@ -72,7 +72,7 @@ ImGuiIO* getIOPtr() {
     return ioptr;
 }
 
-void disposeUI() {
+void gtmaCloseUI() {
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     igDestroyContext(NULL);

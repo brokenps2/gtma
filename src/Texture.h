@@ -10,6 +10,6 @@ typedef struct Texture {
 
 } Texture;
 
-void createTexture(Texture* tex, const char* path);
-void loadTextureFromMemory(Texture* texture, const unsigned char* buffer, size_t size);
-void disposeTexture(Texture* tex);
+void gtmaCreateTexture(Texture* tex, const char* path);
+void gtmaLoadTextureFromMemory(Texture* texture, const unsigned char* buffer, size_t size);
+void gtmaDeleteTexture(Texture* tex);

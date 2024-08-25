@@ -18,7 +18,7 @@ double frameTime;
 
 int posX, posY;
 
-void initWindow() {
+void gtmaInitWindow() {
 
     if (!glfwInit()) {
         printf("GLFW init failed\n");
@@ -71,7 +71,7 @@ float getTime() {
     return currentTime;
 }
 
-void updateWindow() {
+void gtmaUpdateWindow() {
     double currentTime = glfwGetTime();
     deltaTime = currentTime - lastTime;
     lastTime = currentTime;
@@ -82,7 +82,7 @@ void updateWindow() {
         glfwSetInputMode(getWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     }
 
-    render();
+    gtmaRender();
 
     double timeToSleep = frameTime - (glfwGetTime() - lastTime);
 

@@ -16,16 +16,16 @@ typedef struct Sound {
 } Sound;
 
 
-void initAudio();
-void createTrack(Track* track, const char* path, bool loop, float vol);
-void createSound(Sound* sound, const char* path, bool loop, float vol, vec3 position);
-void disposeSound(Sound* sound);
-void disposeTrack(Track* track);
-void playSound(Sound* sound);
-void playSoundFrom(Sound* sound, int seconds);
-void playTrack(Track* track);
-void playTrackFrom(Track* track, int seconds);
-void updateAudio(vec3 camPos, vec3 cameraDir);
-void stopTrack(Track* track);
-void stopSound(Sound* sound);
-void destroyAudio();
+void gtmaInitAudio();
+void gtmaCreateTrack(Track* track, const char* path, bool loop, float vol);
+void gtmaCreateSound(Sound* sound, const char* path, bool loop, float vol, vec3 position);
+void gtmaDeleteSound(Sound* sound);
+void gtmaDeleteTrack(Track* track);
+void gtmaPlaySound(Sound* sound);
+void gtmaPlaySoundFrom(Sound* sound, int seconds);
+void gtmaPlayTrack(Track* track);
+void gtmaPlayTrackFrom(Track* track, int seconds);
+void gtmaUpdateAudio(vec3 camPos, vec3 cameraDir);
+void gtmaStopTrack(Track* track);
+void gtmaStopSound(Sound* sound);
+void gtmaCloseAudio();

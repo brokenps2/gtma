@@ -12,7 +12,7 @@
 ALCcontext* audioContext;
 ALCdevice* audioDevice;
 
-void initAudio() {
+void gtmaInitAudio() {
     const ALCchar* defaultDevice = alcGetString(NULL, ALC_DEFAULT_DEVICE_SPECIFIER);
     audioDevice = alcOpenDevice(defaultDevice);
     if (!audioDevice) {
@@ -35,7 +35,7 @@ void initAudio() {
     }
 }
 
-void createTrack(Track* track, const char* path, bool loop, float vol) {
+void gtmaCreateTrack(Track* track, const char* path, bool loop, float vol) {
     drwav_int16* rawAudioBuffer;
     unsigned int channels, sampleRate;
     drwav_uint64 sampleCount;
@@ -75,7 +75,7 @@ void createTrack(Track* track, const char* path, bool loop, float vol) {
 
 }
 
-void createSound(Sound* sound, const char* path, bool loop, float vol, vec3 position) {
+void gtmaCreateSound(Sound* sound, const char* path, bool loop, float vol, vec3 position) {
     drwav_int16* rawAudioBuffer;
     unsigned int channels, sampleRate;
     drwav_uint64 sampleCount;
@@ -122,11 +122,11 @@ void createSound(Sound* sound, const char* path, bool loop, float vol, vec3 posi
 
 }
 
-void setSoundPosition(Sound* sound, vec3 position) {
+void gtmaSetSoundPosition(Sound* sound, vec3 position) {
     alSource3f(sound->sourceID, AL_POSITION, position[0], position[1], position[2]);
 }
 
-void updateAudio(vec3 camPos, vec3 cameraDir) {
+void gtmaUpdateAudio(vec3 camPos, vec3 cameraDir) {
     float orient[6];
     orient[0] = cameraDir[0];
     orient[1] = cameraDir[1];
@@ -138,7 +138,7 @@ void updateAudio(vec3 camPos, vec3 cameraDir) {
     alListenerfv(AL_ORIENTATION, orient);
 }
 
-void disposeTrack(Track* track) {
+void gtmaDisposeTrack(Track* track) {
     alDeleteSources(1, &track->sourceID);
     alDeleteBuffers(1, &track->bufferID);
     alcMakeContextCurrent(NULL);
@@ -146,7 +146,7 @@ void disposeTrack(Track* track) {
     alcCloseDevice(audioDevice);
 }
 
-void disposeSound(Sound* sound) {
+void gtmaDeleteSound(Sound* sound) {
     alDeleteSources(1, &sound->sourceID);
     alDeleteBuffers(1, &sound->bufferID);
     alcMakeContextCurrent(NULL);
@@ -154,7 +154,7 @@ void disposeSound(Sound* sound) {
     alcCloseDevice(audioDevice);
 }
 
-void playSound(Sound* sound) {
+void gtmaPlaySound(Sound* sound) {
     int state;
     alGetSourcei(sound->sourceID, AL_SOURCE_STATE, &state);
     if(state == AL_STOPPED) {
@@ -168,7 +168,7 @@ void playSound(Sound* sound) {
     }
 }
 
-void playSoundFrom(Sound* sound, int seconds) {
+void gtmaPlaySoundFrom(Sound* sound, int seconds) {
     alSourcei(sound->sourceID, AL_SEC_OFFSET, seconds);
     int state;
     alGetSourcei(sound->sourceID, AL_SOURCE_STATE, &state);
@@ -183,7 +183,7 @@ void playSoundFrom(Sound* sound, int seconds) {
     }
 }
 
-void playTrack(Track* track) {
+void gtmaPlayTrack(Track* track) {
     int state;
     alGetSourcei(track->sourceID, AL_SOURCE_STATE, &state);
     if(state == AL_STOPPED) {
@@ -197,7 +197,7 @@ void playTrack(Track* track) {
     }
 }
 
-void playTrackFrom(Track* track, int seconds) {
+void gtmaPlayTrackFrom(Track* track, int seconds) {
     alSourcei(track->sourceID, AL_SEC_OFFSET, seconds);
     int state;
     alGetSourcei(track->sourceID, AL_SOURCE_STATE, &state);
@@ -212,19 +212,19 @@ void playTrackFrom(Track* track, int seconds) {
     }
 }
 
-void stopSound(Sound* sound) {
+void gtmaStopSound(Sound* sound) {
     alSourceStop(sound->sourceID);
     alSourcei(sound->sourceID, AL_SEC_OFFSET, 0);
     sound->isPlaying = false;
 }
 
-void stopTrack(Track* track) {
+void gtmaStopTrack(Track* track) {
     alSourceStop(track->sourceID);
     alSourcei(track->sourceID, AL_SEC_OFFSET, 0);
     track->isPlaying = false;
 }
 
-void destroyAudio() {
+void gtmaCloseAudio() {
     alcDestroyContext(audioContext);
     alcCloseDevice(audioDevice);
 }

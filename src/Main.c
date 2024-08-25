@@ -22,23 +22,24 @@ int main(int argc, char* argv[]) {
 
     cfgSetPath(argv[1]);
 
-    initConfig();
-    initWindow();
-    initInput();
-    initAudio();
-    initRenderer();
-    initUI();
+    gtmaInitConfig();
+    gtmaInitWindow();
+    gtmaInitInput();
+    gtmaInitAudio();
+    gtmaInitRenderer();
+    gtmaInitUI();
     initScene();
 
     while(!glfwWindowShouldClose(getWindow())) {
         glfwPollEvents();
         updateScene();
-        updateUI();
-        updateWindow();
+        gtmaUpdateUI();
+        gtmaUpdateWindow();
     }
 
-    disposeRenderer();
-    disposeUI();
+    gtmaCloseRenderer();
+    gtmaCloseUI();
+    gtmaCloseAudio();
     disposeScene();
 
     glfwTerminate();
