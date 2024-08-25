@@ -1,8 +1,8 @@
 #include "WindowManager.h"
-#include "Files.h"
 #define CIMGUI_DEFINE_ENUMS_AND_STRUCTS
 #define CIMGUI_USE_GLFW
 #define CIMGUI_USE_OPENGL3
+#include "Files.h"
 #include <GLFW/glfw3.h>
 #include <cimgui.h>
 #include <cimgui_impl.h>
@@ -22,9 +22,9 @@ void initUI() {
     ImGui_ImplGlfw_InitForOpenGL(getWindow(), true);
     ImGui_ImplOpenGL3_Init(glslVersion);
 
-    igStyleColorsLight(NULL);
+    igStyleColorsDark(NULL);
 
-    ImFontAtlas_AddFontFromFileTTF(ioptr->Fonts, res("fonts/Terminus.ttf"), 15, NULL, NULL);
+    ImFontAtlas_AddFontFromFileTTF(ioptr->Fonts, res("fonts/gtmadefaultfont1.ttf"), 16, NULL, NULL);
 }
 
 ImVec4 clearColor;

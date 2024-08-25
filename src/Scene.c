@@ -55,11 +55,12 @@ void initScene() {
     light4.sunMode = false;
 
     //addObject(&table);
-    addObject(&yard);
-    addObject(&sky);
-    addLight(&light1);
-    addLight(&light2);
-    addLight(&light3);
+    addObject(&plane);
+    //addObject(&yard);
+    //addObject(&sky);
+    //addLight(&light1);
+    //addLight(&light2);
+    //addLight(&light3);
     addLight(&light4);
 
 
@@ -80,8 +81,8 @@ void updateScene() {
 
     //glm_vec3_copy(light4.position, table.position);
     
-    //light4.position[0] += (sin(glfwGetTime())) / 8;
-    //light4.position[2] += (cos(glfwGetTime())) / 8;
+    light4.position[0] += (sin(glfwGetTime())) / 8;
+    light4.position[2] += (cos(glfwGetTime())) / 8;
 
 }
 
