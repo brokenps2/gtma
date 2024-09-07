@@ -1,3 +1,3 @@
 #!/bin/sh
 
-gtma config.conf
+./gtma config.conf

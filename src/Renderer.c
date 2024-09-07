@@ -194,7 +194,7 @@ void gtmaRender() {
         colStr[strlen(colStr) + 1] = '\0';
 
         strcpy(actStr, ati);
-        strcat(actStr, ".active");
+        strcat(actStr, ".onoff");
         actStr[strlen(actStr) + 1] = '\0';
 
         strcpy(sunStr, ati);
@@ -229,7 +229,7 @@ void gtmaRender() {
             glBindBuffer(GL_ARRAY_BUFFER, mesh.VBO);
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.EBO);
             mat4 transformationMatrix;
-            loadTransformationMatrix(&transformationMatrix, objPack.objects[i]);
+            gtmaLoadTransformationMatrix(&transformationMatrix, objPack.objects[i]);
             gtmaSetMatrix(&shader, "transMatrix", transformationMatrix);
             gtmaSetBool(&shader, "lightEnabled", mesh.lit);
             gtmaSetVec3(&shader, "viewPos", renderCamera.position);

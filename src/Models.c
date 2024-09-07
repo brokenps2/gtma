@@ -8,7 +8,6 @@
 #include <GL/glew.h>
 #include <cgltf.h>
 #include <stb_image.h>
-#include <fast_obj.h>
 #include "Models.h"
 #include "Files.h"
 
@@ -246,7 +245,7 @@ void gtmaCreateObject(Object* object, const char* mdlPath, float x, float y, flo
     object->rotation[2] = rz;
 }
 
-void loadTransformationMatrix(mat4* matrix, Object* object) {
+void gtmaLoadTransformationMatrix(mat4* matrix, Object* object) {
 
     if(object->rotation[0] < 0) object->rotation[0] = 360 + object->rotation[0];
     if(object->rotation[1] < 0) object->rotation[1] = 360 + object->rotation[1];

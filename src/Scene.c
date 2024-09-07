@@ -57,7 +57,7 @@ void initScene() {
     //addObject(&table);
     gtmaAddObject(&plane);
     //addObject(&yard);
-    //addObject(&sky);
+    //gtmaAddObject(&sky);
     //addLight(&light1);
     //addLight(&light2);
     //addLight(&light3);

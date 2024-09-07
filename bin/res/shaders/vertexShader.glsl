@@ -7,7 +7,7 @@ layout (location = 3) in vec3 color;
 struct PointLight {    
     vec3 position;
     vec3 color;
-    bool active;
+    bool onoff;
     bool sunMode;
 };
 
@@ -59,7 +59,7 @@ vec3 calcPointLight(PointLight light) {
     
     vec3 lightColor = ambient + diffuse;// + specular;
     
-    if(!light.active) {
+    if(!light.onoff) {
         return ambient;
     } else {
         return lightColor;
@@ -89,7 +89,7 @@ void main() {
 
     if (lightEnabled) {
         for (int i = 0; i < actualLightCount; i++) {
-            if (pointLights[i].active) {
+            if (pointLights[i].onoff) {
                 totalLight += calcPointLight(pointLights[i]);
                 activeLights++;
             }
@@ -101,7 +101,7 @@ void main() {
         totalLight = vec3(1.0); // Default color when lighting is disabled
     }
 
-    outLightColor += totalLight;
+    outLightColor = totalLight;
 
     gl_Position = camMatrix * transMatrix * vec4(position, 1.0);
     gl_Position = snap(gl_Position, vec2(320, 240));
