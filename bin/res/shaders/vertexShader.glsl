@@ -51,13 +51,15 @@ vec3 calcPointLight(PointLight light) {
 
     if(!light.sunMode) {
         float distance    = length(light.position - position);
-        float attenuation = 1.0 / (constant + (linear * light.color[0]) * distance + 
-  		    (quadratic * light.color[0]) * (distance * distance));
-        diffuse  *= attenuation;
-        specular *= attenuation;
+        float avgBri = (light.color[0] + light.color[1] + light.color[2]) / 3;
+        float attenuation = 1.0 / (constant + (linear * avgBri) * distance + 
+  		    (quadratic * avgBri) * (distance * distance));
+        attenuation *= avgBri;
+        diffuse     *= attenuation;
+        specular    *= attenuation;
     }
     
-    vec3 lightColor = ambient + diffuse;// + specular;
+    vec3 lightColor = ambient + diffuse + specular;
     
     if(!light.onoff) {
         return ambient;
@@ -102,6 +104,7 @@ void main() {
     }
 
     outLightColor = totalLight;
+    outLightColor += totalLight;
 
     gl_Position = camMatrix * transMatrix * vec4(position, 1.0);
     gl_Position = snap(gl_Position, vec2(320, 240));

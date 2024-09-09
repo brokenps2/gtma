@@ -39,28 +39,28 @@ void initScene() {
     gtmaCreateObject(&mario, "models/mario.glb", 7, 1.2, -3, 1, 1, 1,    0, 0, 0);
     gtmaCreateObject(&sky,   "models/sky.glb",   3, 3, 3,    2.5, 2.5, 2.5,    0, 0, 0);
 
-    gtmaCreateObject(&yard, "models/yard.glb", 0, 0, 0, 10, 10, 10, 0, 0, 0);
+    gtmaCreateObject(&yard, "models/yard.glb", 0, 0.2, 0, 11, 11, 11, 0, 0, 0);
 
     for(int i=0; i < sky.model.meshCount; i++) {
         sky.model.meshes[i].lit = false;
     }
 
-    gtmaCreatePointLight(&light1, 0, 200, 500, 0.6, 0.6, 0.6);
+    gtmaCreatePointLight(&light1, 100, 200, -100, 0.6, 0.6, 0.6);
     light1.sunMode = true;
-    gtmaCreatePointLight(&light2, 500, 200, 0, 0.67, 0.67, 0.67);
+    gtmaCreatePointLight(&light2, -100, 50, -100, 0.6, 0.6, 0.6);
     light2.sunMode = true;
-    gtmaCreatePointLight(&light3, 0, 200, -500, 1, 1, 1);
+    gtmaCreatePointLight(&light3, -100, 50, 100, 0.6, 0.6, 0.6);
     light3.sunMode = true;
-    gtmaCreatePointLight(&light4, -20, 8, 0, 0.6, 0.6, 0.6);
-    light4.sunMode = false;
+    gtmaCreatePointLight(&light4, 100, 50, 100, 0.6, 0.6, 0.6);
+    light4.sunMode = true;
 
     //addObject(&table);
     gtmaAddObject(&plane);
-    //addObject(&yard);
+    gtmaAddObject(&yard);
     //gtmaAddObject(&sky);
-    //addLight(&light1);
-    //addLight(&light2);
-    //addLight(&light3);
+    gtmaAddLight(&light1);
+    gtmaAddLight(&light2);
+    gtmaAddLight(&light3);
     gtmaAddLight(&light4);
 
 
@@ -81,8 +81,7 @@ void updateScene() {
 
     //glm_vec3_copy(light4.position, table.position);
     
-    light4.position[0] += (sin(glfwGetTime())) / 8;
-    light4.position[2] += (cos(glfwGetTime())) / 8;
+    //yard.rotation[0] += (cos(glfwGetTime())) / 4;
 
 }
 
