@@ -50,7 +50,7 @@ vec3 calcPointLight(PointLight light) {
     float quadratic = 0.0019f;
 
     if(!light.sunMode) {
-        float distance    = length(light.position - position);
+        float distance    = length(light.position - lPos);
         float avgBri = (light.color[0] + light.color[1] + light.color[2]) / 3;
         float attenuation = 1.0 / (constant + (linear * avgBri) * distance + 
   		    (quadratic * avgBri) * (distance * distance));
