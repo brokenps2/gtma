@@ -1,7 +1,6 @@
 #include "Audio.h"
 #include "Camera.h"
 #include "Input.h"
-#include "Menus.h"
 #include "Models.h"
 #include "Renderer.h"
 #include "Shader.h"
@@ -35,7 +34,7 @@ void initScene() {
     gtmaSetRenderCamera(&camera);
 
     gtmaCreateObject(&plane, "models/plane.glb", 0, 0, 0,    8, 8, 8,    0, 0, 0);
-    gtmaCreateObject(&table, "models/table.glb", -16, 0, 0,    1, 1, 1,    0, 0, 0);
+    gtmaCreateObject(&table, "models/table.glb", 0, 0, 0,    1, 1, 1,    0, 0, 0);
     gtmaCreateObject(&mario, "models/mario.glb", 7, 1.2, -3, 1, 1, 1,    0, 0, 0);
     gtmaCreateObject(&sky,   "models/sky.glb",   3, 3, 3,    2.5, 2.5, 2.5,    0, 0, 0);
 
@@ -45,32 +44,30 @@ void initScene() {
         sky.model.meshes[i].lit = false;
     }
 
-    gtmaCreatePointLight(&light1, 100, 200, -100, 0.6, 0.6, 0.6);
+    gtmaCreatePointLight(&light1, 100, 200, -100, 0.7, 0.7, 0.7);
     light1.sunMode = true;
-    gtmaCreatePointLight(&light2, -100, 50, -100, 0.6, 0.6, 0.6);
+    gtmaCreatePointLight(&light2, -100, 50, -100, 0.7, 0.7, 0.7);
     light2.sunMode = true;
-    gtmaCreatePointLight(&light3, -100, 50, 100, 0.6, 0.6, 0.6);
+    gtmaCreatePointLight(&light3, -100, 50, 100, 0.65, 0.65, 0.65);
     light3.sunMode = true;
     gtmaCreatePointLight(&light4, 100, 50, 100, 0.6, 0.6, 0.6);
     light4.sunMode = true;
 
-    //addObject(&table);
+    gtmaAddObject(&table);
     gtmaAddObject(&plane);
-    gtmaAddObject(&yard);
+    gtmaAddObject(&mario);
     //gtmaAddObject(&sky);
     gtmaAddLight(&light1);
     gtmaAddLight(&light2);
     gtmaAddLight(&light3);
-    gtmaAddLight(&light4);
+    //gtmaAddLight(&light4);
 
 
 }
 
 void updateScene() {
     gtmaCameraMatrix(&camera, 67.0f, 0.1f, 200.0f, gtmaGetShader(), "camMatrix");
-    if(!getIOPtr()->WantCaptureMouse) {
-        gtmaCameraMove(&camera);
-    }
+    gtmaCameraMove(&camera);
 
     glm_vec3_copy(camera.position, sky.position);
 
@@ -79,7 +76,7 @@ void updateScene() {
  
     gtmaUpdateAudio(camera.position, camera.direction);
 
-    //glm_vec3_copy(light4.position, table.position);
+    //glm_vec3_copy(camera.position, light1.position);
     
     //yard.rotation[0] += (cos(glfwGetTime())) / 4;
 
