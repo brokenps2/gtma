@@ -28,7 +28,6 @@ PointLight light4;
 
 void initScene() {
     gtmaCreateSound(&testSound, "audio/test2.wav", true, 2, soundPos);
-    //playSoundFrom(&testSound, 5);
 
     gtmaCreateCamera(&camera, getWindowWidth(), getWindowHeight(), camPos);
     gtmaSetRenderCamera(&camera);
@@ -60,10 +59,12 @@ void initScene() {
     gtmaAddLight(&light1);
     gtmaAddLight(&light2);
     gtmaAddLight(&light3);
-    //gtmaAddLight(&light4);
+    gtmaAddLight(&light4);
 
+    setClearColor(154, 154, 154);
 
 }
+
 
 void updateScene() {
     gtmaCameraMatrix(&camera, 67.0f, 0.1f, 200.0f, gtmaGetShader(), "camMatrix");
@@ -75,10 +76,6 @@ void updateScene() {
     fflush(stdout);
  
     gtmaUpdateAudio(camera.position, camera.direction);
-
-    //glm_vec3_copy(camera.position, light1.position);
-    
-    //yard.rotation[0] += (cos(glfwGetTime())) / 4;
 
 }
 

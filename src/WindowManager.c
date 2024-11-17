@@ -41,10 +41,6 @@ void gtmaInitWindow() {
     glfwWindowHint(GLFW_FLOATING, GLFW_TRUE);
     glfwMakeContextCurrent(window);
     glfwSetWindowPos(window, posX, posY);
-    
-    #ifdef linux
-
-    #endif
 
     const GLenum err = glewInit();
     glewExperimental = GL_TRUE;

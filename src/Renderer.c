@@ -12,6 +12,7 @@
 #include "WindowManager.h"
 #include "Texture.h"
 #include "Models.h"
+#include "Util.h"
 
 float screenVertices[] = {
     -1.0f,  1.0f,  0.0f, 1.0f,
@@ -34,6 +35,8 @@ unsigned int renderTexture;
 unsigned int RBO;
 unsigned int sVAO;
 unsigned int sVBO;
+
+float clearColor[3];
 
 ObjectPack objPack;
 PointLightPack lightPack;
@@ -76,6 +79,10 @@ void gtmaInitRenderer() {
         printf("framebuffer object incomplete for some reason, no post processing will be applied.\n");
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
+
+    clearColor[0] = 9;
+    clearColor[1] = 8;
+    clearColor[2] = 22;
 
 }
 
@@ -163,6 +170,13 @@ void gtmaRemoveLight(PointLight* light) {
     light->inPack = false;
 }
 
+int rng(int min, int max){
+   return min + rand() / (RAND_MAX / (max - min + 1) + 1);
+}
+
+int delayer = 0;
+bool funMode = false;
+
 void gtmaRender() {
 
     for(int i = 0; i <= lightPack.lightCount - 1; i++) {
@@ -212,7 +226,24 @@ void gtmaRender() {
     glBindFramebuffer(GL_FRAMEBUFFER, FBO);
     glEnable(GL_DEPTH_TEST);
     glViewport(0, 0, renderWidth, renderHeight);
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    if(clearColor[0] == 155 && clearColor[1] == 155 && clearColor[2] == 155) {
+        funMode = false;
+    }
+    if(clearColor[0] == 154 && clearColor[1] == 154 && clearColor[2] == 154) {
+        funMode = true;
+    }
+
+    if(funMode) {
+        if(delayer != 5) {
+            delayer++;
+        } else {
+            clearColor[0] = rng(0, 255);
+            clearColor[1] = rng(0, 255);
+            clearColor[2] = rng(0, 255);
+            delayer = 0;
+        }
+    }
+    glClearColor(glc(clearColor[0]), glc(clearColor[1]), glc(clearColor[2]), 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     gtmaUseShader(&shader);
@@ -259,6 +290,12 @@ void gtmaCloseRenderer() {
     free(objPack.objects);
     free(lightPack.lights);
     glDeleteFramebuffers(1, &FBO);
+}
+
+void setClearColor(float r, float g, float b) {
+    clearColor[0] = r;
+    clearColor[1] = g;
+    clearColor[2] = b;
 }
 
 Shader* gtmaGetShader() {
