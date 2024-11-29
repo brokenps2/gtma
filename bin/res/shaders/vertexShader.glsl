@@ -90,6 +90,7 @@ void main() {
     int activeLights = 0;
 
     if (lightEnabled) {
+        totalLight += 0.05f;
         for (int i = 0; i < actualLightCount; i++) {
             if (pointLights[i].onoff) {
                 totalLight += calcPointLight(pointLights[i]);
@@ -107,7 +108,7 @@ void main() {
     outLightColor += totalLight;
 
     gl_Position = camMatrix * transMatrix * vec4(position, 1.0);
-    gl_Position = snap(gl_Position, vec2(320, 240));
+    gl_Position = snap(gl_Position, vec2(1280, 960));
     outColor = color;
     outTexCoord = texCoord;
 

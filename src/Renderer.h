@@ -12,4 +12,5 @@ void gtmaRemoveLight(PointLight* light);
 void gtmaCloseRenderer();
 Shader* gtmaGetShader();
 void gtmaRender();
+ObjectPack* getObjPack();
 void setClearColor(float r, float g, float b);

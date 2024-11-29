@@ -18,14 +18,13 @@ typedef struct Camera {
     int height;
     float sensitivity;
 
-    float radius;
-
 } Camera;
 
 
 void gtmaCreateCamera(Camera* cam, int width, int height, vec3 pos);
 
 void gtmaCameraMatrix(Camera* cam, float fov, float nearPlane, float farPlane, Shader* shader, const char* uniform);
+void gtmaCameraLook(Camera* cam);
 void gtmaCameraMove(Camera* cam);
 void gtmaCameraSetPosition(Camera* cam, vec3 npos);
 void gtmaCameraIncPosition(Camera* cam, vec3 inc);

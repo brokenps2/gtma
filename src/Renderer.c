@@ -1,10 +1,8 @@
-#include <cglm/vec3.h>
-#include <stb_image.h>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <cglm/common.h>
-#include <cglm/types.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include "Input.h"
 #include "Shader.h"
@@ -27,8 +25,8 @@ float screenVertices[] = {
 Shader shader;
 Camera renderCamera;
 
-int renderWidth = 640;
-int renderHeight = 480;
+int renderWidth = 1280;
+int renderHeight = 960;
 
 unsigned int FBO;
 unsigned int renderTexture;
@@ -284,6 +282,10 @@ void gtmaRender() {
     glBindTexture(GL_TEXTURE_2D, renderTexture);
     glDrawArrays(GL_TRIANGLES, 0, 6);
 
+    if(isLeftDown()) {
+        glfwSetInputMode(getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    }
+
 }
 
 void gtmaCloseRenderer() {
@@ -296,6 +298,10 @@ void setClearColor(float r, float g, float b) {
     clearColor[0] = r;
     clearColor[1] = g;
     clearColor[2] = b;
+}
+
+ObjectPack* getObjPack() {
+    return &objPack;
 }
 
 Shader* gtmaGetShader() {

@@ -5,6 +5,8 @@
 #include <cglm/common.h>
 #include <math.h>
 #include "Config.h"
+#include "Physics.h"
+#include "Renderer.h"
 #include "Shader.h"
 #include "WindowManager.h"
 #include "Input.h"
@@ -33,8 +35,6 @@ void gtmaCreateCamera(Camera* cam, int width, int height, vec3 pos) {
     cam->yaw = 0.0f;
     cam->roll = 0.0f;
     cam->sensitivity = (float)cfgLookupInt("mouseSensitivity") / 100;
-
-    cam->radius = 1;
 }
 
 void gtmaResizeCamera(Camera* cam, int width, int height) {
@@ -110,100 +110,123 @@ float forwardVelocity = 0;
 float backwardVelocity = 0;
 float leftVelocity = 0;
 float rightVelocity = 0;
+float upVelocity = 0;
+float downVelocity = 0;
+
 
 void gtmaCameraMove(Camera* cam) {
+    // Calculate the proposed new position for the camera
+    vec3 proposedPosition;
+    proposedPosition[0] = cam->position[0];
+    proposedPosition[1] = cam->position[1];
+    proposedPosition[2] = cam->position[2];
 
-    if(isKeyDown(GLFW_KEY_W)) {
+    // Forward and backward movement
+    if (isKeyDown(GLFW_KEY_W)) {
         forwardVelocity += accel * getDeltaTime();
-        if(forwardVelocity > maxSpeed) {
-            forwardVelocity = maxSpeed;
-        }
-    } 
-    if(isKeyDown(GLFW_KEY_S)) {
+        if (forwardVelocity > maxSpeed) forwardVelocity = maxSpeed;
+    }
+    if (isKeyDown(GLFW_KEY_S)) {
         backwardVelocity += accel * getDeltaTime();
-        if(backwardVelocity > maxSpeed) {
-            backwardVelocity = maxSpeed;
-        }
+        if (backwardVelocity > maxSpeed) backwardVelocity = maxSpeed;
     }
-    if(isKeyDown(GLFW_KEY_A)) {
+    if (!isKeyDown(GLFW_KEY_W)) {
+        forwardVelocity -= accel * getDeltaTime();
+        if (forwardVelocity < 0) forwardVelocity = 0;
+    }
+    if (!isKeyDown(GLFW_KEY_S)) {
+        backwardVelocity -= accel * getDeltaTime();
+        if (backwardVelocity < 0) backwardVelocity = 0;
+    }
+
+    proposedPosition[0] -= (-cos(glm_rad(cam->yaw)) * forwardVelocity) * getDeltaTime();
+    proposedPosition[2] += (sin(glm_rad(cam->yaw)) * forwardVelocity) * getDeltaTime();
+
+    proposedPosition[0] += (-cos(glm_rad(cam->yaw)) * backwardVelocity) * getDeltaTime();
+    proposedPosition[2] -= (sin(glm_rad(cam->yaw)) * backwardVelocity) * getDeltaTime();
+
+    // Left and right movement
+    if (isKeyDown(GLFW_KEY_A)) {
         leftVelocity += accel * getDeltaTime();
-        if(leftVelocity > maxSpeed) {
-            leftVelocity = maxSpeed;
-        }
+        if (leftVelocity > maxSpeed) leftVelocity = maxSpeed;
     }
-    if(isKeyDown(GLFW_KEY_D)) {
+    if (isKeyDown(GLFW_KEY_D)) {
         rightVelocity += accel * getDeltaTime();
-        if(rightVelocity > maxSpeed) {
-            rightVelocity = maxSpeed;
-        }
+        if (rightVelocity > maxSpeed) rightVelocity = maxSpeed;
+    }
+    if (!isKeyDown(GLFW_KEY_A)) {
+        leftVelocity -= accel * getDeltaTime();
+        if (leftVelocity < 0) leftVelocity = 0;
+    }
+    if (!isKeyDown(GLFW_KEY_D)) {
+        rightVelocity -= accel * getDeltaTime();
+        if (rightVelocity < 0) rightVelocity = 0;
     }
 
+    proposedPosition[0] += (sin(glm_rad(cam->yaw)) * leftVelocity) * getDeltaTime();
+    proposedPosition[2] -= (cos(glm_rad(cam->yaw)) * leftVelocity) * getDeltaTime();
 
+    proposedPosition[0] -= (sin(glm_rad(cam->yaw)) * rightVelocity) * getDeltaTime();
+    proposedPosition[2] += (cos(glm_rad(cam->yaw)) * rightVelocity) * getDeltaTime();
 
-    if(!isKeyDown(GLFW_KEY_W)) {
-        if(forwardVelocity != 0) {
-            forwardVelocity -= accel * getDeltaTime();
-            if(forwardVelocity < 0) {
-                forwardVelocity = 0;
-            }
-        }
+    // Vertical movement
+    if (isKeyDown(GLFW_KEY_SPACE)) {
+        upVelocity += accel * getDeltaTime();
+        if (upVelocity > maxSpeed) upVelocity = maxSpeed;
     }
-    if(!isKeyDown(GLFW_KEY_S)) {
-        if(backwardVelocity != 0) {
-            backwardVelocity -= accel * getDeltaTime();
-            if(backwardVelocity < 0) {
-                backwardVelocity = 0;
-            }
-        }
+    if (isKeyDown(GLFW_KEY_LEFT_CONTROL)) {
+        downVelocity += accel * getDeltaTime();
+        if (downVelocity > maxSpeed) downVelocity = maxSpeed;
     }
-    if(!isKeyDown(GLFW_KEY_A)) {
-        if(leftVelocity != 0) {
-            leftVelocity -= accel * getDeltaTime();
-            if(leftVelocity < 0) {
-                leftVelocity = 0;
-            }
-        }
+    if (!isKeyDown(GLFW_KEY_SPACE)) {
+        upVelocity -= accel * getDeltaTime();
+        if (upVelocity < 0) upVelocity = 0;
     }
-    if(!isKeyDown(GLFW_KEY_D)) {
-         if(rightVelocity != 0) {
-            rightVelocity -= accel * getDeltaTime();
-            if(rightVelocity < 0) {
-                rightVelocity = 0;
-            }
-        }
+    if (!isKeyDown(GLFW_KEY_LEFT_CONTROL)) {
+        downVelocity -= accel * getDeltaTime();
+        if (downVelocity < 0) downVelocity = 0;
     }
 
-    cam->position[0] -= (-cos(glm_rad(cam->yaw)) * forwardVelocity) * getDeltaTime();
-    cam->position[2] += (sin(glm_rad(cam->yaw)) * forwardVelocity) * getDeltaTime();
+    proposedPosition[1] += upVelocity * getDeltaTime();
+    proposedPosition[1] -= downVelocity * getDeltaTime();
 
-    cam->position[0] += (-cos(glm_rad(cam->yaw)) * backwardVelocity) * getDeltaTime();
-    cam->position[2] -= (sin(glm_rad(cam->yaw)) * backwardVelocity) * getDeltaTime();
+    // Check collisions for each axis separately
+    vec3 tempPosition;
+    tempPosition[0] = cam->position[0];
+    tempPosition[1] = cam->position[1];
+    tempPosition[2] = cam->position[2];
 
-    cam->position[0] += (sin(glm_rad(cam->yaw)) * leftVelocity) * getDeltaTime();
-    cam->position[2] -= (cos(glm_rad(cam->yaw)) * leftVelocity) * getDeltaTime();
-
-    cam->position[0] -= (sin(glm_rad(cam->yaw)) * rightVelocity) * getDeltaTime();
-    cam->position[2] += (cos(glm_rad(cam->yaw)) * rightVelocity) * getDeltaTime();
-
-    if(isKeyDown(GLFW_KEY_LEFT_SHIFT)) {
-        maxSpeed = 18;
-    } else {
-        maxSpeed = 12;
+    // X-axis
+    tempPosition[0] = proposedPosition[0];
+    if (!handleVecBoxPhysics(&tempPosition, getObjPack(), 4)) {
+        cam->position[0] = tempPosition[0];
     }
 
-    if(isKeyDown(GLFW_KEY_LEFT_CONTROL)){
-        cam->position[1] -= 8 * getDeltaTime();
+    // Y-axis
+    tempPosition[0] = cam->position[0];
+    tempPosition[1] = cam->position[1];
+    tempPosition[2] = cam->position[2];
+    tempPosition[1] = proposedPosition[1];
+    if (!handleVecBoxPhysics(&tempPosition, getObjPack(), 4)) {
+        cam->position[1] = tempPosition[1];
     }
 
-    if(isKeyDown(GLFW_KEY_SPACE)) {
-        cam->position[1] += 8 * getDeltaTime();
+    // Z-axis
+    tempPosition[0] = cam->position[0];
+    tempPosition[1] = cam->position[1];
+    tempPosition[2] = cam->position[2];
+    tempPosition[2] = proposedPosition[2];
+    if (!handleVecBoxPhysics(&tempPosition, getObjPack(), 4)) {
+        cam->position[2] = tempPosition[2];
     }
+
+    // Speed boost
+    maxSpeed = isKeyDown(GLFW_KEY_LEFT_SHIFT) ? 18 : 12;
 
     cam->position[0] = roundf(cam->position[0] * 100) / 100;
     cam->position[1] = roundf(cam->position[1] * 100) / 100;
     cam->position[2] = roundf(cam->position[2] * 100) / 100;
 
-    gtmaCameraLook(cam);
 }
 
 void gtmaCameraSetPosition(Camera* cam, vec3 npos) {

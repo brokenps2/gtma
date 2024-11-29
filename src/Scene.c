@@ -2,6 +2,7 @@
 #include "Camera.h"
 #include "Input.h"
 #include "Models.h"
+#include "Physics.h"
 #include "Renderer.h"
 #include "Shader.h"
 #include <cglm/vec3.h>
@@ -19,7 +20,7 @@ Object sky;
 
 Object yard;
 
-Sound testSound;
+Track music;
 
 PointLight light1;
 PointLight light2;
@@ -27,7 +28,9 @@ PointLight light3;
 PointLight light4;
 
 void initScene() {
-    gtmaCreateSound(&testSound, "audio/test2.wav", true, 2, soundPos);
+
+    gtmaCreateTrack(&music, "audio/test2.wav", true, 2);
+    gtmaPlayTrackFrom(&music, 5);
 
     gtmaCreateCamera(&camera, getWindowWidth(), getWindowHeight(), camPos);
     gtmaSetRenderCamera(&camera);
@@ -43,40 +46,34 @@ void initScene() {
         sky.model.meshes[i].lit = false;
     }
 
-    gtmaCreatePointLight(&light1, 100, 200, -100, 0.7, 0.7, 0.7);
-    light1.sunMode = true;
-    gtmaCreatePointLight(&light2, -100, 50, -100, 0.7, 0.7, 0.7);
-    light2.sunMode = true;
-    gtmaCreatePointLight(&light3, -100, 50, 100, 0.65, 0.65, 0.65);
-    light3.sunMode = true;
-    gtmaCreatePointLight(&light4, 100, 50, 100, 0.6, 0.6, 0.6);
-    light4.sunMode = true;
+    gtmaCreatePointLight(&light1, -16, 30, 0, 0.8, 0.8, 0.8);
+    light1.sunMode = false;
+
+    gtmaAddLight(&light1);
 
     gtmaAddObject(&table);
-    gtmaAddObject(&plane);
+    gtmaAddObject(&yard );
     gtmaAddObject(&mario);
     //gtmaAddObject(&sky);
-    gtmaAddLight(&light1);
-    gtmaAddLight(&light2);
-    gtmaAddLight(&light3);
-    gtmaAddLight(&light4);
 
-    setClearColor(154, 154, 154);
+    setClearColor(9, 8, 22);
 
 }
 
 
 void updateScene() {
     gtmaCameraMatrix(&camera, 67.0f, 0.1f, 200.0f, gtmaGetShader(), "camMatrix");
+    gtmaCameraLook(&camera);
     gtmaCameraMove(&camera);
 
     glm_vec3_copy(camera.position, sky.position);
 
-    printf("\r%f  %f  %f", camera.position[0], camera.position[1], camera.position[2]);
-    fflush(stdout);
- 
+    //printf("\r%f  %f  %f", camera.position[0], camera.position[1], camera.position[2]);
+    //fflush(stdout);
+    
     gtmaUpdateAudio(camera.position, camera.direction);
 
+    
 }
 
 void disposeScene() {
