@@ -12,5 +12,4 @@ typedef struct AABB {
 AABB calculateAABB(Object* obj);
 bool checkAABBCollision(AABB* a, AABB* b);
 bool checkMeshCollision(Object* objA, Object* objB);
-bool handleCameraPhysics(Camera* camera, ObjectPack* pack, float boundingBoxSize);
-bool handleVecBoxPhysics(vec3* position, ObjectPack* pack, float boundingBoxSize);
+bool handleCamPhysics(vec3* position, ObjectPack* pack, float boundingBoxSizeXZ, float boundingBoxSizeY);

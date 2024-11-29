@@ -113,15 +113,13 @@ float rightVelocity = 0;
 float upVelocity = 0;
 float downVelocity = 0;
 
-
 void gtmaCameraMove(Camera* cam) {
-    // Calculate the proposed new position for the camera
     vec3 proposedPosition;
     proposedPosition[0] = cam->position[0];
     proposedPosition[1] = cam->position[1];
     proposedPosition[2] = cam->position[2];
 
-    // Forward and backward movement
+   // Forward and backward movement
     if (isKeyDown(GLFW_KEY_W)) {
         forwardVelocity += accel * getDeltaTime();
         if (forwardVelocity > maxSpeed) forwardVelocity = maxSpeed;
@@ -171,44 +169,50 @@ void gtmaCameraMove(Camera* cam) {
 
     // Vertical movement
     if (isKeyDown(GLFW_KEY_SPACE)) {
-        upVelocity += accel * getDeltaTime();
+        upVelocity += accel * getDeltaTime() * 3;
         if (upVelocity > maxSpeed) upVelocity = maxSpeed;
     }
     if (isKeyDown(GLFW_KEY_LEFT_CONTROL)) {
-        downVelocity += accel * getDeltaTime();
+        downVelocity += accel * getDeltaTime() * 3;
         if (downVelocity > maxSpeed) downVelocity = maxSpeed;
     }
     if (!isKeyDown(GLFW_KEY_SPACE)) {
-        upVelocity -= accel * getDeltaTime();
+        upVelocity -= accel * getDeltaTime() * 3;
         if (upVelocity < 0) upVelocity = 0;
     }
     if (!isKeyDown(GLFW_KEY_LEFT_CONTROL)) {
-        downVelocity -= accel * getDeltaTime();
+        downVelocity -= accel * getDeltaTime() * 3;
         if (downVelocity < 0) downVelocity = 0;
     }
 
     proposedPosition[1] += upVelocity * getDeltaTime();
     proposedPosition[1] -= downVelocity * getDeltaTime();
 
-    // Check collisions for each axis separately
+    //gravity
+    proposedPosition[1] -= 9.81f * getDeltaTime();
+
     vec3 tempPosition;
     tempPosition[0] = cam->position[0];
     tempPosition[1] = cam->position[1];
     tempPosition[2] = cam->position[2];
 
+    const float maxSlopeHeight = 0.1f; // Maximum climbable height per step
+    const float slopeStep = 0.05f;     // Vertical adjustment increment
+
     // X-axis
     tempPosition[0] = proposedPosition[0];
-    if (!handleVecBoxPhysics(&tempPosition, getObjPack(), 4)) {
+    if (!handleCamPhysics(&tempPosition, getObjPack(), 4, 7)) {
         cam->position[0] = tempPosition[0];
-    }
-
-    // Y-axis
-    tempPosition[0] = cam->position[0];
-    tempPosition[1] = cam->position[1];
-    tempPosition[2] = cam->position[2];
-    tempPosition[1] = proposedPosition[1];
-    if (!handleVecBoxPhysics(&tempPosition, getObjPack(), 4)) {
-        cam->position[1] = tempPosition[1];
+    } else {
+        // Try climbing slope
+        for (float step = slopeStep; step <= maxSlopeHeight; step += slopeStep) {
+            tempPosition[1] = cam->position[1] + step; // Adjust upward
+            if (!handleCamPhysics(&tempPosition, getObjPack(), 4, 7)) {
+                cam->position[0] = tempPosition[0];
+                cam->position[1] = tempPosition[1];
+                break;
+            }
+        }
     }
 
     // Z-axis
@@ -216,18 +220,37 @@ void gtmaCameraMove(Camera* cam) {
     tempPosition[1] = cam->position[1];
     tempPosition[2] = cam->position[2];
     tempPosition[2] = proposedPosition[2];
-    if (!handleVecBoxPhysics(&tempPosition, getObjPack(), 4)) {
+    if (!handleCamPhysics(&tempPosition, getObjPack(), 4, 7)) {
         cam->position[2] = tempPosition[2];
+    } else {
+        // Try climbing slope
+        for (float step = slopeStep; step <= maxSlopeHeight; step += slopeStep) {
+            tempPosition[1] = cam->position[1] + step; // Adjust upward
+            if (!handleCamPhysics(&tempPosition, getObjPack(), 4, 7)) {
+                cam->position[2] = tempPosition[2];
+                cam->position[1] = tempPosition[1];
+                break;
+            }
+        }
+    }
+
+    // Y-axis (gravity and direct vertical movement)
+    tempPosition[0] = cam->position[0];
+    tempPosition[1] = proposedPosition[1];
+    tempPosition[2] = cam->position[2];
+    if (!handleCamPhysics(&tempPosition, getObjPack(), 4, 7)) {
+        cam->position[1] = tempPosition[1];
     }
 
     // Speed boost
     maxSpeed = isKeyDown(GLFW_KEY_LEFT_SHIFT) ? 18 : 12;
 
+    // Rounding to avoid precision errors
     cam->position[0] = roundf(cam->position[0] * 100) / 100;
     cam->position[1] = roundf(cam->position[1] * 100) / 100;
     cam->position[2] = roundf(cam->position[2] * 100) / 100;
-
 }
+
 
 void gtmaCameraSetPosition(Camera* cam, vec3 npos) {
     cam->position[0] = npos[0];

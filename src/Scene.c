@@ -2,14 +2,12 @@
 #include "Camera.h"
 #include "Input.h"
 #include "Models.h"
-#include "Physics.h"
 #include "Renderer.h"
 #include "Shader.h"
 #include <cglm/vec3.h>
-#include <stdio.h>
 
 Camera camera;
-vec3 camPos = {4, 7, 4};
+vec3 camPos = {-7, 24, 4};
 vec3 soundPos = {0, 0, 0};
 
 Object plane;
@@ -40,7 +38,7 @@ void initScene() {
     gtmaCreateObject(&mario, "models/mario.glb", 7, 1.2, -3, 1, 1, 1,    0, 0, 0);
     gtmaCreateObject(&sky,   "models/sky.glb",   3, 3, 3,    2.5, 2.5, 2.5,    0, 0, 0);
 
-    gtmaCreateObject(&yard, "models/yard.glb", 0, 0.2, 0, 11, 11, 11, 0, 0, 0);
+    gtmaCreateObject(&yard, "models/castle.glb", 0, 0.2, 0, 11, 11, 11, 0, 0, 0);
 
     for(int i=0; i < sky.model.meshCount; i++) {
         sky.model.meshes[i].lit = false;
@@ -52,7 +50,7 @@ void initScene() {
     gtmaAddLight(&light1);
 
     gtmaAddObject(&table);
-    gtmaAddObject(&yard );
+    gtmaAddObject(&yard);
     gtmaAddObject(&mario);
     //gtmaAddObject(&sky);
 

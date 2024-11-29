@@ -33,25 +33,9 @@ AABB calculateAABB(Object* obj) {
     return box;
 }
 
-static AABB calculateCameraAABB(Camera* camera, float boundingBoxSize) {
-    vec3 halfSize = {boundingBoxSize / 2, boundingBoxSize / 2, boundingBoxSize / 2};
-    AABB box = {
-        .min = {
-            camera->position[0] - halfSize[0],
-            camera->position[1] - halfSize[1],
-            camera->position[2] - halfSize[2]
-        },
-        .max = {
-            camera->position[0] + halfSize[0],
-            camera->position[1] + halfSize[1],
-            camera->position[2] + halfSize[2]
-        }
-    };
-    return box;
-}
 
-static AABB calculateVectorBoxAABB(vec3 position, float boundingBoxSize) {
-    vec3 halfSize = {boundingBoxSize / 2, boundingBoxSize / 2, boundingBoxSize / 2};
+static AABB calculateCameraAABB(vec3 position, float boundingBoxSizeXZ, float boundingBoxSizeY) {
+    vec3 halfSize = {boundingBoxSizeXZ / 2, boundingBoxSizeY / 2, boundingBoxSizeXZ / 2};
     AABB box = {
         .min = {
             position[0] - halfSize[0],
@@ -149,49 +133,14 @@ bool checkAABBTriangleCollision(AABB* aabb, vec3 triangle[3]) {
     return true;
 }
 
-
-
-bool handleCameraPhysics(Camera* camera, ObjectPack* pack, float boundingBoxSize) {
-    AABB cameraAABB = calculateCameraAABB(camera, boundingBoxSize);
+bool handleCamPhysics(vec3* position, ObjectPack* pack, float boundingBoxSizeXZ, float boundingBoxSizeY) {
+    AABB vbAABB = calculateCameraAABB(*position, boundingBoxSizeXZ, boundingBoxSizeY);
 
     for (int i = 0; i < pack->objectCount; i++) {
         Object* obj = pack->objects[i];
         AABB objectAABB = calculateAABB(obj);
 
-        if (checkAABBCollision(&cameraAABB, &objectAABB)) {
-            for (int j = 0; j < obj->model.meshCount; j++) {
-                Mesh* mesh = &obj->model.meshes[j];
-
-                for (int k = 0; k < mesh->indexCount; k += 3) {
-                    vec3 tri[3];
-                    for (int v = 0; v < 3; v++) {
-                        int idx = mesh->indices[k + v];
-                        for (int c = 0; c < 3; c++) {
-                            tri[v][c] = mesh->vertices[idx].position[c] * obj->scale[c] + obj->position[c];
-                        }
-                    }
-
-                    if (checkAABBTriangleCollision(&cameraAABB, tri)) {
-                        printf("Camera collides with Object %d\n", i);
-                        return true;
-                    }
-                }
-            }
-        }
-    }
-
-    return false;
-}
-
-
-bool handleVecBoxPhysics(vec3* position, ObjectPack* pack, float boundingBoxSize) {
-    AABB cameraAABB = calculateVectorBoxAABB(*position, boundingBoxSize);
-
-    for (int i = 0; i < pack->objectCount; i++) {
-        Object* obj = pack->objects[i];
-        AABB objectAABB = calculateAABB(obj);
-
-        if (checkAABBCollision(&cameraAABB, &objectAABB)) {
+        if (checkAABBCollision(&vbAABB, &objectAABB)) {
 
             for (int j = 0; j < obj->model.meshCount; j++) {
                 Mesh* mesh = &obj->model.meshes[j];
@@ -205,7 +154,7 @@ bool handleVecBoxPhysics(vec3* position, ObjectPack* pack, float boundingBoxSize
                         }
                     }
 
-                    if (checkAABBTriangleCollision(&cameraAABB, tri)) {
+                    if (checkAABBTriangleCollision(&vbAABB, tri)) {
                         return true;
                     }
                 }
