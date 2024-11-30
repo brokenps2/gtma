@@ -39,7 +39,7 @@ static AABB calculateCameraAABB(vec3 position, float boundingBoxSizeXZ, float bo
     AABB box = {
         .min = {
             position[0] - halfSize[0],
-            position[1] - halfSize[1],
+            position[1] - halfSize[1] * 2,
             position[2] - halfSize[2]
         },
         .max = {

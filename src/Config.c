@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <libconfig.h>
+#include <string.h>
 
 const char* path;
 config_t cfg;
@@ -82,6 +83,21 @@ int cfgLookupInt(const char* key) {
     int value;
     
     if(config_lookup_int(&cfg, key, &value)) {
+        return value;
+    } else if(strcmp(key, "mouseSensitivity") == 0) {
+        printf("mouseSensitivity setting not found, defaulting to 15\n");
+        return 15;
+    } else {
+        printf("setting '%s' not found.\n", key);
+        exit(1);
+    }
+
+}
+
+int cfgLookupBool(const char* key) {
+    int value;
+    
+    if(config_lookup_bool(&cfg, key, &value)) {
         return value;
     } else {
         printf("setting '%s' not found.\n", key);

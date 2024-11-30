@@ -25,8 +25,8 @@ float screenVertices[] = {
 Shader shader;
 Camera renderCamera;
 
-int renderWidth = 1280;
-int renderHeight = 960;
+int renderWidth = 512;
+int renderHeight = 384;
 
 unsigned int FBO;
 unsigned int renderTexture;
@@ -273,7 +273,7 @@ void gtmaRender() {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glViewport(0, 0, getWindowWidth(), getWindowHeight());
     glDisable(GL_DEPTH_TEST);
-    glClearColor(1, 0, 0, 0);
+    glClearColor(glc(9), glc(8), glc(22), 0);
     glClear(GL_COLOR_BUFFER_BIT);
     gtmaUseShader(&shader);
     glBindTexture(GL_TEXTURE_2D, 0);

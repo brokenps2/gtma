@@ -9,6 +9,8 @@
 #include "Renderer.h"
 #include "Input.h"
 
+int fullscreen = 0;
+
 GLFWwindow* window;
 float currentTime = 0;
 float lastTime = 0;
