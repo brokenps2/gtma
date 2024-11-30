@@ -105,17 +105,16 @@ void gtmaCameraLook(Camera* cam) {
 
 }
 
-float maxSpeed = 12;
-float accel = 60;
-float forwardVelocity = 0;
-float backwardVelocity = 0;
-float leftVelocity = 0;
-float rightVelocity = 0;
-float upVelocity = 0;
-float downVelocity = 0;
+float maxSpeed = 12.0f;
+float accel = 60.0f;
+float forwardVelocity = 0.0f;
+float backwardVelocity = 0.0f;
+float leftVelocity = 0.0f;
+float rightVelocity = 0.0f;
+float upVelocity = 0.0f;
+float downVelocity = 0.0f;
 
-bool falling = false;
-float verticalSpeed = 0;
+float verticalSpeed = 0.0f;
 
 void gtmaCameraMove(Camera* cam, bool spectating) {
     vec3 proposedPosition;
@@ -177,7 +176,7 @@ void gtmaCameraMove(Camera* cam, bool spectating) {
     if(!spectating) {
         //gravity
         if (isKeyDown(GLFW_KEY_SPACE) && verticalSpeed == 0) { 
-            verticalSpeed = -20;
+            verticalSpeed = -20.0f;
         }
 
         proposedPosition[1] -= verticalSpeed * getDeltaTime();
@@ -192,13 +191,13 @@ void gtmaCameraMove(Camera* cam, bool spectating) {
 
         // X-axis
         tempPosition[0] = proposedPosition[0];
-        if (!handleCamPhysics(&tempPosition, getObjPack(), 2.5, 5)) {
+        if (!handleCamPhysics(&tempPosition, getObjPack(), 2.5f, 5.0f)) {
             cam->position[0] = tempPosition[0];
         } else {
             // Try climbing slope
             for (float step = slopeStep; step <= maxSlopeHeight; step += slopeStep) {
                 tempPosition[1] = cam->position[1] + step; // Adjust upward
-                if (!handleCamPhysics(&tempPosition, getObjPack(), 2.5, 5)) {
+                if (!handleCamPhysics(&tempPosition, getObjPack(), 2.5f, 5.0f)) {
                     cam->position[0] = tempPosition[0];
                     cam->position[1] = tempPosition[1];
                     break;
@@ -211,13 +210,13 @@ void gtmaCameraMove(Camera* cam, bool spectating) {
         tempPosition[1] = cam->position[1];
         tempPosition[2] = cam->position[2];
         tempPosition[2] = proposedPosition[2];
-        if (!handleCamPhysics(&tempPosition, getObjPack(), 2.5, 5)) {
+        if (!handleCamPhysics(&tempPosition, getObjPack(), 2.5f, 5.0f)) {
             cam->position[2] = tempPosition[2];
         } else {
             // Try climbing slope
             for (float step = slopeStep; step <= maxSlopeHeight; step += slopeStep) {
                 tempPosition[1] = cam->position[1] + step; // Adjust upward
-                if (!handleCamPhysics(&tempPosition, getObjPack(), 2.5, 5)) {
+                if (!handleCamPhysics(&tempPosition, getObjPack(), 2.5f, 5.0f)) {
                     cam->position[2] = tempPosition[2];
                     cam->position[1] = tempPosition[1];
                     break;
@@ -229,11 +228,11 @@ void gtmaCameraMove(Camera* cam, bool spectating) {
         tempPosition[0] = cam->position[0];
         tempPosition[1] = proposedPosition[1];
         tempPosition[2] = cam->position[2];
-        if (!handleCamPhysics(&tempPosition, getObjPack(), 2.5, 5)) {
+        if (!handleCamPhysics(&tempPosition, getObjPack(), 2.5f, 5.0f)) {
             cam->position[1] = tempPosition[1];
-            verticalSpeed += 0.2;
+            verticalSpeed += 0.2f;
         } else {
-            verticalSpeed = 0;
+            verticalSpeed = 0.0f;
         }
 
  
@@ -264,7 +263,7 @@ void gtmaCameraMove(Camera* cam, bool spectating) {
 
     // Rounding to avoid precision errors
     cam->position[0] = roundf(cam->position[0] * 100) / 100;
-    cam->position[1] = roundf(cam->position[1] * 100) / 100;
+    cam->position[1] = roundf(cam->position[1] * 1000) / 1000;
     cam->position[2] = roundf(cam->position[2] * 100) / 100;
 }
 

@@ -59,7 +59,7 @@ vec3 calcPointLight(PointLight light) {
         specular    *= attenuation;
     }
     
-    vec3 lightColor = ambient + diffuse + specular;
+    vec3 lightColor = ambient + diffuse;// + specular;
     
     if(!light.onoff) {
         return ambient;
