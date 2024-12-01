@@ -16,6 +16,8 @@
 
 double oldMouseX = 0, oldMouseY = 0, newMouseX = 0, newMouseY = 0;
 
+float fov = 80.0f;
+
 void gtmaCreateCamera(Camera* cam, int width, int height, vec3 pos) {
     cam->width = width;
     cam->height = height;
@@ -43,7 +45,7 @@ void gtmaResizeCamera(Camera* cam, int width, int height) {
     cam->height = height;
 }
 
-void gtmaCameraMatrix(Camera* cam, float fov, float nearPlane, float farPlane, Shader* shader, const char* uniform) {
+void gtmaCameraMatrix(Camera* cam, float nearPlane, float farPlane, Shader* shader, const char* uniform) {
 
     if(cam->width != getWindowWidth()) {
         cam->width = getWindowWidth();
@@ -258,8 +260,18 @@ void gtmaCameraMove(Camera* cam, bool spectating) {
         glm_vec3_copy(proposedPosition, cam->position);
     }
 
+    float maxFov = 95.5;
+
     // Speed boost
-    maxSpeed = isKeyDown(GLFW_KEY_LEFT_SHIFT) ? 18 : 12;
+    if(isKeyDown(GLFW_KEY_LEFT_SHIFT)) {
+        maxSpeed = 22;
+        fov += 64 * getDeltaTime();
+        if(fov > maxFov) fov = maxFov;
+    } else {
+        maxSpeed = 12;
+        fov -= 64 * getDeltaTime();
+        if(fov <= 90) fov = 90;
+    }
 
     // Rounding to avoid precision errors
     cam->position[0] = roundf(cam->position[0] * 100) / 100;

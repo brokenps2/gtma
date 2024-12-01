@@ -4,6 +4,8 @@
 #include "Models.h"
 #include "Renderer.h"
 #include "Shader.h"
+#include "WindowManager.h"
+#include <GLFW/glfw3.h>
 #include <cglm/vec3.h>
 
 Camera camera;
@@ -11,12 +13,12 @@ vec3 camPos = {-12, 20, 4};
 vec3 soundPos = {0, 0, 0};
 
 Object plane;
-Object table;
-Object mario;
-Object radio;
+Object lampPost;
 Object sky;
 
 Object yard;
+
+Object platform;
 
 Track music;
 
@@ -37,17 +39,16 @@ void initScene() {
     gtmaSetRenderCamera(&camera);
 
     gtmaCreateObject(&plane, "models/plane.glb", 0, 0, 0,    8, 8, 8,    0, 0, 0);
-    gtmaCreateObject(&table, "models/lamppost.glb", -20, 5.5, 0,    1.5, 1.5, 1.5,    0, 0, 0);
-    gtmaCreateObject(&mario, "models/mario.glb", 12, 1.2, -3, 1, 1, 1,    0, 0, 0);
+    gtmaCreateObject(&lampPost, "models/lamppost.glb", -20, 5.5, 0,    1.5, 1.5, 1.5,    0, 0, 0);
     gtmaCreateObject(&sky,   "models/sky.glb",   3, 3, 3,    2.5, 2.5, 2.5,    0, 0, 0);
-
+    gtmaCreateObject(&platform, "models/platform.glb", -48, 5, 0, 1, 1, 1, 0, 0, 0);
     gtmaCreateObject(&yard, "models/physbox.glb", 0, 0.2, 0, 1, 1, 1, 0, 0, 0);
 
     for(int i=0; i < sky.model.meshCount; i++) {
         sky.model.meshes[i].lit = false;
     }
 
-    table.model.meshes[7].lit = false;
+    lampPost.model.meshes[7].lit = false;
 
     gtmaCreatePointLight(&light1, -53, 100, 53, brightness, brightness, brightness);
     gtmaCreatePointLight(&light2, -53, 100, -53, brightness, brightness, brightness);
@@ -58,7 +59,7 @@ void initScene() {
     light3.sunMode = true;
     light4.sunMode = true;
 
-    gtmaCreatePointLight(&lamp, -20, 7.5f, 0, 1.75, 1.75, 1.75);
+    gtmaCreatePointLight(&lamp, -20, 7.5f, 0, 0.75, 0.75, 0.75);
 
     gtmaAddLight(&light1);
     gtmaAddLight(&light2);
@@ -66,9 +67,9 @@ void initScene() {
     gtmaAddLight(&light4);
     gtmaAddLight(&lamp);
 
-    gtmaAddObject(&table);
+    gtmaAddObject(&lampPost);
     gtmaAddObject(&yard);
-    //gtmaAddObject(&mario);
+    gtmaAddObject(&platform);
     gtmaAddObject(&sky);
 
     setClearColor(9, 8, 22);
@@ -78,7 +79,7 @@ void initScene() {
 bool spectating = false;
 
 void updateScene() {
-    gtmaCameraMatrix(&camera, 67.0f, 0.1f, 200.0f, gtmaGetShader(), "camMatrix");
+    gtmaCameraMatrix(&camera, 0.1f, 200.0f, gtmaGetShader(), "camMatrix");
     gtmaCameraLook(&camera);
     gtmaCameraMove(&camera, spectating);
 
@@ -92,13 +93,17 @@ void updateScene() {
     if(isKeyPressed(GLFW_KEY_K)) {
         spectating = !spectating;
     }
+
+    sky.rotation[1] += 0.025f;
+
+    platform.position[0] += sin(glfwGetTime()) / 10;
+    platform.position[2] += cos(glfwGetTime()) / 10;
     
 }
 
 void disposeScene() {
     gtmaDeleteObject(&plane);
-    gtmaDeleteObject(&table);
-    gtmaDeleteObject(&mario);
+    gtmaDeleteObject(&lampPost);
     gtmaDeleteObject(&sky);
     gtmaDeleteObject(&yard);
 }
