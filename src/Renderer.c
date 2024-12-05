@@ -26,8 +26,8 @@ float screenVertices[] = {
 Shader shader;
 Camera renderCamera;
 
-int renderWidth = 1280;
-int renderHeight = 960;
+int renderWidth = 1600;
+int renderHeight = 900;
 
 unsigned int FBO;
 unsigned int renderTexture;
@@ -177,9 +177,6 @@ int delayer = 0;
 bool funMode = false;
 
 void gtmaRender() {
-
-    renderWidth = cfgGetResX();
-    renderHeight = cfgGetResY();
 
     for(int i = 0; i <= lightPack.lightCount - 1; i++) {
 

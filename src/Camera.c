@@ -45,7 +45,7 @@ void gtmaResizeCamera(Camera* cam, int width, int height) {
     cam->height = height;
 }
 
-void gtmaCameraMatrix(Camera* cam, float nearPlane, float farPlane, Shader* shader, const char* uniform) {
+void gtmaCameraMatrix(Camera* cam, float nearPlane, float farPlane, Shader* shader) {
 
     if(cam->width != getWindowWidth()) {
         cam->width = getWindowWidth();
@@ -74,7 +74,9 @@ void gtmaCameraMatrix(Camera* cam, float nearPlane, float farPlane, Shader* shad
     mat4 camCross;
     glm_mat4_mul(proj, view, camCross);
 
-    gtmaSetMatrix(shader, uniform, camCross);
+    gtmaSetMatrix(shader, "camCross", camCross);
+    gtmaSetMatrix(shader, "viewMatrix", view);
+    gtmaSetMatrix(shader, "projMatrix", proj);
 }
 
 void gtmaCameraLook(Camera* cam) {
@@ -178,7 +180,7 @@ void gtmaCameraMove(Camera* cam, bool spectating) {
     if(!spectating) {
         //gravity
         if (isKeyDown(GLFW_KEY_SPACE) && verticalSpeed == 0) { 
-            verticalSpeed = -20.0f;
+            verticalSpeed = -18.0f;
         }
 
         proposedPosition[1] -= verticalSpeed * getDeltaTime();
@@ -225,6 +227,7 @@ void gtmaCameraMove(Camera* cam, bool spectating) {
                 }
             }
         }
+        
 
         // Y-axis (gravity and direct vertical movement)
         tempPosition[0] = cam->position[0];
@@ -232,12 +235,11 @@ void gtmaCameraMove(Camera* cam, bool spectating) {
         tempPosition[2] = cam->position[2];
         if (!handleCamPhysics(&tempPosition, getObjPack(), 2.5f, 5.0f)) {
             cam->position[1] = tempPosition[1];
-            verticalSpeed += 0.2f;
+            verticalSpeed += (9.81f * 2) * getDeltaTime();
         } else {
             verticalSpeed = 0.0f;
         }
 
- 
     } else {
         // Vertical movement
         if (isKeyDown(GLFW_KEY_SPACE)) {
@@ -264,7 +266,7 @@ void gtmaCameraMove(Camera* cam, bool spectating) {
 
     // Speed boost
     if(isKeyDown(GLFW_KEY_LEFT_SHIFT)) {
-        maxSpeed = 22;
+        maxSpeed = 18;
         fov += 64 * getDeltaTime();
         if(fov > maxFov) fov = maxFov;
     } else {

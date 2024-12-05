@@ -9,7 +9,7 @@
 #include <cglm/vec3.h>
 
 Camera camera;
-vec3 camPos = {-12, 20, 4};
+vec3 camPos = {-8, 5, 2};
 vec3 soundPos = {0, 0, 0};
 
 Object plane;
@@ -18,7 +18,6 @@ Object sky;
 
 Object yard;
 
-Object platform;
 
 Track music;
 
@@ -41,8 +40,7 @@ void initScene() {
     gtmaCreateObject(&plane, "models/plane.glb", 0, 0, 0,    8, 8, 8,    0, 0, 0);
     gtmaCreateObject(&lampPost, "models/lamppost.glb", -20, 5.5, 0,    1.5, 1.5, 1.5,    0, 0, 0);
     gtmaCreateObject(&sky,   "models/sky.glb",   3, 3, 3,    2.5, 2.5, 2.5,    0, 0, 0);
-    gtmaCreateObject(&platform, "models/platform.glb", -48, 5, 0, 1, 1, 1, 0, 0, 0);
-    gtmaCreateObject(&yard, "models/physbox.glb", 0, 0.2, 0, 1, 1, 1, 0, 0, 0);
+    gtmaCreateObject(&yard, "models/downey.glb", 0, 0.2, 0, 1, 1, 1, 0, 0, 0);
 
     for(int i=0; i < sky.model.meshCount; i++) {
         sky.model.meshes[i].lit = false;
@@ -67,10 +65,9 @@ void initScene() {
     gtmaAddLight(&light4);
     gtmaAddLight(&lamp);
 
-    gtmaAddObject(&lampPost);
+    //gtmaAddObject(&lampPost);
     gtmaAddObject(&yard);
-    gtmaAddObject(&platform);
-    gtmaAddObject(&sky);
+    //.gtmaAddObject(&sky);
 
     setClearColor(9, 8, 22);
 
@@ -95,9 +92,6 @@ void updateScene() {
     }
 
     sky.rotation[1] += 0.025f;
-
-    platform.position[0] += sin(glfwGetTime()) / 10;
-    platform.position[2] += cos(glfwGetTime()) / 10;
     
 }
 

@@ -17,6 +17,7 @@ uniform int actualLightCount = 0;
 out vec2 outTexCoord;
 out vec3 outColor;
 out vec3 outLightColor;
+out float visibility;
 
 uniform bool lightEnabled;
 
@@ -24,7 +25,9 @@ uniform bool frame = false;
 
 uniform vec3 viewPos;
 
-uniform mat4 camMatrix;
+uniform mat4 camCross;
+uniform mat4 viewMatrix;
+uniform mat4 projMatrix;
 uniform mat4 transMatrix;
 
 vec3 calcPointLight(PointLight light) {
@@ -107,9 +110,16 @@ void main() {
     outLightColor = totalLight;
     outLightColor += totalLight;
 
-    gl_Position = camMatrix * transMatrix * vec4(position, 1.0);
+    gl_Position = camCross * transMatrix * vec4(position, 1.0);
     gl_Position = snap(gl_Position, vec2(1280, 960));
     outColor = color;
     outTexCoord = texCoord;
+
+    vec4 worldPosition = transMatrix * vec4(position, 1.0);
+    vec4 positionRelativeToCam = viewMatrix * worldPosition;
+    float distance = length(positionRelativeToCam.xyz);
+    visibility = exp(-pow((distance*0.022), 5));
+    visibility = clamp(visibility, 0.0, 1.0);
+    
 
 }

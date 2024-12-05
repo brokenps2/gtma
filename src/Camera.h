@@ -23,7 +23,7 @@ typedef struct Camera {
 
 void gtmaCreateCamera(Camera* cam, int width, int height, vec3 pos);
 
-void gtmaCameraMatrix(Camera* cam, float nearPlane, float farPlane, Shader* shader, const char* uniform);
+void gtmaCameraMatrix(Camera* cam, float nearPlane, float farPlane, Shader* shader);
 void gtmaCameraLook(Camera* cam);
 void gtmaCameraMove(Camera* cam, bool spectating);
 void gtmaCameraSetPosition(Camera* cam, vec3 npos);
