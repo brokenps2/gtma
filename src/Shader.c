@@ -114,7 +114,7 @@ void gtmaSetInt(Shader* shader, const char* name, int value) {
     glUniform1i(glGetUniformLocation(shader->id, name), value);
 }
 void gtmaSetFloat(Shader* shader, const char* name, float value) { 
-    glUniform1i(glGetUniformLocation(shader->id, name), value);
+    glUniform1f(glGetUniformLocation(shader->id, name), value);
 }
 void gtmaSetMatrix(Shader* shader, const char* name, mat4 value) {
     glUniformMatrix4fv(glGetUniformLocation(shader->id, name), 1, GL_FALSE, (GLfloat*)value);

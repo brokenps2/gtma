@@ -12,6 +12,8 @@ uniform bool lightEnabled;
 
 uniform bool frame = false;
 
+uniform vec3 clearColor = vec3(0, 0, 0);
+
 vec3 greyscale(vec3 color, float str) {
     float g = dot(color, vec3(0.299, 0.587, 0.114));
     return mix(color, vec3(g), str);
@@ -27,7 +29,7 @@ void main() {
         return;
     }
 
-    vec4 skyColor = vec4(0, 0, 0, 1);
+    vec4 skyColor = vec4(clearColor/255, 1);
 
     if(lightEnabled) {
         fragColor = mix(skyColor, texture(tex0, outTexCoord) * vec4(outColor, 1.0) * vec4(outLightColor, 1.0), visibility);

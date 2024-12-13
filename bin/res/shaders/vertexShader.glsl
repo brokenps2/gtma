@@ -25,6 +25,8 @@ uniform bool frame = false;
 
 uniform vec3 viewPos;
 
+uniform float fogLevel = 0.0022f;
+
 uniform mat4 camCross;
 uniform mat4 viewMatrix;
 uniform mat4 projMatrix;
@@ -62,7 +64,7 @@ vec3 calcPointLight(PointLight light) {
         specular    *= attenuation;
     }
     
-    vec3 lightColor = ambient + diffuse;// + specular;
+    vec3 lightColor = ambient + diffuse + specular;
     
     if(!light.onoff) {
         return ambient;
@@ -111,14 +113,14 @@ void main() {
     outLightColor += totalLight;
 
     gl_Position = camCross * transMatrix * vec4(position, 1.0);
-    gl_Position = snap(gl_Position, vec2(1280, 960));
+    gl_Position = snap(gl_Position, vec2(256, 192));
     outColor = color;
     outTexCoord = texCoord;
 
     vec4 worldPosition = transMatrix * vec4(position, 1.0);
     vec4 positionRelativeToCam = viewMatrix * worldPosition;
     float distance = length(positionRelativeToCam.xyz);
-    visibility = exp(-pow((distance*0.022), 5));
+    visibility = exp(-pow((distance*fogLevel), 5));
     visibility = clamp(visibility, 0.0, 1.0);
     
 

@@ -180,7 +180,7 @@ void gtmaCameraMove(Camera* cam, bool spectating) {
     if(!spectating) {
         //gravity
         if (isKeyDown(GLFW_KEY_SPACE) && verticalSpeed == 0) { 
-            verticalSpeed = -18.0f;
+            verticalSpeed = -20.0f;
         }
 
         proposedPosition[1] -= verticalSpeed * getDeltaTime();
@@ -235,7 +235,7 @@ void gtmaCameraMove(Camera* cam, bool spectating) {
         tempPosition[2] = cam->position[2];
         if (!handleCamPhysics(&tempPosition, getObjPack(), 2.5f, 5.0f)) {
             cam->position[1] = tempPosition[1];
-            verticalSpeed += (9.81f * 2) * getDeltaTime();
+            verticalSpeed += (9.81f * 4) * getDeltaTime();
         } else {
             verticalSpeed = 0.0f;
         }

@@ -32,7 +32,7 @@ void gtmaInitWindow() {
     posX = (videoMode->width / 2) - (cfgGetResX() / 2);
     posY = (videoMode->height / 2) - (cfgGetResY() / 2);
     
-    frameTime = 1.0f / 144.0f;
+    frameTime = 1.0f / 60.0f;
  
     const char* ctitle = cfgGetTitle();
 
@@ -41,6 +41,8 @@ void gtmaInitWindow() {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 0);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_FLOATING, GLFW_TRUE);
+    glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+    glfwMaximizeWindow(window);
     glfwMakeContextCurrent(window);
     glfwSetWindowPos(window, posX, posY);
 

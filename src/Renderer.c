@@ -11,7 +11,6 @@
 #include "Texture.h"
 #include "Models.h"
 #include "Util.h"
-#include "Config.h"
 
 float screenVertices[] = {
     -1.0f,  1.0f,  0.0f, 1.0f,
@@ -26,8 +25,8 @@ float screenVertices[] = {
 Shader shader;
 Camera renderCamera;
 
-int renderWidth = 1600;
-int renderHeight = 900;
+int renderWidth = 640;
+int renderHeight = 480;
 
 unsigned int FBO;
 unsigned int renderTexture;
@@ -36,6 +35,7 @@ unsigned int sVAO;
 unsigned int sVBO;
 
 float clearColor[3];
+float fogLevel = 0.000062f;
 
 ObjectPack objPack;
 PointLightPack lightPack;
@@ -225,23 +225,7 @@ void gtmaRender() {
     glBindFramebuffer(GL_FRAMEBUFFER, FBO);
     glEnable(GL_DEPTH_TEST);
     glViewport(0, 0, renderWidth, renderHeight);
-    if(clearColor[0] == 155 && clearColor[1] == 155 && clearColor[2] == 155) {
-        funMode = false;
-    }
-    if(clearColor[0] == 154 && clearColor[1] == 154 && clearColor[2] == 154) {
-        funMode = true;
-    }
-
-    if(funMode) {
-        if(delayer != 5) {
-            delayer++;
-        } else {
-            clearColor[0] = rng(0, 255);
-            clearColor[1] = rng(0, 255);
-            clearColor[2] = rng(0, 255);
-            delayer = 0;
-        }
-    }
+   
     glClearColor(glc(clearColor[0]), glc(clearColor[1]), glc(clearColor[2]), 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -263,6 +247,8 @@ void gtmaRender() {
             gtmaSetMatrix(&shader, "transMatrix", transformationMatrix);
             gtmaSetBool(&shader, "lightEnabled", mesh.lit);
             gtmaSetVec3(&shader, "viewPos", renderCamera.position);
+            gtmaSetVec3(&shader, "clearColor", clearColor);
+            gtmaSetFloat(&shader, "fogLevel", fogLevel);
             
             glBindTexture(GL_TEXTURE_2D, mesh.texture.id);
             glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);
@@ -295,7 +281,7 @@ void gtmaCloseRenderer() {
     glDeleteFramebuffers(1, &FBO);
 }
 
-void setClearColor(float r, float g, float b) {
+void gtmaSetClearColor(float r, float g, float b) {
     clearColor[0] = r;
     clearColor[1] = g;
     clearColor[2] = b;
@@ -307,5 +293,9 @@ ObjectPack* getObjPack() {
 
 Shader* gtmaGetShader() {
     return &shader;
+}
+
+void gtmaSetFogLevel(float level) {
+    fogLevel = level;
 }
 
