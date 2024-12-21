@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "Input.h"
+#include "Interface.h"
 #include "Shader.h"
 #include "Camera.h"
 #include "WindowManager.h"
@@ -223,6 +224,7 @@ void gtmaRender() {
     }
 
     glBindFramebuffer(GL_FRAMEBUFFER, FBO);
+
     glEnable(GL_DEPTH_TEST);
     glViewport(0, 0, renderWidth, renderHeight);
    
@@ -257,6 +259,7 @@ void gtmaRender() {
 
     }
 
+
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glViewport(0, 0, getWindowWidth(), getWindowHeight());
     glDisable(GL_DEPTH_TEST);
@@ -268,6 +271,19 @@ void gtmaRender() {
     glBindVertexArray(sVAO);
     glBindTexture(GL_TEXTURE_2D, renderTexture);
     glDrawArrays(GL_TRIANGLES, 0, 6);
+
+    GLint lastProgram, lastTexture, lastVAO;
+    glGetIntegerv(GL_CURRENT_PROGRAM, &lastProgram);
+    glGetIntegerv(GL_TEXTURE_BINDING_2D, &lastTexture);
+    glGetIntegerv(GL_VERTEX_ARRAY_BINDING, &lastVAO);
+
+    updateNuklear();
+    renderNuklear();
+
+    glUseProgram(lastProgram);
+    glBindTexture(GL_TEXTURE_2D, lastTexture);
+    glBindVertexArray(lastVAO);
+
 
     if(isLeftDown()) {
         glfwSetInputMode(getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);

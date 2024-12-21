@@ -66,7 +66,7 @@ void initScene() {
 
     gtmaAddObject(&lampPost);
     gtmaAddObject(&yard);
-    gtmaAddObject(&sky);
+    //gtmaAddObject(&sky);
 
     gtmaSetClearColor(9, 8, 22);
 
