@@ -76,8 +76,6 @@ void gtmaUpdateWindow() {
     deltaTime = currentTime - lastTime;
     lastTime = currentTime;
 
-    glfwSwapBuffers(window);
-
     if(isKeyPressed(GLFW_KEY_ESCAPE) && glfwGetInputMode(getWindow(), GLFW_CURSOR) == GLFW_CURSOR_DISABLED) {
         glfwSetInputMode(getWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     }
@@ -89,4 +87,6 @@ void gtmaUpdateWindow() {
     if (timeToSleep > 0) {
         usleep(timeToSleep * 1e6);
     }
+
+    glfwSwapBuffers(window);
 }

@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "Interface.h"
 #include "Renderer.h"
 #include <GLFW/glfw3.h>
 #include <stdbool.h>
@@ -28,7 +27,6 @@ int main(int argc, char* argv[]) {
     gtmaInitAudio();
     gtmaInitRenderer();
     initScene();
-    initNuklear();
 
     while(!glfwWindowShouldClose(getWindow())) {
         glfwPollEvents();

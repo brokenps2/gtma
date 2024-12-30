@@ -17,7 +17,6 @@ Object sky;
 
 Object yard;
 
-
 Track music;
 
 PointLight light1;
@@ -26,7 +25,7 @@ PointLight light3;
 PointLight light4;
 PointLight lamp;
 
-float brightness = 0.42f;
+float brightness = 0.56f;
 
 void initScene() {
 
@@ -39,7 +38,7 @@ void initScene() {
     gtmaCreateObject(&plane, "models/plane.glb", 0, 0, 0,    8, 8, 8,    0, 0, 0);
     gtmaCreateObject(&lampPost, "models/lamppost.glb", -20, 5.5, 0,    1.5, 1.5, 1.5,    0, 0, 0);
     gtmaCreateObject(&sky,   "models/sky.glb",   3, 3, 3,    3.5, 3.5, 3.5,    0, 0, 0);
-    gtmaCreateObject(&yard, "models/castle.glb", 0, 0.2, 0, 18, 18, 18, 0, 0, 0);
+    gtmaCreateObject(&yard, "models/yard.glb", 0, 0.2, 0, 11, 11, 11, 0, 0, 0);
 
     for(int i=0; i < sky.model.meshCount; i++) {
         sky.model.meshes[i].lit = false;
@@ -66,7 +65,7 @@ void initScene() {
 
     gtmaAddObject(&lampPost);
     gtmaAddObject(&yard);
-    //gtmaAddObject(&sky);
+    gtmaAddObject(&sky);
 
     gtmaSetClearColor(9, 8, 22);
 

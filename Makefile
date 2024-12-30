@@ -3,8 +3,8 @@ OBJ_DIR := obj
 SRC_FILES := $(wildcard $(SRC_DIR)/*.c)
 OBJ_FILES := $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRC_FILES))
 INCLUDES := -Iinclude/
-LDFLAGS := -L/usr/lib -g -l:libglfw.so -lm -lGL -lopenal -lcimgui -l:libGLEW.so -l:libconfig.so 
-CPPFLAGS := -Wall -g -O2
+LDFLAGS := -L/usr/lib -g -l:libglfw.so -lm -lpthread -lGL -lopenal -lcimgui -l:libGLEW.so -l:libconfig.so 
+CPPFLAGS := -Wall -O2 -pthread
 
 bin/gtma: $(OBJ_FILES)
 	gcc $(LDFLAGS) -o $@ $^

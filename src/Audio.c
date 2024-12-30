@@ -1,11 +1,8 @@
-#include <stdlib.h>
-#include <stdbool.h>
 #include <stdio.h>
 #include <AL/al.h>
 #include <AL/alc.h>
 #define DR_WAV_IMPLEMENTATION
 #include <dr_wav.h>
-#include <cglm/vec3.h>
 #include "Audio.h"
 #include "Files.h"
 

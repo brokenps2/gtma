@@ -105,6 +105,19 @@ void gtmaCameraLook(Camera* cam) {
 
         if(cam->roll >= 360) cam->roll = cam->roll - 360;
         if(cam->roll <= -360) cam->roll = cam->roll + 360;
+
+        if(isKeyDown(GLFW_KEY_LEFT)) {
+            cam->yaw -= cam->sensitivity * getDeltaTime() * 600;
+        }
+        if(isKeyDown(GLFW_KEY_RIGHT)) {
+            cam->yaw += cam->sensitivity * getDeltaTime() * 600;
+        }
+        if(isKeyDown(GLFW_KEY_UP)) {
+            cam->pitch += cam->sensitivity * getDeltaTime() * 600;
+        }
+        if(isKeyDown(GLFW_KEY_DOWN)) {
+            cam->pitch -= cam->sensitivity * getDeltaTime() * 600;
+        }   
     }
 
 }
@@ -266,7 +279,7 @@ void gtmaCameraMove(Camera* cam, bool spectating) {
 
     // Speed boost
     if(isKeyDown(GLFW_KEY_LEFT_SHIFT)) {
-        maxSpeed = 18;
+        maxSpeed = 21;
         fov += 64 * getDeltaTime();
         if(fov > maxFov) fov = maxFov;
     } else {
