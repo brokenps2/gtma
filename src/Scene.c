@@ -8,11 +8,10 @@
 #include <cglm/vec3.h>
 
 Camera camera;
-vec3 camPos = {-8, 32, 2};
+vec3 camPos = {-8, 6, 2};
 vec3 soundPos = {0, 0, 0};
 
 Object plane;
-Object lampPost;
 Object sky;
 
 Object yard;
@@ -25,7 +24,7 @@ PointLight light3;
 PointLight light4;
 PointLight lamp;
 
-float brightness = 0.56f;
+float brightness = 0.82f;
 
 void initScene() {
 
@@ -36,15 +35,12 @@ void initScene() {
     gtmaSetRenderCamera(&camera);
 
     gtmaCreateObject(&plane, "models/plane.glb", 0, 0, 0,    8, 8, 8,    0, 0, 0);
-    gtmaCreateObject(&lampPost, "models/lamppost.glb", -20, 5.5, 0,    1.5, 1.5, 1.5,    0, 0, 0);
     gtmaCreateObject(&sky,   "models/sky.glb",   3, 3, 3,    3.5, 3.5, 3.5,    0, 0, 0);
-    gtmaCreateObject(&yard, "models/yard.glb", 0, 0.2, 0, 11, 11, 11, 0, 0, 0);
+    gtmaCreateObject(&yard, "models/tiletest.glb", 0, 0.2, 0, 2.25, 2.25, 2.25, 0, 0, 0);
 
     for(int i=0; i < sky.model.meshCount; i++) {
         sky.model.meshes[i].lit = false;
     }
-
-    lampPost.model.meshes[7].lit = false;
 
     gtmaCreatePointLight(&light1, -100, 100, 100, brightness, brightness, brightness);
     gtmaCreatePointLight(&light2, -100, 100, -100, brightness, brightness, brightness);
@@ -63,11 +59,10 @@ void initScene() {
     gtmaAddLight(&light4);
     gtmaAddLight(&lamp);
 
-    gtmaAddObject(&lampPost);
     gtmaAddObject(&yard);
     gtmaAddObject(&sky);
 
-    gtmaSetClearColor(9, 8, 22);
+    gtmaSetClearColor(155, 171, 250);
 
 }
 
@@ -80,8 +75,8 @@ void updateScene() {
 
     glm_vec3_copy(camera.position, sky.position);
 
-    printf("\r%f  %f  %f", camera.position[0], camera.position[1], camera.position[2]);
-    fflush(stdout);
+    //printf("\r%f  %f  %f", camera.position[0], camera.position[1], camera.position[2]);
+    
     
     gtmaUpdateAudio(camera.position, camera.direction);
 
@@ -95,7 +90,6 @@ void updateScene() {
 
 void disposeScene() {
     gtmaDeleteObject(&plane);
-    gtmaDeleteObject(&lampPost);
     gtmaDeleteObject(&sky);
     gtmaDeleteObject(&yard);
 }

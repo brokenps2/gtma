@@ -133,6 +133,12 @@ float downVelocity = 0.0f;
 
 float verticalSpeed = 0.0f;
 
+bool bobRight = false;
+
+void viewBob(Camera* cam) {
+    cam->pitch -= sin(glfwGetTime() * 8) / 8;
+}
+
 void gtmaCameraMove(Camera* cam, bool spectating) {
     vec3 proposedPosition;
     proposedPosition[0] = cam->position[0];
@@ -179,6 +185,10 @@ void gtmaCameraMove(Camera* cam, bool spectating) {
     if (!isKeyDown(GLFW_KEY_D)) {
         rightVelocity -= accel * getDeltaTime();
         if (rightVelocity < 0) rightVelocity = 0;
+    }
+
+    if(isKeyDown(GLFW_KEY_W) || isKeyDown(GLFW_KEY_S) || isKeyDown(GLFW_KEY_A) || isKeyDown(GLFW_KEY_D)) {
+        viewBob(cam);
     }
 
     proposedPosition[0] += (sin(glm_rad(cam->yaw)) * leftVelocity) * getDeltaTime();
@@ -283,7 +293,7 @@ void gtmaCameraMove(Camera* cam, bool spectating) {
         fov += 64 * getDeltaTime();
         if(fov > maxFov) fov = maxFov;
     } else {
-        maxSpeed = 12;
+        maxSpeed = 9;
         fov -= 64 * getDeltaTime();
         if(fov <= 90) fov = 90;
     }

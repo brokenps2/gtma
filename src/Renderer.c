@@ -25,8 +25,8 @@ float screenVertices[] = {
 Shader shader;
 Camera renderCamera;
 
-int renderWidth = 400;
-int renderHeight = 300;
+int renderWidth;
+int renderHeight;
 
 unsigned int FBO;
 unsigned int renderTexture;
@@ -35,7 +35,7 @@ unsigned int sVAO;
 unsigned int sVBO;
 
 float clearColor[3];
-float fogLevel = 0.000062f;
+float fogLevel = 0.000028f;
 
 ObjectPack objPack;
 PointLightPack lightPack;
@@ -64,14 +64,14 @@ void gtmaInitRenderer() {
 
     glGenTextures(1, &renderTexture);
     glBindTexture(GL_TEXTURE_2D, renderTexture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, renderWidth, renderHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 800, 600, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, renderTexture, 0);
 
     glGenRenderbuffers(1, &RBO);
     glBindRenderbuffer(GL_RENDERBUFFER, RBO);
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, renderWidth, renderHeight);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, 800, 600);
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, RBO);
 
     if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
@@ -169,14 +169,24 @@ void gtmaRemoveLight(PointLight* light) {
     light->inPack = false;
 }
 
-int rng(int min, int max){
-   return min + rand() / (RAND_MAX / (max - min + 1) + 1);
+int lastWidth = 800, lastHeight = 600;
+
+void resizeFBO(int newWidth, int newHeight) {
+    glBindFramebuffer(GL_FRAMEBUFFER, FBO);
+
+    glBindTexture(GL_TEXTURE_2D, renderTexture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, newWidth, newHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+
+    glBindRenderbuffer(GL_RENDERBUFFER, RBO);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, newWidth, newHeight);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-int delayer = 0;
-bool funMode = false;
-
 void gtmaRender() {
+
+    renderWidth = getWindowWidth() / 2;
+    renderHeight = getWindowHeight() / 2;
 
     for(int i = 0; i <= lightPack.lightCount - 1; i++) {
 
@@ -223,12 +233,21 @@ void gtmaRender() {
     }
 
     glBindFramebuffer(GL_FRAMEBUFFER, FBO);
+
+    if (renderWidth != lastWidth || renderHeight != lastHeight) {
+        resizeFBO(renderWidth, renderHeight);
+        lastWidth = renderWidth;
+        lastHeight = renderHeight;
+    }
+
     glEnable(GL_DEPTH_TEST);
     glViewport(0, 0, renderWidth, renderHeight);
-   
+
     glClearColor(glc(clearColor[0]), glc(clearColor[1]), glc(clearColor[2]), 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    printf("%i %i\n", renderWidth, getWindowWidth());
+    
     gtmaUseShader(&shader);
     gtmaSetInt(&shader, "tex0", 0);
     gtmaSetBool(&shader, "frame", false);
@@ -249,6 +268,10 @@ void gtmaRender() {
             gtmaSetVec3(&shader, "viewPos", renderCamera.position);
             gtmaSetVec3(&shader, "clearColor", clearColor);
             gtmaSetFloat(&shader, "fogLevel", fogLevel);
+            vec2 screenRes = {getWindowWidth(), getWindowHeight()};
+            vec2 frameRes = {renderWidth, renderHeight};
+            gtmaSetVec2(&shader, "screenRes", screenRes);
+            gtmaSetVec2(&shader, "frameRes", frameRes);
             
             glBindTexture(GL_TEXTURE_2D, mesh.texture.id);
             glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);

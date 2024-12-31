@@ -122,6 +122,9 @@ void gtmaSetMatrix(Shader* shader, const char* name, mat4 value) {
 void gtmaSetVec3(Shader* shader, const char* name, vec3 value) {
     glUniform3f(glGetUniformLocation(shader->id, name), value[0], value[1], value[2]);
 }
+void gtmaSetVec2(Shader* shader, const char* name, vec2 value) {
+    glUniform2f(glGetUniformLocation(shader->id, name), value[0], value[1]);
+}
 
 GLint gtmaGetBool(Shader* shader, const char* name) {
     return glGetUniformLocation(shader->id, name);

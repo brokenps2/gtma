@@ -16,6 +16,8 @@ float currentTime = 0;
 float lastTime = 0;
 float deltaTime;
 
+float monitorWidth, monitorHeight;
+
 double frameTime;
 
 int posX, posY;
@@ -28,11 +30,14 @@ void gtmaInitWindow() {
     }
 
     const GLFWvidmode* videoMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+    
+    monitorWidth = videoMode->width;
+    monitorHeight = videoMode->height;
 
     posX = (videoMode->width / 2) - (cfgGetResX() / 2);
     posY = (videoMode->height / 2) - (cfgGetResY() / 2);
     
-    frameTime = 1.0f / 60.0f;
+    frameTime = 1.0f / 143.0f;
  
     const char* ctitle = cfgGetTitle();
 

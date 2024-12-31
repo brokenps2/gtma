@@ -32,6 +32,9 @@ uniform mat4 viewMatrix;
 uniform mat4 projMatrix;
 uniform mat4 transMatrix;
 
+uniform vec2 screenRes = vec2(640, 480);
+uniform vec2 frameRes;
+
 vec3 calcPointLight(PointLight light) {
 
     vec3 lPos = vec3(transMatrix * vec4(position, 1.0));
@@ -64,7 +67,7 @@ vec3 calcPointLight(PointLight light) {
         specular    *= attenuation;
     }
     
-    vec3 lightColor = ambient + diffuse + specular;
+    vec3 lightColor = ambient + diffuse;// + specular;
     
     if(!light.onoff) {
         return ambient;
@@ -113,7 +116,7 @@ void main() {
     outLightColor += totalLight;
 
     gl_Position = camCross * transMatrix * vec4(position, 1.0);
-    gl_Position = snap(gl_Position, vec2(640, 480));
+    gl_Position = snap(gl_Position, vec2(frameRes.x / 4, frameRes.y / 4));
     outColor = color;
     outTexCoord = texCoord;
 

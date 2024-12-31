@@ -39,6 +39,7 @@ void gtmaSetInt(Shader* shader, const char* name, int value);
 void gtmaSetFloat(Shader* shader, const char* name, float value);
 void gtmaSetMatrix(Shader* shader, const char* name, mat4 value);
 void gtmaSetVec3(Shader* shader, const char* name, vec3 value);
+void gtmaSetVec2(Shader* shader, const char* name, vec2 value);
 
 void gtmaCreatePointLight(PointLight* light, float x, float y, float z, float r, float g, float b);
 
