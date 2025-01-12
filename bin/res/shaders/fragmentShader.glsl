@@ -61,8 +61,7 @@ vec4 dither(vec4 color, int numLevels) {
 void main() {
 
     if(frame) {
-        vec4 color = texture(tex0, outTexCoord);
-        fragColor = color;
+        fragColor = texture(tex0, outTexCoord);
         return;
     }
 

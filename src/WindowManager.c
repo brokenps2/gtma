@@ -59,6 +59,8 @@ void gtmaInitWindow() {
     }
 
     glViewport(0, 0, cfgGetResX(), cfgGetResY());
+    glClearColor(0, 0, 0, 1);
+    glClear(GL_COLOR_BUFFER_BIT);
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);

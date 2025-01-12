@@ -123,7 +123,7 @@ void gtmaCameraLook(Camera* cam) {
 }
 
 float maxSpeed = 12.0f;
-float accel = 60.0f;
+float accel = 56.0f;
 float forwardVelocity = 0.0f;
 float backwardVelocity = 0.0f;
 float leftVelocity = 0.0f;
@@ -136,7 +136,7 @@ float verticalSpeed = 0.0f;
 bool bobRight = false;
 
 void viewBob(Camera* cam) {
-    cam->pitch -= sin(glfwGetTime() * 8) / 8;
+    cam->pitch -= (sin(glfwGetTime() * 8) / 8) * getDeltaTime() * 80;
 }
 
 void gtmaCameraMove(Camera* cam, bool spectating) {

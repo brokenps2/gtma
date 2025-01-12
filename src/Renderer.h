@@ -13,5 +13,7 @@ void gtmaCloseRenderer();
 Shader* gtmaGetShader();
 void gtmaRender();
 ObjectPack* getObjPack();
+int getFrameWidth();
+int getFrameHeight();
 void gtmaSetClearColor(float r, float g, float b);
 void gtmaSetFogLevel(float level);

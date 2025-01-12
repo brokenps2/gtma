@@ -1,5 +1,7 @@
 #include "Texture.h"
 #include <cglm/quat.h>
+#include <cglm/vec3.h>
+#include <mm_malloc.h>
 #include <time.h>
 #define FAST_OBJ_IMPLEMENTATION
 #define CGLTF_IMPLEMENTATION
@@ -9,6 +11,7 @@
 #include <cgltf.h>
 #include <stb_image.h>
 #include "Models.h"
+#include "Renderer.h"
 #include "Files.h"
 
 void convertMatrix(float source[16], float destination[4][4]) {
@@ -268,3 +271,4 @@ void gtmaLoadTransformationMatrix(mat4* matrix, Object* object) {
 
     glm_scale(*matrix, object->scale);
 }
+

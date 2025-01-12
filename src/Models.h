@@ -34,6 +34,8 @@ typedef struct Model {
 typedef struct Object {
     Model model;
     vec3 position;
+    vec3 lastFramePosition;
+    vec3 lastFrameScale;
     vec3 rotation;
     vec3 scale;
     int packID;

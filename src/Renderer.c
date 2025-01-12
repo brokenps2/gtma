@@ -1,6 +1,7 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <cglm/common.h>
+#include <cglm/vec3.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -35,7 +36,9 @@ unsigned int sVAO;
 unsigned int sVBO;
 
 float clearColor[3];
-float fogLevel = 0.000028f;
+float fogLevel = 0.000000028f;
+
+float fboScaleFactor = 0.5;
 
 ObjectPack objPack;
 PointLightPack lightPack;
@@ -111,7 +114,7 @@ void gtmaAddLight(PointLight* light) {
     if(!light->inPack) {
         if(lightPack.lightCount != 0) {
             PointLightPack tempPack = lightPack;
-            lightPack.lights = malloc((lightPack.lightCount + 1) * sizeof(Object*));
+            lightPack.lights = malloc((lightPack.lightCount + 1) * sizeof(PointLight*));
             for(int i = 0; i <= tempPack.lightCount - 1; i++) {
                 lightPack.lights[i] = tempPack.lights[i];
             }
@@ -185,8 +188,8 @@ void resizeFBO(int newWidth, int newHeight) {
 
 void gtmaRender() {
 
-    renderWidth = getWindowWidth() / 2;
-    renderHeight = getWindowHeight() / 2;
+    renderWidth = getWindowWidth() * fboScaleFactor;
+    renderHeight = getWindowHeight() * fboScaleFactor;
 
     for(int i = 0; i <= lightPack.lightCount - 1; i++) {
 
@@ -246,8 +249,6 @@ void gtmaRender() {
     glClearColor(glc(clearColor[0]), glc(clearColor[1]), glc(clearColor[2]), 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    printf("%i %i\n", renderWidth, getWindowWidth());
-    
     gtmaUseShader(&shader);
     gtmaSetInt(&shader, "tex0", 0);
     gtmaSetBool(&shader, "frame", false);
@@ -263,6 +264,7 @@ void gtmaRender() {
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.EBO);
             mat4 transformationMatrix;
             gtmaLoadTransformationMatrix(&transformationMatrix, objPack.objects[i]);
+            gtmaSetBool(&shader, "ui", false);
             gtmaSetMatrix(&shader, "transMatrix", transformationMatrix);
             gtmaSetBool(&shader, "lightEnabled", mesh.lit);
             gtmaSetVec3(&shader, "viewPos", renderCamera.position);
@@ -272,7 +274,7 @@ void gtmaRender() {
             vec2 frameRes = {renderWidth, renderHeight};
             gtmaSetVec2(&shader, "screenRes", screenRes);
             gtmaSetVec2(&shader, "frameRes", frameRes);
-            
+
             glBindTexture(GL_TEXTURE_2D, mesh.texture.id);
             glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);
             
@@ -316,6 +318,14 @@ ObjectPack* getObjPack() {
 
 Shader* gtmaGetShader() {
     return &shader;
+}
+
+int getFrameWidth() {
+    return renderWidth;
+}
+
+int getFrameHeight() {
+    return renderHeight;
 }
 
 void gtmaSetFogLevel(float level) {

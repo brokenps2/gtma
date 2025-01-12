@@ -13,7 +13,6 @@ vec3 soundPos = {0, 0, 0};
 
 Object plane;
 Object sky;
-
 Object yard;
 
 Track music;
@@ -24,28 +23,26 @@ PointLight light3;
 PointLight light4;
 PointLight lamp;
 
-float brightness = 0.82f;
+float brightness = 0.92f;
 
 void initScene() {
 
     gtmaCreateTrack(&music, "audio/test2.wav", true, 2);
-    //gtmaPlayTrackFrom(&music, 5);
+    gtmaPlayTrackFrom(&music, 5);
 
     gtmaCreateCamera(&camera, getWindowWidth(), getWindowHeight(), camPos);
     gtmaSetRenderCamera(&camera);
 
-    gtmaCreateObject(&plane, "models/plane.glb", 0, 0, 0,    8, 8, 8,    0, 0, 0);
+    //gtmaCreateObject(&plane, "models/radio.glb", 0, 0, 0,    8, 8, 8,    0, 0, 0);
     gtmaCreateObject(&sky,   "models/sky.glb",   3, 3, 3,    3.5, 3.5, 3.5,    0, 0, 0);
-    gtmaCreateObject(&yard, "models/tiletest.glb", 0, 0.2, 0, 2.25, 2.25, 2.25, 0, 0, 0);
+    gtmaCreateObject(&yard, "models/tileroomtest2.glb", 0, 0.2, 0, 3, 3, 3, 0, 0, 0);
 
-    for(int i=0; i < sky.model.meshCount; i++) {
-        sky.model.meshes[i].lit = false;
-    }
+    sky.model.meshes[0].lit = false;
 
-    gtmaCreatePointLight(&light1, -100, 100, 100, brightness, brightness, brightness);
-    gtmaCreatePointLight(&light2, -100, 100, -100, brightness, brightness, brightness);
-    gtmaCreatePointLight(&light3, 100, 100, 100, brightness, brightness, brightness);
-    gtmaCreatePointLight(&light4, 100, 100, -100, brightness, brightness, brightness);
+    gtmaCreatePointLight(&light1, 100, 100, 0, brightness, brightness, brightness);
+    gtmaCreatePointLight(&light2, 0, 100, 100, brightness, brightness, brightness);
+    gtmaCreatePointLight(&light3, -100, 100, 0, brightness, brightness, brightness);
+    gtmaCreatePointLight(&light4, 0, 100, -100, brightness, brightness, brightness);
     light1.sunMode = true;
     light2.sunMode = true;
     light3.sunMode = true;
@@ -60,6 +57,7 @@ void initScene() {
     gtmaAddLight(&lamp);
 
     gtmaAddObject(&yard);
+    //gtmaAddObject(&plane);
     gtmaAddObject(&sky);
 
     gtmaSetClearColor(155, 171, 250);
@@ -67,6 +65,8 @@ void initScene() {
 }
 
 bool spectating = false;
+
+bool scaleDown = false;
 
 void updateScene() {
     gtmaCameraMatrix(&camera, 0.1f, 450.0f, gtmaGetShader());
@@ -77,7 +77,6 @@ void updateScene() {
 
     //printf("\r%f  %f  %f", camera.position[0], camera.position[1], camera.position[2]);
     
-    
     gtmaUpdateAudio(camera.position, camera.direction);
 
     if(isKeyPressed(GLFW_KEY_K)) {
@@ -85,7 +84,6 @@ void updateScene() {
     }
 
     sky.rotation[1] += 0.025f;
-    
 }
 
 void disposeScene() {
