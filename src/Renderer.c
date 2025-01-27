@@ -1,11 +1,12 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <SDL2/SDL_mouse.h>
 #include <cglm/common.h>
 #include <cglm/vec3.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "Input.h"
+#include "Events.h"
 #include "Shader.h"
 #include "Camera.h"
 #include "WindowManager.h"
@@ -48,7 +49,7 @@ void gtmaInitRenderer() {
     objPack.objectCount = 0;
     lightPack.lightCount = 0;
 
-    glfwSetInputMode(getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    SDL_SetRelativeMouseMode(true);
 
     gtmaCreateShader(&shader);
 
@@ -295,7 +296,6 @@ void gtmaRender() {
     glDrawArrays(GL_TRIANGLES, 0, 6);
 
     if(isLeftDown()) {
-        glfwSetInputMode(getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     }
 
 }

@@ -1,9 +1,9 @@
 #pragma once
 
-typedef struct GLFWwindow GLFWwindow;
+typedef struct SDL_Window SDL_Window;
 
 void gtmaInitWindow();
 void gtmaUpdateWindow();
 float getTime();
 float getDeltaTime();
-GLFWwindow* getWindow();
+SDL_Window* getWindow();

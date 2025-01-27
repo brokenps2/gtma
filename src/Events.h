@@ -1,4 +1,5 @@
 #pragma once
+#include <stdbool.h>
 
 double getMouseX();
 double getMouseY();
@@ -11,4 +12,5 @@ int getWindowPosX();
 int getWindowPosY();
 bool isKeyDown(int keycode);
 bool isKeyPressed(int keycode);
-void gtmaInitInput();
+bool gtmaIsRunning();
+void gtmaUpdateEvents();

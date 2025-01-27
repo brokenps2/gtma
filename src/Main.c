@@ -6,7 +6,7 @@
 #include "Audio.h"
 #include "Scene.h"
 #include "WindowManager.h"
-#include "Input.h"
+#include "Events.h"
 #include "Config.h"
 
 int main(int argc, char* argv[]) {
@@ -23,13 +23,12 @@ int main(int argc, char* argv[]) {
 
     gtmaInitConfig();
     gtmaInitWindow();
-    gtmaInitInput();
     gtmaInitAudio();
     gtmaInitRenderer();
     initScene();
 
-    while(!glfwWindowShouldClose(getWindow())) {
-        glfwPollEvents();
+    while(gtmaIsRunning()) {
+        gtmaUpdateEvents();
         updateScene();
         gtmaUpdateWindow();
     }
@@ -38,7 +37,6 @@ int main(int argc, char* argv[]) {
     gtmaCloseAudio();
     disposeScene();
 
-    glfwTerminate();
     printf("\n");
     return 0;
 }

@@ -10,7 +10,8 @@
 #include "Renderer.h"
 #include "Shader.h"
 #include "WindowManager.h"
-#include "Input.h"
+#include <SDL2/SDL.h>
+#include "Events.h"
 #include "Camera.h"
 #include <GLFW/glfw3.h>
 
@@ -81,7 +82,7 @@ void gtmaCameraMatrix(Camera* cam, float nearPlane, float farPlane, Shader* shad
 
 void gtmaCameraLook(Camera* cam) {
 
-    if(glfwGetInputMode(getWindow(), GLFW_CURSOR) == GLFW_CURSOR_DISABLED) {
+    if(SDL_GetRelativeMouseMode()) {
         newMouseX = getMouseX();
         newMouseY = getMouseY();
 
@@ -106,16 +107,16 @@ void gtmaCameraLook(Camera* cam) {
         if(cam->roll >= 360) cam->roll = cam->roll - 360;
         if(cam->roll <= -360) cam->roll = cam->roll + 360;
 
-        if(isKeyDown(GLFW_KEY_LEFT)) {
+        if(isKeyDown(SDL_SCANCODE_LEFT)) {
             cam->yaw -= cam->sensitivity * getDeltaTime() * 600;
         }
-        if(isKeyDown(GLFW_KEY_RIGHT)) {
+        if(isKeyDown(SDL_SCANCODE_RIGHT)) {
             cam->yaw += cam->sensitivity * getDeltaTime() * 600;
         }
-        if(isKeyDown(GLFW_KEY_UP)) {
+        if(isKeyDown(SDL_SCANCODE_UP)) {
             cam->pitch += cam->sensitivity * getDeltaTime() * 600;
         }
-        if(isKeyDown(GLFW_KEY_DOWN)) {
+        if(isKeyDown(SDL_SCANCODE_DOWN)) {
             cam->pitch -= cam->sensitivity * getDeltaTime() * 600;
         }   
     }
@@ -146,19 +147,19 @@ void gtmaCameraMove(Camera* cam, bool spectating) {
     proposedPosition[2] = cam->position[2];
 
     // Forward and backward movement
-    if (isKeyDown(GLFW_KEY_W)) {
+    if (isKeyDown(SDL_SCANCODE_W)) {
         forwardVelocity += accel * getDeltaTime();
         if (forwardVelocity > maxSpeed) forwardVelocity = maxSpeed;
     }
-    if (isKeyDown(GLFW_KEY_S)) {
+    if (isKeyDown(SDL_SCANCODE_S)) {
         backwardVelocity += accel * getDeltaTime();
         if (backwardVelocity > maxSpeed) backwardVelocity = maxSpeed;
     }
-    if (!isKeyDown(GLFW_KEY_W)) {
+    if (!isKeyDown(SDL_SCANCODE_W)) {
         forwardVelocity -= accel * getDeltaTime();
         if (forwardVelocity < 0) forwardVelocity = 0;
     }
-    if (!isKeyDown(GLFW_KEY_S)) {
+    if (!isKeyDown(SDL_SCANCODE_S)) {
         backwardVelocity -= accel * getDeltaTime();
         if (backwardVelocity < 0) backwardVelocity = 0;
     }
@@ -170,24 +171,24 @@ void gtmaCameraMove(Camera* cam, bool spectating) {
     proposedPosition[2] -= (sin(glm_rad(cam->yaw)) * backwardVelocity) * getDeltaTime();
 
     // Left and right movement
-    if (isKeyDown(GLFW_KEY_A)) {
+    if (isKeyDown(SDL_SCANCODE_A)) {
         leftVelocity += accel * getDeltaTime();
         if (leftVelocity > maxSpeed) leftVelocity = maxSpeed;
     }
-    if (isKeyDown(GLFW_KEY_D)) {
+    if (isKeyDown(SDL_SCANCODE_D)) {
         rightVelocity += accel * getDeltaTime();
         if (rightVelocity > maxSpeed) rightVelocity = maxSpeed;
     }
-    if (!isKeyDown(GLFW_KEY_A)) {
+    if (!isKeyDown(SDL_SCANCODE_A)) {
         leftVelocity -= accel * getDeltaTime();
         if (leftVelocity < 0) leftVelocity = 0;
     }
-    if (!isKeyDown(GLFW_KEY_D)) {
+    if (!isKeyDown(SDL_SCANCODE_D)) {
         rightVelocity -= accel * getDeltaTime();
         if (rightVelocity < 0) rightVelocity = 0;
     }
 
-    if(isKeyDown(GLFW_KEY_W) || isKeyDown(GLFW_KEY_S) || isKeyDown(GLFW_KEY_A) || isKeyDown(GLFW_KEY_D)) {
+    if(isKeyDown(SDL_SCANCODE_W) || isKeyDown(GLFW_KEY_S) || isKeyDown(GLFW_KEY_A) || isKeyDown(GLFW_KEY_D)) {
         viewBob(cam);
     }
 
@@ -202,7 +203,7 @@ void gtmaCameraMove(Camera* cam, bool spectating) {
 
     if(!spectating) {
         //gravity
-        if (isKeyDown(GLFW_KEY_SPACE) && verticalSpeed == 0) { 
+        if (isKeyDown(SDL_SCANCODE_SPACE) && verticalSpeed == 0) { 
             verticalSpeed = -20.0f;
         }
 
@@ -265,19 +266,19 @@ void gtmaCameraMove(Camera* cam, bool spectating) {
 
     } else {
         // Vertical movement
-        if (isKeyDown(GLFW_KEY_SPACE)) {
+        if (isKeyDown(SDL_SCANCODE_SPACE)) {
             upVelocity += accel * getDeltaTime();
             if (upVelocity > maxSpeed) upVelocity = maxSpeed;
         }
-        if (isKeyDown(GLFW_KEY_LEFT_CONTROL)) {
+        if (isKeyDown(SDL_SCANCODE_LCTRL)) {
             downVelocity += accel * getDeltaTime();
             if (downVelocity > maxSpeed) downVelocity = maxSpeed;
         }
-        if (!isKeyDown(GLFW_KEY_SPACE)) {
+        if (!isKeyDown(SDL_SCANCODE_SPACE)) {
             upVelocity -= accel * getDeltaTime();
             if (upVelocity < 0) upVelocity = 0;
         }
-        if (!isKeyDown(GLFW_KEY_LEFT_CONTROL)) {
+        if (!isKeyDown(SDL_SCANCODE_LCTRL)) {
             downVelocity -= accel * getDeltaTime();
             if (downVelocity < 0) downVelocity = 0;
         }
@@ -288,7 +289,7 @@ void gtmaCameraMove(Camera* cam, bool spectating) {
     float maxFov = 95.5;
 
     // Speed boost
-    if(isKeyDown(GLFW_KEY_LEFT_SHIFT)) {
+    if(isKeyDown(SDL_SCANCODE_LSHIFT)) {
         maxSpeed = 21;
         fov += 64 * getDeltaTime();
         if(fov > maxFov) fov = maxFov;
