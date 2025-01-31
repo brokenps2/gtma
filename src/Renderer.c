@@ -9,7 +9,7 @@
 #include "Events.h"
 #include "Shader.h"
 #include "Camera.h"
-#include "WindowManager.h"
+#include "Interface.h"
 #include "Texture.h"
 #include "Models.h"
 #include "Util.h"
@@ -45,6 +45,7 @@ ObjectPack objPack;
 PointLightPack lightPack;
 
 void gtmaInitRenderer() {
+
 
     objPack.objectCount = 0;
     lightPack.lightCount = 0;
@@ -295,8 +296,14 @@ void gtmaRender() {
     glBindTexture(GL_TEXTURE_2D, renderTexture);
     glDrawArrays(GL_TRIANGLES, 0, 6);
 
-    if(isLeftDown()) {
-    }
+    GLint lastProgram, lastTexture, lastVAO;
+    glGetIntegerv(GL_CURRENT_PROGRAM, &lastProgram);
+    glGetIntegerv(GL_TEXTURE_BINDING_2D, &lastTexture);
+    glGetIntegerv(GL_VERTEX_ARRAY_BINDING, &lastVAO);
+    renderNuklear();
+    glUseProgram(lastProgram);
+    glBindTexture(GL_TEXTURE_2D, lastTexture);
+    glBindVertexArray(lastVAO);
 
 }
 

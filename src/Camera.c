@@ -1,3 +1,4 @@
+#include <SDL2/SDL_timer.h>
 #include <cglm/cam.h>
 #include <cglm/cglm.h>
 #include <cglm/mat4.h>
@@ -137,7 +138,7 @@ float verticalSpeed = 0.0f;
 bool bobRight = false;
 
 void viewBob(Camera* cam) {
-    cam->pitch -= (sin(glfwGetTime() * 8) / 8) * getDeltaTime() * 80;
+    cam->pitch -= (sin(((float)SDL_GetTicks() / 1000) * 8) / 8) * getDeltaTime() * 80;
 }
 
 void gtmaCameraMove(Camera* cam, bool spectating) {
@@ -188,7 +189,7 @@ void gtmaCameraMove(Camera* cam, bool spectating) {
         if (rightVelocity < 0) rightVelocity = 0;
     }
 
-    if(isKeyDown(SDL_SCANCODE_W) || isKeyDown(GLFW_KEY_S) || isKeyDown(GLFW_KEY_A) || isKeyDown(GLFW_KEY_D)) {
+    if(isKeyDown(SDL_SCANCODE_W) || isKeyDown(SDL_SCANCODE_S) || isKeyDown(SDL_SCANCODE_A) || isKeyDown(SDL_SCANCODE_D)) {
         viewBob(cam);
     }
 

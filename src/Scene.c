@@ -1,14 +1,17 @@
 #include "Audio.h"
 #include "Camera.h"
 #include "Events.h"
+#include "Interface.h"
 #include "Models.h"
 #include "Renderer.h"
+#include <nuklear.h>
 #include "Shader.h"
-#include <GLFW/glfw3.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_mouse.h>
 #include <cglm/vec3.h>
 
 Camera camera;
-vec3 camPos = {-8, 6, 2};
+vec3 camPos = {-8, 16, 2};
 vec3 soundPos = {0, 0, 0};
 
 Object plane;
@@ -23,7 +26,7 @@ PointLight light3;
 PointLight light4;
 PointLight lamp;
 
-float brightness = 0.92f;
+float brightness = 0.82f;
 
 void initScene() {
 
@@ -35,7 +38,7 @@ void initScene() {
 
     //gtmaCreateObject(&plane, "models/radio.glb", 0, 0, 0,    8, 8, 8,    0, 0, 0);
     gtmaCreateObject(&sky,   "models/sky.glb",   3, 3, 3,    3.5, 3.5, 3.5,    0, 0, 0);
-    gtmaCreateObject(&yard, "models/tileroomtest2.glb", 0, 0.2, 0, 3, 3, 3, 0, 0, 0);
+    gtmaCreateObject(&yard, "models/yard.glb", 0, 0.2, 0, 14, 14, 14, 0, 0, 0);
 
     sky.model.meshes[0].lit = false;
 
@@ -66,9 +69,18 @@ void initScene() {
 
 bool spectating = false;
 
-bool scaleDown = false;
+bool showMenu = false;
+
+int inputCounter = 0;
 
 void updateScene() {
+
+    if(inputCounter != 6) {
+        inputCounter++;
+    } else {
+        inputCounter = 0;
+    }
+
     gtmaCameraMatrix(&camera, 0.1f, 450.0f, gtmaGetShader());
     gtmaCameraLook(&camera);
     gtmaCameraMove(&camera, spectating);
@@ -79,8 +91,26 @@ void updateScene() {
     
     gtmaUpdateAudio(camera.position, camera.direction);
 
-    if(isKeyPressed(GLFW_KEY_K)) {
+    if(isKeyPressed(SDL_SCANCODE_K)) {
         spectating = !spectating;
+    }
+
+    if(isKeyPressed(SDL_SCANCODE_E)) {
+        SDL_SetRelativeMouseMode(false);
+        showMenu = true;
+    }
+
+    if(showMenu) {
+        if(nk_begin(getContext(), "menu", nk_rect(((float)getWindowWidth() / 2) - 300, ((float)getWindowHeight() / 2) - 300, 300, 300), NK_WINDOW_BORDER|NK_WINDOW_MOVABLE|NK_WINDOW_TITLE|NK_WINDOW_MINIMIZABLE)) {
+
+            nk_layout_row_static(getContext(), 30, 150, 1);
+            if(nk_button_label(getContext(), "lock mouse") && inputCounter) {
+                SDL_SetRelativeMouseMode(true);
+                showMenu = false;
+            }
+
+        }
+        nk_end(getContext());
     }
 
     sky.rotation[1] += 0.025f;

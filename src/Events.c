@@ -1,6 +1,8 @@
 #include "Events.h"
 #include <SDL2/SDL.h>
 #include <GL/glew.h>
+#include <nuklear.h>
+#include <nuklear_sdl_gl3.h>
 #include <SDL2/SDL_mouse.h>
 #include <stdbool.h>
 #include "Config.h"
@@ -185,5 +187,6 @@ void gtmaUpdateEvents() {
                 cursorCallback(e.motion.x, e.motion.y);
                 break;
         }
+        nk_sdl_handle_event(&e);
     }
 }
