@@ -34,13 +34,13 @@ void gtmaInitWindow() {
     
     frameTime = 1.0f / 143.0f;
  
-    const char* title = cfgGetTitle();
+    const char* title = cfgLookupString("title");
 
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
-    window = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, cfgGetResX(), cfgGetResY(), SDL_WINDOW_OPENGL);
+    window = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, cfgLookupInt("width"), cfgLookupInt("height"), SDL_WINDOW_OPENGL);
 
     SDL_SetWindowResizable(window, true);
 
@@ -54,7 +54,7 @@ void gtmaInitWindow() {
         exit(1);
     }
 
-    glViewport(0, 0, cfgGetResX(), cfgGetResY());
+    glViewport(0, 0, cfgLookupInt("width"), cfgLookupInt("height"));
     glClearColor(0, 0, 0, 1);
     glClear(GL_COLOR_BUFFER_BIT);
     glEnable(GL_DEPTH_TEST);

@@ -20,9 +20,7 @@ int main(int argc, char* argv[]) {
 
     printf("\n");
 
-    cfgSetPath(argv[1]);
-
-    gtmaInitConfig();
+    gtmaInitConfig(argv[1]);
     gtmaInitWindow();
     gtmaInitAudio();
     gtmaInitRenderer();

@@ -3,6 +3,7 @@
 #include <GL/glew.h>
 #include <nuklear.h>
 #include <nuklear_sdl_gl3.h>
+#include "Interface.h"
 #include <SDL2/SDL_mouse.h>
 #include <stdbool.h>
 #include "Config.h"
@@ -10,8 +11,6 @@
 
 double mouseX;
 double mouseY;
-
-double mouseToYaw;
 
 int windowPosX = 800, windowPosY = 200;
 int windowSizeX = 800, windowSizeY = 600;
@@ -55,14 +54,14 @@ bool isRightPressed() {
 
 int getWindowWidth() {
     if(!dimensionsUpdated) {
-        return cfgGetResX();
+        return cfgLookupInt("width");
     }
     return windowSizeX;
 }
 
 int getWindowHeight() {
     if(!dimensionsUpdated) {
-        return cfgGetResY();
+        return cfgLookupInt("height");
     }
     return windowSizeY;
 }
@@ -148,8 +147,8 @@ void windowMoveCallback(int xpos, int ypos) {
 }
 
 void gtmaInitInput() {
-    windowSizeX = cfgGetResX();
-    windowSizeY = cfgGetResY();
+    windowSizeX = cfgLookupInt("width");
+    windowSizeY = cfgLookupInt("height");
 }
 
 bool gtmaIsRunning() {
@@ -158,7 +157,9 @@ bool gtmaIsRunning() {
 
 void gtmaUpdateEvents() {
     SDL_Event e;
+    nk_input_begin(getContext());
     while (SDL_PollEvent(&e)) {
+        nk_sdl_handle_event(&e);
         switch (e.type) {
             case SDL_QUIT:
                 running = false;
@@ -187,6 +188,6 @@ void gtmaUpdateEvents() {
                 cursorCallback(e.motion.x, e.motion.y);
                 break;
         }
-        nk_sdl_handle_event(&e);
     }
+    nk_input_end(getContext());
 }

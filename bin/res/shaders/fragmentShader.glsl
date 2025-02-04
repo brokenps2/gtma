@@ -12,6 +12,8 @@ uniform bool lightEnabled;
 
 uniform bool frame = false;
 
+uniform bool ditherEnabled = true;
+
 uniform vec3 clearColor = vec3(0, 0, 0);
 
 uniform vec2 screenRes = vec2(640, 480);
@@ -74,6 +76,8 @@ void main() {
         fragColor = mix(skyColor, fragColor, visibility);
     }
 
-    fragColor = dither(fragColor, 12);
+    if(ditherEnabled) {
+        fragColor = dither(fragColor, 12);
+    }
 
 }

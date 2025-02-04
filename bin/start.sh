@@ -1,6 +1,6 @@
 #!/bin/sh
 
-./gtma config.conf
+./gtma config.json
 
 #references for style of future game
 # - the museum of anything goes

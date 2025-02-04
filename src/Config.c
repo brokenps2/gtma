@@ -1,107 +1,97 @@
+#include "Files.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <libconfig.h>
+#include <cjson/cJSON.h>
 #include <string.h>
 
-const char* path;
-config_t cfg;
+const char* configPath;
+char* contents;
 
-void gtmaInitConfig() {
-    config_init(&cfg);
-    if(!config_read_file(&cfg, path)) {
-        printf("Unable to read config file\n");
+cJSON* json;
+
+void gtmaInitConfig(const char* path) {
+    
+    configPath = path;
+    contents = malloc((getFileSize(configPath) * sizeof(char)));
+    contents = getFileSrc(configPath);
+
+    if(!contents) {
+        printf("config file of path %s contents is NULL\n", path);
         exit(1);
     }
-}
 
-void cfgSetPath(const char* spath) {
-    path = spath;
-}
+    json = cJSON_Parse(contents);
 
-int cfgGetResX() {
-
-    int rx;
-
-    if(config_lookup_int(&cfg, "resX", &rx)) {
-        return rx;
-    } else {
-        printf("resX setting not found, defualting to 800.\n");
-        return 800;
-    }
-}
-
-int cfgGetResY() {
-
-    int ry;
-
-    if(config_lookup_int(&cfg, "resY", &ry)) {
-        return ry;
-    } else {
-        printf("resY setting not found, defualting to 600.\n");
-        return 600;
-    }
-}
-
-const char* cfgGetTitle() {
-
-    const char* tt;
-    
-    if(config_lookup_string(&cfg, "title", &tt)) {
-        return tt;
-    } else {
-        printf("title setting not found, defualting.\n");
-        return "gtma";
+    if(!json) {
+        printf("error reading config file %s\n", path);
+        exit(1);
     }
 
 }
 
 const char* cfgGetResLoc() {
 
-    char* pathToResLoc;
+    cJSON* resLocPath = cJSON_GetObjectItem(json, "resLoc");
 
-    if(config_lookup_string(&cfg, "resources", (const char**)&pathToResLoc)) {
-        return pathToResLoc;
+    if(cJSON_IsString(resLocPath)) {
+        return resLocPath->valuestring;
     } else {
-        printf("No resource directory specified in config file, exiting.\n");
+        printf("error reading config file value \"resLoc\"\n");
         exit(1);
     }
 }
 
 const char* cfgLookupString(const char* key) {
-    const char* value;
-    
-    if(config_lookup_string(&cfg, key, &value)) {
-        return value;
+
+    cJSON* value = cJSON_GetObjectItem(json, key);
+ 
+    if(cJSON_IsString(value)) {
+        return value->valuestring;
     } else {
-        printf("setting '%s' not found.\n", key);
+        printf("error reading config file value \"%s\"\n", key);
         exit(1);
     }
 
 }
 
 int cfgLookupInt(const char* key) {
-    int value;
+    cJSON* value = cJSON_GetObjectItem(json, key);
     
-    if(config_lookup_int(&cfg, key, &value)) {
-        return value;
-    } else if(strcmp(key, "mouseSensitivity") == 0) {
-        printf("mouseSensitivity setting not found, defaulting to 15\n");
-        return 15;
+    if(cJSON_IsNumber(value)) {
+        return value->valueint;
     } else {
-        printf("setting '%s' not found.\n", key);
+        printf("error reading config file value \"%s\"\n", key);
+        exit(1);
+    }
+
+}
+
+float cfgLookupFloat(const char* key) {
+
+    cJSON* value = cJSON_GetObjectItem(json, key);
+ 
+    if(cJSON_IsNumber(value)) {
+        return value->valuedouble;
+    } else {
+        printf("error reading config file value \"%s\"\n", key);
         exit(1);
     }
 
 }
 
 int cfgLookupBool(const char* key) {
-    int value;
-    
-    if(config_lookup_bool(&cfg, key, &value)) {
-        return value;
+    cJSON* value = cJSON_GetObjectItem(json, key);
+ 
+    if(cJSON_IsBool(value)) {
+        return value->valueint;
     } else {
-        printf("setting '%s' not found.\n", key);
+        printf("error reading config file value \"%s\"\n", key);
         exit(1);
     }
 
+}
+
+void gtmaDestroyConfig() {
+    free(contents);
+    cJSON_Delete(json);
 }

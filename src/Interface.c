@@ -27,7 +27,10 @@ void initNuklear() {
 
     {
         nk_sdl_font_stash_begin(&atlas);
-        struct nk_font *termin = nk_font_atlas_add_from_file(atlas, res("fonts/Times.ttf"), 18, 0);
+        struct nk_font *termin = nk_font_atlas_add_from_file(atlas, res("fonts/DPixel.ttf"), 14, 0);
+        termin->config->pixel_snap = true;
+        termin->config->oversample_v = 4;
+        termin->config->oversample_h = 4;
         nk_sdl_font_stash_end();
         nk_style_set_font(ctx, &termin->handle);
     }

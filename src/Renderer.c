@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "Config.h"
 #include "Events.h"
 #include "Shader.h"
 #include "Camera.h"
@@ -46,6 +47,7 @@ PointLightPack lightPack;
 
 void gtmaInitRenderer() {
 
+    fboScaleFactor = cfgLookupFloat("fboScaleFactor");
 
     objPack.objectCount = 0;
     lightPack.lightCount = 0;
@@ -276,6 +278,8 @@ void gtmaRender() {
             vec2 frameRes = {renderWidth, renderHeight};
             gtmaSetVec2(&shader, "screenRes", screenRes);
             gtmaSetVec2(&shader, "frameRes", frameRes);
+            gtmaSetBool(&shader, "ditherEnabled", cfgLookupBool("ditherEnabled"));
+            gtmaSetBool(&shader, "vertexSnap", cfgLookupBool("vertexSnap"));
 
             glBindTexture(GL_TEXTURE_2D, mesh.texture.id);
             glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);

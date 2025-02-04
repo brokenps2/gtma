@@ -9,6 +9,9 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_mouse.h>
 #include <cglm/vec3.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 Camera camera;
 vec3 camPos = {-8, 16, 2};
@@ -26,6 +29,9 @@ PointLight light3;
 PointLight light4;
 PointLight lamp;
 
+char* camPosStr[3];
+char* camRotStr[2];
+
 float brightness = 0.82f;
 
 void initScene() {
@@ -36,9 +42,8 @@ void initScene() {
     gtmaCreateCamera(&camera, getWindowWidth(), getWindowHeight(), camPos);
     gtmaSetRenderCamera(&camera);
 
-    //gtmaCreateObject(&plane, "models/radio.glb", 0, 0, 0,    8, 8, 8,    0, 0, 0);
     gtmaCreateObject(&sky,   "models/sky.glb",   3, 3, 3,    3.5, 3.5, 3.5,    0, 0, 0);
-    gtmaCreateObject(&yard, "models/yard.glb", 0, 0.2, 0, 14, 14, 14, 0, 0, 0);
+    gtmaCreateObject(&yard, "models/tiletest.glb", 0, 0.2, 0, 3, 3, 3, 0, 0, 0);
 
     sky.model.meshes[0].lit = false;
 
@@ -53,6 +58,13 @@ void initScene() {
 
     gtmaCreatePointLight(&lamp, -20, 7.5f, 0, 0.75, 0.75, 0.75);
 
+    camPosStr[0] = malloc(sizeof(float) + (3 * sizeof(char)));
+    camPosStr[1] = malloc(sizeof(float) + (3 * sizeof(char)));
+    camPosStr[2] = malloc(sizeof(float) + (3 * sizeof(char)));
+
+    camRotStr[0] = malloc(sizeof(float) + (6 * sizeof(char)));
+    camRotStr[1] = malloc(sizeof(float) + (6 * sizeof(char)));
+
     gtmaAddLight(&light1);
     gtmaAddLight(&light2);
     gtmaAddLight(&light3);
@@ -63,7 +75,8 @@ void initScene() {
     //gtmaAddObject(&plane);
     gtmaAddObject(&sky);
 
-    gtmaSetClearColor(155, 171, 250);
+    //gtmaSetClearColor(155, 171, 250);
+    gtmaSetClearColor(0, 0, 18);
 
 }
 
@@ -71,15 +84,10 @@ bool spectating = false;
 
 bool showMenu = false;
 
-int inputCounter = 0;
+int savedMouseX = 0;
+int savedMouseY = 0;
 
 void updateScene() {
-
-    if(inputCounter != 6) {
-        inputCounter++;
-    } else {
-        inputCounter = 0;
-    }
 
     gtmaCameraMatrix(&camera, 0.1f, 450.0f, gtmaGetShader());
     gtmaCameraLook(&camera);
@@ -87,36 +95,66 @@ void updateScene() {
 
     glm_vec3_copy(camera.position, sky.position);
 
-    //printf("\r%f  %f  %f", camera.position[0], camera.position[1], camera.position[2]);
-    
+    glm_vec3_copy(camera.position, lamp.position);
+
     gtmaUpdateAudio(camera.position, camera.direction);
+
+
+    strcpy(camPosStr[0], "x: ");
+    sprintf(camPosStr[0] + strlen(camPosStr[0]), "%f", camera.position[0]);
+    strcpy(camPosStr[1], "y: ");
+    sprintf(camPosStr[1] + strlen(camPosStr[1]), "%f", camera.position[1]);
+    strcpy(camPosStr[2], "z: ");
+    sprintf(camPosStr[2] + strlen(camPosStr[2]), "%f", camera.position[2]);
+
+    strcpy(camRotStr[0], "rotX: ");
+    sprintf(camRotStr[0] + strlen(camRotStr[0]), "%f", camera.yaw);
+    strcpy(camRotStr[1], "rotY: ");
+    sprintf(camRotStr[1] + strlen(camRotStr[1]), "%f", camera.pitch);
 
     if(isKeyPressed(SDL_SCANCODE_K)) {
         spectating = !spectating;
     }
 
     if(isKeyPressed(SDL_SCANCODE_E)) {
-        SDL_SetRelativeMouseMode(false);
-        showMenu = true;
+        savedMouseX = getMouseX(); savedMouseY = getMouseY();
+        if(showMenu) { SDL_SetRelativeMouseMode(true); } else { SDL_SetRelativeMouseMode(false); }   
+        showMenu = !showMenu;
     }
-
     if(showMenu) {
-        if(nk_begin(getContext(), "menu", nk_rect(((float)getWindowWidth() / 2) - 300, ((float)getWindowHeight() / 2) - 300, 300, 300), NK_WINDOW_BORDER|NK_WINDOW_MOVABLE|NK_WINDOW_TITLE|NK_WINDOW_MINIMIZABLE)) {
-
+        if(nk_begin(getContext(), "menu", nk_rect(0, 0, 300, getWindowHeight()), NK_WINDOW_MOVABLE|NK_WINDOW_TITLE)) {
             nk_layout_row_static(getContext(), 30, 150, 1);
-            if(nk_button_label(getContext(), "lock mouse") && inputCounter) {
+            if(nk_button_label(getContext(), "lock mouse")) {
                 SDL_SetRelativeMouseMode(true);
                 showMenu = false;
+                SDL_WarpMouseGlobal(savedMouseX, savedMouseY);
             }
-
         }
         nk_end(getContext());
     }
+
+
+
+    if(nk_begin(getContext(), "info", nk_rect(0, getWindowHeight() - 110, 600, 110), NK_WINDOW_BORDER)) {
+        nk_layout_row_dynamic(getContext(), 25, 3);
+        nk_label(getContext(), camPosStr[0], NK_LEFT);
+        nk_label(getContext(), camPosStr[1], NK_LEFT);
+        nk_label(getContext(), camPosStr[2], NK_LEFT);
+        nk_layout_row_dynamic(getContext(), 25, 2);
+        nk_label(getContext(), camRotStr[0], NK_RIGHT);
+        nk_layout_row_dynamic(getContext(), 25, 2);
+        nk_label(getContext(), camRotStr[1], NK_RIGHT);
+
+    }
+    nk_end(getContext());
 
     sky.rotation[1] += 0.025f;
 }
 
 void disposeScene() {
+    free(camPosStr[0]);
+    free(camPosStr[1]);
+    free(camPosStr[2]);
     gtmaDeleteObject(&plane);
     gtmaDeleteObject(&sky);
     gtmaDeleteObject(&yard);

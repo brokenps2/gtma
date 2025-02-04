@@ -8,6 +8,7 @@ typedef struct Texture {
     unsigned char* data;
     unsigned int id;
 
+
 } Texture;
 
 void gtmaCreateTexture(Texture* tex, const char* path);
