@@ -33,6 +33,7 @@ typedef struct Model {
 
 typedef struct Object {
     Model model;
+    const char* name;
     vec3 position;
     vec3 lastFramePosition;
     vec3 lastFrameScale;
@@ -48,7 +49,7 @@ typedef struct ObjectPack {
 } ObjectPack;
 
 void gtmaCreateModel(Model* model, const char* path);
-void gtmaCreateObject(Object* object, const char* mdlPath, float x, float y, float z, float sx, float sy, float sz, float rx, float ry, float rz);
+void gtmaCreateObject(Object* object, const char* mdlPath, const char* name, float x, float y, float z, float sx, float sy, float sz, float rx, float ry, float rz);
 void gtmaCreateObjectPack(ObjectPack* pack);
 void gtmaDeleteObject(Object* object);
 void gtmaLoadTransformationMatrix(mat4* matrix, Object* object);

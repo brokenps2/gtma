@@ -2,7 +2,6 @@
 #include <SDL2/SDL_timer.h>
 #include <SDL2/SDL_video.h>
 #include <stdio.h>
-#include <time.h>
 #include <stdlib.h>
 #include <GL/glew.h>
 #include <SDL2/SDL.h>

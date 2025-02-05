@@ -67,7 +67,7 @@ void gtmaCreateModel(Model* model, const char* path) {
     cgltf_result result = cgltf_parse_file(&options, res(path), &data);
 
     if (result != cgltf_result_success) {
-        printf("failed to load GLTF file\n");
+        printf("failed to load GLTF file %s, %i\n", res(path), result);
         exit(1);
     }
 
@@ -229,9 +229,11 @@ void gtmaDeleteObject(Object* object) {
 }
 
 
-void gtmaCreateObject(Object* object, const char* mdlPath, float x, float y, float z, float sx, float sy, float sz, float rx, float ry, float rz) {
+void gtmaCreateObject(Object* object, const char* mdlPath, const char* name, float x, float y, float z, float sx, float sy, float sz, float rx, float ry, float rz) {
     Model model; 
     gtmaCreateModel(&model, mdlPath);
+
+    object->name = name;
 
     object->model = model;
 

@@ -165,11 +165,13 @@ void gtmaCameraMove(Camera* cam, bool spectating) {
         if (backwardVelocity < 0) backwardVelocity = 0;
     }
 
-    proposedPosition[0] -= (-cos(glm_rad(cam->yaw)) * forwardVelocity) * getDeltaTime();
-    proposedPosition[2] += (sin(glm_rad(cam->yaw)) * forwardVelocity) * getDeltaTime();
+    if(SDL_GetRelativeMouseMode()) {
+        proposedPosition[0] -= (-cos(glm_rad(cam->yaw)) * forwardVelocity) * getDeltaTime();
+        proposedPosition[2] += (sin(glm_rad(cam->yaw)) * forwardVelocity) * getDeltaTime();
 
-    proposedPosition[0] += (-cos(glm_rad(cam->yaw)) * backwardVelocity) * getDeltaTime();
-    proposedPosition[2] -= (sin(glm_rad(cam->yaw)) * backwardVelocity) * getDeltaTime();
+        proposedPosition[0] += (-cos(glm_rad(cam->yaw)) * backwardVelocity) * getDeltaTime();
+        proposedPosition[2] -= (sin(glm_rad(cam->yaw)) * backwardVelocity) * getDeltaTime();
+    }
 
     // Left and right movement
     if (isKeyDown(SDL_SCANCODE_A)) {
@@ -193,22 +195,26 @@ void gtmaCameraMove(Camera* cam, bool spectating) {
         viewBob(cam);
     }
 
-    proposedPosition[0] += (sin(glm_rad(cam->yaw)) * leftVelocity) * getDeltaTime();
-    proposedPosition[2] -= (cos(glm_rad(cam->yaw)) * leftVelocity) * getDeltaTime();
+    if(SDL_GetRelativeMouseMode()) {
+        proposedPosition[0] += (sin(glm_rad(cam->yaw)) * leftVelocity) * getDeltaTime();
+        proposedPosition[2] -= (cos(glm_rad(cam->yaw)) * leftVelocity) * getDeltaTime();
 
-    proposedPosition[0] -= (sin(glm_rad(cam->yaw)) * rightVelocity) * getDeltaTime();
-    proposedPosition[2] += (cos(glm_rad(cam->yaw)) * rightVelocity) * getDeltaTime();
+        proposedPosition[0] -= (sin(glm_rad(cam->yaw)) * rightVelocity) * getDeltaTime();
+        proposedPosition[2] += (cos(glm_rad(cam->yaw)) * rightVelocity) * getDeltaTime();
 
-    proposedPosition[1] += upVelocity * getDeltaTime();
-    proposedPosition[1] -= downVelocity * getDeltaTime();
-
+        proposedPosition[1] += upVelocity * getDeltaTime();
+        proposedPosition[1] -= downVelocity * getDeltaTime();
+    }
+    
     if(!spectating) {
         //gravity
         if (isKeyDown(SDL_SCANCODE_SPACE) && verticalSpeed == 0) { 
             verticalSpeed = -20.0f;
         }
 
-        proposedPosition[1] -= verticalSpeed * getDeltaTime();
+        if(SDL_GetRelativeMouseMode()) {
+            proposedPosition[1] -= verticalSpeed * getDeltaTime();
+        }
 
         vec3 tempPosition;
         tempPosition[0] = cam->position[0];
