@@ -93,7 +93,8 @@ void updateScene() {
 
     debugMenu();
 
-    printf("%f\n", yard.position[1]);
+    printf("\r%i", getObjPack()->objectCount);
+    fflush(stdout);
 
     sky.rotation[1] += 0.025f;
 }

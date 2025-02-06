@@ -6,6 +6,7 @@
 void gtmaInitRenderer();
 void gtmaSetRenderCamera(Camera* cam);
 void gtmaAddObject(Object* obj);
+Object* gtmaCreateAndAddObject(const char* path, const char* name, float x, float y, float z, float sx, float sy, float sz, float rx, float ry, float rz);
 void gtmaAddLight(PointLight* light);
 void gtmaRemoveObject(Object* obj);
 void gtmaRemoveLight(PointLight* light);

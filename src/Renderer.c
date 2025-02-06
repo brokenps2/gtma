@@ -114,6 +114,17 @@ void gtmaAddObject(Object* obj) {
     }
 }
 
+Object* gtmaCreateAndAddObject(const char* path, const char* name, float x, float y, float z, float sx, float sy, float sz, float rx, float ry, float rz) {
+    Object* newObject = (Object*)malloc(sizeof(Object));
+
+    gtmaCreateObject(newObject, path, name, x, y, z, sx, sy, sz, rx, ry, rz);
+
+    gtmaAddObject(newObject);
+
+    return newObject;
+}
+
+
 void gtmaAddLight(PointLight* light) {
     if(!light->inPack) {
         if(lightPack.lightCount != 0) {
