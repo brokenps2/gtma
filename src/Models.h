@@ -29,6 +29,7 @@ typedef struct Model {
     int totalPosCount;
     int totalUVCount;
     int totalNormalCound;
+    bool isBillboard;
 } Model;
 
 typedef struct Object {
@@ -41,6 +42,7 @@ typedef struct Object {
     vec3 scale;
     int packID;
     bool inPack;
+    bool isBillboard;
 } Object;
 
 typedef struct ObjectPack {
@@ -50,6 +52,8 @@ typedef struct ObjectPack {
 
 void gtmaCreateModel(Model* model, const char* path);
 void gtmaCreateObject(Object* object, const char* mdlPath, const char* name, float x, float y, float z, float sx, float sy, float sz, float rx, float ry, float rz);
+void gtmaCreateObjectReplaceTexture(Object* object, const char* mdlPath, const char* texturePath, const char* name, float x, float y, float z, float sx, float sy, float sz, float rx, float ry, float rz);
+void gtmaCreateBillboard(Object* object, const char* texturePath, const char* name, float x, float y, float z, float sx, float sy, float sz, float rx, float rz);
 void gtmaCreateObjectPack(ObjectPack* pack);
 void gtmaDeleteObject(Object* object);
 void gtmaLoadTransformationMatrix(mat4* matrix, Object* object);

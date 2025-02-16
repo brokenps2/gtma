@@ -26,7 +26,7 @@ float screenVertices[] = {
 };
 
 Shader shader;
-Camera renderCamera;
+Camera* renderCamera;
 
 int renderWidth;
 int renderHeight;
@@ -38,7 +38,7 @@ unsigned int sVAO;
 unsigned int sVBO;
 
 float clearColor[3];
-float fogLevel = 0.000000028f;
+float fogLevel = 0.00000028f;
 
 float fboScaleFactor = 0.5;
 
@@ -86,14 +86,14 @@ void gtmaInitRenderer() {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 
-    clearColor[0] = 9;
-    clearColor[1] = 8;
-    clearColor[2] = 22;
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ZERO);
 
 }
 
 void gtmaSetRenderCamera(Camera* cam) {
-    renderCamera = *cam;
+    renderCamera = cam;
 }
 
 void gtmaAddObject(Object* obj) {
@@ -118,6 +118,16 @@ Object* gtmaCreateAndAddObject(const char* path, const char* name, float x, floa
     Object* newObject = (Object*)malloc(sizeof(Object));
 
     gtmaCreateObject(newObject, path, name, x, y, z, sx, sy, sz, rx, ry, rz);
+
+    gtmaAddObject(newObject);
+
+    return newObject;
+}
+
+Object* gtmaCreateAndAddBillboard(const char* texPath, const char* name, float x, float y, float z, float sx, float sy, float sz, float rx, float rz) {
+    Object* newObject = (Object*)malloc(sizeof(Object));
+
+    gtmaCreateBillboard(newObject, texPath, name, x, y, z, sx, sy, sz, rx, rz);
 
     gtmaAddObject(newObject);
 
@@ -270,6 +280,10 @@ void gtmaRender() {
 
     for (int i = 0; i < objPack.objectCount; i++) {
 
+        if(objPack.objects[i]->isBillboard) {
+            objPack.objects[i]->rotation[1] = -renderCamera->yaw;
+        }
+
         Model* model = &objPack.objects[i]->model;
 
         for(int j = 0; j < model->meshCount; j++) {
@@ -282,7 +296,7 @@ void gtmaRender() {
             gtmaSetBool(&shader, "ui", false);
             gtmaSetMatrix(&shader, "transMatrix", transformationMatrix);
             gtmaSetBool(&shader, "lightEnabled", mesh.lit);
-            gtmaSetVec3(&shader, "viewPos", renderCamera.position);
+            gtmaSetVec3(&shader, "viewPos", renderCamera->position);
             gtmaSetVec3(&shader, "clearColor", clearColor);
             gtmaSetFloat(&shader, "fogLevel", fogLevel);
             vec2 screenRes = {getWindowWidth(), getWindowHeight()};

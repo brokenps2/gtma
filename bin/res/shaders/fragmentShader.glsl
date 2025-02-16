@@ -67,7 +67,11 @@ void main() {
         return;
     }
 
-    vec4 skyColor = vec4(clearColor/255, 1);
+    vec4 texColor = texture(tex0, outTexCoord);
+    if(texColor.a < 0.1)
+        discard;
+
+    vec4 skyColor = vec4(clearColor.x/256, clearColor.y/256, clearColor.z/256, 1);
 
     if(lightEnabled) {
         fragColor = mix(skyColor, texture(tex0, outTexCoord) * vec4(outColor, 1.0) * vec4(outLightColor, 1.0), visibility);

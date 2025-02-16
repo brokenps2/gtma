@@ -1,7 +1,6 @@
 #include "Util.h"
 #include <SDL2/SDL_stdinc.h>
 #include <nuklear.h>
-#include "Camera.h"
 #include "Interface.h"
 #include <SDL2/SDL.h>
 #include "Renderer.h"
@@ -14,6 +13,11 @@ float glc(float color) {
     float glcolor;
     glcolor = color/255;
     return glcolor;
+}
+
+int randBetween(int min, int max) {
+    int random = rand()%((max+1)-min) + min;
+    return random;
 }
 
 char *ftoa(float num, int precision) {

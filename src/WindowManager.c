@@ -31,7 +31,7 @@ void gtmaInitWindow() {
         exit(1);
     }
     
-    frameTime = 1.0f / 143.0f;
+    frameTime = 1.0f / 144.0f;
  
     const char* title = cfgLookupString("title");
 

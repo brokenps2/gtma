@@ -9,6 +9,8 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_mouse.h>
 #include <cglm/vec3.h>
+#include <string.h>
+#include "Texture.h"
 #include "Util.h"
 
 Camera camera;
@@ -29,7 +31,9 @@ PointLight lamp;
 
 ObjectPack scenePack;
 
-float brightness = 0.82f;
+Texture grassTex;
+
+float brightness = 0.12f;
 
 void initScene() {
 
@@ -40,8 +44,8 @@ void initScene() {
     gtmaSetRenderCamera(&camera);
 
     gtmaCreateObject(&sky,   "models/sky.glb", "skybox",  3, 3, 3,    3.5, 3.5, 3.5,    0, 0, 0);
-    gtmaCreateObject(&yard, "models/tileroomtest2.glb", "map", 0, 0.2, 0, 3, 3, 3, 0, 0, 0);
-    gtmaCreateObject(&mario, "models/mario.glb", "mario", 31, 1.29, 29, 1, 1, 1, 0, 0, 0);
+    gtmaCreateObject(&yard, "models/grassPlane.glb", "map", 0, 0.2, 0, 8, 8, 8, 0, 0, 0);
+    gtmaCreateBillboard(&mario, "images/tree.png", "mario", 0, 7, 0, 2.7, 3.5, 2.7, 0, 0);
 
     sky.model.meshes[0].lit = false;
 
@@ -54,7 +58,7 @@ void initScene() {
     light3.sunMode = true;
     light4.sunMode = true;
 
-    gtmaCreatePointLight(&lamp, -20, 7.5f, 0, 0.75, 0.75, 0.75);
+    gtmaCreatePointLight(&lamp, -20, 7.5f, 0, 1.0f, 1.0f, 1.0f);
 
     gtmaAddLight(&light1);
     gtmaAddLight(&light2);
@@ -63,11 +67,20 @@ void initScene() {
     gtmaAddLight(&lamp);
 
     gtmaAddObject(&yard);
-    gtmaAddObject(&mario);
-    gtmaAddObject(&sky);
 
-    //gtmaSetClearColor(155, 171, 250);
-    gtmaSetClearColor(0, 0, 18);
+    for(int i = 0; i < 300; i++) {
+        char name[256];
+        memset(name, 0, strlen(name));
+        strcpy(name, "tree");
+        sprintf(name + strlen(name), "%i", i);
+        name[strlen(name) + 1] = '\0';
+
+        gtmaCreateAndAddBillboard("images/tree.png", name, randBetween(-100, 100), 7, randBetween(-100, 100), 1.7, 2.5, 1.7, 0, 0);
+    }
+    gtmaAddObject(&mario);
+    //gtmaAddObject(&sky);
+
+    gtmaSetClearColor(70, 82, 89);
 
 }
 
@@ -92,9 +105,6 @@ void updateScene() {
     }
 
     debugMenu();
-
-    printf("\r%i", getObjPack()->objectCount);
-    fflush(stdout);
 
     sky.rotation[1] += 0.025f;
 }

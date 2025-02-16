@@ -248,6 +248,34 @@ void gtmaCreateObject(Object* object, const char* mdlPath, const char* name, flo
     object->rotation[0] = rx;
     object->rotation[1] = ry;
     object->rotation[2] = rz;
+
+    object->isBillboard = false;
+}
+
+void gtmaCreateBillboard(Object* object, const char* texturePath, const char* name, float x, float y, float z, float sx, float sy, float sz, float rx, float rz) {
+    Model model;
+    gtmaCreateModel(&model, "models/billboard.glb");
+    Texture texture;
+    gtmaCreateTexture(&texture, texturePath);
+    model.meshes[0].texture = texture;
+
+    object->name = name;
+
+    object->model = model;
+
+    object->position[0] = x;
+    object->position[1] = y;
+    object->position[2] = z;
+
+    object->scale[0] = sx;
+    object->scale[1] = sy;
+    object->scale[2] = sz;
+
+    object->rotation[0] = rx;
+    object->rotation[1] = 0;
+    object->rotation[2] = rz;
+
+    object->isBillboard = true;
 }
 
 void gtmaLoadTransformationMatrix(mat4* matrix, Object* object) {
