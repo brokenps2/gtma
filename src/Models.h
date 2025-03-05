@@ -29,10 +29,9 @@ typedef struct Model {
     int totalPosCount;
     int totalUVCount;
     int totalNormalCound;
-    bool isBillboard;
 } Model;
 
-typedef struct Object {
+typedef struct GameGameObject {
     Model model;
     const char* name;
     vec3 position;
@@ -42,19 +41,16 @@ typedef struct Object {
     vec3 scale;
     int packID;
     bool inPack;
-    bool isBillboard;
-} Object;
+} GameObject;
 
-typedef struct ObjectPack {
-    Object** objects;
+typedef struct GameObjectPack {
+    GameObject** objects;
     int objectCount;
-} ObjectPack;
+} GameObjectPack;
 
 void gtmaCreateModel(Model* model, const char* path);
-void gtmaCreateObject(Object* object, const char* mdlPath, const char* name, float x, float y, float z, float sx, float sy, float sz, float rx, float ry, float rz);
-void gtmaCreateObjectReplaceTexture(Object* object, const char* mdlPath, const char* texturePath, const char* name, float x, float y, float z, float sx, float sy, float sz, float rx, float ry, float rz);
-void gtmaCreateBillboard(Object* object, const char* texturePath, const char* name, float x, float y, float z, float sx, float sy, float sz, float rx, float rz);
-void gtmaCreateObjectPack(ObjectPack* pack);
-void gtmaDeleteObject(Object* object);
-void gtmaLoadTransformationMatrix(mat4* matrix, Object* object);
+void gtmaCreateGameObject(GameObject* object, const char* mdlPath, const char* name, float x, float y, float z, float sx, float sy, float sz, float rx, float ry, float rz);
+void gtmaCreateGameObjectPack(GameObjectPack* pack);
+void gtmaDeleteGameObject(GameObject* object);
+void gtmaLoadTransformationMatrix(mat4* matrix, GameObject* object);
 void gtmaDeleteModel(Model* model);

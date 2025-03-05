@@ -10,7 +10,6 @@
 #include "Events.h"
 #include "Shader.h"
 #include "Camera.h"
-#include "Interface.h"
 #include "Texture.h"
 #include "Models.h"
 #include "Util.h"
@@ -26,7 +25,7 @@ float screenVertices[] = {
 };
 
 Shader shader;
-Camera* renderCamera;
+Camera renderCamera;
 
 int renderWidth;
 int renderHeight;
@@ -38,11 +37,11 @@ unsigned int sVAO;
 unsigned int sVBO;
 
 float clearColor[3];
-float fogLevel = 0.00000028f;
+float fogLevel = 0.000000028f;
 
 float fboScaleFactor = 0.5;
 
-ObjectPack objPack;
+GameObjectPack objPack;
 PointLightPack lightPack;
 
 void gtmaInitRenderer() {
@@ -86,26 +85,26 @@ void gtmaInitRenderer() {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ZERO);
+    clearColor[0] = 9;
+    clearColor[1] = 8;
+    clearColor[2] = 22;
 
 }
 
 void gtmaSetRenderCamera(Camera* cam) {
-    renderCamera = cam;
+    renderCamera = *cam;
 }
 
-void gtmaAddObject(Object* obj) {
+void gtmaAddGameObject(GameObject* obj) {
     if(!obj->inPack) {
         if(objPack.objectCount != 0) {
-            ObjectPack tempPack = objPack;
-            objPack.objects = malloc((objPack.objectCount + 1) * sizeof(Object*));
+            GameObjectPack tempPack = objPack;
+            objPack.objects = malloc((objPack.objectCount + 1) * sizeof(GameObject*));
             for(int i = 0; i <= tempPack.objectCount - 1; i++) {
                 objPack.objects[i] = tempPack.objects[i];
             }
         } else {
-            objPack.objects = malloc((objPack.objectCount + 1) * sizeof(Object*));
+            objPack.objects = malloc((objPack.objectCount + 1) * sizeof(GameObject*));
         }
         objPack.objects[objPack.objectCount] = obj;
         obj->packID = objPack.objectCount;
@@ -114,22 +113,12 @@ void gtmaAddObject(Object* obj) {
     }
 }
 
-Object* gtmaCreateAndAddObject(const char* path, const char* name, float x, float y, float z, float sx, float sy, float sz, float rx, float ry, float rz) {
-    Object* newObject = (Object*)malloc(sizeof(Object));
+GameObject* gtmaCreateAndAddGameObject(const char* path, const char* name, float x, float y, float z, float sx, float sy, float sz, float rx, float ry, float rz) {
+    GameObject* newObject = (GameObject*)malloc(sizeof(GameObject));
 
-    gtmaCreateObject(newObject, path, name, x, y, z, sx, sy, sz, rx, ry, rz);
+    gtmaCreateGameObject(newObject, path, name, x, y, z, sx, sy, sz, rx, ry, rz);
 
-    gtmaAddObject(newObject);
-
-    return newObject;
-}
-
-Object* gtmaCreateAndAddBillboard(const char* texPath, const char* name, float x, float y, float z, float sx, float sy, float sz, float rx, float rz) {
-    Object* newObject = (Object*)malloc(sizeof(Object));
-
-    gtmaCreateBillboard(newObject, texPath, name, x, y, z, sx, sy, sz, rx, rz);
-
-    gtmaAddObject(newObject);
+    gtmaAddGameObject(newObject);
 
     return newObject;
 }
@@ -153,7 +142,7 @@ void gtmaAddLight(PointLight* light) {
     }
 }
 
-void gtmaRemoveObject(Object* obj) {
+void gtmaRemoveGameObject(GameObject* obj) {
     if (obj == NULL || objPack.objectCount == 0) {
         return;
     }
@@ -167,7 +156,7 @@ void gtmaRemoveObject(Object* obj) {
     }
     objPack.objectCount--;
     if (objPack.objectCount > 0) {
-        objPack.objects = realloc(objPack.objects, objPack.objectCount * sizeof(Object*));
+        objPack.objects = realloc(objPack.objects, objPack.objectCount * sizeof(GameObject*));
     } else {
         free(objPack.objects);
         objPack.objects = NULL;
@@ -280,10 +269,6 @@ void gtmaRender() {
 
     for (int i = 0; i < objPack.objectCount; i++) {
 
-        if(objPack.objects[i]->isBillboard) {
-            objPack.objects[i]->rotation[1] = -renderCamera->yaw;
-        }
-
         Model* model = &objPack.objects[i]->model;
 
         for(int j = 0; j < model->meshCount; j++) {
@@ -296,7 +281,7 @@ void gtmaRender() {
             gtmaSetBool(&shader, "ui", false);
             gtmaSetMatrix(&shader, "transMatrix", transformationMatrix);
             gtmaSetBool(&shader, "lightEnabled", mesh.lit);
-            gtmaSetVec3(&shader, "viewPos", renderCamera->position);
+            gtmaSetVec3(&shader, "viewPos", renderCamera.position);
             gtmaSetVec3(&shader, "clearColor", clearColor);
             gtmaSetFloat(&shader, "fogLevel", fogLevel);
             vec2 screenRes = {getWindowWidth(), getWindowHeight()};
@@ -325,15 +310,6 @@ void gtmaRender() {
     glBindTexture(GL_TEXTURE_2D, renderTexture);
     glDrawArrays(GL_TRIANGLES, 0, 6);
 
-    GLint lastProgram, lastTexture, lastVAO;
-    glGetIntegerv(GL_CURRENT_PROGRAM, &lastProgram);
-    glGetIntegerv(GL_TEXTURE_BINDING_2D, &lastTexture);
-    glGetIntegerv(GL_VERTEX_ARRAY_BINDING, &lastVAO);
-    renderNuklear();
-    glUseProgram(lastProgram);
-    glBindTexture(GL_TEXTURE_2D, lastTexture);
-    glBindVertexArray(lastVAO);
-
 }
 
 void gtmaCloseRenderer() {
@@ -348,8 +324,12 @@ void gtmaSetClearColor(float r, float g, float b) {
     clearColor[2] = b;
 }
 
-ObjectPack* getObjPack() {
+GameObjectPack* getObjPack() {
     return &objPack;
+}
+
+PointLightPack* getLightPack() {
+    return &lightPack;
 }
 
 Shader* gtmaGetShader() {

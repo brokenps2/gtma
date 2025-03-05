@@ -25,7 +25,7 @@ void gtmaCreateCamera(Camera* cam, int width, int height, vec3 pos);
 
 void gtmaCameraMatrix(Camera* cam, float nearPlane, float farPlane, Shader* shader);
 void gtmaCameraLook(Camera* cam);
-void gtmaCameraMove(Camera* cam, bool spectating);
+void gtmaCameraMove(Camera* cam);
 void gtmaCameraSetPosition(Camera* cam, vec3 npos);
 void gtmaCameraIncPosition(Camera* cam, vec3 inc);
 

@@ -31,7 +31,7 @@ void gtmaInitWindow() {
         exit(1);
     }
     
-    frameTime = 1.0f / 144.0f;
+    frameTime = 1.0f / 143.0f;
  
     const char* title = cfgLookupString("title");
 
@@ -43,8 +43,7 @@ void gtmaInitWindow() {
 
     SDL_SetWindowResizable(window, true);
 
-
-    SDL_GLContext glContext = SDL_GL_CreateContext(window);
+    SDL_GL_CreateContext(window);
     
     const GLenum err = glewInit();
     glewExperimental = GL_TRUE;

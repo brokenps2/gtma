@@ -5,16 +5,16 @@
 
 void gtmaInitRenderer();
 void gtmaSetRenderCamera(Camera* cam);
-void gtmaAddObject(Object* obj);
-Object* gtmaCreateAndAddObject(const char* path, const char* name, float x, float y, float z, float sx, float sy, float sz, float rx, float ry, float rz);
-Object* gtmaCreateAndAddBillboard(const char* texPath, const char* name, float x, float y, float z, float sx, float sy, float sz, float rx, float rz);
+void gtmaAddGameObject(GameObject* obj);
+GameObject* gtmaCreateAndAddGameObject(const char* path, const char* name, float x, float y, float z, float sx, float sy, float sz, float rx, float ry, float rz);
 void gtmaAddLight(PointLight* light);
-void gtmaRemoveObject(Object* obj);
+void gtmaRemoveGameObject(GameObject* obj);
 void gtmaRemoveLight(PointLight* light);
 void gtmaCloseRenderer();
 Shader* gtmaGetShader();
 void gtmaRender();
-ObjectPack* getObjPack();
+GameObjectPack* getObjPack();
+PointLightPack* getLightPack();
 int getFrameWidth();
 int getFrameHeight();
 void gtmaSetClearColor(float r, float g, float b);

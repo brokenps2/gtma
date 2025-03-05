@@ -11,7 +11,6 @@
 #include <cgltf.h>
 #include <stb_image.h>
 #include "Models.h"
-#include "Renderer.h"
 #include "Files.h"
 
 void convertMatrix(float source[16], float destination[4][4]) {
@@ -215,7 +214,7 @@ void gtmaCreateModel(Model* model, const char* path) {
     cgltf_free(data);
 }
 
-void gtmaDeleteObject(Object* object) {
+void gtmaDeleteGameObject(GameObject* object) {
     for(int i = 0; i < object->model.meshCount; i++) {
         Mesh mesh = object->model.meshes[i];
         free(mesh.vertices);
@@ -229,7 +228,7 @@ void gtmaDeleteObject(Object* object) {
 }
 
 
-void gtmaCreateObject(Object* object, const char* mdlPath, const char* name, float x, float y, float z, float sx, float sy, float sz, float rx, float ry, float rz) {
+void gtmaCreateGameObject(GameObject* object, const char* mdlPath, const char* name, float x, float y, float z, float sx, float sy, float sz, float rx, float ry, float rz) {
     Model model; 
     gtmaCreateModel(&model, mdlPath);
 
@@ -248,37 +247,9 @@ void gtmaCreateObject(Object* object, const char* mdlPath, const char* name, flo
     object->rotation[0] = rx;
     object->rotation[1] = ry;
     object->rotation[2] = rz;
-
-    object->isBillboard = false;
 }
 
-void gtmaCreateBillboard(Object* object, const char* texturePath, const char* name, float x, float y, float z, float sx, float sy, float sz, float rx, float rz) {
-    Model model;
-    gtmaCreateModel(&model, "models/billboard.glb");
-    Texture texture;
-    gtmaCreateTexture(&texture, texturePath);
-    model.meshes[0].texture = texture;
-
-    object->name = name;
-
-    object->model = model;
-
-    object->position[0] = x;
-    object->position[1] = y;
-    object->position[2] = z;
-
-    object->scale[0] = sx;
-    object->scale[1] = sy;
-    object->scale[2] = sz;
-
-    object->rotation[0] = rx;
-    object->rotation[1] = 0;
-    object->rotation[2] = rz;
-
-    object->isBillboard = true;
-}
-
-void gtmaLoadTransformationMatrix(mat4* matrix, Object* object) {
+void gtmaLoadTransformationMatrix(mat4* matrix, GameObject* object) {
 
     if(object->rotation[0] < 0) object->rotation[0] = 360 + object->rotation[0];
     if(object->rotation[1] < 0) object->rotation[1] = 360 + object->rotation[1];

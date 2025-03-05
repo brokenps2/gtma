@@ -3,11 +3,9 @@
 #include <GL/glew.h>
 #include <nuklear.h>
 #include <nuklear_sdl_gl3.h>
-#include "Interface.h"
 #include <SDL2/SDL_mouse.h>
 #include <stdbool.h>
 #include "Config.h"
-#include "WindowManager.h"
 
 double mouseX;
 double mouseY;
@@ -157,9 +155,7 @@ bool gtmaIsRunning() {
 
 void gtmaUpdateEvents() {
     SDL_Event e;
-    nk_input_begin(getContext());
     while (SDL_PollEvent(&e)) {
-        nk_sdl_handle_event(&e);
         switch (e.type) {
             case SDL_QUIT:
                 running = false;
@@ -189,5 +185,4 @@ void gtmaUpdateEvents() {
                 break;
         }
     }
-    nk_input_end(getContext());
 }

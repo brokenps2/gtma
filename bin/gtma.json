@@ -1,0 +1,26 @@
+{
+  "resLoc": "/home/eli/gtma/bin/res/",
+  "title": "gtma",
+  "width": 1024,
+  "height": 768,
+  "mouseSensitivity": 12,
+  "fboScaleFactor": 0.5,
+  "vertexSnap": true,
+  "ditherEnabled": true,
+  "testObjs": [
+    {
+      "name": "john1"
+    },
+    {
+      "name": "john2"
+    },
+    {
+      "name": "john3"
+    },
+    {
+      "name": "john4"
+    }
+  ]
+  }
+}
+
