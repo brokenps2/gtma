@@ -7,9 +7,9 @@
 #include <SDL2/SDL.h>
 #include <stdbool.h>
 #include <unistd.h>
-#include "Config.h"
-#include "Renderer.h"
-#include "Events.h"
+#include "util/config.h"
+#include "graphics/renderer.h"
+#include "window/events.h"
 
 int fullscreen = 0;
 

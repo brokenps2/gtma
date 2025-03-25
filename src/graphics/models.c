@@ -1,4 +1,4 @@
-#include "Texture.h"
+#include "graphics/texture.h"
 #include <cglm/quat.h>
 #include <cglm/vec3.h>
 #include <mm_malloc.h>
@@ -10,8 +10,8 @@
 #include <GL/glew.h>
 #include <cgltf.h>
 #include <stb_image.h>
-#include "Models.h"
-#include "Files.h"
+#include "graphics/models.h"
+#include "util/files.h"
 
 void convertMatrix(float source[16], float destination[4][4]) {
     for (int i = 0; i < 4; ++i) {

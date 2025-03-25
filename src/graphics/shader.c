@@ -2,8 +2,8 @@
 #include <cglm/cglm.h>
 #include <stdbool.h>
 #include <stdio.h>
-#include "Files.h"
-#include "Shader.h"
+#include "util/files.h"
+#include "graphics/shader.h"
 
 void gtmaCreateShader(Shader* shader) {
     shader->vtShaderSrc = getVertexShaderSrc();

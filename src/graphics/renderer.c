@@ -6,13 +6,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "Config.h"
-#include "Events.h"
-#include "Shader.h"
-#include "Camera.h"
-#include "Texture.h"
-#include "Models.h"
-#include "Util.h"
+#include "graphics/shader.h"
+#include "graphics/models.h"
+#include "graphics/camera.h"
+#include "graphics/texture.h"
+#include "window/events.h"
+#include "util/config.h"
 
 float screenVertices[] = {
     -1.0f,  1.0f,  0.0f, 1.0f,
@@ -89,6 +88,10 @@ void gtmaInitRenderer() {
     clearColor[1] = 8;
     clearColor[2] = 22;
 
+}
+
+float glc(int color) {
+    return color / 255;
 }
 
 void gtmaSetRenderCamera(Camera* cam) {

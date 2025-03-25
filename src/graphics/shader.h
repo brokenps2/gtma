@@ -1,7 +1,7 @@
 #pragma once
 #include <GL/glew.h>
 #include <cglm/cglm.h>
-#include "Files.h"
+#include "util/files.h"
 
 typedef struct Shader {
 

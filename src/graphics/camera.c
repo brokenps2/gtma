@@ -6,14 +6,13 @@
 #include <cglm/common.h>
 #include <cglm/vec3.h>
 #include <math.h>
-#include "Config.h"
-#include "Physics.h"
-#include "Renderer.h"
-#include "Shader.h"
-#include "WindowManager.h"
+#include "util/config.h"
+#include "graphics/renderer.h"
+#include "graphics/shader.h"
+#include "window/windowManager.h"
 #include <SDL2/SDL.h>
-#include "Events.h"
-#include "Camera.h"
+#include "window/events.h"
+#include "graphics/camera.h"
 #include <GLFW/glfw3.h>
 
 double oldMouseX = 0, oldMouseY = 0, newMouseX = 0, newMouseY = 0;

@@ -1,0 +1,8 @@
+[
+  {
+    "directory": "/home/eli/gtma",
+    "command": "/usr/bin/gcc -Wall -g -O2 -pthread -I./src -c src/$(file).c -o obj/$(file).o",
+    "file": "/home/eli/gtma/src/*.c",
+    "output": "/home/eli/gtma/obj/*.o"
+  }
+]

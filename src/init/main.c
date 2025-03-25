@@ -1,13 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "Renderer.h"
+#include "graphics/renderer.h"
 #include <GLFW/glfw3.h>
 #include <stdbool.h>
-#include "Audio.h"
-#include "Scene.h"
-#include "WindowManager.h"
-#include "Events.h"
-#include "Config.h"
+#include "audio/audio.h"
+#include "scene/scene.h"
+#include "window/windowManager.h"
+#include "window/events.h"
+#include "util/config.h"
 
 int main(int argc, char* argv[]) {
 

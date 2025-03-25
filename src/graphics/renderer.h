@@ -1,7 +1,7 @@
 #pragma once
-#include "Camera.h"
-#include "Models.h"
-#include "Shader.h"
+#include "graphics/camera.h"
+#include "graphics/models.h"
+#include "graphics/shader.h"
 
 void gtmaInitRenderer();
 void gtmaSetRenderCamera(Camera* cam);

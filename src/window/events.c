@@ -1,11 +1,11 @@
-#include "Events.h"
+#include "window/events.h"
 #include <SDL2/SDL.h>
 #include <GL/glew.h>
 #include <nuklear.h>
 #include <nuklear_sdl_gl3.h>
 #include <SDL2/SDL_mouse.h>
 #include <stdbool.h>
-#include "Config.h"
+#include "util/config.h"
 
 double mouseX;
 double mouseY;

@@ -1,6 +1,6 @@
 #pragma once
 #include <cglm/cglm.h>
-#include "Texture.h"
+#include "graphics/texture.h"
 
 typedef struct Vertex {
     float position[3];
@@ -31,7 +31,7 @@ typedef struct Model {
     int totalNormalCound;
 } Model;
 
-typedef struct GameGameObject {
+typedef struct GameObject {
     Model model;
     const char* name;
     vec3 position;
