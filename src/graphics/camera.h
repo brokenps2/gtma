@@ -2,6 +2,7 @@
 #include <cglm/cglm.h>
 #include "graphics/shader.h"
 #include <GLFW/glfw3.h>
+#include "physics/physics.h"
 
 
 typedef struct Camera {
@@ -18,6 +19,7 @@ typedef struct Camera {
     int height;
     float sensitivity;
 
+    AABB aabb;
 } Camera;
 
 

@@ -163,7 +163,7 @@ void gtmaCreateModel(Model* model, const char* path) {
             }
 
             model->totalPosCount += mesh->postnCount;
-            model->totalNormalCound += mesh->normlCount;
+            model->totalNormalCount += mesh->normlCount;
             model->totalUVCount += mesh->texcoCount;
             model->totalIndexCount += mesh->indexCount;
 
@@ -247,6 +247,7 @@ void gtmaCreateGameObject(GameObject* object, const char* mdlPath, const char* n
     object->rotation[0] = rx;
     object->rotation[1] = ry;
     object->rotation[2] = rz;
+
 }
 
 void gtmaLoadTransformationMatrix(mat4* matrix, GameObject* object) {

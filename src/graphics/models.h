@@ -1,6 +1,7 @@
 #pragma once
 #include <cglm/cglm.h>
 #include "graphics/texture.h"
+#include "physics/physics.h"
 
 typedef struct Vertex {
     float position[3];
@@ -28,7 +29,8 @@ typedef struct Model {
     int totalIndexCount;
     int totalPosCount;
     int totalUVCount;
-    int totalNormalCound;
+    int totalNormalCount;
+    AABB aabb;
 } Model;
 
 typedef struct GameObject {

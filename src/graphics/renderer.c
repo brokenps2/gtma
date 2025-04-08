@@ -13,16 +13,6 @@
 #include "window/events.h"
 #include "util/config.h"
 
-float screenVertices[] = {
-    -1.0f,  1.0f,  0.0f, 1.0f,
-    -1.0f, -1.0f,  0.0f, 0.0f,
-    1.0f, -1.0f,  1.0f, 0.0f,
-
-    -1.0f,  1.0f,  0.0f, 1.0f,
-    1.0f, -1.0f,  1.0f, 0.0f,
-    1.0f,  1.0f,  1.0f, 1.0f
-};
-
 Shader shader;
 Camera renderCamera;
 
@@ -53,6 +43,16 @@ void gtmaInitRenderer() {
     SDL_SetRelativeMouseMode(true);
 
     gtmaCreateShader(&shader);
+
+    float screenVertices[] = {
+        -1.0f,  1.0f,  0.0f, 1.0f,
+        -1.0f, -1.0f,  0.0f, 0.0f,
+        1.0f, -1.0f,  1.0f, 0.0f,
+
+        -1.0f,  1.0f,  0.0f, 1.0f,
+        1.0f, -1.0f,  1.0f, 0.0f,
+        1.0f,  1.0f,  1.0f, 1.0f
+    };
 
     glGenVertexArrays(1, &sVAO);
     glGenBuffers(1, &sVBO);
@@ -91,7 +91,7 @@ void gtmaInitRenderer() {
 }
 
 float glc(int color) {
-    return color / 255;
+    return (float)color / 255;
 }
 
 void gtmaSetRenderCamera(Camera* cam) {

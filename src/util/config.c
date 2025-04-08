@@ -114,6 +114,23 @@ int cfgLookupBool(const char* key) {
     exit(1);
 }
 
+float* cfgLookupVec3(const char* key) {
+    cJSON* value = cfgGetNestedItem(key);
+    if (cJSON_IsArray(value) && cJSON_GetArraySize(value) == 3) {
+        cJSON* x = cJSON_GetArrayItem(value, 0);
+        cJSON* y = cJSON_GetArrayItem(value, 1);
+        cJSON* z = cJSON_GetArrayItem(value, 2);
+        
+        if (cJSON_IsNumber(x) && cJSON_IsNumber(y) && cJSON_IsNumber(z)) {
+            return (float[3]){ (float)x->valuedouble, (float)y->valuedouble, (float)z->valuedouble };
+        }
+    }
+    
+    printf("error reading config file value \"%s\"\n", key);
+    exit(1);
+}
+
+
 
 void gtmaDestroyConfig() {
     free(contents);
