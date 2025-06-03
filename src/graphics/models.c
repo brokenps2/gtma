@@ -1,5 +1,4 @@
 #include "graphics/texture.h"
-#include "physics/physics.h"
 #include <cglm/quat.h>
 #include <cglm/vec3.h>
 #include <mm_malloc.h>
@@ -248,8 +247,6 @@ void gtmaCreateGameObject(GameObject* object, const char* mdlPath, const char* n
     object->rotation[0] = rx;
     object->rotation[1] = ry;
     object->rotation[2] = rz;
-
-    object->model.aabb = calculateAABB(object);
 
 }
 

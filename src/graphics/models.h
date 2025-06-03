@@ -1,11 +1,7 @@
 #pragma once
 #include <cglm/cglm.h>
 #include "graphics/texture.h"
-
-typedef struct AABB {
-    vec3 min;
-    vec3 max;
-} AABB;
+#include "physics/physics.h"
 
 typedef struct Vertex {
     float position[3];

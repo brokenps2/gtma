@@ -31,7 +31,9 @@ void initScene() {
     gtmaCreateCamera(&camera, getWindowWidth(), getWindowHeight(), camPos);
     gtmaSetRenderCamera(&camera);
 
-   gtmaCreateGameObject(&yard, "models/plane.glb", "map", 0, 0.2, 0, 12, 12, 12, 0, 0, 0);
+    gtmaCreateGameObject(&lightPost, "models/lamppost.glb", "lightPost", 0, 6.5, 0, 2, 2, 2, 0, 0, 0);
+    lightPost.model.meshes[7].lit = false;
+    gtmaCreateGameObject(&yard, "models/plane.glb", "map", 0, 0.2, 0, 12, 12, 12, 0, 0, 0);
     gtmaCreateGameObject(&sky, "models/sky.glb", "sky", 0, 0, 0, 3.5, 3.5, 3.5, 0, 0, 0);
     sky.model.meshes[0].lit = false;
 
@@ -43,7 +45,7 @@ void initScene() {
     gtmaAddLight(&lightPostLight);
 
     gtmaAddGameObject(&yard);
-    //gtmaAddGameObject(&sky);
+    gtmaAddGameObject(&sky);
     gtmaAddGameObject(&lightPost);
 
     gtmaSetClearColor(9, 8, 22);
@@ -54,7 +56,7 @@ void initScene() {
 void updateScene() {
 
     gtmaCameraMatrix(&camera, 0.1f, 450.0f, gtmaGetShader());
-    gtmaCameraMove(&camera, false);
+    gtmaCameraMove(&camera);
 
     gtmaUpdateAudio(camera.position, camera.direction);
 
