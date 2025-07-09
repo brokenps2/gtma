@@ -33,26 +33,5 @@ typedef struct Model {
     AABB aabb;
 } Model;
 
-typedef struct GameObject {
-    Model model;
-    const char* name;
-    vec3 position;
-    vec3 lastFramePosition;
-    vec3 lastFrameScale;
-    vec3 rotation;
-    vec3 scale;
-    int packID;
-    bool inPack;
-} GameObject;
-
-typedef struct GameObjectPack {
-    GameObject** objects;
-    int objectCount;
-} GameObjectPack;
-
 void gtmaCreateModel(Model* model, const char* path);
-void gtmaCreateGameObject(GameObject* object, const char* mdlPath, const char* name, float x, float y, float z, float sx, float sy, float sz, float rx, float ry, float rz);
-void gtmaCreateGameObjectPack(GameObjectPack* pack);
-void gtmaDeleteGameObject(GameObject* object);
-void gtmaLoadTransformationMatrix(mat4* matrix, GameObject* object);
 void gtmaDeleteModel(Model* model);

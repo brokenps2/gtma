@@ -1,6 +1,7 @@
 #pragma once
 
 void gtmaInitConfig(const char* path);
+void gtmaDestroyConfig();
 
 const char* cfgGetResLoc();
 const char* cfgLookupString(const char* key);

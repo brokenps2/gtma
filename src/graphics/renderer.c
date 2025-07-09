@@ -8,6 +8,7 @@
 #include <string.h>
 #include "graphics/shader.h"
 #include "graphics/models.h"
+#include "scenes/objects.h"
 #include "graphics/camera.h"
 #include "graphics/texture.h"
 #include "window/events.h"
@@ -30,15 +31,12 @@ float fogLevel = 0.000000028f;
 
 float fboScaleFactor = 0.5;
 
-GameObjectPack objPack;
-PointLightPack lightPack;
+GameObjectPack* objPack;
+PointLightPack* lightPack;
 
 void gtmaInitRenderer() {
 
     fboScaleFactor = cfgLookupFloat("fboScaleFactor");
-
-    objPack.objectCount = 0;
-    lightPack.lightCount = 0;
 
     SDL_SetRelativeMouseMode(true);
 
@@ -98,97 +96,6 @@ void gtmaSetRenderCamera(Camera* cam) {
     renderCamera = *cam;
 }
 
-void gtmaAddGameObject(GameObject* obj) {
-    if(!obj->inPack) {
-        if(objPack.objectCount != 0) {
-            GameObjectPack tempPack = objPack;
-            objPack.objects = malloc((objPack.objectCount + 1) * sizeof(GameObject*));
-            for(int i = 0; i <= tempPack.objectCount - 1; i++) {
-                objPack.objects[i] = tempPack.objects[i];
-            }
-        } else {
-            objPack.objects = malloc((objPack.objectCount + 1) * sizeof(GameObject*));
-        }
-        objPack.objects[objPack.objectCount] = obj;
-        obj->packID = objPack.objectCount;
-        objPack.objectCount++;
-        obj->inPack = true;
-    }
-}
-
-GameObject* gtmaCreateAndAddGameObject(const char* path, const char* name, float x, float y, float z, float sx, float sy, float sz, float rx, float ry, float rz) {
-    GameObject* newObject = (GameObject*)malloc(sizeof(GameObject));
-
-    gtmaCreateGameObject(newObject, path, name, x, y, z, sx, sy, sz, rx, ry, rz);
-
-    gtmaAddGameObject(newObject);
-
-    return newObject;
-}
-
-
-void gtmaAddLight(PointLight* light) {
-    if(!light->inPack) {
-        if(lightPack.lightCount != 0) {
-            PointLightPack tempPack = lightPack;
-            lightPack.lights = malloc((lightPack.lightCount + 1) * sizeof(PointLight*));
-            for(int i = 0; i <= tempPack.lightCount - 1; i++) {
-                lightPack.lights[i] = tempPack.lights[i];
-            }
-        } else {
-            lightPack.lights = malloc((lightPack.lightCount + 1) * sizeof(PointLight*));
-        }
-        lightPack.lights[lightPack.lightCount] = light;
-        light->packID = lightPack.lightCount;
-        lightPack.lightCount++;
-        light->inPack = true;
-    }
-}
-
-void gtmaRemoveGameObject(GameObject* obj) {
-    if (obj == NULL || objPack.objectCount == 0) {
-        return;
-    }
-    int id = obj->packID;
-    if (id < 0 || id >= objPack.objectCount || objPack.objects[id] != obj) {
-        return;
-    }
-    for (int i = id; i < objPack.objectCount - 1; i++) {
-        objPack.objects[i] = objPack.objects[i + 1];
-        objPack.objects[i]->packID = i;
-    }
-    objPack.objectCount--;
-    if (objPack.objectCount > 0) {
-        objPack.objects = realloc(objPack.objects, objPack.objectCount * sizeof(GameObject*));
-    } else {
-        free(objPack.objects);
-        objPack.objects = NULL;
-    }
-    obj->inPack = false;
-}
-
-void gtmaRemoveLight(PointLight* light) {
-    if (light == NULL || lightPack.lightCount == 0) {
-        return;
-    }
-    int id = light->packID;
-    if (id < 0 || id >= lightPack.lightCount || lightPack.lights[id] != light) {
-        return;
-    }
-    for (int i = id; i < lightPack.lightCount - 1; i++) {
-        lightPack.lights[i] = lightPack.lights[i + 1];
-        lightPack.lights[i]->packID = i;
-    }
-    lightPack.lightCount--;
-    if (lightPack.lightCount > 0) {
-        lightPack.lights = realloc(lightPack.lights, lightPack.lightCount * sizeof(PointLight*));
-    } else {
-        free(lightPack.lights);
-        lightPack.lights = NULL;
-    }
-    light->inPack = false;
-}
-
 int lastWidth = 800, lastHeight = 600;
 
 void resizeFBO(int newWidth, int newHeight) {
@@ -208,49 +115,53 @@ void gtmaRender() {
     renderWidth = getWindowWidth() * fboScaleFactor;
     renderHeight = getWindowHeight() * fboScaleFactor;
 
-    for(int i = 0; i <= lightPack.lightCount - 1; i++) {
+    if(lightPack != NULL) {
+        for(int i = 0; i <= lightPack->lightCount - 1; i++) {
 
-        char ati[256];
-        char posStr[512];
-        char colStr[512];
-        char actStr[512];
-        char sunStr[512];
+            char ati[256];
+            char posStr[512];
+            char colStr[512];
+            char actStr[512];
+            char sunStr[512];
 
-        if(i != 0) {
-            memset(ati, 0, strlen(ati));
-            memset(posStr, 0, strlen(posStr));
-            memset(colStr, 0, strlen(colStr));
-            memset(actStr, 0, strlen(actStr));
-            memset(sunStr, 0, strlen(sunStr));
+            if(i != 0) {
+                memset(ati, 0, strlen(ati));
+                memset(posStr, 0, strlen(posStr));
+                memset(colStr, 0, strlen(colStr));
+                memset(actStr, 0, strlen(actStr));
+                memset(sunStr, 0, strlen(sunStr));
+            }
+
+            strcpy(ati, "pointLights[");
+            sprintf(ati + strlen(ati), "%i", i);
+            strcat(ati, "]");
+
+            strcpy(posStr, ati);
+            strcat(posStr, ".position");
+            posStr[strlen(posStr) + 1] = '\0';
+
+            strcpy(colStr, ati);
+            strcat(colStr, ".color");
+            colStr[strlen(colStr) + 1] = '\0';
+
+            strcpy(actStr, ati);
+            strcat(actStr, ".onoff");
+            actStr[strlen(actStr) + 1] = '\0';
+
+            strcpy(sunStr, ati);
+            strcat(sunStr, ".sunMode");
+            sunStr[strlen(sunStr) + 1] = '\0';
+
+            gtmaSetVec3(&shader, posStr, lightPack->lights[i]->position);
+            gtmaSetVec3(&shader, colStr, lightPack->lights[i]->color);
+            gtmaSetBool(&shader, actStr, lightPack->lights[i]->active);
+            gtmaSetBool(&shader, sunStr, lightPack->lights[i]->sunMode);
+
+            gtmaSetInt(&shader, "actualLightCount", lightPack->lightCount);
         }
-
-        strcpy(ati, "pointLights[");
-        sprintf(ati + strlen(ati), "%i", i);
-        strcat(ati, "]");
-
-        strcpy(posStr, ati);
-        strcat(posStr, ".position");
-        posStr[strlen(posStr) + 1] = '\0';
-
-        strcpy(colStr, ati);
-        strcat(colStr, ".color");
-        colStr[strlen(colStr) + 1] = '\0';
-
-        strcpy(actStr, ati);
-        strcat(actStr, ".onoff");
-        actStr[strlen(actStr) + 1] = '\0';
-
-        strcpy(sunStr, ati);
-        strcat(sunStr, ".sunMode");
-        sunStr[strlen(sunStr) + 1] = '\0';
-
-        gtmaSetVec3(&shader, posStr, lightPack.lights[i]->position);
-        gtmaSetVec3(&shader, colStr, lightPack.lights[i]->color);
-        gtmaSetBool(&shader, actStr, lightPack.lights[i]->active);
-        gtmaSetBool(&shader, sunStr, lightPack.lights[i]->sunMode);
-
-        gtmaSetInt(&shader, "actualLightCount", lightPack.lightCount);
     }
+
+    
 
     glBindFramebuffer(GL_FRAMEBUFFER, FBO);
 
@@ -270,36 +181,40 @@ void gtmaRender() {
     gtmaSetInt(&shader, "tex0", 0);
     gtmaSetBool(&shader, "frame", false);
 
-    for (int i = 0; i < objPack.objectCount; i++) {
+    if(objPack != NULL) {
+        for (int i = 0; i < objPack->objectCount; i++) {
 
-        Model* model = &objPack.objects[i]->model;
+            Model* model = &objPack->objects[i]->model;
 
-        for(int j = 0; j < model->meshCount; j++) {
-            Mesh mesh = model->meshes[j];
-            glBindVertexArray(mesh.VAO);
-            glBindBuffer(GL_ARRAY_BUFFER, mesh.VBO);
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.EBO);
-            mat4 transformationMatrix;
-            gtmaLoadTransformationMatrix(&transformationMatrix, objPack.objects[i]);
-            gtmaSetBool(&shader, "ui", false);
-            gtmaSetMatrix(&shader, "transMatrix", transformationMatrix);
-            gtmaSetBool(&shader, "lightEnabled", mesh.lit);
-            gtmaSetVec3(&shader, "viewPos", renderCamera.position);
-            gtmaSetVec3(&shader, "clearColor", clearColor);
-            gtmaSetFloat(&shader, "fogLevel", fogLevel);
-            vec2 screenRes = {getWindowWidth(), getWindowHeight()};
-            vec2 frameRes = {renderWidth, renderHeight};
-            gtmaSetVec2(&shader, "screenRes", screenRes);
-            gtmaSetVec2(&shader, "frameRes", frameRes);
-            gtmaSetBool(&shader, "ditherEnabled", cfgLookupBool("ditherEnabled"));
-            gtmaSetBool(&shader, "vertexSnap", cfgLookupBool("vertexSnap"));
+            for(int j = 0; j < model->meshCount; j++) {
+                Mesh mesh = model->meshes[j];
+                glBindVertexArray(mesh.VAO);
+                glBindBuffer(GL_ARRAY_BUFFER, mesh.VBO);
+                glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.EBO);
+                mat4 transformationMatrix;
+                gtmaLoadTransformationMatrix(&transformationMatrix, objPack->objects[i]);
+                gtmaSetBool(&shader, "ui", false);
+                gtmaSetMatrix(&shader, "transMatrix", transformationMatrix);
+                gtmaSetBool(&shader, "lightEnabled", mesh.lit);
+                gtmaSetVec3(&shader, "viewPos", renderCamera.position);
+                gtmaSetVec3(&shader, "clearColor", clearColor);
+                gtmaSetFloat(&shader, "fogLevel", fogLevel);
+                vec2 screenRes = {getWindowWidth(), getWindowHeight()};
+                vec2 frameRes = {renderWidth, renderHeight};
+                gtmaSetVec2(&shader, "screenRes", screenRes);
+                gtmaSetVec2(&shader, "frameRes", frameRes);
+                gtmaSetBool(&shader, "ditherEnabled", cfgLookupBool("ditherEnabled"));
+                gtmaSetBool(&shader, "vertexSnap", cfgLookupBool("vertexSnap"));
 
-            glBindTexture(GL_TEXTURE_2D, mesh.texture.id);
-            glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);
-            
+                glBindTexture(GL_TEXTURE_2D, mesh.texture.id);
+                glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);
+                
+            }
+
         }
-
     }
+
+    
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glViewport(0, 0, getWindowWidth(), getWindowHeight());
@@ -316,8 +231,6 @@ void gtmaRender() {
 }
 
 void gtmaCloseRenderer() {
-    free(objPack.objects);
-    free(lightPack.lights);
     glDeleteFramebuffers(1, &FBO);
 }
 
@@ -327,12 +240,12 @@ void gtmaSetClearColor(float r, float g, float b) {
     clearColor[2] = b;
 }
 
-GameObjectPack* getObjPack() {
-    return &objPack;
+void gtmaLoadGameObjectPack(GameObjectPack* pack) {
+    objPack = pack;
 }
 
-PointLightPack* getLightPack() {
-    return &lightPack;
+void gtmaLoadPointLightPack(PointLightPack* pack) {
+    lightPack = pack;
 }
 
 Shader* gtmaGetShader() {

@@ -1,21 +1,16 @@
 #pragma once
 #include "graphics/camera.h"
-#include "graphics/models.h"
 #include "graphics/shader.h"
+#include "scenes/objects.h"
 
 void gtmaInitRenderer();
 void gtmaSetRenderCamera(Camera* cam);
-void gtmaAddGameObject(GameObject* obj);
-GameObject* gtmaCreateAndAddGameObject(const char* path, const char* name, float x, float y, float z, float sx, float sy, float sz, float rx, float ry, float rz);
-void gtmaAddLight(PointLight* light);
-void gtmaRemoveGameObject(GameObject* obj);
-void gtmaRemoveLight(PointLight* light);
 void gtmaCloseRenderer();
 Shader* gtmaGetShader();
 void gtmaRender();
-GameObjectPack* getObjPack();
-PointLightPack* getLightPack();
 int getFrameWidth();
 int getFrameHeight();
+void gtmaLoadGameObjectPack(GameObjectPack* pack);
+void gtmaLoadPointLightPack(PointLightPack* pack);
 void gtmaSetClearColor(float r, float g, float b);
 void gtmaSetFogLevel(float level);

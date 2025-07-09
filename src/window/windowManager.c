@@ -98,3 +98,8 @@ void gtmaUpdateWindow() {
     SDL_GL_SwapWindow(window);
 
 }
+
+void gtmaCloseWindow() {
+    SDL_DestroyWindow(window);
+    SDL_Quit();
+}

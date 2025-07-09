@@ -4,12 +4,17 @@
 #include <GLFW/glfw3.h>
 #include <stdbool.h>
 #include "audio/audio.h"
-#include "scene/scene.h"
+#include "scenes/scenes.h"
 #include "window/windowManager.h"
 #include "window/events.h"
 #include "util/config.h"
 
+Scene* currentScene = NULL;
+
 int main(int argc, char* argv[]) {
+
+    extern Scene testScene1;
+    currentScene = &testScene1;
 
     if(argc < 2 || argc > 2) {
         printf("Usage: gtma [config file path]\n");
@@ -23,17 +28,19 @@ int main(int argc, char* argv[]) {
     gtmaInitWindow();
     gtmaInitAudio();
     gtmaInitRenderer();
-    initScene();
+    currentScene->init();
 
     while(gtmaIsRunning()) {
         gtmaUpdateEvents();
-        updateScene();
+        currentScene->update();
         gtmaUpdateWindow();
     }
 
+    currentScene->dispose();
     gtmaCloseRenderer();
     gtmaCloseAudio();
-    disposeScene();
+    gtmaDestroyConfig();
+    gtmaCloseWindow();
 
     printf("\n");
     return 0;

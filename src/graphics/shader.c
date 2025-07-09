@@ -2,6 +2,7 @@
 #include <cglm/cglm.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include "util/files.h"
 #include "graphics/shader.h"
 
@@ -105,6 +106,53 @@ void gtmaCreatePointLight(PointLight* light, float x, float y, float z, float r,
     light->sunMode = false;
 
     light->active = true;
+}
+
+void gtmaAddLight(PointLight* light, PointLightPack* lightPack) {
+    if(!light->inPack) {
+        if(lightPack->lightCount != 0) {
+            PointLightPack* tempPack = lightPack;
+            lightPack->lights = malloc((lightPack->lightCount + 1) * sizeof(PointLight*));
+            for(int i = 0; i <= tempPack->lightCount - 1; i++) {
+                lightPack->lights[i] = tempPack->lights[i];
+            }
+        } else {
+            lightPack->lights = malloc((lightPack->lightCount + 1) * sizeof(PointLight*));
+        }
+        lightPack->lights[lightPack->lightCount] = light;
+        light->packID = lightPack->lightCount;
+        lightPack->lightCount++;
+        light->inPack = true;
+    }
+}
+
+void gtmaRemoveLightID(PointLightPack* lightPack, int id) {
+    if (lightPack->lightCount == 0) {
+        return;
+    }
+
+    for(int i = 0; i < lightPack->lightCount; i++) {
+        if(id == lightPack->lights[i]->packID) {
+            PointLight* light = lightPack->lights[i];
+            int id = light->packID;
+            if (id < 0 || id >= lightPack->lightCount || lightPack->lights[id] != light) {
+                return;
+            }
+            for (int i = id; i < lightPack->lightCount - 1; i++) {
+                lightPack->lights[i] = lightPack->lights[i + 1];
+                lightPack->lights[i]->packID = i;
+            }
+            lightPack->lightCount--;
+            if (lightPack->lightCount > 0) {
+                lightPack->lights = realloc(lightPack->lights, lightPack->lightCount * sizeof(PointLight*));
+            } else {
+                free(lightPack->lights);
+                lightPack->lights = NULL;
+            }
+            light->inPack = false;
+        }
+    }
+
 }
 
 void gtmaSetBool(Shader* shader, const char* name, bool value) {         

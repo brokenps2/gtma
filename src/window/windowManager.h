@@ -7,3 +7,4 @@ void gtmaUpdateWindow();
 float getTime();
 float getDeltaTime();
 SDL_Window* getWindow();
+void gtmaCloseWindow();
