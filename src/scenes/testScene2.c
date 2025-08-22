@@ -22,9 +22,9 @@ void initScene2() {
     gtmaLoadGameObjectPack(&sceneObjectPack);
     gtmaLoadPointLightPack(&sceneLightPack);
 
-    gtmaCreateGameObject(&map2, "models/tileroomtest2.glb", "map", 0, 0, 0, 4, 4, 4, 0, 0, 0);
+    //gtmaCreateGameObject(&map2, "models/tileroomtest2.glb", "map", 0, 0, 0, 4, 4, 4, 0, 0, 0);
 
-    gtmaCreateCamera(&camera, getWindowWidth(), getWindowHeight(), camPos);
+    //gtmaCreateCamera(&camera, camPos);
     gtmaSetRenderCamera(&camera);
 
     gtmaCreatePointLight(&light, 0, 30, 0, brightness, 3, brightness);
@@ -39,7 +39,7 @@ extern Scene testScene1;
 
 void updateScene2() {
     gtmaCameraMatrix(&camera, 0.1f, 450.0f, gtmaGetShader());
-    gtmaCameraMove(&camera);
+    //gtmaCameraMove(&camera);
 
     if(isKeyPressed(SDL_SCANCODE_6)) {
         switchScene(&testScene1);

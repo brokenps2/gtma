@@ -111,10 +111,10 @@ void gtmaCreatePointLight(PointLight* light, float x, float y, float z, float r,
 void gtmaAddLight(PointLight* light, PointLightPack* lightPack) {
     if(!light->inPack) {
         if(lightPack->lightCount != 0) {
-            PointLightPack* tempPack = lightPack;
+            PointLightPack tempPack = *lightPack;
             lightPack->lights = malloc((lightPack->lightCount + 1) * sizeof(PointLight*));
-            for(int i = 0; i <= tempPack->lightCount - 1; i++) {
-                lightPack->lights[i] = tempPack->lights[i];
+            for(int i = 0; i <= tempPack.lightCount - 1; i++) {
+                lightPack->lights[i] = tempPack.lights[i];
             }
         } else {
             lightPack->lights = malloc((lightPack->lightCount + 1) * sizeof(PointLight*));

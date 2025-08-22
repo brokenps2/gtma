@@ -21,6 +21,8 @@ typedef struct Mesh {
     Texture texture;
     bool lit;
     unsigned int VAO, VBO, EBO;
+    AABB aabb;
+    bool collisionEnabled;
 } Mesh;
 
 typedef struct Model {

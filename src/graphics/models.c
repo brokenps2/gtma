@@ -1,4 +1,5 @@
 #include "graphics/texture.h"
+#include "physics/physics.h"
 #include <cglm/quat.h>
 #include <cglm/vec3.h>
 #include <mm_malloc.h>
@@ -206,6 +207,8 @@ void gtmaCreateModel(Model* model, const char* path) {
             glEnableVertexAttribArray(2);
             glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, color));
             glEnableVertexAttribArray(3);
+
+            mesh->collisionEnabled = true;
 
             model->meshes[i] = *mesh;
         }

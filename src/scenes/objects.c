@@ -6,7 +6,7 @@
 #include <stb_image.h>
 #include <string.h>
 
-void gtmaCreateGameObject(GameObject* object, const char* mdlPath, const char* name, float x, float y, float z, float sx, float sy, float sz, float rx, float ry, float rz) {
+void gtmaCreateGameObject(GameObject* object, const char* mdlPath, const char* name, vec3 position, vec3 scale, vec3 rotation) {
     Model model; 
     gtmaCreateModel(&model, mdlPath);
 
@@ -14,19 +14,21 @@ void gtmaCreateGameObject(GameObject* object, const char* mdlPath, const char* n
 
     object->model = model;
 
-    object->position[0] = x;
-    object->position[1] = y;
-    object->position[2] = z;
+    object->position[0] = position[0];
+    object->position[1] = position[1];
+    object->position[2] = position[2];
 
-    object->scale[0] = sx;
-    object->scale[1] = sy;
-    object->scale[2] = sz;
+    object->scale[0] = scale[0];
+    object->scale[1] = scale[1];
+    object->scale[2] = scale[2];
 
-    object->rotation[0] = rx;
-    object->rotation[1] = ry;
-    object->rotation[2] = rz;
+    object->rotation[0] = rotation[0];
+    object->rotation[1] = rotation[1];
+    object->rotation[2] = rotation[2];
 
-    object->collisionEnabled = true;
+    for(int i = 0; i < object->model.meshCount; i++) {
+        calculateMeshAABB(&object->model.meshes[i], object->scale, object->position);
+    }
 }
 
 void gtmaDeleteGameObject(GameObject* object) {

@@ -9,7 +9,6 @@ typedef struct GameObject {
     vec3 scale;
     int packID;
     bool inPack;
-    bool collisionEnabled;
 } GameObject;
 
 typedef struct ScreenObject {
@@ -32,7 +31,8 @@ typedef struct ScreenObjectPack {
     int objectCount;
 } ScreenObjectPack;
 
-void gtmaCreateGameObject(GameObject* object, const char* mdlPath, const char* name, float x, float y, float z, float sx, float sy, float sz, float rx, float ry, float rz);
+
+void gtmaCreateGameObject(GameObject* object, const char* mdlPath, const char* name, vec3 position, vec3 scale, vec3 rotation);
 void gtmaCreateGameObjectPack(GameObjectPack* pack);
 void gtmaDeleteGameObject(GameObject* object);
 void gtmaLoadTransformationMatrix(mat4* matrix, GameObject* object);

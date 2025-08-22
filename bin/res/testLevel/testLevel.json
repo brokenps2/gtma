@@ -1,0 +1,13 @@
+{
+  "gravity": 9.81,
+  "gameObjects": [
+    {
+      	"name": "map",
+	  	"path": "models/tileroomtest2.glb",
+	  	"x":  0, "y":  0, "z":  0,
+	  	"sx": 4, "sy": 4, "sz": 4,
+		"rx": 0, "ry": 0, "rz": 0
+    }
+  ]
+  }
+}

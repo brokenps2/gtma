@@ -58,6 +58,8 @@ void gtmaInitWindow() {
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
+
+    SDL_GL_SetSwapInterval(1);
 }
 
 SDL_Window* getWindow() {
@@ -94,6 +96,9 @@ void gtmaUpdateWindow() {
     if (timeToSleep > 0) {
         usleep(timeToSleep * 1e6);
     }
+
+    //printf("\r%lf", 1 / deltaTime);
+    fflush(stdout);
 
     SDL_GL_SwapWindow(window);
 

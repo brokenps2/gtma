@@ -27,7 +27,7 @@ unsigned int sVAO;
 unsigned int sVBO;
 
 float clearColor[3];
-float fogLevel = 0.000000028f;
+float fogLevel = 0.00000000038f;
 
 float fboScaleFactor = 0.5;
 
@@ -116,7 +116,7 @@ void gtmaRender() {
     renderHeight = getWindowHeight() * fboScaleFactor;
 
     if(lightPack != NULL) {
-        for(int i = 0; i <= lightPack->lightCount - 1; i++) {
+        for(int i = 0; i < lightPack->lightCount; i++) {
 
             char ati[256];
             char posStr[512];
