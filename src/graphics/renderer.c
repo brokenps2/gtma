@@ -27,7 +27,7 @@ unsigned int sVAO;
 unsigned int sVBO;
 
 float clearColor[3];
-float fogLevel = 0.00000000038f;
+float fogLevel = 0.0058f;
 
 float fboScaleFactor = 0.5;
 

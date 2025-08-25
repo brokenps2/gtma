@@ -301,6 +301,7 @@ void gtmaCameraMove(Camera* cam, GameObjectPack* objPack, bool flying) {
             if (downVelocity < 0) downVelocity = 0;
         }
         glm_vec3_copy(proposedPosition, cam->position);
+        gtmaCameraLook(cam);
         return;
     }
 
@@ -309,7 +310,7 @@ void gtmaCameraMove(Camera* cam, GameObjectPack* objPack, bool flying) {
     float maxFov = 95.5;
 
     if(isKeyDown(SDL_SCANCODE_LSHIFT)) {
-        maxSpeed = 21;
+        maxSpeed = 28;
         fov += 64 * getDeltaTime();
         if(fov > maxFov) fov = maxFov;
     } else {

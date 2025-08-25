@@ -31,7 +31,7 @@ void gtmaInitWindow() {
         exit(1);
     }
     
-    frameTime = 1.0f / 144.0f;
+    frameTime = 1.0f / 30.0f;
  
     const char* title = cfgLookupString("title");
 
@@ -98,7 +98,7 @@ void gtmaUpdateWindow() {
     }
 
     //printf("\r%lf", 1 / deltaTime);
-    fflush(stdout);
+    //fflush(stdout);
 
     SDL_GL_SwapWindow(window);
 

@@ -41,6 +41,22 @@ bool testAABBIntersection(AABB a, AABB b) {
     (a.minZ <= b.maxZ && a.maxZ >= b.minZ);
 }
 
+static inline bool triangleAABBOverlap(AABB* aabb, vec3 tri[3]) {
+    float min[3] = {FLT_MAX, FLT_MAX, FLT_MAX};
+    float max[3] = {-FLT_MAX, -FLT_MAX, -FLT_MAX};
+
+    for (int i = 0; i < 3; i++) {
+        for (int c = 0; c < 3; c++) {
+            if (tri[i][c] < min[c]) min[c] = tri[i][c];
+            if (tri[i][c] > max[c]) max[c] = tri[i][c];
+        }
+    }
+
+    return !(aabb->maxX < min[0] || aabb->minX > max[0] ||
+             aabb->maxY < min[1] || aabb->minY > max[1] ||
+             aabb->maxZ < min[2] || aabb->minZ > max[2]);
+}
+
 static void calculateTriangleNormal(const vec3 v0, const vec3 v1, const vec3 v2, vec3 normal) {
     vec3 edge1, edge2;
     for (int i = 0; i < 3; i++) {
@@ -135,7 +151,7 @@ bool updateCameraPhysics(GameObjectPack* objPack, Camera* cam) {
                         }
                     }
 
-                    if (checkAABBTriangleCollision(&cam->aabb, tri)) {
+                    if (triangleAABBOverlap(&cam->aabb, tri) && checkAABBTriangleCollision(&cam->aabb, tri)) {
                         return true;
                     }
                 }

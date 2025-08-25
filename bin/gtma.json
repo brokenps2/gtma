@@ -2,7 +2,7 @@
   "resLoc": "/home/eli/gtma/bin/res/",
   "title": "gtma",
   "width": 1024,
-  "height":768,
+  "height": 768,
   "mouseSensitivity": 12,
   "fboScaleFactor": 1,
   "vertexSnap": true,
