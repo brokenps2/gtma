@@ -102,6 +102,8 @@ void gtmaCreatePointLight(PointLight* light, float x, float y, float z, float r,
     light->color[0] = r;
     light->color[1] = g;
     light->color[2] = b;
+
+    light->range = 1;
     
     light->sunMode = false;
 

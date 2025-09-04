@@ -27,11 +27,14 @@ unsigned int sVAO;
 unsigned int sVBO;
 
 float clearColor[3];
-float fogLevel = 0.0058f;
+float fogLevel = 0.0000000058f;
+
+float ambientLight = 0.1;
 
 float fboScaleFactor = 0.5;
 
 GameObjectPack* objPack;
+ScreenObjectPack* screenPack;
 PointLightPack* lightPack;
 
 void gtmaInitRenderer() {
@@ -110,6 +113,69 @@ void resizeFBO(int newWidth, int newHeight) {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
+void gtmaSetAmbientLightLevel(float ambient) {
+    ambientLight = ambient;
+}
+
+void gtmaRenderScreen() {
+    glDisable(GL_DEPTH_TEST);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    if (screenPack != NULL) {
+        for (int i = 0; i < screenPack->objectCount; i++) {
+            ScreenObject* obj = screenPack->objects[i];
+            if (!obj->visible) continue;
+
+            for (int j = 0; j < obj->model.meshCount; j++) {
+                Mesh mesh = obj->model.meshes[j];
+                glBindVertexArray(mesh.VAO);
+                glBindBuffer(GL_ARRAY_BUFFER, mesh.VBO);
+                glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.EBO);
+
+                mat4 transformationMatrix;
+                glm_mat4_identity(transformationMatrix);
+
+                glm_scale(transformationMatrix, (vec3){obj->size[0], obj->size[1], 1.0f});
+
+                glm_translate(transformationMatrix, (vec3){obj->position[0], obj->position[1], 0.0f});
+
+                if (obj->rotation != 0.0f)
+                    glm_rotate_z(transformationMatrix, glm_rad(obj->rotation), transformationMatrix);
+
+
+                gtmaUseShader(&shader);
+                gtmaSetBool(&shader, "frame", false);
+                gtmaSetBool(&shader, "ui", true);
+                gtmaSetMatrix(&shader, "transMatrix", transformationMatrix);
+                glBindTexture(GL_TEXTURE_2D, mesh.texture.id);
+                glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);
+
+                mat4 ortho;
+                glm_ortho(0.0f, getWindowWidth(), getWindowHeight(), 0.0f, -1.0f, 1.0f, ortho);  
+                glUniformMatrix4fv(glGetUniformLocation(shader.id, "orthoMatrix"), 1, GL_FALSE, (float*)ortho);
+
+
+            }
+        }
+    }
+}
+
+void gtmaRenderFBO() {
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glViewport(0, 0, getWindowWidth(), getWindowHeight());
+    glDisable(GL_DEPTH_TEST);
+    glClearColor(glc(9), glc(8), glc(22), 0);
+    glClear(GL_COLOR_BUFFER_BIT);
+    gtmaUseShader(&shader);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    gtmaSetBool(&shader, "frame", true);
+    glBindVertexArray(sVAO);
+    glBindTexture(GL_TEXTURE_2D, renderTexture);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    gtmaSetBool(&shader, "frame", false);
+}
+
 void gtmaRender() {
 
     renderWidth = getWindowWidth() * fboScaleFactor;
@@ -123,6 +189,7 @@ void gtmaRender() {
             char colStr[512];
             char actStr[512];
             char sunStr[512];
+            char rngStr[512];
 
             if(i != 0) {
                 memset(ati, 0, strlen(ati));
@@ -130,6 +197,7 @@ void gtmaRender() {
                 memset(colStr, 0, strlen(colStr));
                 memset(actStr, 0, strlen(actStr));
                 memset(sunStr, 0, strlen(sunStr));
+                memset(rngStr, 0, strlen(rngStr));
             }
 
             strcpy(ati, "pointLights[");
@@ -151,11 +219,17 @@ void gtmaRender() {
             strcpy(sunStr, ati);
             strcat(sunStr, ".sunMode");
             sunStr[strlen(sunStr) + 1] = '\0';
+            
+            strcpy(rngStr, ati);
+            strcat(rngStr, ".range");
+            rngStr[strlen(rngStr) + 1] = '\0';
 
             gtmaSetVec3(&shader, posStr, lightPack->lights[i]->position);
             gtmaSetVec3(&shader, colStr, lightPack->lights[i]->color);
             gtmaSetBool(&shader, actStr, lightPack->lights[i]->active);
             gtmaSetBool(&shader, sunStr, lightPack->lights[i]->sunMode);
+            gtmaSetFloat(&shader, rngStr, lightPack->lights[i]->range);
+            gtmaSetFloat(&shader, "ambientLevel", ambientLight);
 
             gtmaSetInt(&shader, "actualLightCount", lightPack->lightCount);
         }
@@ -214,21 +288,12 @@ void gtmaRender() {
         }
     }
 
-    
+    gtmaRenderFBO();
 
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    glViewport(0, 0, getWindowWidth(), getWindowHeight());
-    glDisable(GL_DEPTH_TEST);
-    glClearColor(glc(9), glc(8), glc(22), 0);
-    glClear(GL_COLOR_BUFFER_BIT);
-    gtmaUseShader(&shader);
-    glBindTexture(GL_TEXTURE_2D, 0);
-    gtmaSetBool(&shader, "frame", true);
-    glBindVertexArray(sVAO);
-    glBindTexture(GL_TEXTURE_2D, renderTexture);
-    glDrawArrays(GL_TRIANGLES, 0, 6);
-
+    gtmaRenderScreen();
 }
+
+
 
 void gtmaCloseRenderer() {
     glDeleteFramebuffers(1, &FBO);
@@ -246,6 +311,10 @@ void gtmaLoadGameObjectPack(GameObjectPack* pack) {
 
 void gtmaLoadPointLightPack(PointLightPack* pack) {
     lightPack = pack;
+}
+
+void gtmaLoadScreenObjectPack(ScreenObjectPack* pack) {
+    screenPack = pack;
 }
 
 Shader* gtmaGetShader() {

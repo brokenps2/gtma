@@ -9,6 +9,7 @@ struct PointLight {
     vec3 color;
     bool onoff;
     bool sunMode;
+    float range;
 };
 
 uniform PointLight pointLights[32]; //remember this incase I somehow need more
@@ -23,14 +24,21 @@ uniform bool lightEnabled;
 
 uniform bool frame = false;
 
+uniform bool ui = false;
+
 uniform vec3 viewPos;
 
 uniform float fogLevel = 0.0022f;
+
+uniform float ambientLevel = 0.02;
+
+vec3 ambient = vec3(ambientLevel);
 
 uniform mat4 camCross;
 uniform mat4 viewMatrix;
 uniform mat4 projMatrix;
 uniform mat4 transMatrix;
+uniform mat4 orthoMatrix;
 
 uniform vec2 screenRes = vec2(640, 480);
 uniform vec2 frameRes;
@@ -41,7 +49,6 @@ vec3 calcPointLight(PointLight light) {
     vec3 lPos = vec3(transMatrix * vec4(position, 1.0));
     vec3 lNormal = mat3(transpose(inverse(transMatrix))) * normal;
 
-    vec3 ambient = vec3(0.05);
 
     vec3 norm = normalize(lNormal);
     vec3 lightDir = normalize(light.position - lPos);
@@ -61,8 +68,9 @@ vec3 calcPointLight(PointLight light) {
     if(!light.sunMode) {
         float distance    = length(light.position - lPos);
         float avgBri = (light.color[0] + light.color[1] + light.color[2]) / 3;
-        float attenuation = 1.0 / (constant + (linear * avgBri) * distance + 
-  		    (quadratic * avgBri) * (distance * distance));
+        float range = light.range;
+        float attenuation = 1.0 / (constant + (linear * range) * distance + 
+  		    (quadratic * range) * (distance * distance));
         attenuation *= avgBri;
         diffuse     *= attenuation;
         specular    *= attenuation;
@@ -95,6 +103,12 @@ void main() {
         return;
     }
 
+    if(ui) {
+        gl_Position = orthoMatrix * transMatrix * vec4(position, 1.0);
+        outTexCoord = texCoord;
+        return;
+    }
+
     vec3 totalLight = vec3(0.0);
     int activeLights = 0;
 
@@ -114,7 +128,6 @@ void main() {
     }
 
     outLightColor = totalLight;
-    outLightColor += totalLight;
 
     gl_Position = camCross * transMatrix * vec4(position, 1.0);
 

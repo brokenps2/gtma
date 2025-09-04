@@ -31,6 +31,25 @@ void gtmaCreateGameObject(GameObject* object, const char* mdlPath, const char* n
     }
 }
 
+void gtmaCreateScreenObject(ScreenObject* object, const char* mdlPath, const char* name, vec2 position, vec2 size, float rotation) {
+    Model model;
+    gtmaCreateModel(&model, mdlPath);
+
+    object->name = name;
+    object->model = model;
+
+    object->position[0] = position[0];
+    object->position[1] = position[1];
+
+    object->size[0] = size[0];
+    object->size[1] = size[1];
+
+    object->rotation = rotation;
+
+    object->visible = true;
+    object->inPack = false;
+}
+
 void gtmaDeleteGameObject(GameObject* object) {
     for(int i = 0; i < object->model.meshCount; i++) {
         Mesh mesh = object->model.meshes[i];
@@ -98,7 +117,7 @@ void gtmaRemoveGameObjectName(GameObjectPack* objPack, const char* name) {
     }
 
     for(int i = 0; i < objPack->objectCount; i++) {
-        if(strcmp(name, objPack->objects[i]->name)) {
+        if(strcmp(name, objPack->objects[i]->name) == 0) {
             GameObject* obj = objPack->objects[i];
             int id = obj->packID;
             if (id < 0 || id >= objPack->objectCount || objPack->objects[id] != obj) {
@@ -149,62 +168,74 @@ void gtmaRemoveGameObjectID(GameObjectPack* objPack, int id) {
 
 }
 
-void gtmaCreateScreenObject(ScreenObject* object, const char* texturePath, const char* name, float x, float y, float sx, float sy, float r) {
-    Model model; 
-    gtmaCreateModel(&model, "models/billboard.glb");
-    Texture texture;
-    gtmaCreateTexture(&texture, texturePath);
-    model.meshes[0].texture = texture;
 
-    object->name = name;
-
-    object->model = model;
-
-    object->position[0] = x;
-    object->position[1] = y;
-
-    object->scale[0] = sx;
-    object->scale[1] = sy;
-
-    object->rotation = r;
+void gtmaAddScreenObject(ScreenObject* obj, ScreenObjectPack* pack) {
+    if (!obj->inPack) {
+        if (pack->objectCount != 0) {
+            ScreenObjectPack tempPack = *pack;
+            pack->objects = malloc((pack->objectCount + 1) * sizeof(ScreenObject*));
+            for (int i = 0; i < tempPack.objectCount; i++) {
+                pack->objects[i] = tempPack.objects[i];
+            }
+        } else {
+            pack->objects = malloc(sizeof(ScreenObject*));
+        }
+        pack->objects[pack->objectCount] = obj;
+        obj->packID = pack->objectCount;
+        pack->objectCount++;
+        obj->inPack = true;
+    }
 }
 
-void gtmaLoadScreenTransformationMatrix(mat4* matrix, ScreenObject* obj) {
-    float x_px = obj->position[0];
-    float y_px = obj->position[1];
-    float sx_px = obj->scale[0];
-    float sy_px = obj->scale[1];
+void gtmaRemoveScreenObjectName(ScreenObjectPack* pack, const char* name) {
+    if (pack->objectCount == 0) return;
 
-    float fboW = (float)getFrameWidth();
-    float fboH = (float)getFrameHeight();
+    for (int i = 0; i < pack->objectCount; i++) {
+        if (strcmp(name, pack->objects[i]->name) == 0) {
+            ScreenObject* obj = pack->objects[i];
+            int id = obj->packID;
+            if (id < 0 || id >= pack->objectCount || pack->objects[id] != obj) {
+                return;
+            }
 
-    // Convert pixel position to NDC
-    float ndcX = (x_px / fboW) * 2.0f - 1.0f;
-    float ndcY = 1.0f - (y_px / fboH) * 2.0f;  // invert Y so (0,0) is bottom-left
+            for (int j = id; j < pack->objectCount - 1; j++) {
+                pack->objects[j] = pack->objects[j + 1];
+                pack->objects[j]->packID = j;
+            }
 
-    // Convert pixel size to NDC scale
-    float ndcSX = (sx_px / fboW) * 2.0f;
-    float ndcSY = (sy_px / fboH) * 2.0f;
-
-    // Start with identity
-    glm_mat4_identity(*matrix);
-
-    // Scale
-    mat4 scale;
-    glm_mat4_identity(scale);
-    glm_scale(scale, (vec3){ndcSX, ndcSY, 1.0f});
-    glm_mat4_mul(scale, *matrix, *matrix);
-
-    // Rotate around Z axis
-    mat4 rotation;
-    glm_mat4_identity(rotation);
-    glm_rotate_z(rotation, obj->rotation, rotation);
-    glm_mat4_mul(rotation, *matrix, *matrix);
-
-    // Translate
-    mat4 translation;
-    glm_mat4_identity(translation);
-    glm_translate(translation, (vec3){ndcX, ndcY, 0.0f});
-    glm_mat4_mul(translation, *matrix, *matrix);
+            pack->objectCount--;
+            if (pack->objectCount > 0) {
+                pack->objects = realloc(pack->objects, pack->objectCount * sizeof(ScreenObject*));
+            } else {
+                free(pack->objects);
+                pack->objects = NULL;
+            }
+            obj->inPack = false;
+            obj->packID = -1;
+            return;
+        }
+    }
 }
 
+void gtmaRemoveScreenObjectID(ScreenObjectPack* pack, int id) {
+    if (pack->objectCount == 0) return;
+    if (id < 0 || id >= pack->objectCount) return;
+
+    ScreenObject* obj = pack->objects[id];
+
+    for (int j = id; j < pack->objectCount - 1; j++) {
+        pack->objects[j] = pack->objects[j + 1];
+        pack->objects[j]->packID = j;
+    }
+
+    pack->objectCount--;
+    if (pack->objectCount > 0) {
+        pack->objects = realloc(pack->objects, pack->objectCount * sizeof(ScreenObject*));
+    } else {
+        free(pack->objects);
+        pack->objects = NULL;
+    }
+
+    obj->inPack = false;
+    obj->packID = -1;
+}

@@ -28,4 +28,6 @@ void gtmaPlayTrackFrom(Track* track, int seconds);
 void gtmaUpdateAudio(vec3 camPos, vec3 cameraDir);
 void gtmaStopTrack(Track* track);
 void gtmaStopSound(Sound* sound);
+void gtmaSetSoundPosition(Sound* sound, vec3 position);
+void gtmaChangePitch(Sound* sound, float value);
 void gtmaCloseAudio();

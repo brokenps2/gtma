@@ -13,13 +13,17 @@
 #include <SDL2/SDL.h>
 #include "window/events.h"
 #include "graphics/camera.h"
+#include "audio/audio.h"
 #include <GLFW/glfw3.h>
 
 double oldMouseX = 0, oldMouseY = 0, newMouseX = 0, newMouseY = 0;
 
-float fov = 80.0f;
+float fov = 75.0f;
 
 static float camLength, camRadius;
+
+Sound footstep;
+Sound footstepFast;
 
 AABB calculateCameraAABB(vec3 position, float sizeXZ, float sizeY) {
     vec3 halfSize = {sizeXZ / 2, sizeY / 2, sizeXZ / 2};
@@ -60,6 +64,9 @@ void gtmaCreateCamera(Camera* cam, float length, float radius, vec3 pos) {
     cam->aabb = calculateCameraAABB(cam->position, radius, length);
     camLength = length;
     camRadius = radius;
+
+    gtmaCreateSound(&footstep, "audio/footstep.wav", true, 1, cam->position);
+    gtmaCreateSound(&footstepFast, "audio/footstepfast.wav", true, 1, cam->position);
 
 }
 
@@ -157,9 +164,11 @@ float rightVelocity = 0.0f;
 float upVelocity = 0.0f;
 float downVelocity = 0.0f;
 float fallingSpeed = 0.0f;
+float lastFallingSpeed = 0.0f;
 
 float maxSlopeHeight = 0.15f;
 float slopeStep = 0.05f;
+bool moving = false;
 
 vec3 proposedPosition;
 
@@ -221,6 +230,8 @@ void cameraCollide(Camera* cam, GameObjectPack* objPack) {
 
     cam->aabb = calculateCameraAABB(tempPosition, camRadius, camLength);
 
+    lastFallingSpeed = fallingSpeed;
+
     if (!updateCameraPhysics(objPack, cam)) {
         cam->position[1] = tempPosition[1];
         fallingSpeed += (9.81f * 4) * getDeltaTime();
@@ -259,11 +270,38 @@ void gtmaCameraMove(Camera* cam, GameObjectPack* objPack, bool flying) {
     }
 
     if (isKeyDown(SDL_SCANCODE_D)) {
+        moving = true;
         rightVelocity += accel * getDeltaTime();
         if (rightVelocity > maxSpeed) rightVelocity = maxSpeed;
     } else {
+        moving = false;
         rightVelocity -= accel * getDeltaTime();
         if (rightVelocity < 0) rightVelocity = 0;
+    }
+
+    bool playedFootstepSound = false;
+
+    float fallingSpeedRounded = roundf(fallingSpeed * 100) / 100;
+
+    if((moving) && fallingSpeedRounded < 1) {
+        gtmaSetSoundPosition(&footstep, cam->position);
+        gtmaSetSoundPosition(&footstepFast, cam->position);
+        if(!playedFootstepSound) {
+            playedFootstepSound = true;
+            if(isKeyDown(SDL_SCANCODE_LSHIFT)) {
+                gtmaChangePitch(&footstepFast, ((float)(rand() % (12 + 1 - 6) + 6)) / 10);
+                gtmaStopSound(&footstep);
+                gtmaPlaySound(&footstepFast);
+            } else {
+                gtmaChangePitch(&footstep, ((float)(rand() % (12 + 1 - 6) + 6)) / 10);
+                gtmaStopSound(&footstepFast);
+                gtmaPlaySound(&footstep);
+            }
+        }
+    } else {
+        gtmaStopSound(&footstep);
+        gtmaStopSound(&footstepFast);
+        playedFootstepSound = false;
     }
 
     if(SDL_GetRelativeMouseMode()) {
@@ -307,7 +345,7 @@ void gtmaCameraMove(Camera* cam, GameObjectPack* objPack, bool flying) {
 
     cameraCollide(cam, objPack);
 
-    float maxFov = 95.5;
+    float maxFov = 80.5;
 
     if(isKeyDown(SDL_SCANCODE_LSHIFT)) {
         maxSpeed = 28;
@@ -316,7 +354,7 @@ void gtmaCameraMove(Camera* cam, GameObjectPack* objPack, bool flying) {
     } else {
         maxSpeed = 16;
         fov -= 64 * getDeltaTime();
-        if(fov <= 90) fov = 90;
+        if(fov <= 75) fov = 75;
     }
 
     cam->position[0] = roundf(cam->position[0] * 100) / 100;

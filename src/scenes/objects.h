@@ -14,22 +14,25 @@ typedef struct GameObject {
 typedef struct ScreenObject {
     Model model;
     const char* name;
+
     vec2 position;
+    vec2 size;
     float rotation;
-    vec2 scale;
+    bool visible;
+
     int packID;
     bool inPack;
 } ScreenObject;
-
-typedef struct GameObjectPack {
-    GameObject** objects;
-    int objectCount;
-} GameObjectPack;
 
 typedef struct ScreenObjectPack {
     ScreenObject** objects;
     int objectCount;
 } ScreenObjectPack;
+
+typedef struct GameObjectPack {
+    GameObject** objects;
+    int objectCount;
+} GameObjectPack;
 
 
 void gtmaCreateGameObject(GameObject* object, const char* mdlPath, const char* name, vec3 position, vec3 scale, vec3 rotation);
@@ -41,6 +44,10 @@ void gtmaRemoveGameObjectName(GameObjectPack* objPack, const char* name);
 void gtmaRemoveGameObjectID(GameObjectPack* objPack, int id);
 void gtmaDeleteGameObjectPack(GameObjectPack* objPack);
 void gtmaLoadTransformationMatrix(mat4* matrix, GameObject* object);
-void gtmaCreateScreenObject(ScreenObject* object, const char* texturePack, const char* name, float x, float y, float sx, float sy, float r);
+void gtmaCreateScreenObject(ScreenObject* object, const char* mdlPath, const char* name, vec2 position, vec2 size, float rotation);
+void gtmaAddScreenObject(ScreenObject* obj, ScreenObjectPack* pack);
+void gtmaRemoveScreenObjectName(ScreenObjectPack* pack, const char* name);
+void gtmaRemoveScreenObjectID(ScreenObjectPack* pack, int id);
 void gtmaLoadScreenTransformationMatrix(mat4* matrix, ScreenObject* object);
+void gtmaCreateScreenObject(ScreenObject* object, const char* mdlPath, const char* name, vec2 position, vec2 size, float rotation);
 //TODO: Local Screenobject pack functions

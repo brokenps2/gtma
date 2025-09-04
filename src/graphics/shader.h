@@ -22,6 +22,7 @@ typedef struct PointLight {
     bool sunMode;
     int packID;
     bool inPack;
+    float range;
 } PointLight;
 
 typedef struct PointLightPack {

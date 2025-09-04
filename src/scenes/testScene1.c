@@ -26,7 +26,10 @@ static PointLight light3;
 static PointLight rightHallLight;
 static PointLight leftHallLight;
 
-static float brightness = 2.15f;
+static PointLight lamp;
+static bool flashlightOn = false;
+
+static float brightness = 3.15f;
 
 void initScene() {
     
@@ -38,7 +41,7 @@ void initScene() {
     sky.model.meshes[0].lit = false;
     sky.model.meshes[0].collisionEnabled = false;
     gtmaCreateGameObject(&exitSign, "models/exitsign.glb", "exitSign", (vec3){17.5, 9, -31}, (vec3){2, 2, 2}, (vec3){0, -120, 0});
-    gtmaCreateGameObject(&desk, "models/desk.glb", "desk", (vec3){-19, -9, 0}, (vec3){3, 3, 3}, (vec3){0, 0, 0});
+    gtmaCreateGameObject(&desk, "models/desk.glb", "desk", (vec3){-19, -9, 0}, (vec3){3.2, 3, 3.2}, (vec3){0, 0, 0});
 
     gtmaCreateCamera(&camera, 10, 6, camPos);
     gtmaSetRenderCamera(&camera);
@@ -49,6 +52,8 @@ void initScene() {
 
     gtmaCreatePointLight(&rightHallLight, 40, 3, 74, brightness/1.2, brightness/1.2, brightness/1.2);
     gtmaCreatePointLight(&leftHallLight, 50, 7, -95, brightness/1.3, brightness/1.3, brightness/1.3);
+
+    gtmaCreatePointLight(&lamp, camPos[0], camPos[1], camPos[2], brightness, brightness, brightness);
 
     gtmaAddGameObject(&map, &sceneObjectPack);
     //gtmaAddGameObject(&sky, &sceneObjectPack);
@@ -62,25 +67,48 @@ void initScene() {
 
     gtmaSetClearColor(0, 0, 0);
 
+    gtmaCameraMatrix(&camera, 0.1f, 450.0f, gtmaGetShader());
+
 }
 
-extern Scene testScene2;
+extern Scene outdoorScene;
 
 bool spectating = false;
+
+void checkFlashlight() {
+    glm_vec3_copy(camera.position, lamp.position);
+
+    if(isKeyPressed(SDL_SCANCODE_F)) flashlightOn = !flashlightOn;
+    if(flashlightOn && !lamp.inPack) {
+        gtmaAddLight(&lamp, &sceneLightPack); 
+    } else if(!flashlightOn && lamp.inPack) {
+        gtmaRemoveLightID(&sceneLightPack, lamp.packID);
+    }
+}
 
 void updateScene() {
 
     gtmaCameraMatrix(&camera, 0.1f, 450.0f, gtmaGetShader());
     gtmaCameraMove(&camera, &sceneObjectPack, spectating);
     
-    printf("\r%f %f %f", camera.position[0], camera.position[1], camera.position[2]);
-    fflush(stdout);
+    //printf("\r%f %f %f", camera.position[0], camera.position[1], camera.position[2]);
+    //fflush(stdout);
 
     gtmaUpdateAudio(camera.position, camera.direction);
 
     if(isKeyPressed(SDL_SCANCODE_6)) {
-        switchScene(&testScene2);
+        switchScene(&outdoorScene);
     }
+
+    if(isKeyPressed(SDL_SCANCODE_O)) {
+        for(int i = 0; i < sceneLightPack.lightCount; i++) {
+            sceneLightPack.lights[i]->color[0] = brightness/8;
+            sceneLightPack.lights[i]->color[1] = brightness/8;
+            sceneLightPack.lights[i]->color[2] = brightness/8;
+        }
+    }
+
+    checkFlashlight();
 
     if(isKeyPressed(SDL_SCANCODE_P)) spectating = !spectating;
 

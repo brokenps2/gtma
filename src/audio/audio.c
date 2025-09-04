@@ -105,15 +105,9 @@ void gtmaCreateSound(Sound* sound, const char* path, bool loop, float vol, vec3 
     } else {
         alSourcei(sound->sourceID, AL_LOOPING, AL_FALSE);
     }
-    alSourcei(sound->sourceID, AL_GAIN, vol);
 
     alSource3f(sound->sourceID, AL_POSITION, position[0], position[1], position[2]);
-
-    alDistanceModel(AL_LINEAR_DISTANCE);
-
-    alSourcef(sound->sourceID, AL_REFERENCE_DISTANCE, 1.0f);
-    alSourcef(sound->sourceID, AL_MAX_DISTANCE, 15 * vol);
-    alSourcef(sound->sourceID, AL_ROLLOFF_FACTOR, 1.0f);
+    alSourcei(sound->sourceID, AL_GAIN, vol);
 
     free(rawAudioBuffer);
 
@@ -151,12 +145,15 @@ void gtmaDeleteSound(Sound* sound) {
     alcCloseDevice(audioDevice);
 }
 
+void gtmaChangePitch(Sound* sound, float value) {
+    alSourcef(sound->sourceID, AL_PITCH, value);
+}
+
 void gtmaPlaySound(Sound* sound) {
     int state;
     alGetSourcei(sound->sourceID, AL_SOURCE_STATE, &state);
     if(state == AL_STOPPED) {
         sound->isPlaying = false;
-        alSourcei(sound->sourceID, AL_POSITION, 0);
     }
 
     if(!sound->isPlaying) {
@@ -171,7 +168,6 @@ void gtmaPlaySoundFrom(Sound* sound, int seconds) {
     alGetSourcei(sound->sourceID, AL_SOURCE_STATE, &state);
     if(state == AL_STOPPED) {
         sound->isPlaying = false;
-        alSourcei(sound->sourceID, AL_POSITION, 0);
     }
 
     if(!sound->isPlaying) {

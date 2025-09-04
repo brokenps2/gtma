@@ -19,6 +19,8 @@ uniform vec3 clearColor = vec3(0, 0, 0);
 uniform vec2 screenRes = vec2(640, 480);
 uniform vec2 frameRes = vec2(640, 480);
 
+uniform bool ui = false;
+
 vec3 greyscale(vec4 color) {
     vec3 tcol = vec3(color.r, color.g, color.b);
     float g = dot(tcol, vec3(0.299, 0.587, 0.114));
@@ -63,6 +65,11 @@ vec4 dither(vec4 color, int numLevels) {
 void main() {
 
     if(frame) {
+        fragColor = texture(tex0, outTexCoord);
+        return;
+    }
+
+    if(ui) {
         fragColor = texture(tex0, outTexCoord);
         return;
     }
