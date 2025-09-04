@@ -15,6 +15,8 @@ typedef struct ScreenObject {
     Model model;
     const char* name;
 
+    char* text;
+
     vec2 position;
     vec2 size;
     float rotation;
@@ -51,3 +53,4 @@ void gtmaRemoveScreenObjectID(ScreenObjectPack* pack, int id);
 void gtmaLoadScreenTransformationMatrix(mat4* matrix, ScreenObject* object);
 void gtmaCreateScreenObject(ScreenObject* object, const char* mdlPath, const char* name, vec2 position, vec2 size, float rotation);
 void gtmaDeletScreenObjectPack(ScreenObjectPack* objPack);
+void gtmaChangeScreenObjectTexture(ScreenObject* object, const char* path);

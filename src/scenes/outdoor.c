@@ -41,7 +41,9 @@ static void initScene() {
     sky.model.meshes[0].lit = false;
     sky.model.meshes[0].collisionEnabled = false;
 
-    gtmaCreateScreenObject(&uitest, "models/uitest.glb", "uitest", (vec2){0.6, 0.6}, (vec2){100, 200}, 0);
+    gtmaCreateScreenObject(&uitest, "models/uitest.glb", "uitest", (vec2){64, 48}, (vec2){8, 8}, 0);
+    gtmaChangeScreenObjectTexture(&uitest, "images/crosshair.png");
+
  
     gtmaCreateCamera(&camera, 10, 6, camPos);
     gtmaSetRenderCamera(&camera);
@@ -51,7 +53,7 @@ static void initScene() {
     gtmaCreatePointLight(&light3, -300, 300, -300, brightness, brightness, brightness); light3.sunMode = true;
 
     gtmaAddGameObject(&map, &sceneObjectPack);
-    //gtmaAddGameObject(&sky, &sceneObjectPack);
+    gtmaAddGameObject(&sky, &sceneObjectPack);
     gtmaAddScreenObject(&uitest, &sceneScreenPack);
     gtmaAddLight(&light1, &sceneLightPack);
     gtmaAddLight(&light2, &sceneLightPack);

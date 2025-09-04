@@ -26,6 +26,8 @@ uniform bool frame = false;
 
 uniform bool ui = false;
 
+uniform bool text = false;
+
 uniform vec3 viewPos;
 
 uniform float fogLevel = 0.0022f;
@@ -107,6 +109,15 @@ void main() {
         gl_Position = orthoMatrix * transMatrix * vec4(position, 1.0);
         outTexCoord = texCoord;
         return;
+    }
+
+    if(text) {
+        vec2 ndc = vec2(
+            (position.x / screenRes.x) * 2.0 - 1.0,
+            (position.y / screenRes.y) * 2.0 - 1.0
+        );
+        gl_Position = vec4(ndc, 0.0, 1.0);
+        outTexCoord = texCoord;
     }
 
     vec3 totalLight = vec3(0.0);

@@ -1,3 +1,4 @@
+#include <AL/al.h>
 #include <SDL2/SDL_timer.h>
 #include <cglm/cam.h>
 #include <cglm/cglm.h>
@@ -24,6 +25,7 @@ static float camLength, camRadius;
 
 Sound footstep;
 Sound footstepFast;
+Sound jump;
 
 AABB calculateCameraAABB(vec3 position, float sizeXZ, float sizeY) {
     vec3 halfSize = {sizeXZ / 2, sizeY / 2, sizeXZ / 2};
@@ -67,6 +69,9 @@ void gtmaCreateCamera(Camera* cam, float length, float radius, vec3 pos) {
 
     gtmaCreateSound(&footstep, "audio/footstep.wav", true, 1, cam->position);
     gtmaCreateSound(&footstepFast, "audio/footstepfast.wav", true, 1, cam->position);
+    alSourcef(footstep.sourceID, AL_GAIN, 0.1);
+    alSourcef(footstepFast.sourceID, AL_GAIN, 0.1);
+    gtmaCreateSound(&jump, "audio/jump.wav", 0, 1, cam->position);
 
 }
 
@@ -174,7 +179,9 @@ vec3 proposedPosition;
 
 void cameraCollide(Camera* cam, GameObjectPack* objPack) {
     if (isKeyDown(SDL_SCANCODE_SPACE) && fallingSpeed == 0) { 
-        fallingSpeed = -22.0f;
+        gtmaSetSoundPosition(&jump, cam->position);
+        gtmaPlaySound(&jump);
+        fallingSpeed = -20.0f;
     }
 
     if(SDL_GetRelativeMouseMode()) {
@@ -346,11 +353,11 @@ void gtmaCameraMove(Camera* cam, GameObjectPack* objPack, bool flying) {
     float maxFov = 80.5;
 
     if(isKeyDown(SDL_SCANCODE_LSHIFT)) {
-        maxSpeed = 28;
+        maxSpeed = 32;
         fov += 64 * getDeltaTime();
         if(fov > maxFov) fov = maxFov;
     } else {
-        maxSpeed = 16;
+        maxSpeed = 20;
         fov -= 64 * getDeltaTime();
         if(fov <= 75) fov = 75;
     }

@@ -88,6 +88,11 @@ void gtmaDeleteScreenObject(ScreenObject* object) {
     }
 }
 
+void gtmaChangeScreenObjectTexture(ScreenObject* object, const char* path) {
+    stbi_image_free(object->model.meshes[0].texture.data);
+    gtmaCreateTexture(&object->model.meshes[0].texture, path);
+}
+
 void gtmaLoadTransformationMatrix(mat4* matrix, GameObject* object) {
 
     if(object->rotation[0] < 0) object->rotation[0] = 360 + object->rotation[0];

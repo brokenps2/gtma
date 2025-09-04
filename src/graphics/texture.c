@@ -27,8 +27,6 @@ void gtmaCreateTexture(Texture* tex, const char* path) {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, tex->w, tex->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, tex->data);
     }
 
-    stbi_image_free(tex->data);
-
 }
 
 void gtmaLoadTextureFromMemory(Texture* texture, const unsigned char* buffer, size_t size) {
