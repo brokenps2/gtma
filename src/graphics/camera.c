@@ -28,16 +28,16 @@ Sound footstepFast;
 AABB calculateCameraAABB(vec3 position, float sizeXZ, float sizeY) {
     vec3 halfSize = {sizeXZ / 2, sizeY / 2, sizeXZ / 2};
     AABB box;
+
     box.minX = position[0] - halfSize[0];
     box.minY = position[1] - halfSize[1] * 2;
     box.minZ = position[2] - halfSize[2];
+
     box.maxX = position[0] + halfSize[0];
     box.maxY = position[1] + halfSize[1];
     box.maxZ = position[2] + halfSize[2];
-    box.maxY -= (sizeY / 4);
-    box.maxX -= (sizeY / 4);
-    return box;
 
+    return box;
 }
 
 void gtmaCreateCamera(Camera* cam, float length, float radius, vec3 pos) {
@@ -240,6 +240,8 @@ void cameraCollide(Camera* cam, GameObjectPack* objPack) {
     }
 }
 
+float fallingSpeedRounded = 0;
+
 void gtmaCameraMove(Camera* cam, GameObjectPack* objPack, bool flying) {
     proposedPosition[0] = cam->position[0];
     proposedPosition[1] = cam->position[1];
@@ -270,20 +272,16 @@ void gtmaCameraMove(Camera* cam, GameObjectPack* objPack, bool flying) {
     }
 
     if (isKeyDown(SDL_SCANCODE_D)) {
-        moving = true;
         rightVelocity += accel * getDeltaTime();
         if (rightVelocity > maxSpeed) rightVelocity = maxSpeed;
     } else {
-        moving = false;
         rightVelocity -= accel * getDeltaTime();
         if (rightVelocity < 0) rightVelocity = 0;
     }
 
     bool playedFootstepSound = false;
 
-    float fallingSpeedRounded = roundf(fallingSpeed * 100) / 100;
-
-    if((moving) && fallingSpeedRounded < 1) {
+    if((forwardVelocity > 0 || backwardVelocity > 0 || leftVelocity > 0 || rightVelocity > 0)) {
         gtmaSetSoundPosition(&footstep, cam->position);
         gtmaSetSoundPosition(&footstepFast, cam->position);
         if(!playedFootstepSound) {

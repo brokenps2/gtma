@@ -15,6 +15,7 @@ static vec3 camPos = {-28, -2.2, 0};
 
 static GameObjectPack sceneObjectPack;
 static PointLightPack sceneLightPack;
+static ScreenObjectPack sceneScreenPack;
 
 static GameObject map;
 static GameObject sky;
@@ -35,6 +36,7 @@ void initScene() {
     
     gtmaLoadGameObjectPack(&sceneObjectPack);
     gtmaLoadPointLightPack(&sceneLightPack);
+    gtmaLoadScreenObjectPack(&sceneScreenPack);
 
     gtmaCreateGameObject(&map, "models/office.glb", "map", (vec3){0, 0, 0}, (vec3){3, 2.3, 3}, (vec3){0, 0, 0});
     gtmaCreateGameObject(&sky, "models/sky.glb", "sky", (vec3){0, 0, 0}, (vec3){12, 12, 12}, (vec3){0, 0, 0});

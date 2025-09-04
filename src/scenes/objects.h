@@ -50,4 +50,4 @@ void gtmaRemoveScreenObjectName(ScreenObjectPack* pack, const char* name);
 void gtmaRemoveScreenObjectID(ScreenObjectPack* pack, int id);
 void gtmaLoadScreenTransformationMatrix(mat4* matrix, ScreenObject* object);
 void gtmaCreateScreenObject(ScreenObject* object, const char* mdlPath, const char* name, vec2 position, vec2 size, float rotation);
-//TODO: Local Screenobject pack functions
+void gtmaDeletScreenObjectPack(ScreenObjectPack* objPack);

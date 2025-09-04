@@ -97,7 +97,7 @@ static void updateScene() {
 static void disposeScene() {
 
     gtmaDeleteGameObjectPack(&sceneObjectPack);
-    
+    gtmaDeletScreenObjectPack(&sceneScreenPack);
 }
 
 Scene outdoorScene = {

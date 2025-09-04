@@ -60,6 +60,31 @@ void gtmaDeleteGameObject(GameObject* object) {
         glDeleteBuffers(1, &mesh.VBO);
         glDeleteBuffers(1, &mesh.EBO);
         glDeleteTextures(1, &mesh.texture.id);
+        mesh.vertices = NULL;
+        mesh.texture.data = NULL;
+        mesh.indices = NULL;
+        mesh.EBO = 0;
+        mesh.VBO = 0;
+        mesh.VAO = 0;
+    }
+}
+
+void gtmaDeleteScreenObject(ScreenObject* object) {
+    for(int i = 0; i < object->model.meshCount; i++) {
+        Mesh mesh = object->model.meshes[i];
+        free(mesh.vertices);
+        free(mesh.indices);
+        stbi_image_free(mesh.texture.data);
+        glDeleteVertexArrays(1, &mesh.VAO);
+        glDeleteBuffers(1, &mesh.VBO);
+        glDeleteBuffers(1, &mesh.EBO);
+        glDeleteTextures(1, &mesh.texture.id);
+        mesh.vertices = NULL;
+        mesh.texture.data = NULL;
+        mesh.indices = NULL;
+        mesh.EBO = 0;
+        mesh.VBO = 0;
+        mesh.VAO = 0;
     }
 }
 
@@ -108,6 +133,14 @@ void gtmaAddGameObject(GameObject* obj, GameObjectPack* objPack) {
 void gtmaDeleteGameObjectPack(GameObjectPack* objPack) {
     for(int i = 0; i < objPack->objectCount; i++) {
         gtmaDeleteGameObject(objPack->objects[i]);
+        gtmaRemoveGameObjectID(objPack, objPack->objects[i]->packID);
+    }
+}
+
+void gtmaDeletScreenObjectPack(ScreenObjectPack* objPack) {
+    for(int i = 0; i < objPack->objectCount; i++) {
+        gtmaDeleteScreenObject(objPack->objects[i]);
+        gtmaRemoveScreenObjectID(objPack, objPack->objects[i]->packID);
     }
 }
 
