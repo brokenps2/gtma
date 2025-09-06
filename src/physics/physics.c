@@ -135,6 +135,8 @@ bool checkAABBTriangleCollision(AABB* aabb, vec3 triangle[3]) {
 }
 
 bool updateCameraPhysics(GameObjectPack* objPack, Camera* cam) {
+
+
     for(int i = 0; i < objPack->objectCount; i++) {
         GameObject* obj = objPack->objects[i];
 
@@ -152,12 +154,18 @@ bool updateCameraPhysics(GameObjectPack* objPack, Camera* cam) {
                     }
 
                     if (triangleAABBOverlap(&cam->aabb, tri) && checkAABBTriangleCollision(&cam->aabb, tri)) {
+                        if(obj->pickable) {
+                            cam->currentCollision = (char*)obj->name;
+                        }
                         return true;
                     }
                 }
             }
         }
     }
+
+    cam->currentCollision = "none";
+
     return false;
 }
 
@@ -168,7 +176,7 @@ bool rayIntersectsAABB(vec3 rayOrigin, vec3 rayDir, AABB* aabb, float* t) {
     float tmax = (aabb->maxX - rayOrigin[0]) / rayDir[0];
     if (tmin > tmax) { float tmp = tmin; tmin = tmax; tmax = tmp; }
 
-    for (int i = 1; i < 3; i++) {
+    for (int i = 0; i < 3; i++) {
         float t1 = ((i == 0 ? aabb->minX : (i == 1 ? aabb->minY : aabb->minZ)) - rayOrigin[i]) / rayDir[i];
         float t2 = ((i == 0 ? aabb->maxX : (i == 1 ? aabb->maxY : aabb->maxZ)) - rayOrigin[i]) / rayDir[i];
         if (t1 > t2) { float tmp = t1; t1 = t2; t2 = tmp; }
@@ -201,7 +209,8 @@ const char* pickObject(GameObjectPack* pack, Camera* cam) {
         GameObject* obj = pack->objects[i];
         float t;
         for(int j = 0; j < obj->model.meshCount; j++) {
-            if (rayIntersectsAABB(rayOrigin, rayDir, &obj->model.meshes[j].aabb, &t)) {
+            if (obj->pickable && rayIntersectsAABB(rayOrigin, rayDir, &obj->model.meshes[j].aabb, &t)) {
+                t = fabs(t);
                 if (t < closestT) {
                     closestT = t;
                     picked = obj->name;
@@ -209,6 +218,10 @@ const char* pickObject(GameObjectPack* pack, Camera* cam) {
             }
         }
         
+    }
+
+    if(picked == NULL) {
+        picked = "none";
     }
 
     return picked;

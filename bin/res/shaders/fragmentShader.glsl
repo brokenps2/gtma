@@ -25,6 +25,12 @@ uniform bool text = false;
 
 uniform vec3 textColor;
 
+uniform float fade = 0.0; // 0.0 = visible, 1.0 = black
+uniform bool startFadeOut = false;
+        bool fadingIn = false;
+        bool fadingOut = true;
+uniform float deltaTime = 1;
+
 vec3 greyscale(vec4 color) {
     vec3 tcol = vec3(color.r, color.g, color.b);
     float g = dot(tcol, vec3(0.299, 0.587, 0.114));
@@ -69,18 +75,33 @@ vec4 dither(vec4 color, int numLevels) {
 void main() {
 
     if(frame) {
-        fragColor = texture(tex0, outTexCoord);
+        float fade = 0.0f;
+        float fadeSpeed = 1.0f;
+
+        if (fadingOut) {
+            fade += deltaTime / fadeSpeed;
+            if (fade >= 1.0f) {
+                fade = 1.0f;
+                
+                //fadingOut = false;
+                //fadingIn = true;
+            }
+        } else if (fadingIn) {
+            fade -= deltaTime / fadeSpeed;
+            if (fade <= 0.0f) {
+                fade = 0.0f;
+                fadingIn = false;
+            }
+        }
+        vec4 scene = texture(tex0, outTexCoord);
+        vec4 overlay = vec4(0.0, 0.0, 0.0, fade);
+        fragColor = mix(scene, vec4(1.0), fade);
         return;
     }
 
     if(ui) {
         fragColor = texture(tex0, outTexCoord);
         return;
-    }
-
-    if(text) {
-        float alpha = texture(tex0, outTexCoord).r;
-        fragColor = vec4(textColor, alpha);
     }
 
     vec4 texColor = texture(tex0, outTexCoord);

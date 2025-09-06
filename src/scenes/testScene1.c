@@ -9,6 +9,7 @@
 #include <SDL2/SDL.h>
 #include <cglm/vec3.h>
 #include <stdio.h>
+#include <string.h>
 
 static Camera camera;
 static vec3 camPos = {-28, -2.2, 0};
@@ -16,6 +17,8 @@ static vec3 camPos = {-28, -2.2, 0};
 static GameObjectPack sceneObjectPack;
 static PointLightPack sceneLightPack;
 static ScreenObjectPack sceneScreenPack;
+
+static ScreenObject loadingScreen;
 
 static GameObject map;
 static GameObject sky;
@@ -44,6 +47,11 @@ void initScene() {
     sky.model.meshes[0].collisionEnabled = false;
     gtmaCreateGameObject(&exitSign, "models/exitsign.glb", "exitSign", (vec3){17.5, 9, -31}, (vec3){2, 2, 2}, (vec3){0, -120, 0});
     gtmaCreateGameObject(&desk, "models/desk.glb", "desk", (vec3){-19, -9, 0}, (vec3){3.2, 3, 3.2}, (vec3){0, 0, 0});
+    desk.pickable = true;
+    
+    gtmaCreateScreenObject(&loadingScreen, "models/uitest.glb", "loading", (vec2){(float)getWindowWidth()/2, (float)getWindowHeight()/2}, (vec2){getWindowWidth(), getWindowHeight()}, 0);
+    gtmaChangeScreenObjectTexture(&loadingScreen, "images/loading.png");
+    loadingScreen.visible = false;
 
     gtmaCreateCamera(&camera, 10, 6, camPos);
     gtmaSetRenderCamera(&camera);
@@ -71,6 +79,7 @@ void initScene() {
 
     gtmaCameraMatrix(&camera, 0.1f, 450.0f, gtmaGetShader());
 
+
 }
 
 extern Scene outdoorScene;
@@ -87,6 +96,8 @@ void checkFlashlight() {
         gtmaRemoveLightID(&sceneLightPack, lamp.packID);
     }
 }
+
+int firstFrame = 0;
 
 void updateScene() {
 
@@ -110,9 +121,16 @@ void updateScene() {
         }
     }
 
+    if(isLeftPressed()) {
+        if(strcmp(pickObject(&sceneObjectPack, &camera), "desk") == 0) {
+            switchScene(&outdoorScene);
+        }
+    }
+
     checkFlashlight();
 
     if(isKeyPressed(SDL_SCANCODE_P)) spectating = !spectating;
+
 
 }
 

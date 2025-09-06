@@ -26,6 +26,8 @@ void gtmaCreateGameObject(GameObject* object, const char* mdlPath, const char* n
     object->rotation[1] = rotation[1];
     object->rotation[2] = rotation[2];
 
+    object->pickable = false;
+
     for(int i = 0; i < object->model.meshCount; i++) {
         calculateMeshAABB(&object->model.meshes[i], object->scale, object->position);
     }

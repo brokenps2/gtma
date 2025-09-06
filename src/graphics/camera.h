@@ -20,6 +20,7 @@ typedef struct Camera {
     float sensitivity;
 
     AABB aabb;
+    char* currentCollision;
 } Camera;
 
 

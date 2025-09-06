@@ -23,6 +23,7 @@ typedef struct Mesh {
     unsigned int VAO, VBO, EBO;
     AABB aabb;
     bool collisionEnabled;
+    bool visible;
 } Mesh;
 
 typedef struct Model {

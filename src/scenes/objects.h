@@ -9,6 +9,7 @@ typedef struct GameObject {
     vec3 scale;
     int packID;
     bool inPack;
+    bool pickable;
 } GameObject;
 
 typedef struct ScreenObject {

@@ -13,9 +13,10 @@
 #include <stdio.h>
 #include "window/windowManager.h"
 #include <stdlib.h>
+#include <string.h>
 
 static Camera camera;
-static vec3 camPos = {-28, 32, 0};
+static vec3 camPos = {-28, 10, 0};
 
 static GameObjectPack sceneObjectPack;
 static PointLightPack sceneLightPack;
@@ -23,8 +24,9 @@ static ScreenObjectPack sceneScreenPack;
 
 static GameObject map;
 static GameObject sky;
-static GameObject exitSign;
-static ScreenObject uitest;
+static GameObject desk;
+static ScreenObject crosshair;
+static ScreenObject loadingScreen;
 static PointLight light1;
 static PointLight light2;
 static PointLight light3;
@@ -43,10 +45,12 @@ static void initScene() {
     gtmaCreateGameObject(&sky, "models/sky.glb", "sky", (vec3){0, 0, 0}, (vec3){18, 18, 18}, (vec3){0, 0, 0});
     sky.model.meshes[0].lit = false;
     sky.model.meshes[0].collisionEnabled = false;
-    gtmaCreateGameObject(&exitSign, "models/exitsign.glb", "exitSign", (vec3){0, 30, 0}, (vec3){1, 1, 1}, (vec3){0, 0, 0});
+    gtmaCreateGameObject(&desk, "models/desk.glb", "desk", (vec3){-50, 6, -50}, (vec3){2, 2, 2}, (vec3){0, 0, 0});
+    desk.pickable = true;
 
-    gtmaCreateScreenObject(&uitest, "models/uitest.glb", "uitest", (vec2){((float)getWindowWidth() / 2), ((float)getWindowHeight() / 2)}, (vec2){8, 8}, 0);
-    gtmaChangeScreenObjectTexture(&uitest, "images/crosshair.png");
+    gtmaCreateScreenObject(&crosshair, "models/uitest.glb", "uitest", (vec2){((float)getWindowWidth() / 2), ((float)getWindowHeight() / 2)}, (vec2){8, 8}, 0);
+    gtmaChangeScreenObjectTexture(&crosshair, "images/crosshair.png");
+    
  
     gtmaCreateCamera(&camera, 10, 6, camPos);
     gtmaSetRenderCamera(&camera);
@@ -55,10 +59,11 @@ static void initScene() {
     gtmaCreatePointLight(&light2, 300, 300, 0, brightness, brightness, brightness); light2.sunMode = true;
     gtmaCreatePointLight(&light3, -300, 300, -300, brightness, brightness, brightness); light3.sunMode = true;
 
-    gtmaAddGameObject(&exitSign, &sceneObjectPack);
     gtmaAddGameObject(&map, &sceneObjectPack);
     gtmaAddGameObject(&sky, &sceneObjectPack);
-    gtmaAddScreenObject(&uitest, &sceneScreenPack);
+    gtmaAddGameObject(&desk, &sceneObjectPack);
+    gtmaAddScreenObject(&crosshair, &sceneScreenPack);
+    gtmaAddScreenObject(&loadingScreen, &sceneScreenPack);
     gtmaAddLight(&light1, &sceneLightPack);
     gtmaAddLight(&light2, &sceneLightPack);
     gtmaAddLight(&light3, &sceneLightPack);
@@ -75,24 +80,28 @@ static bool spectating = false;
 
 static void updateScene() {
 
+    if(loadingScreen.visible) {
+        SDL_Delay(1000);
+        loadingScreen.visible = false;
+        switchScene(&testScene1);
+    }
+
     gtmaCameraMatrix(&camera, 0.1f, 650.0f, gtmaGetShader());
     gtmaCameraMove(&camera, &sceneObjectPack, spectating);
     glm_vec3_copy(camera.position, sky.position);
 
-    //printf("\r%f %f %f", camera.position[0], camera.position[1], camera.position[2]);
-    //fflush(stdout);
+    printf("\r%f %f %f", camera.position[0], camera.position[1], camera.position[2]);
+    fflush(stdout);
     
-    uitest.position[0] = ((float)getWindowWidth() / 2);
-    uitest.position[1] = ((float)getWindowHeight() / 2);
+    crosshair.position[0] = ((float)getWindowWidth() / 2);
+    crosshair.position[1] = ((float)getWindowHeight() / 2);
 
     gtmaUpdateAudio(camera.position, camera.direction);
 
-    if(isKeyPressed(SDL_SCANCODE_6)) {
-        switchScene(&testScene1);
-    }
-
-    if(isKeyPressed(SDL_SCANCODE_F)) {
-        printf("%s\n", pickObject(&sceneObjectPack, &camera));
+    if(isLeftPressed()) {
+        if(strcmp(pickObject(&sceneObjectPack, &camera), "desk") == 0) {
+            loadingScreen.visible = true;
+        }
     }
 
     if(isKeyPressed(SDL_SCANCODE_O)) {

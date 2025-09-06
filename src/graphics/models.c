@@ -169,6 +169,7 @@ void gtmaCreateModel(Model* model, const char* path) {
             model->totalIndexCount += mesh->indexCount;
 
             mesh->lit = true;
+            mesh->visible = true;
 
             if (gltfMesh->primitives_count > 0) {
                 cgltf_primitive* firstPrimitive = &gltfMesh->primitives[0];

@@ -13,6 +13,7 @@
 #include "graphics/texture.h"
 #include "window/events.h"
 #include "util/config.h"
+#include "window/windowManager.h"
 
 Shader shader;
 Camera renderCamera;
@@ -254,6 +255,7 @@ void gtmaRender() {
     gtmaUseShader(&shader);
     gtmaSetInt(&shader, "tex0", 0);
     gtmaSetBool(&shader, "frame", false);
+    gtmaSetFloat(&shader, "deltaTime", getDeltaTime());
 
     if(objPack != NULL) {
         for (int i = 0; i < objPack->objectCount; i++) {
@@ -261,7 +263,12 @@ void gtmaRender() {
             Model* model = &objPack->objects[i]->model;
 
             for(int j = 0; j < model->meshCount; j++) {
+
                 Mesh mesh = model->meshes[j];
+                if(mesh.visible == false) {
+                    printf("gfdsgudgoidjfdi\n");
+                    continue;
+                }
                 glBindVertexArray(mesh.VAO);
                 glBindBuffer(GL_ARRAY_BUFFER, mesh.VBO);
                 glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.EBO);
