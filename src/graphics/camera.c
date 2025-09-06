@@ -173,7 +173,6 @@ float lastFallingSpeed = 0.0f;
 
 float maxSlopeHeight = 0.15f;
 float slopeStep = 0.05f;
-bool moving = false;
 
 vec3 proposedPosition;
 
@@ -250,9 +249,12 @@ void cameraCollide(Camera* cam, GameObjectPack* objPack) {
 float fallingSpeedRounded = 0;
 
 void gtmaCameraMove(Camera* cam, GameObjectPack* objPack, bool flying) {
+
     proposedPosition[0] = cam->position[0];
     proposedPosition[1] = cam->position[1];
     proposedPosition[2] = cam->position[2];
+
+    if(flying) maxSpeed = 60;
 
     if (isKeyDown(SDL_SCANCODE_W)) {
         forwardVelocity += accel * getDeltaTime();
@@ -329,11 +331,11 @@ void gtmaCameraMove(Camera* cam, GameObjectPack* objPack, bool flying) {
     if(flying) {
         if (isKeyDown(SDL_SCANCODE_SPACE)) {
             upVelocity += accel * getDeltaTime();
-            if (upVelocity > maxSpeed) upVelocity = maxSpeed;
+            if (upVelocity > 64) upVelocity = 64;
         }
         if (isKeyDown(SDL_SCANCODE_LCTRL)) {
             downVelocity += accel * getDeltaTime();
-            if (downVelocity > maxSpeed) downVelocity = maxSpeed;
+            if (downVelocity > 64) downVelocity = 64;
         }
         if (!isKeyDown(SDL_SCANCODE_SPACE)) {
             upVelocity -= accel * getDeltaTime();

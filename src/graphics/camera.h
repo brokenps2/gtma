@@ -31,4 +31,3 @@ void gtmaCameraLook(Camera* cam);
 void gtmaCameraMove(Camera* cam, GameObjectPack* objPack, bool flying);
 void gtmaCameraSetPosition(Camera* cam, vec3 npos);
 void gtmaCameraIncPosition(Camera* cam, vec3 inc);
-

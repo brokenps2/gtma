@@ -14,3 +14,4 @@ bool isKeyDown(int keycode);
 bool isKeyPressed(int keycode);
 bool gtmaIsRunning();
 void gtmaUpdateEvents();
+void gtmaToggleControls(bool onoff);

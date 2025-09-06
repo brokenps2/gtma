@@ -139,7 +139,7 @@ void gtmaRenderScreen() {
 
                 glm_scale(transformationMatrix, (vec3){obj->size[0], obj->size[1], 1.0f});
 
-                glm_translate(transformationMatrix, (vec3){obj->position[0]/8, obj->position[1]/8, 0.0f});
+                glm_translate(transformationMatrix, (vec3){obj->position[0]/obj->size[0], obj->position[1]/obj->size[1], 0.0f});
 
                 if (obj->rotation != 0.0f)
                     glm_rotate_z(transformationMatrix, glm_rad(obj->rotation), transformationMatrix);

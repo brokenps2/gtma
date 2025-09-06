@@ -1,6 +1,7 @@
 #include "window/events.h"
 #include <SDL2/SDL.h>
 #include <GL/glew.h>
+#include <SDL2/SDL_events.h>
 #include <nuklear.h>
 #include <nuklear_sdl_gl3.h>
 #include <SDL2/SDL_mouse.h>
@@ -21,6 +22,18 @@ bool running = true;
 
 bool keys[SDL_NUM_SCANCODES];
 bool keysPressed[SDL_NUM_SCANCODES];
+
+int blockAllEvents(void* userdata, SDL_Event* event) {
+    return 0; // block everything
+}
+
+void blockInput() {
+    SDL_SetEventFilter(blockAllEvents, NULL);
+}
+
+void unblockInput() {
+    SDL_SetEventFilter(NULL, NULL); // restore default
+}
 
 double getMouseX() {
     return mouseX;
@@ -153,9 +166,22 @@ bool gtmaIsRunning() {
     return running;
 }
 
+bool controlsEnabled = true;
+
+void gtmaToggleControls(bool onoff) {
+    if(onoff == false) SDL_FlushEvents(SDL_FIRSTEVENT, SDL_LASTEVENT);
+    controlsEnabled = onoff;
+}
+
 void gtmaUpdateEvents() {
     SDL_Event e;
     while (SDL_PollEvent(&e)) {
+        
+        if(!controlsEnabled) {
+            SDL_FlushEvents(SDL_FIRSTEVENT, SDL_LASTEVENT);
+            continue;
+        }
+
         switch (e.type) {
             case SDL_QUIT:
                 running = false;
