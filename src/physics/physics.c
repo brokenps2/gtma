@@ -162,3 +162,54 @@ bool updateCameraPhysics(GameObjectPack* objPack, Camera* cam) {
 }
 
 
+
+bool rayIntersectsAABB(vec3 rayOrigin, vec3 rayDir, AABB* aabb, float* t) {
+    float tmin = (aabb->minX - rayOrigin[0]) / rayDir[0];
+    float tmax = (aabb->maxX - rayOrigin[0]) / rayDir[0];
+    if (tmin > tmax) { float tmp = tmin; tmin = tmax; tmax = tmp; }
+
+    for (int i = 1; i < 3; i++) {
+        float t1 = ((i == 0 ? aabb->minX : (i == 1 ? aabb->minY : aabb->minZ)) - rayOrigin[i]) / rayDir[i];
+        float t2 = ((i == 0 ? aabb->maxX : (i == 1 ? aabb->maxY : aabb->maxZ)) - rayOrigin[i]) / rayDir[i];
+        if (t1 > t2) { float tmp = t1; t1 = t2; t2 = tmp; }
+
+        if ((tmin > t2) || (t1 > tmax)) return false;
+        if (t1 > tmin) tmin = t1;
+        if (t2 < tmax) tmax = t2;
+    }
+
+    if (t) *t = tmin;
+    return true;
+}
+
+const char* pickObject(GameObjectPack* pack, Camera* cam) {
+
+    const char* picked = NULL;
+    float closestT = FLT_MAX;
+
+    vec3 rayOrigin;
+    glm_vec3_copy(cam->position, rayOrigin);
+
+    vec3 rayDir = {
+        cos(glm_rad(cam->yaw)) * cos(glm_rad(cam->pitch)),
+        sin(glm_rad(cam->pitch)),
+        sin(glm_rad(cam->yaw)) * cos(glm_rad(cam->pitch))
+    };
+    glm_vec3_normalize(rayDir);
+
+    for (int i = 0; i < pack->objectCount; i++) {
+        GameObject* obj = pack->objects[i];
+        float t;
+        for(int j = 0; j < obj->model.meshCount; j++) {
+            if (rayIntersectsAABB(rayOrigin, rayDir, &obj->model.meshes[j].aabb, &t)) {
+                if (t < closestT) {
+                    closestT = t;
+                    picked = obj->name;
+                }
+            }
+        }
+        
+    }
+
+    return picked;
+}

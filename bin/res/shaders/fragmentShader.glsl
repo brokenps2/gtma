@@ -93,7 +93,7 @@ void main() {
         fragColor = mix(skyColor, texture(tex0, outTexCoord) * vec4(outColor, 1.0) * vec4(outLightColor, 1.0), visibility);
     } else {
         fragColor = texture(tex0, outTexCoord) * vec4(outColor, 1.0);
-        fragColor = mix(skyColor, fragColor, visibility);
+        fragColor = mix(skyColor, fragColor, 1);
     }
 
     if(ditherEnabled) {

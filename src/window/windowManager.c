@@ -22,6 +22,8 @@ float monitorWidth, monitorHeight;
 
 double frameTime;
 
+bool mouseCaptured = true;
+
 int posX, posY;
 
 void gtmaInitWindow() {
@@ -74,6 +76,10 @@ float getTime() {
     return currentTime;
 }
 
+bool isMouseCaptured() {
+    return mouseCaptured;
+}
+
 void gtmaUpdateWindow() {
     double currentTime = (double)SDL_GetTicks() / 1000;
     deltaTime = currentTime - lastTime;
@@ -87,6 +93,14 @@ void gtmaUpdateWindow() {
 
     if(isKeyPressed(SDL_SCANCODE_ESCAPE)) {
         SDL_SetRelativeMouseMode(false);
+        mouseCaptured = false;
+    }
+
+    if(!mouseCaptured) {
+        if(isLeftPressed()) {
+            SDL_SetRelativeMouseMode(true);
+            mouseCaptured = true;
+        }
     }
 
     gtmaRender();

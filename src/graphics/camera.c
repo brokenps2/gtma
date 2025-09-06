@@ -69,8 +69,8 @@ void gtmaCreateCamera(Camera* cam, float length, float radius, vec3 pos) {
 
     gtmaCreateSound(&footstep, "audio/footstep.wav", true, 1, cam->position);
     gtmaCreateSound(&footstepFast, "audio/footstepfast.wav", true, 1, cam->position);
-    alSourcef(footstep.sourceID, AL_GAIN, 0.1);
-    alSourcef(footstepFast.sourceID, AL_GAIN, 0.1);
+    alSourcef(footstep.sourceID, AL_GAIN, 0.5);
+    alSourcef(footstepFast.sourceID, AL_GAIN, 0.5);
     gtmaCreateSound(&jump, "audio/jump.wav", 0, 1, cam->position);
 
 }

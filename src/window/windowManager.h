@@ -1,4 +1,5 @@
 #pragma once
+#include <stdbool.h>
 
 typedef struct SDL_Window SDL_Window;
 
@@ -8,3 +9,4 @@ float getTime();
 float getDeltaTime();
 SDL_Window* getWindow();
 void gtmaCloseWindow();
+bool isMouseCaptured();
