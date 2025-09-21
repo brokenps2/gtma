@@ -6,7 +6,7 @@
   "mouseSensitivity": 12,
   "fboScaleFactor": 0.5,
   "vertexSnap": true,
-  "ditherEnabled": false,
+  "ditherEnabled": true,
   "testObjs": [
     {
       "name": "john1"

@@ -10,13 +10,12 @@
 #include <SDL2/SDL_timer.h>
 #include <cglm/types.h>
 #include <cglm/vec3.h>
-#include <stdio.h>
 #include "window/windowManager.h"
 #include <unistd.h>
 #include <string.h>
 
 static Camera camera;
-static vec3 camPos = {-28, 10, 0};
+static vec3 camPos = {-28, 560, 0};
 
 static GameObjectPack sceneObjectPack;
 static PointLightPack sceneLightPack;
@@ -36,8 +35,6 @@ static float brightness = 1.35f;
 
 static int sceneIndex = 0;
 
-unsigned char* loadingScreenData;
-
 static void initScene() {
 
     gtmaToggleControls(true);
@@ -47,14 +44,15 @@ static void initScene() {
     gtmaLoadScreenObjectPack(&sceneScreenPack);
 
     gtmaCreateGameObject(&map, "models/stoneland.glb", "map", (vec3){0, 0, 0}, (vec3){1.5, 1, 1.5}, (vec3){0, 0, 0});
-    map.model.meshes[4].collisionEnabled = false;
+    map.model.meshes[map.model.meshCount-1].collisionEnabled = false;
     gtmaCreateGameObject(&sky, "models/sky.glb", "sky", (vec3){0, 0, 0}, (vec3){18, 18, 18}, (vec3){0, 0, 0});
     sky.model.meshes[0].lit = false;
     sky.model.meshes[0].collisionEnabled = false;
     gtmaCreateGameObject(&desk, "models/desk.glb", "desk", (vec3){137, 4, 77}, (vec3){2, 2, 2}, (vec3){0, 0, 0});
     desk.pickable = true;
-    gtmaCreateGameObject(&cliffsWarp, "models/physCube.glb", "cliffsWarp", (vec3){314, -228, -304}, (vec3){16, 1, 16}, (vec3){0, 0, 0});
+    gtmaCreateGameObject(&cliffsWarp, "models/office.glb", "cliffsWarp", (vec3){314, -248, -304}, (vec3){3, 3, 3}, (vec3){0, -30, 0});
     cliffsWarp.pickable = true;
+    cliffsWarp.model.meshes[0].collisionEnabled = false;
 
     gtmaCreateScreenObject(&crosshair, "models/uitest.glb", "uitest", (vec2){((float)getWindowWidth() / 2), ((float)getWindowHeight() / 2)}, (vec2){8, 8}, 0);
     gtmaChangeScreenObjectTexture(&crosshair, "images/crosshair.png");
@@ -62,12 +60,11 @@ static void initScene() {
     gtmaCreateScreenObject(&loadingScreen, "models/uitest.glb", "loading", (vec2){(float)getWindowWidth()/2, (float)getWindowHeight() / 2}, (vec2){400, 60}, 0);
     gtmaChangeScreenObjectTexture(&loadingScreen, "images/loading.png");
     loadingScreen.visible = false;
-    
  
     gtmaCreateCamera(&camera, 10, 6, camPos);
     gtmaSetRenderCamera(&camera);
 
-    gtmaCreatePointLight(&light1, -300, 300, 300, brightness/2, brightness/2, brightness/2); light1.sunMode = true;
+    gtmaCreatePointLight(&light1, -300, 300, 300, brightness, brightness, brightness); light1.sunMode = true;
     gtmaCreatePointLight(&light2, 300, 300, 0, brightness, brightness, brightness); light2.sunMode = true;
     gtmaCreatePointLight(&light3, -300, 300, -300, brightness, brightness, brightness); light3.sunMode = true;
 
@@ -83,11 +80,13 @@ static void initScene() {
 
     gtmaSetClearColor(138, 154, 255);
 
+    camera.pitch = -85;
     gtmaCameraMatrix(&camera, 0.1f, 450.0f, gtmaGetShader());
 
 }
 
 extern Scene testScene1;
+extern Scene natatorium;
 
 static bool spectating = false;
 
@@ -95,7 +94,7 @@ void warp() {
     if(sceneIndex == 0) {
         switchScene(&testScene1);
     } else if(sceneIndex == 1) {
-        switchScene(&testScene1);
+        switchScene(&natatorium);
     }
 }
 
@@ -109,6 +108,8 @@ static void startTransition() {
     gtmaToggleControls(false);
     loadingScreen.visible = true;
 }
+
+static bool spinMap = false;
 
 static void updateScene() {
     if (transitioning) {
@@ -132,22 +133,28 @@ static void updateScene() {
     fflush(stdout);
     
     //object transforms
-    crosshair.position[0] = ((float)getWindowWidth() / 2);
-    crosshair.position[1] = ((float)getWindowHeight() / 2);
+    crosshair.position[0] = ((float)getWindowWidth() / 2); crosshair.position[1] = ((float)getWindowHeight() / 2);
+    loadingScreen.position[0] = ((float)getWindowWidth()/ 2); loadingScreen.position[1] = ((float)getWindowHeight() / 2);
     desk.rotation[1] += 150 * getDeltaTime();
 
     gtmaUpdateAudio(camera.position, camera.direction);
 
     //warps
     if(strcmp(camera.currentCollision, "cliffsWarp") == 0) {
-        startTransition();
         sceneIndex = 1;
+        startTransition();
     }
 
     if(isLeftPressed()) {
         if(strcmp(pickObject(&sceneObjectPack, &camera), "desk") == 0) {
-            startTransition();
+            spinMap = !spinMap;
         }
+    }
+
+    if(spinMap) {
+        map.rotation[1] += 150 * getDeltaTime();
+    } else {
+        map.rotation[1] = 0;
     }
 
     //misc

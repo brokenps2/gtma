@@ -10,26 +10,25 @@
 #include <cglm/vec3.h>
 #include <stdbool.h>
 #include <stdio.h>
-#include <string.h>
+#include "window/windowManager.h"
+
 
 static Camera camera;
-static vec3 camPos = {-28, -2.2, 0};
+static vec3 camPos = {0, 18, 100};
 
 static GameObjectPack sceneObjectPack;
 static PointLightPack sceneLightPack;
 static ScreenObjectPack sceneScreenPack;
 
 static GameObject map;
-static GameObject sky;
-static GameObject exitSign;
-static GameObject desk;
-static GameObject stonelandWarp;
 
+static PointLight light0;
 static PointLight light1;
 static PointLight light2;
 static PointLight light3;
-static PointLight rightHallLight;
-static PointLight leftHallLight;
+static PointLight light4;
+static PointLight light5;
+static PointLight light6;
 
 static ScreenObject crosshair;
 static ScreenObject loadingScreen;
@@ -37,9 +36,11 @@ static ScreenObject loadingScreen;
 static PointLight lamp;
 static bool flashlightOn = false;
 
-static float brightness = 3.15f;
+static float brightness = 1.95f;
 
-void initScene() {
+static int sceneIndex = 0;
+
+static void initScene() {
 
     gtmaToggleControls(true);
 
@@ -47,14 +48,7 @@ void initScene() {
     gtmaLoadPointLightPack(&sceneLightPack);
     gtmaLoadScreenObjectPack(&sceneScreenPack);
 
-    gtmaCreateGameObject(&map, "models/office.glb", "map", (vec3){0, 0, 0}, (vec3){3, 2.3, 3}, (vec3){0, 0, 0});
-    gtmaCreateGameObject(&sky, "models/sky.glb", "sky", (vec3){0, 0, 0}, (vec3){12, 12, 12}, (vec3){0, 0, 0});
-    sky.model.meshes[0].lit = false;
-    sky.model.meshes[0].collisionEnabled = false;
-    gtmaCreateGameObject(&exitSign, "models/exitsign.glb", "exitSign", (vec3){17.5, 9, -31}, (vec3){2, 2, 2}, (vec3){0, -120, 0});
-    gtmaCreateGameObject(&desk, "models/desk.glb", "desk", (vec3){-19, -9, 0}, (vec3){3.2, 3, 3.2}, (vec3){0, 0, 0});
-    gtmaCreateGameObject(&stonelandWarp, "models/door2.glb", "stonelandWarp", (vec3){63, 2, 121}, (vec3){3.75, 3.45, 3.75}, (vec3){0, 118, 0});
-    stonelandWarp.pickable = true;
+    gtmaCreateGameObject(&map, "models/natatorium.glb", "map", (vec3){0, 0, 0}, (vec3){1.25, 1, 1.25}, (vec3){0, 0, 0});
 
     gtmaCreateScreenObject(&crosshair, "models/uitest.glb", "uitest", (vec2){((float)getWindowWidth() / 2), ((float)getWindowHeight() / 2)}, (vec2){8, 8}, 0);
     gtmaChangeScreenObjectTexture(&crosshair, "images/crosshair.png");
@@ -66,27 +60,29 @@ void initScene() {
     gtmaCreateCamera(&camera, 10, 6, camPos);
     gtmaSetRenderCamera(&camera);
 
-    gtmaCreatePointLight(&light1, -25, -4, 0, brightness/2, brightness/2, brightness/2);
-    gtmaCreatePointLight(&light2, 0, 12, 0, brightness, brightness, brightness);
-    gtmaCreatePointLight(&light3, 12, 2, 0, brightness, brightness, brightness);
+    gtmaCreatePointLight(&light0, 134, 70, -100, brightness, brightness, brightness); light0.sunMode = true;
+    gtmaCreatePointLight(&light1, 0, 70, -100, brightness, brightness, brightness); light1.sunMode = true;
+    gtmaCreatePointLight(&light2, -115, 70, -100, brightness, brightness, brightness); light2.sunMode = true;
+    gtmaCreatePointLight(&light3, -112, 60, 220, brightness, brightness, brightness); light3.sunMode = true;
+    gtmaCreatePointLight(&light4, 0, 60, 220, brightness, brightness, brightness); light4.sunMode = true;
+    gtmaCreatePointLight(&light5, 120, 60, 220, brightness, brightness, brightness); light5.sunMode = true;
+    gtmaCreatePointLight(&light6, 0, 56, 0, brightness, brightness, brightness); light6.sunMode = true;
 
-    gtmaCreatePointLight(&rightHallLight, 40, 3, 74, brightness/1.2, brightness/1.2, brightness/1.2);
-    gtmaCreatePointLight(&leftHallLight, 50, 7, -95, brightness/1.3, brightness/1.3, brightness/1.3);
-
-    gtmaCreatePointLight(&lamp, camPos[0], camPos[1], camPos[2], brightness, brightness, brightness);
+    gtmaCreatePointLight(&lamp, camPos[0], camPos[1], camPos[2], brightness*4, brightness*4, brightness*4);
+    lamp.sunMode = true;
+    lamp.range = 24 * lamp.range;
 
     gtmaAddGameObject(&map, &sceneObjectPack);
-    //gtmaAddGameObject(&sky, &sceneObjectPack);
-    gtmaAddGameObject(&exitSign, &sceneObjectPack);
-    gtmaAddGameObject(&desk, &sceneObjectPack);
-    gtmaAddGameObject(&stonelandWarp, &sceneObjectPack);
     gtmaAddScreenObject(&crosshair, &sceneScreenPack);
     gtmaAddScreenObject(&loadingScreen, &sceneScreenPack);
-    gtmaAddLight(&light2, &sceneLightPack);
+    gtmaAddLight(&light0, &sceneLightPack);
     gtmaAddLight(&light1, &sceneLightPack);
+    gtmaAddLight(&light2, &sceneLightPack);
     gtmaAddLight(&light3, &sceneLightPack);
-    gtmaAddLight(&rightHallLight, &sceneLightPack);
-    gtmaAddLight(&leftHallLight, &sceneLightPack);
+    gtmaAddLight(&light4, &sceneLightPack);
+    gtmaAddLight(&light5, &sceneLightPack);
+    gtmaAddLight(&light6, &sceneLightPack);
+    gtmaAddLight(&lamp, &sceneLightPack);
 
     gtmaSetClearColor(0, 0, 0);
 
@@ -97,10 +93,10 @@ void initScene() {
 
 extern Scene outdoorScene;
 
-bool spectating = false;
+static bool spectating = false;
 static int frameCounter = 0;
 
-void checkFlashlight() {
+static void checkFlashlight() {
     glm_vec3_copy(camera.position, lamp.position);
 
     if(isKeyPressed(SDL_SCANCODE_F)) flashlightOn = !flashlightOn;
@@ -110,16 +106,34 @@ void checkFlashlight() {
         gtmaRemoveLightID(&sceneLightPack, lamp.packID);
     }
 }
+static void warp() {
+    if(sceneIndex == 0) {
+        //switchScene(&testScene1);
+    } else if(sceneIndex == 1) {
+        //switchScene(&testScene1);
+    }
+}
 
-static bool crosshairActivated = false;
+static float transitionTimer = 0.0f;
+static float transitionDuration = 1.0f; // seconds
+static bool transitioning = false;
 
-void updateScene() {
+static void startTransition() {
+    transitioning = true;
+    transitionTimer = transitionDuration;
+    gtmaToggleControls(false);
+    loadingScreen.visible = true;
+}
 
-    if(loadingScreen.visible) {
-        gtmaToggleControls(false);
-        SDL_Delay(1000);
-        loadingScreen.visible = false;
-        switchScene(&outdoorScene);
+static void updateScene() {
+    if (transitioning) {
+        transitionTimer -= getDeltaTime();
+        if (transitionTimer <= 0.0f) {
+            transitioning = false;
+            loadingScreen.visible = false;
+            warp();
+            gtmaToggleControls(true);
+        }
         return;
     }
 
@@ -142,12 +156,6 @@ void updateScene() {
         }
     }
 
-    if(isLeftPressed()) {
-        if(strcmp(pickObject(&sceneObjectPack, &camera), "stonelandWarp") == 0) {
-            loadingScreen.visible = true;
-        }
-    }
-
     checkFlashlight();
 
     if(isKeyPressed(SDL_SCANCODE_P)) spectating = !spectating;
@@ -155,13 +163,13 @@ void updateScene() {
 
 }
 
-void disposeScene() {
+static void disposeScene() {
     frameCounter = 0;
     gtmaDeleteGameObjectPack(&sceneObjectPack);
     gtmaDeletScreenObjectPack(&sceneScreenPack);
 }
 
-Scene testScene1 = {
+Scene natatorium = {
     .init = initScene,
     .update = updateScene,
     .dispose = disposeScene

@@ -139,10 +139,14 @@ void main() {
     }
 
     outLightColor = totalLight;
+    if(totalLight.r > 1 || totalLight.g > 1 || totalLight.b > 1) 
+        totalLight.r = 1;
+        totalLight.g = 1;
+        totalLight.b = 1;
 
     gl_Position = camCross * transMatrix * vec4(position, 1.0);
 
-    gl_Position = snap(gl_Position, vec2(frameRes.x / 2, frameRes.y / 2));
+    gl_Position = snap(gl_Position, vec2(frameRes.x / 3, frameRes.y / 3));
 
     outColor = color;
     outTexCoord = texCoord;

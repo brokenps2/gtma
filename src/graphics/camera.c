@@ -1,4 +1,5 @@
 #include <AL/al.h>
+#include <SDL2/SDL_scancode.h>
 #include <SDL2/SDL_timer.h>
 #include <cglm/cam.h>
 #include <cglm/cglm.h>
@@ -22,6 +23,7 @@ double oldMouseX = 0, oldMouseY = 0, newMouseX = 0, newMouseY = 0;
 float fov = 75.0f;
 
 static float camLength, camRadius;
+static float oldCamLength;
 
 Sound footstep;
 Sound footstepFast;
@@ -66,6 +68,7 @@ void gtmaCreateCamera(Camera* cam, float length, float radius, vec3 pos) {
     cam->aabb = calculateCameraAABB(cam->position, radius, length);
     camLength = length;
     camRadius = radius;
+    oldCamLength = length;
 
     gtmaCreateSound(&footstep, "audio/footstep.wav", true, 1, cam->position);
     gtmaCreateSound(&footstepFast, "audio/footstepfast.wav", true, 1, cam->position);
@@ -176,6 +179,9 @@ float slopeStep = 0.05f;
 
 vec3 proposedPosition;
 
+bool crouched = false;
+float camLengthHalf = 0;
+
 void cameraCollide(Camera* cam, GameObjectPack* objPack) {
     if (isKeyDown(SDL_SCANCODE_SPACE) && fallingSpeed == 0) { 
         gtmaSetSoundPosition(&jump, cam->position);
@@ -191,6 +197,16 @@ void cameraCollide(Camera* cam, GameObjectPack* objPack) {
     tempPosition[1] = cam->position[1];
     tempPosition[2] = cam->position[2];
     tempPosition[0] = proposedPosition[0];
+
+    if(crouched) {
+        camLengthHalf = camLength / 2;
+        oldCamLength = camLength;
+        camLength = camLengthHalf;
+    } else {
+        camLength = oldCamLength;
+    }
+
+    printf("%f\n", camLength);
 
     cam->aabb = calculateCameraAABB(tempPosition, camRadius, camLength);
 
@@ -348,6 +364,12 @@ void gtmaCameraMove(Camera* cam, GameObjectPack* objPack, bool flying) {
         glm_vec3_copy(proposedPosition, cam->position);
         gtmaCameraLook(cam);
         return;
+    }
+
+    if(isKeyDown(SDL_SCANCODE_LCTRL)) {
+        crouched = true;
+    } else {
+        crouched = false;
     }
 
     cameraCollide(cam, objPack);
