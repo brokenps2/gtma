@@ -7,6 +7,8 @@
 #include "audio/audio.h"
 #include "window/events.h"
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_mouse.h>
+#include <SDL2/SDL_scancode.h>
 #include <cglm/vec3.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -33,6 +35,7 @@ static PointLight leftHallLight;
 
 static ScreenObject crosshair;
 static ScreenObject loadingScreen;
+static ScreenObject pauseScreen;
 
 static PointLight lamp;
 static bool flashlightOn = false;
@@ -59,6 +62,10 @@ void initScene() {
     gtmaCreateScreenObject(&crosshair, "models/uitest.glb", "uitest", (vec2){((float)getWindowWidth() / 2), ((float)getWindowHeight() / 2)}, (vec2){8, 8}, 0);
     gtmaChangeScreenObjectTexture(&crosshair, "images/crosshair.png");
 
+    gtmaCreateScreenObject(&pauseScreen, "models/uitest.glb", "pause", (vec2){((float)getWindowWidth()/2), ((float)getWindowHeight()/2)}, (vec2){400, 80}, 0);
+    gtmaChangeScreenObjectTexture(&pauseScreen, "images/paused.png");
+    pauseScreen.visible = false;
+
     gtmaCreateScreenObject(&loadingScreen, "models/uitest.glb", "loading", (vec2){(float)getWindowWidth()/2, (float)getWindowHeight()/2}, (vec2){400, 60}, 0);
     gtmaChangeScreenObjectTexture(&loadingScreen, "images/loading.png");
     loadingScreen.visible = false;
@@ -82,6 +89,7 @@ void initScene() {
     gtmaAddGameObject(&stonelandWarp, &sceneObjectPack);
     gtmaAddScreenObject(&crosshair, &sceneScreenPack);
     gtmaAddScreenObject(&loadingScreen, &sceneScreenPack);
+    gtmaAddScreenObject(&pauseScreen, &sceneScreenPack);
     gtmaAddLight(&light2, &sceneLightPack);
     gtmaAddLight(&light1, &sceneLightPack);
     gtmaAddLight(&light3, &sceneLightPack);
@@ -96,6 +104,7 @@ void initScene() {
 }
 
 extern Scene outdoorScene;
+extern Scene titleScreen;
 
 bool spectating = false;
 static int frameCounter = 0;
@@ -111,9 +120,11 @@ void checkFlashlight() {
     }
 }
 
-static bool crosshairActivated = false;
-
 void updateScene() {
+
+    if(checkPaused(&pauseScreen)) {
+        return;
+    }
 
     if(loadingScreen.visible) {
         gtmaToggleControls(false);

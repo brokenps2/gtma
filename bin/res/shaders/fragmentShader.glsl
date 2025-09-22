@@ -25,6 +25,8 @@ uniform bool text = false;
 
 uniform vec3 textColor;
 
+uniform float fboBrightness = 1;
+
 uniform float fade = 0.0; // 0.0 = visible, 1.0 = black
 uniform bool startFadeOut = false;
         bool fadingIn = false;
@@ -75,27 +77,7 @@ vec4 dither(vec4 color, int numLevels) {
 void main() {
 
     if(frame) {
-        float fade = 0.0f;
-        float fadeSpeed = 1.0f;
-
-        if (fadingOut) {
-            fade += deltaTime / fadeSpeed;
-            if (fade >= 1.0f) {
-                fade = 1.0f;
-                
-                //fadingOut = false;
-                //fadingIn = true;
-            }
-        } else if (fadingIn) {
-            fade -= deltaTime / fadeSpeed;
-            if (fade <= 0.0f) {
-                fade = 0.0f;
-                fadingIn = false;
-            }
-        }
-        vec4 scene = texture(tex0, outTexCoord);
-        vec4 overlay = vec4(0.0, 0.0, 0.0, fade);
-        fragColor = mix(scene, vec4(1.0), fade);
+        fragColor = texture(tex0, outTexCoord) * vec4(fboBrightness);
         return;
     }
 

@@ -1,0 +1,15 @@
+{
+	"name": "blue-skybox",
+	"model": "models/sky.glb",
+	"x": 0,
+	"y": 0,
+	"z": 0,
+	"sx": 18,
+	"sy": 18,
+	"sz": 18,
+	"rx": 0,
+	"ry": 0,
+	"rz": 0,
+	"pickable": false,
+	"billboard": false
+}

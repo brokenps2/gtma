@@ -27,6 +27,7 @@ static GameObject desk;
 static GameObject cliffsWarp;
 static ScreenObject crosshair;
 static ScreenObject loadingScreen;
+static ScreenObject pauseScreen;
 static PointLight light1;
 static PointLight light2;
 static PointLight light3;
@@ -57,6 +58,10 @@ static void initScene() {
     gtmaCreateScreenObject(&crosshair, "models/uitest.glb", "uitest", (vec2){((float)getWindowWidth() / 2), ((float)getWindowHeight() / 2)}, (vec2){8, 8}, 0);
     gtmaChangeScreenObjectTexture(&crosshair, "images/crosshair.png");
 
+    gtmaCreateScreenObject(&pauseScreen, "models/uitest.glb", "pause", (vec2){((float)getWindowWidth()/2), ((float)getWindowHeight()/2)}, (vec2){400, 80}, 0);
+    gtmaChangeScreenObjectTexture(&pauseScreen, "images/paused.png");
+    pauseScreen.visible = false;
+
     gtmaCreateScreenObject(&loadingScreen, "models/uitest.glb", "loading", (vec2){(float)getWindowWidth()/2, (float)getWindowHeight() / 2}, (vec2){400, 60}, 0);
     gtmaChangeScreenObjectTexture(&loadingScreen, "images/loading.png");
     loadingScreen.visible = false;
@@ -74,6 +79,7 @@ static void initScene() {
     gtmaAddGameObject(&cliffsWarp, &sceneObjectPack);
     gtmaAddScreenObject(&crosshair, &sceneScreenPack);
     gtmaAddScreenObject(&loadingScreen, &sceneScreenPack);
+    gtmaAddScreenObject(&pauseScreen, &sceneScreenPack);
     gtmaAddLight(&light1, &sceneLightPack);
     gtmaAddLight(&light2, &sceneLightPack);
     gtmaAddLight(&light3, &sceneLightPack);
@@ -112,6 +118,11 @@ static void startTransition() {
 static bool spinMap = false;
 
 static void updateScene() {
+
+    if(checkPaused(&pauseScreen)) {
+        return;
+    }
+
     if (transitioning) {
         transitionTimer -= getDeltaTime();
         if (transitionTimer <= 0.0f) {

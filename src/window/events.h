@@ -12,6 +12,7 @@ int getWindowPosX();
 int getWindowPosY();
 bool isKeyDown(int keycode);
 bool isKeyPressed(int keycode);
+void gtmaSetRunning(bool run);
 bool gtmaIsRunning();
 void gtmaUpdateEvents();
 void gtmaToggleControls(bool onoff);

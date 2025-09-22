@@ -166,6 +166,10 @@ bool gtmaIsRunning() {
     return running;
 }
 
+void gtmaSetRunning(bool run) {
+    running = run;
+}
+
 bool controlsEnabled = true;
 
 void gtmaToggleControls(bool onoff) {

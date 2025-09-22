@@ -13,8 +13,8 @@ Scene* currentScene = NULL;
 
 int main(int argc, char* argv[]) {
 
-    extern Scene testScene1;
-    currentScene = &testScene1;
+    extern Scene titleScreen;
+    currentScene = &titleScreen;
 
     if(argc < 2 || argc > 2) {
         printf("Usage: gtma [config file path]\n");
@@ -42,6 +42,5 @@ int main(int argc, char* argv[]) {
     gtmaDestroyConfig();
     gtmaCloseWindow();
 
-    printf("\n");
     return 0;
 }

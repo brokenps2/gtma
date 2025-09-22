@@ -198,16 +198,6 @@ void cameraCollide(Camera* cam, GameObjectPack* objPack) {
     tempPosition[2] = cam->position[2];
     tempPosition[0] = proposedPosition[0];
 
-    if(crouched) {
-        camLengthHalf = camLength / 2;
-        oldCamLength = camLength;
-        camLength = camLengthHalf;
-    } else {
-        camLength = oldCamLength;
-    }
-
-    printf("%f\n", camLength);
-
     cam->aabb = calculateCameraAABB(tempPosition, camRadius, camLength);
 
     if (!updateCameraPhysics(objPack, cam)) {
@@ -378,11 +368,11 @@ void gtmaCameraMove(Camera* cam, GameObjectPack* objPack, bool flying) {
 
     if(isKeyDown(SDL_SCANCODE_LSHIFT)) {
         maxSpeed = 32;
-        fov += 64 * getDeltaTime();
+        fov += 32 * getDeltaTime();
         if(fov > maxFov) fov = maxFov;
     } else {
         maxSpeed = 20;
-        fov -= 64 * getDeltaTime();
+        fov -= 32 * getDeltaTime();
         if(fov <= 75) fov = 75;
     }
 

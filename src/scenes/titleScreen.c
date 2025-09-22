@@ -62,6 +62,8 @@ static void initScene() {
 }
 
 extern Scene outdoorScene;
+extern Scene natatorium;
+extern Scene robert;
 extern Scene testScene1;
 
 static bool spectating = true;
@@ -71,6 +73,10 @@ static void warp() {
         switchScene(&testScene1);
     } else if(sceneIndex == 1) {
         switchScene(&outdoorScene);
+    } else if(sceneIndex == 2) {
+        switchScene(&natatorium);
+    } else if(sceneIndex == 3) {
+        switchScene(&robert);
     }
 }
 
@@ -106,8 +112,21 @@ static void updateScene() {
     sky.rotation[1] -= 60 * getDeltaTime();
     sky.rotation[2] -= 60 * getDeltaTime();
 
-    if(isKeyPressed(SDL_SCANCODE_E)) {
+    if(isKeyPressed(SDL_SCANCODE_1)) {
         logo.visible = false;
+        sceneIndex = 0;
+        startTransition();
+    } else if(isKeyPressed(SDL_SCANCODE_2)) {
+        logo.visible = false;
+        sceneIndex = 1;
+        startTransition();
+    } else if(isKeyPressed(SDL_SCANCODE_3)) {
+        logo.visible = false;
+        sceneIndex = 2;
+        startTransition();
+    } else if(isKeyPressed(SDL_SCANCODE_4)) {
+        logo.visible = false;
+        sceneIndex = 3;
         startTransition();
     }
 

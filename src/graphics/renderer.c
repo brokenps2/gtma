@@ -33,6 +33,7 @@ float fogLevel = 0.0018f;
 float ambientLight = 0.1;
 
 float fboScaleFactor = 0.5;
+float fboBrightness = 1;
 
 GameObjectPack* objPack;
 ScreenObjectPack* screenPack;
@@ -118,6 +119,10 @@ void gtmaSetAmbientLightLevel(float ambient) {
     ambientLight = ambient;
 }
 
+void gtmaSetFBOBrightness(float level) {
+    fboBrightness = level;
+}
+
 void gtmaRenderScreen() {
     glDisable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
@@ -171,6 +176,7 @@ void gtmaRenderFBO() {
     gtmaUseShader(&shader);
     glBindTexture(GL_TEXTURE_2D, 0);
     gtmaSetBool(&shader, "frame", true);
+    gtmaSetFloat(&shader, "fboBrightness", fboBrightness);
     glBindVertexArray(sVAO);
     glBindTexture(GL_TEXTURE_2D, renderTexture);
     glDrawArrays(GL_TRIANGLES, 0, 6);
