@@ -7,6 +7,7 @@
 #include "audio/audio.h"
 #include "window/events.h"
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_scancode.h>
 #include <cglm/vec3.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -37,9 +38,11 @@ static ScreenObject pauseScreen;
 static PointLight lamp;
 static bool flashlightOn = false;
 
-static float brightness = 1.95f;
+static float brightness = 1.55f;
 
 static int sceneIndex = 0;
+
+static int objIndex = 0;
 
 static void initScene() {
 
@@ -50,6 +53,7 @@ static void initScene() {
     gtmaLoadScreenObjectPack(&sceneScreenPack);
 
     gtmaCreateGameObject(&map, "models/natatorium.glb", "map", (vec3){0, 0, 0}, (vec3){1.25, 1, 1.25}, (vec3){0, 0, 0});
+    map.model.meshes[7].lit = false;
 
     gtmaCreateScreenObject(&crosshair, "models/uitest.glb", "uitest", (vec2){((float)getWindowWidth() / 2), ((float)getWindowHeight() / 2)}, (vec2){8, 8}, 0);
     gtmaChangeScreenObjectTexture(&crosshair, "images/crosshair.png");
@@ -65,12 +69,12 @@ static void initScene() {
     gtmaCreateCamera(&camera, 10, 6, camPos);
     gtmaSetRenderCamera(&camera);
 
-    gtmaCreatePointLight(&light0, 134, 70, -100, brightness, brightness, brightness); light0.sunMode = true;
+    gtmaCreatePointLight(&light0, 134, 70, -100, brightness, brightness*1.8, brightness*2.2); light0.sunMode = true;
     gtmaCreatePointLight(&light1, 0, 70, -100, brightness, brightness, brightness); light1.sunMode = true;
-    gtmaCreatePointLight(&light2, -115, 70, -100, brightness, brightness, brightness); light2.sunMode = true;
+    gtmaCreatePointLight(&light2, -115, 70, -100, brightness, brightness*1.8, brightness*2.2); light2.sunMode = true;
     gtmaCreatePointLight(&light3, -112, 60, 220, brightness, brightness, brightness); light3.sunMode = true;
     gtmaCreatePointLight(&light4, 0, 60, 220, brightness, brightness, brightness); light4.sunMode = true;
-    gtmaCreatePointLight(&light5, 120, 60, 220, brightness, brightness, brightness); light5.sunMode = true;
+    gtmaCreatePointLight(&light5, 120, 60, 220, brightness, brightness*1.8, brightness*2.2); light5.sunMode = true;
     gtmaCreatePointLight(&light6, 0, 56, 0, brightness, brightness, brightness); light6.sunMode = true;
 
     gtmaCreatePointLight(&lamp, camPos[0], camPos[1], camPos[2], brightness*4, brightness*4, brightness*4);

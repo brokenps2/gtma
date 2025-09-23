@@ -28,7 +28,7 @@ unsigned int sVAO;
 unsigned int sVBO;
 
 float clearColor[3];
-float fogLevel = 0.0018f;
+float fogLevel = 0.00000000000000000022f;
 
 float ambientLight = 0.1;
 
@@ -283,7 +283,7 @@ void gtmaRender() {
                 gtmaSetBool(&shader, "ui", false);
                 gtmaSetMatrix(&shader, "transMatrix", transformationMatrix);
                 gtmaSetBool(&shader, "lightEnabled", mesh.lit);
-                gtmaSetVec3(&shader, "viewPos", renderCamera.position);
+                gtmaSetVec3(&shader, "viewPos", renderCamera.renderPos);
                 gtmaSetVec3(&shader, "clearColor", clearColor);
                 gtmaSetFloat(&shader, "fogLevel", fogLevel);
                 vec2 screenRes = {getWindowWidth(), getWindowHeight()};

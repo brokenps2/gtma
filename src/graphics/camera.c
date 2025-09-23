@@ -25,6 +25,8 @@ float fov = 75.0f;
 static float camLength, camRadius;
 static float oldCamLength;
 
+static bool moving = false;
+
 Sound footstep;
 Sound footstepFast;
 Sound jump;
@@ -83,7 +85,19 @@ void gtmaResizeCamera(Camera* cam, int width, int height) {
     cam->height = height;
 }
 
+void viewBob(vec3* pos) {
+    // Strength of bobbing
+    float amplitude = 100.0f;   // up/down amount
+    float frequency = 1.0f;   // how fast it bobs
+
+    float bobOffset = sinf(((float)SDL_GetTicks() / 1000) * frequency) * amplitude;
+    *pos[1] += bobOffset;
+
+}
+
 void gtmaCameraMatrix(Camera* cam, float nearPlane, float farPlane, Shader* shader) {
+
+    glm_vec3_copy(cam->position, cam->renderPos);
 
     if(cam->width != getWindowWidth()) {
         cam->width = getWindowWidth();
@@ -104,9 +118,9 @@ void gtmaCameraMatrix(Camera* cam, float nearPlane, float farPlane, Shader* shad
     glm_normalize_to(cam->direction, cam->front);
 
     vec3 cent;
-    glm_vec3_add(cam->position, cam->front, cent);
+    glm_vec3_add(cam->renderPos, cam->front, cent);
 
-    glm_lookat(cam->position, cent, cam->up, view);
+    glm_lookat(cam->renderPos, cent, cam->up, view);
     glm_perspective(glm_rad(fov), ((float)cam->width / (float)cam->height), nearPlane, farPlane, proj);
 
     mat4 camCross;
@@ -164,7 +178,7 @@ void gtmaCameraLook(Camera* cam) {
 }
 
 float maxSpeed = 120.0f;
-float accel = 76.0f;
+float accel = 120.0f;
 float forwardVelocity = 0.0f;
 float backwardVelocity = 0.0f;
 float leftVelocity = 0.0f;
@@ -299,6 +313,7 @@ void gtmaCameraMove(Camera* cam, GameObjectPack* objPack, bool flying) {
     if((forwardVelocity > 0 || backwardVelocity > 0 || leftVelocity > 0 || rightVelocity > 0)) {
         gtmaSetSoundPosition(&footstep, cam->position);
         gtmaSetSoundPosition(&footstepFast, cam->position);
+        moving = true;
         if(!playedFootstepSound) {
             playedFootstepSound = true;
             if(isKeyDown(SDL_SCANCODE_LSHIFT)) {
@@ -315,6 +330,7 @@ void gtmaCameraMove(Camera* cam, GameObjectPack* objPack, bool flying) {
         gtmaStopSound(&footstep);
         gtmaStopSound(&footstepFast);
         playedFootstepSound = false;
+        moving = false;
     }
 
     if(SDL_GetRelativeMouseMode()) {

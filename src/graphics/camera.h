@@ -7,6 +7,7 @@
 
 typedef struct Camera {
     vec3 position;
+    vec3 renderPos;
     vec3 front;
     vec3 up;
     vec3 direction;

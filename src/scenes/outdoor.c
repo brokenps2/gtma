@@ -32,7 +32,7 @@ static PointLight light1;
 static PointLight light2;
 static PointLight light3;
 
-static float brightness = 1.35f;
+static float brightness = 1.15f;
 
 static int sceneIndex = 0;
 
