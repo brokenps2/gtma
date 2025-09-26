@@ -26,7 +26,7 @@ typedef struct Camera {
 
 
 void gtmaCreateCamera(Camera* cam, float length, float radius, vec3 pos);
-
+void gtmaSetOrthographic(bool set);
 void gtmaCameraMatrix(Camera* cam, float nearPlane, float farPlane, Shader* shader);
 void gtmaCameraLook(Camera* cam);
 void gtmaCameraMove(Camera* cam, GameObjectPack* objPack, bool flying);

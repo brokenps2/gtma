@@ -20,7 +20,26 @@
 
 double oldMouseX = 0, oldMouseY = 0, newMouseX = 0, newMouseY = 0;
 
-float fov = 75.0f;
+float fov = 60.0f;
+
+float maxSpeed = 120.0f;
+float accel = 120.0f;
+float forwardVelocity = 0.0f;
+float backwardVelocity = 0.0f;
+float leftVelocity = 0.0f;
+float rightVelocity = 0.0f;
+float upVelocity = 0.0f;
+float downVelocity = 0.0f;
+float fallingSpeed = 0.0f;
+float lastFallingSpeed = 0.0f;
+
+float maxSlopeHeight = 0.15f;
+float slopeStep = 0.05f;
+
+vec3 proposedPosition;
+
+bool crouched = false;
+float camLengthHalf = 0;
 
 static float camLength, camRadius;
 static float oldCamLength;
@@ -30,6 +49,8 @@ static bool moving = false;
 Sound footstep;
 Sound footstepFast;
 Sound jump;
+
+bool orthographic = false;
 
 AABB calculateCameraAABB(vec3 position, float sizeXZ, float sizeY) {
     vec3 halfSize = {sizeXZ / 2, sizeY / 2, sizeXZ / 2};
@@ -85,14 +106,12 @@ void gtmaResizeCamera(Camera* cam, int width, int height) {
     cam->height = height;
 }
 
-void viewBob(vec3* pos) {
-    // Strength of bobbing
-    float amplitude = 100.0f;   // up/down amount
-    float frequency = 1.0f;   // how fast it bobs
+float bobState = 0;
+float bobIntensity = 0;
+float bobPhase = 0;
 
-    float bobOffset = sinf(((float)SDL_GetTicks() / 1000) * frequency) * amplitude;
-    *pos[1] += bobOffset;
-
+void gtmaSetOrthographic(bool set) {
+    orthographic = set;
 }
 
 void gtmaCameraMatrix(Camera* cam, float nearPlane, float farPlane, Shader* shader) {
@@ -121,7 +140,11 @@ void gtmaCameraMatrix(Camera* cam, float nearPlane, float farPlane, Shader* shad
     glm_vec3_add(cam->renderPos, cam->front, cent);
 
     glm_lookat(cam->renderPos, cent, cam->up, view);
-    glm_perspective(glm_rad(fov), ((float)cam->width / (float)cam->height), nearPlane, farPlane, proj);
+    if(orthographic) {
+        glm_ortho(0, getWindowWidth(), 0, getWindowHeight(), 0.1, 1000, proj);
+    } else {
+        glm_perspective(glm_rad(fov), ((float)cam->width / (float)cam->height), nearPlane, farPlane, proj);
+    }
 
     mat4 camCross;
     glm_mat4_mul(proj, view, camCross);
@@ -177,24 +200,6 @@ void gtmaCameraLook(Camera* cam) {
 
 }
 
-float maxSpeed = 120.0f;
-float accel = 120.0f;
-float forwardVelocity = 0.0f;
-float backwardVelocity = 0.0f;
-float leftVelocity = 0.0f;
-float rightVelocity = 0.0f;
-float upVelocity = 0.0f;
-float downVelocity = 0.0f;
-float fallingSpeed = 0.0f;
-float lastFallingSpeed = 0.0f;
-
-float maxSlopeHeight = 0.15f;
-float slopeStep = 0.05f;
-
-vec3 proposedPosition;
-
-bool crouched = false;
-float camLengthHalf = 0;
 
 void cameraCollide(Camera* cam, GameObjectPack* objPack) {
     if (isKeyDown(SDL_SCANCODE_SPACE) && fallingSpeed == 0) { 
@@ -269,6 +274,10 @@ void cameraCollide(Camera* cam, GameObjectPack* objPack) {
 float fallingSpeedRounded = 0;
 
 void gtmaCameraMove(Camera* cam, GameObjectPack* objPack, bool flying) {
+
+    if(orthographic) {
+        flying = true;
+    }
 
     proposedPosition[0] = cam->position[0];
     proposedPosition[1] = cam->position[1];
@@ -380,7 +389,7 @@ void gtmaCameraMove(Camera* cam, GameObjectPack* objPack, bool flying) {
 
     cameraCollide(cam, objPack);
 
-    float maxFov = 80.5;
+    float maxFov = 65.5;
 
     if(isKeyDown(SDL_SCANCODE_LSHIFT)) {
         maxSpeed = 32;
@@ -389,7 +398,7 @@ void gtmaCameraMove(Camera* cam, GameObjectPack* objPack, bool flying) {
     } else {
         maxSpeed = 20;
         fov -= 32 * getDeltaTime();
-        if(fov <= 75) fov = 75;
+        if(fov <= 60) fov = 60;
     }
 
     cam->position[0] = roundf(cam->position[0] * 100) / 100;

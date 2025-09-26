@@ -13,7 +13,7 @@
 #include "window/windowManager.h"
 
 static Camera camera;
-static vec3 camPos = {148, -2, 203};
+static vec3 camPos = {0, 0, 0};
 
 static GameObjectPack sceneObjectPack;
 static PointLightPack sceneLightPack;
@@ -36,7 +36,7 @@ static void initScene() {
     gtmaLoadPointLightPack(&sceneLightPack);
     gtmaLoadScreenObjectPack(&sceneScreenPack);
 
-    gtmaCreateGameObject(&sky, "models/skywater.glb", "sky", (vec3){0, 0, 0}, (vec3){12, 12, 12}, (vec3){0, 0, -30});
+    gtmaCreateGameObject(&sky, "models/cloudysky.glb", "sky", (vec3){0, 0, 0}, (vec3){12, 12, 12}, (vec3){0, 0, -30});
     sky.model.meshes[0].lit = false;
     sky.model.meshes[0].collisionEnabled = false;
 
@@ -109,8 +109,8 @@ static void updateScene() {
     logo.rotation += (sin((float)SDL_GetTicks() / 1000) / 50);
 
     //sky.rotation[0] -= 100 * getDeltaTime();
-    sky.rotation[1] -= 60 * getDeltaTime();
-    sky.rotation[2] -= 60 * getDeltaTime();
+    sky.rotation[1] -= 1 * getDeltaTime();
+    sky.rotation[2] -= 1 * getDeltaTime();
 
     if(isKeyPressed(SDL_SCANCODE_1)) {
         logo.visible = false;

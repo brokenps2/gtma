@@ -33,7 +33,7 @@ void gtmaInitWindow() {
         exit(1);
     }
     
-    frameTime = 1.0f / 30.0f;
+    frameTime = 1.0f / 144.0f;
  
     const char* title = cfgLookupString("title");
 
@@ -61,7 +61,7 @@ void gtmaInitWindow() {
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
 
-    SDL_GL_SetSwapInterval(0);
+    SDL_GL_SetSwapInterval(1);
 }
 
 SDL_Window* getWindow() {

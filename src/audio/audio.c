@@ -32,46 +32,6 @@ void gtmaInitAudio() {
     }
 }
 
-void gtmaCreateTrack(Track* track, const char* path, bool loop, float vol) {
-    drwav_int16* rawAudioBuffer;
-    unsigned int channels, sampleRate;
-    drwav_uint64 sampleCount;
-    rawAudioBuffer = drwav_open_file_and_read_pcm_frames_s16(res(path), &channels, &sampleRate, &sampleCount, NULL);
-
-    if(!rawAudioBuffer) {
-        printf("unable to open audio file\n");
-        free(rawAudioBuffer);
-        exit(1);
-    }
-
-    int format = -1;
-    if (channels == 1) {
-        format = AL_FORMAT_MONO16;
-    } else if (channels == 2) {
-        format = AL_FORMAT_STEREO16;
-    } else {
-        printf("unsupported number of channels: %d\n", channels);
-        free(rawAudioBuffer);
-        exit(1);
-    }
-
-    alGenBuffers(1, &track->bufferID);
-    alBufferData(track->bufferID, format, rawAudioBuffer, sampleCount * channels * sizeof(drwav_int16), sampleRate);
-
-    alGenSources(1, &track->sourceID);
-    alSourcei(track->sourceID, AL_BUFFER, track->bufferID);
-    if(loop) {
-        alSourcei(track->sourceID, AL_LOOPING, AL_TRUE);
-    } else {
-        alSourcei(track->sourceID, AL_LOOPING, AL_FALSE);
-    }
-    alSourcei(track->sourceID, AL_POSITION, 0);
-    alSourcei(track->sourceID, AL_GAIN, vol);
-
-    free(rawAudioBuffer);
-
-}
-
 void gtmaCreateSound(Sound* sound, const char* path, bool loop, float vol, vec3 position) {
     drwav_int16* rawAudioBuffer;
     unsigned int channels, sampleRate;
@@ -129,14 +89,6 @@ void gtmaUpdateAudio(vec3 camPos, vec3 cameraDir) {
     alListenerfv(AL_ORIENTATION, orient);
 }
 
-void gtmaDisposeTrack(Track* track) {
-    alDeleteSources(1, &track->sourceID);
-    alDeleteBuffers(1, &track->bufferID);
-    alcMakeContextCurrent(NULL);
-    alcDestroyContext(audioContext);
-    alcCloseDevice(audioDevice);
-}
-
 void gtmaDeleteSound(Sound* sound) {
     alDeleteSources(1, &sound->sourceID);
     alDeleteBuffers(1, &sound->bufferID);
@@ -176,45 +128,10 @@ void gtmaPlaySoundFrom(Sound* sound, int seconds) {
     }
 }
 
-void gtmaPlayTrack(Track* track) {
-    int state;
-    alGetSourcei(track->sourceID, AL_SOURCE_STATE, &state);
-    if(state == AL_STOPPED) {
-        track->isPlaying = false;
-        alSourcei(track->sourceID, AL_POSITION, 0);
-    }
-
-    if(!track->isPlaying) {
-        alSourcePlay(track->sourceID);
-        track->isPlaying = true;
-    }
-}
-
-void gtmaPlayTrackFrom(Track* track, int seconds) {
-    alSourcei(track->sourceID, AL_SEC_OFFSET, seconds);
-    int state;
-    alGetSourcei(track->sourceID, AL_SOURCE_STATE, &state);
-    if(state == AL_STOPPED) {
-        track->isPlaying = false;
-        alSourcei(track->sourceID, AL_POSITION, 0);
-    }
-
-    if(!track->isPlaying) {
-        alSourcePlay(track->sourceID);
-        track->isPlaying = true;
-    }
-}
-
 void gtmaStopSound(Sound* sound) {
     alSourceStop(sound->sourceID);
     alSourcei(sound->sourceID, AL_SEC_OFFSET, 0);
     sound->isPlaying = false;
-}
-
-void gtmaStopTrack(Track* track) {
-    alSourceStop(track->sourceID);
-    alSourcei(track->sourceID, AL_SEC_OFFSET, 0);
-    track->isPlaying = false;
 }
 
 void gtmaCloseAudio() {

@@ -18,8 +18,7 @@
 Shader shader;
 Camera renderCamera;
 
-int renderWidth;
-int renderHeight;
+int renderWidth, renderHeight;
 
 unsigned int FBO;
 unsigned int renderTexture;
@@ -28,7 +27,7 @@ unsigned int sVAO;
 unsigned int sVBO;
 
 float clearColor[3];
-float fogLevel = 0.00000000000000000022f;
+float fogLevel = 0.0022f;
 
 float ambientLight = 0.1;
 
@@ -272,7 +271,6 @@ void gtmaRender() {
 
                 Mesh mesh = model->meshes[j];
                 if(mesh.visible == false) {
-                    printf("gfdsgudgoidjfdi\n");
                     continue;
                 }
                 glBindVertexArray(mesh.VAO);
@@ -286,6 +284,8 @@ void gtmaRender() {
                 gtmaSetVec3(&shader, "viewPos", renderCamera.renderPos);
                 gtmaSetVec3(&shader, "clearColor", clearColor);
                 gtmaSetFloat(&shader, "fogLevel", fogLevel);
+                gtmaSetBool(&shader, "selected", objPack->objects[i]->selected);
+                gtmaSetInt(&shader, "meshIndex", j);
                 vec2 screenRes = {getWindowWidth(), getWindowHeight()};
                 vec2 frameRes = {renderWidth, renderHeight};
                 gtmaSetVec2(&shader, "screenRes", screenRes);

@@ -31,6 +31,8 @@ void gtmaCreateGameObject(GameObject* object, const char* mdlPath, const char* n
     for(int i = 0; i < object->model.meshCount; i++) {
         calculateMeshAABB(&object->model.meshes[i], object->scale, object->position);
     }
+
+    object->selected = false;
 }
 
 void gtmaCreateScreenObject(ScreenObject* object, const char* mdlPath, const char* name, vec2 position, vec2 size, float rotation) {

@@ -46,6 +46,7 @@ static void initScene() {
 
     gtmaCreateGameObject(&map, "models/stoneland.glb", "map", (vec3){0, 0, 0}, (vec3){1.5, 1, 1.5}, (vec3){0, 0, 0});
     map.model.meshes[map.model.meshCount-1].collisionEnabled = false;
+    
     gtmaCreateGameObject(&sky, "models/sky.glb", "sky", (vec3){0, 0, 0}, (vec3){18, 18, 18}, (vec3){0, 0, 0});
     sky.model.meshes[0].lit = false;
     sky.model.meshes[0].collisionEnabled = false;
@@ -96,7 +97,7 @@ extern Scene natatorium;
 
 static bool spectating = false;
 
-void warp() {
+static void warp() {
     if(sceneIndex == 0) {
         switchScene(&testScene1);
     } else if(sceneIndex == 1) {
@@ -119,7 +120,7 @@ static bool spinMap = false;
 
 static void updateScene() {
 
-    if(checkPaused(&pauseScreen)) {
+    if(gtmaCheckPauseAndSelect(&pauseScreen, &sceneObjectPack, &sceneLightPack)) {
         return;
     }
 

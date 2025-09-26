@@ -10,6 +10,7 @@ typedef struct GameObject {
     int packID;
     bool inPack;
     bool pickable;
+    bool selected;
 } GameObject;
 
 typedef struct ScreenObject {

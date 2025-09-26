@@ -1,6 +1,7 @@
 #pragma once
 #include <stdbool.h>
 #include "scenes/objects.h"
+#include "graphics/shader.h"
 
 typedef struct Scene {
     void (*init)();
@@ -8,5 +9,6 @@ typedef struct Scene {
     void (*dispose)();
 } Scene;
 
-bool checkPaused(ScreenObject* pauseScreen);
+bool gtmaCheckPauseAndSelect(ScreenObject* pauseScreen, GameObjectPack* objPack, PointLightPack* lightPack);
+void gtmaSetEditMode(int set);
 void switchScene(Scene* newScene);

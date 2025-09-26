@@ -6,6 +6,7 @@
 #include "graphics/renderer.h"
 #include "audio/audio.h"
 #include "window/events.h"
+#include "window/windowManager.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_mouse.h>
 #include <SDL2/SDL_scancode.h>
@@ -107,7 +108,27 @@ extern Scene outdoorScene;
 extern Scene titleScreen;
 
 bool spectating = false;
-static int frameCounter = 0;
+
+int sceneIndex = 0;
+
+void warp() {
+    if(sceneIndex == 0) {
+        switchScene(&titleScreen);
+    } else if(sceneIndex == 1) {
+        //switchScene(&natatorium);
+    }
+}
+
+static float transitionTimer = 0.0f;
+static float transitionDuration = 1.0f; // seconds
+static bool transitioning = false;
+
+static void startTransition() {
+    transitioning = true;
+    transitionTimer = transitionDuration;
+    gtmaToggleControls(false);
+    loadingScreen.visible = true;
+}
 
 void checkFlashlight() {
     glm_vec3_copy(camera.position, lamp.position);
@@ -122,15 +143,18 @@ void checkFlashlight() {
 
 void updateScene() {
 
-    if(checkPaused(&pauseScreen)) {
+    if(gtmaCheckPauseAndSelect(&pauseScreen, &sceneObjectPack, &sceneLightPack)) {
         return;
     }
 
-    if(loadingScreen.visible) {
-        gtmaToggleControls(false);
-        SDL_Delay(1000);
-        loadingScreen.visible = false;
-        switchScene(&outdoorScene);
+    if (transitioning) {
+        transitionTimer -= getDeltaTime();
+        if (transitionTimer <= 0.0f) {
+            transitioning = false;
+            loadingScreen.visible = false;
+            warp();
+            gtmaToggleControls(true);
+        }
         return;
     }
 
@@ -167,7 +191,6 @@ void updateScene() {
 }
 
 void disposeScene() {
-    frameCounter = 0;
     gtmaDeleteGameObjectPack(&sceneObjectPack);
     gtmaDeletScreenObjectPack(&sceneScreenPack);
 }

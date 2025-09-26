@@ -42,8 +42,6 @@ static float brightness = 1.55f;
 
 static int sceneIndex = 0;
 
-static int objIndex = 0;
-
 static void initScene() {
 
     gtmaToggleControls(true);
@@ -66,15 +64,15 @@ static void initScene() {
     gtmaChangeScreenObjectTexture(&loadingScreen, "images/loading.png");
     loadingScreen.visible = false;
 
-    gtmaCreateCamera(&camera, 10, 6, camPos);
+    gtmaCreateCamera(&camera, 11, 6, camPos);
     gtmaSetRenderCamera(&camera);
 
-    gtmaCreatePointLight(&light0, 134, 70, -100, brightness, brightness*1.8, brightness*2.2); light0.sunMode = true;
+    gtmaCreatePointLight(&light0, 134, 70, -100, brightness, brightness, brightness); light0.sunMode = true;
     gtmaCreatePointLight(&light1, 0, 70, -100, brightness, brightness, brightness); light1.sunMode = true;
-    gtmaCreatePointLight(&light2, -115, 70, -100, brightness, brightness*1.8, brightness*2.2); light2.sunMode = true;
+    gtmaCreatePointLight(&light2, -115, 70, -100, brightness, brightness, brightness); light2.sunMode = true;
     gtmaCreatePointLight(&light3, -112, 60, 220, brightness, brightness, brightness); light3.sunMode = true;
     gtmaCreatePointLight(&light4, 0, 60, 220, brightness, brightness, brightness); light4.sunMode = true;
-    gtmaCreatePointLight(&light5, 120, 60, 220, brightness, brightness*1.8, brightness*2.2); light5.sunMode = true;
+    gtmaCreatePointLight(&light5, 120, 60, 220, brightness, brightness, brightness); light5.sunMode = true;
     gtmaCreatePointLight(&light6, 0, 56, 0, brightness, brightness, brightness); light6.sunMode = true;
 
     gtmaCreatePointLight(&lamp, camPos[0], camPos[1], camPos[2], brightness*4, brightness*4, brightness*4);
@@ -135,9 +133,15 @@ static void startTransition() {
     loadingScreen.visible = true;
 }
 
+static int setEdit = 0;
+
 static void updateScene() {
 
-    if(checkPaused(&pauseScreen)) {
+    if(isKeyPressed(SDL_SCANCODE_E)) {
+        gtmaSetEditMode(1);
+    }
+
+    if(gtmaCheckPauseAndSelect(&pauseScreen, &sceneObjectPack, &sceneLightPack)) {
         return;
     }
 
@@ -152,8 +156,8 @@ static void updateScene() {
         return;
     }
 
-    gtmaCameraMatrix(&camera, 0.1f, 450.0f, gtmaGetShader());
     gtmaCameraMove(&camera, &sceneObjectPack, spectating);
+    gtmaCameraMatrix(&camera, 0.1f, 450.0f, gtmaGetShader());
     
     printf("\r%f %f %f", camera.position[0], camera.position[1], camera.position[2]);
     fflush(stdout);
