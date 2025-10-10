@@ -1,6 +1,0 @@
-Log:
-  Level: verbose
-
-CompileFlags:
-  Add: 
-    - I./src

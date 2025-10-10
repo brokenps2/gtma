@@ -16,7 +16,7 @@
 #include <string.h>
 
 static Camera camera;
-static vec3 camPos = {-28, 10, 0};
+static vec3 camPos = {-28, 139, 0};
 
 static GameObjectPack sceneObjectPack;
 static PointLightPack sceneLightPack;
@@ -30,8 +30,6 @@ static PointLight light1;
 static PointLight light2;
 static PointLight light3;
 
-static Sound feild;
-
 static float brightness = 1.35f;
 
 static int sceneIndex = 0;
@@ -44,7 +42,8 @@ static void initScene() {
     gtmaLoadPointLightPack(&sceneLightPack);
     gtmaLoadScreenObjectPack(&sceneScreenPack);
 
-    gtmaCreateGameObject(&map, "models/plane.glb", "map", (vec3){0, 0, 0}, (vec3){2, 2, 2}, (vec3){0, 0, 0});
+    gtmaCreateGameObject(&map, "models/castle.glb", "map", (vec3){0, 0, 0}, (vec3){30, 30, 30}, (vec3){0, 0, 0});
+    map.model.meshes[4].collisionEnabled = false;
 
     gtmaCreateScreenObject(&crosshair, "models/uitest.glb", "uitest", (vec2){((float)getWindowWidth() / 2), ((float)getWindowHeight() / 2)}, (vec2){8, 8}, 0);
     gtmaChangeScreenObjectTexture(&crosshair, "images/crosshair.png");
@@ -53,8 +52,6 @@ static void initScene() {
     gtmaChangeScreenObjectTexture(&loadingScreen, "images/loading.png");
     loadingScreen.visible = false;
  
-    gtmaCreateSound(&feild, "audio/feild.wav", true, 1, camPos);
-
     gtmaCreateCamera(&camera, 10, 6, camPos);
     gtmaSetRenderCamera(&camera);
 
@@ -73,7 +70,7 @@ static void initScene() {
 
     gtmaCameraMatrix(&camera, 0.1f, 450.0f, gtmaGetShader());
 
-    gtmaPlaySound(&feild);
+    gtmaSetOrthographic(true);
 
 }
 
@@ -120,8 +117,6 @@ static void updateScene() {
     crosshair.position[0] = ((float)getWindowWidth() / 2);
     crosshair.position[1] = ((float)getWindowHeight() / 2);
 
-    glm_vec3_copy(camera.position, feild.position);
-
     gtmaUpdateAudio(camera.position, camera.direction);
 
     //warps
@@ -136,7 +131,7 @@ static void disposeScene() {
     gtmaDeletScreenObjectPack(&sceneScreenPack);
 }
 
-Scene robert = {
+Scene editor = {
     .init = initScene,
     .update = updateScene,
     .dispose = disposeScene

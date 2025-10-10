@@ -38,7 +38,7 @@ static ScreenObject pauseScreen;
 static PointLight lamp;
 static bool flashlightOn = false;
 
-static float brightness = 1.55f;
+static float brightness = 1.35f;
 
 static int sceneIndex = 0;
 

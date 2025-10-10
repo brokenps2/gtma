@@ -52,6 +52,8 @@ Sound jump;
 
 bool orthographic = false;
 
+float zoom = 16.0f/14.0f;
+
 AABB calculateCameraAABB(vec3 position, float sizeXZ, float sizeY) {
     vec3 halfSize = {sizeXZ / 2, sizeY / 2, sizeXZ / 2};
     AABB box;
@@ -141,7 +143,8 @@ void gtmaCameraMatrix(Camera* cam, float nearPlane, float farPlane, Shader* shad
 
     glm_lookat(cam->renderPos, cent, cam->up, view);
     if(orthographic) {
-        glm_ortho(0, getWindowWidth(), 0, getWindowHeight(), 0.1, 1000, proj);
+        float left = -(float)getWindowWidth() / 240, right = (float)getWindowWidth() / 240, down = -(float)getWindowWidth() / 240, up = (float)getWindowHeight() / 240;
+        glm_ortho(left / zoom, right / zoom, down / zoom, up / zoom, 1.0f, 1000.0f, proj);
     } else {
         glm_perspective(glm_rad(fov), ((float)cam->width / (float)cam->height), nearPlane, farPlane, proj);
     }
@@ -182,20 +185,19 @@ void gtmaCameraLook(Camera* cam) {
         if(cam->yaw <= -360) cam->yaw = cam->yaw + 360;
 
         if(cam->roll >= 360) cam->roll = cam->roll - 360;
-        if(cam->roll <= -360) cam->roll = cam->roll + 360;
-
-        if(isKeyDown(SDL_SCANCODE_LEFT)) {
-            cam->yaw -= cam->sensitivity * getDeltaTime() * 600;
-        }
-        if(isKeyDown(SDL_SCANCODE_RIGHT)) {
-            cam->yaw += cam->sensitivity * getDeltaTime() * 600;
-        }
-        if(isKeyDown(SDL_SCANCODE_UP)) {
-            cam->pitch += cam->sensitivity * getDeltaTime() * 600;
-        }
-        if(isKeyDown(SDL_SCANCODE_DOWN)) {
-            cam->pitch -= cam->sensitivity * getDeltaTime() * 600;
-        }   
+        if(cam->roll <= -360) cam->roll = cam->roll + 360;  
+    }
+    if(isKeyDown(SDL_SCANCODE_LEFT)) {
+        cam->yaw -= cam->sensitivity * getDeltaTime() * 600;
+    }
+    if(isKeyDown(SDL_SCANCODE_RIGHT)) {
+        cam->yaw += cam->sensitivity * getDeltaTime() * 600;
+    }
+    if(isKeyDown(SDL_SCANCODE_UP)) {
+        cam->pitch += cam->sensitivity * getDeltaTime() * 600;
+    }
+    if(isKeyDown(SDL_SCANCODE_DOWN)) {
+        cam->pitch -= cam->sensitivity * getDeltaTime() * 600;
     }
 
 }
@@ -273,10 +275,61 @@ void cameraCollide(Camera* cam, GameObjectPack* objPack) {
 
 float fallingSpeedRounded = 0;
 
+void cameraMoveOrtho(Camera* cam) {
+     if(isKeyDown(SDL_SCANCODE_S)) {
+        cam->position[0] += (-cos(glm_rad(cam->yaw)) * 150) * getDeltaTime();
+        cam->position[2] -= (sin(glm_rad(cam->yaw)) * 150) * getDeltaTime();
+    }
+
+    if(isKeyDown(SDL_SCANCODE_A)) {
+        cam->position[0] += (sin(glm_rad(cam->yaw)) * 150) * getDeltaTime();
+        cam->position[2] -= (cos(glm_rad(cam->yaw)) * 150) * getDeltaTime();
+    }
+
+    if(isKeyDown(SDL_SCANCODE_D)) {
+        cam->position[0] -= (sin(glm_rad(cam->yaw)) * 150) * getDeltaTime();
+        cam->position[2] += (cos(glm_rad(cam->yaw)) * 150) * getDeltaTime();
+    }
+
+    if(isKeyDown(SDL_SCANCODE_W)) {
+        cam->position[0] -= (-cos(glm_rad(cam->yaw)) * 150) * getDeltaTime();
+        cam->position[2] += (sin(glm_rad(cam->yaw)) * 150) * getDeltaTime();
+    }
+
+    if(isKeyPressed(SDL_SCANCODE_PAGEUP)) {
+        zoom *= 1.2f;
+    }
+    if(isKeyPressed(SDL_SCANCODE_PAGEDOWN)) {
+        zoom *= 0.8f;
+    }
+    if(isKeyDown(SDL_SCANCODE_LEFT)) {
+        cam->yaw += cam->sensitivity * getDeltaTime() * 600;
+    }
+    if(isKeyDown(SDL_SCANCODE_RIGHT)) {
+        cam->yaw -= cam->sensitivity * getDeltaTime() * 600;
+    }
+    if(isKeyDown(SDL_SCANCODE_UP)) {
+        cam->pitch += cam->sensitivity * getDeltaTime() * 600;
+    }
+    if(isKeyDown(SDL_SCANCODE_DOWN)) {
+        cam->pitch -= cam->sensitivity * getDeltaTime() * 600;
+    }
+    if(isKeyDown(SDL_SCANCODE_SPACE)) {
+        cam->position[1] += 150 * getDeltaTime();
+    }
+    if(isKeyDown(SDL_SCANCODE_LCTRL)) {
+        cam->position[1] -= 150 * getDeltaTime();
+    }
+
+    if(cam->pitch > 89.99f) cam->pitch = 89.99f;
+    if(cam->pitch < -89.99f) cam->pitch = -89.99f;
+}
+
 void gtmaCameraMove(Camera* cam, GameObjectPack* objPack, bool flying) {
 
     if(orthographic) {
-        flying = true;
+        cameraMoveOrtho(cam);
+        return;
     }
 
     proposedPosition[0] = cam->position[0];

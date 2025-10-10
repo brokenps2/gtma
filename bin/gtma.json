@@ -1,12 +1,12 @@
 {
   "resLoc": "/home/eli/gtma/bin/res/",
   "title": "gtma",
-  "width": 1024,
-  "height": 600,
+  "width": 1280,
+  "height": 720,
   "mouseSensitivity": 12,
   "fboScaleFactor": 0.5,
   "vertexSnap": true,
-  "ditherEnabled": false,
+  "ditherEnabled": true,
   "testObjs": [
     {
       "name": "john1"

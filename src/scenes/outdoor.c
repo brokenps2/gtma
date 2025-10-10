@@ -15,7 +15,7 @@
 #include <string.h>
 
 static Camera camera;
-static vec3 camPos = {-28, 560, 0};
+static vec3 camPos = {-28, 7, 0};
 
 static GameObjectPack sceneObjectPack;
 static PointLightPack sceneLightPack;
@@ -32,7 +32,7 @@ static PointLight light1;
 static PointLight light2;
 static PointLight light3;
 
-static float brightness = 1.15f;
+static float brightness = 1.45f;
 
 static int sceneIndex = 0;
 
@@ -84,6 +84,8 @@ static void initScene() {
     gtmaAddLight(&light1, &sceneLightPack);
     gtmaAddLight(&light2, &sceneLightPack);
     gtmaAddLight(&light3, &sceneLightPack);
+
+    gtmaSetFogLevel(0.0035);
 
     gtmaSetClearColor(138, 154, 255);
 
@@ -175,6 +177,7 @@ static void updateScene() {
 }
 
 static void disposeScene() {
+    gtmaSetFogLevel(0.00);
     gtmaDeleteGameObjectPack(&sceneObjectPack);
     gtmaDeletScreenObjectPack(&sceneScreenPack);
 }

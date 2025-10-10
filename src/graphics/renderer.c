@@ -27,7 +27,7 @@ unsigned int sVAO;
 unsigned int sVBO;
 
 float clearColor[3];
-float fogLevel = 0.0022f;
+float fogLevel = 0.0000052f;
 
 float ambientLight = 0.1;
 
@@ -261,6 +261,7 @@ void gtmaRender() {
     gtmaSetInt(&shader, "tex0", 0);
     gtmaSetBool(&shader, "frame", false);
     gtmaSetFloat(&shader, "deltaTime", getDeltaTime());
+
 
     if(objPack != NULL) {
         for (int i = 0; i < objPack->objectCount; i++) {

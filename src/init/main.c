@@ -8,6 +8,7 @@
 #include "window/windowManager.h"
 #include "window/events.h"
 #include "util/config.h"
+#include <time.h>
 
 Scene* currentScene = NULL;
 
@@ -15,6 +16,8 @@ int main(int argc, char* argv[]) {
 
     extern Scene titleScreen;
     currentScene = &titleScreen;
+
+    srand(time(NULL));
 
     if(argc < 2 || argc > 2) {
         printf("Usage: gtma [config file path]\n");
