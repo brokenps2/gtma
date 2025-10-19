@@ -9,6 +9,8 @@
 #include <unistd.h>
 #include "util/config.h"
 #include "graphics/renderer.h"
+#include <stb_image.h>
+#include "util/files.h"
 #include "window/events.h"
 
 int fullscreen = 0;
@@ -26,13 +28,15 @@ bool mouseCaptured = true;
 
 int posX, posY;
 
+SDL_Surface* surface;
+
 void gtmaInitWindow() {
 
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
         printf("SDL init failed\n");
         exit(1);
     }
-    
+
     frameTime = 1.0f / 144.0f;
  
     const char* title = cfgLookupString("title");
@@ -119,6 +123,7 @@ void gtmaUpdateWindow() {
 }
 
 void gtmaCloseWindow() {
+    SDL_FreeSurface(surface);
     SDL_DestroyWindow(window);
     SDL_Quit();
 }

@@ -11,6 +11,7 @@ typedef struct GameObject {
     bool inPack;
     bool pickable;
     bool selected;
+    bool billboard;
 } GameObject;
 
 typedef struct ScreenObject {

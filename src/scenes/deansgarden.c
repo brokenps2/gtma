@@ -1,3 +1,4 @@
+
 #include "graphics/camera.h"
 #include "graphics/shader.h"
 #include "physics/physics.h"
@@ -12,10 +13,9 @@
 #include <cglm/vec3.h>
 #include "window/windowManager.h"
 #include <unistd.h>
-#include <string.h>
 
 static Camera camera;
-static vec3 camPos = {-28, 10, 0};
+static vec3 camPos = {-117, 13, 7};
 
 static GameObjectPack sceneObjectPack;
 static PointLightPack sceneLightPack;
@@ -23,8 +23,8 @@ static ScreenObjectPack sceneScreenPack;
 
 static GameObject map;
 static GameObject sky;
-static GameObject desk;
-static GameObject cliffsWarp;
+static GameObject dean;
+static GameObject hallWarp;
 static ScreenObject crosshair;
 static ScreenObject loadingScreen;
 static ScreenObject pauseScreen;
@@ -32,7 +32,7 @@ static PointLight light1;
 static PointLight light2;
 static PointLight light3;
 
-static float brightness = 1.45f;
+static float brightness = 1.35f;
 
 static int sceneIndex = 0;
 
@@ -44,17 +44,17 @@ static void initScene() {
     gtmaLoadPointLightPack(&sceneLightPack);
     gtmaLoadScreenObjectPack(&sceneScreenPack);
 
-    gtmaCreateGameObject(&map, "models/stoneland.glb", "map", (vec3){0, 0, 0}, (vec3){1.5, 1, 1.5}, (vec3){0, 0, 0});
-    map.model.meshes[map.model.meshCount-1].collisionEnabled = false;
+    gtmaCreateGameObject(&map, "models/jimmyhouse.glb", "map", (vec3){0, 0, 0}, (vec3){6.5, 5.75, 6.5}, (vec3){0, 0, 0});
     
     gtmaCreateGameObject(&sky, "models/sky.glb", "sky", (vec3){0, 0, 0}, (vec3){18, 18, 18}, (vec3){0, 0, 0});
     sky.model.meshes[0].lit = false;
     sky.model.meshes[0].collisionEnabled = false;
-    gtmaCreateGameObject(&desk, "models/desk.glb", "desk", (vec3){137, 4, 77}, (vec3){2, 2, 2}, (vec3){0, 0, 0});
-    desk.pickable = true;
-    gtmaCreateGameObject(&cliffsWarp, "models/office.glb", "cliffsWarp", (vec3){314, -248, -304}, (vec3){3, 3, 3}, (vec3){0, -30, 0});
-    cliffsWarp.pickable = true;
-    cliffsWarp.model.meshes[0].collisionEnabled = false;
+
+    gtmaCreateGameObject(&dean, "models/dean.glb", "dean", (vec3){90, 10, 0}, (vec3){3, 3, 3}, (vec3){0, 180, 0});
+    dean.billboard = true;
+
+    gtmaCreateGameObject(&hallWarp, "models/door2.glb", "hallWarp", (vec3){-123, 9, 6}, (vec3){3, 3, 3}, (vec3){0, 0, 0});
+    hallWarp.pickable = true;
 
     gtmaCreateScreenObject(&crosshair, "models/uitest.glb", "uitest", (vec2){((float)getWindowWidth() / 2), ((float)getWindowHeight() / 2)}, (vec2){8, 8}, 0);
     gtmaChangeScreenObjectTexture(&crosshair, "images/crosshair.png");
@@ -76,8 +76,8 @@ static void initScene() {
 
     gtmaAddGameObject(&map, &sceneObjectPack);
     gtmaAddGameObject(&sky, &sceneObjectPack);
-    gtmaAddGameObject(&desk, &sceneObjectPack);
-    gtmaAddGameObject(&cliffsWarp, &sceneObjectPack);
+    gtmaAddGameObject(&dean, &sceneObjectPack);
+    gtmaAddGameObject(&hallWarp, &sceneObjectPack);
     gtmaAddScreenObject(&crosshair, &sceneScreenPack);
     gtmaAddScreenObject(&loadingScreen, &sceneScreenPack);
     gtmaAddScreenObject(&pauseScreen, &sceneScreenPack);
@@ -94,16 +94,14 @@ static void initScene() {
 
 }
 
-extern Scene testScene1;
-extern Scene natatorium;
+extern Scene deansHallway;
 
 static bool spectating = false;
 
 static void warp() {
     if(sceneIndex == 0) {
-        switchScene(&testScene1);
+        switchScene(&deansHallway);
     } else if(sceneIndex == 1) {
-        switchScene(&natatorium);
     }
 }
 
@@ -149,26 +147,14 @@ static void updateScene() {
     //object transforms
     crosshair.position[0] = ((float)getWindowWidth() / 2); crosshair.position[1] = ((float)getWindowHeight() / 2);
     loadingScreen.position[0] = ((float)getWindowWidth()/ 2); loadingScreen.position[1] = ((float)getWindowHeight() / 2);
-    desk.rotation[1] += 150 * getDeltaTime();
 
     gtmaUpdateAudio(camera.position, camera.direction);
 
-    //warps
-    if(strcmp(camera.currentCollision, "cliffsWarp") == 0) {
-        sceneIndex = 1;
-        startTransition();
-    }
-
     if(isLeftPressed()) {
-        if(strcmp(pickObject(&sceneObjectPack, &camera), "desk") == 0) {
-            spinMap = !spinMap;
+        if(strcmp(pickObject(&sceneObjectPack, &camera), "hallWarp") == 0) {
+            sceneIndex = 0;
+            startTransition();
         }
-    }
-
-    if(spinMap) {
-        map.rotation[1] += 150 * getDeltaTime();
-    } else {
-        map.rotation[1] = 0;
     }
 
     //misc
@@ -182,7 +168,7 @@ static void disposeScene() {
     gtmaDeletScreenObjectPack(&sceneScreenPack);
 }
 
-Scene outdoorScene = {
+Scene deansGarden = {
     .init = initScene,
     .update = updateScene,
     .dispose = disposeScene

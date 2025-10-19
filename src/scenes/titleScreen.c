@@ -76,7 +76,7 @@ static void initScene() {
     gtmaAddScreenObject(&loadingScreen, &sceneScreenPack);
     gtmaAddLight(&light, &sceneLightPack);
 
-    gtmaSetClearColor(120, 110, 220);
+    gtmaSetClearColor(9, 8, 22);
 
     gtmaSetFogLevel(0.095);
 
@@ -89,7 +89,7 @@ extern Scene outdoorScene;
 extern Scene natatorium;
 extern Scene robert;
 extern Scene testScene1;
-extern Scene editor;
+extern Scene deansHallway;
 
 static bool spectating = true;
 
@@ -102,9 +102,7 @@ static void warp() {
     } else if(sceneIndex == 2) {
         switchScene(&natatorium);
     } else if(sceneIndex == 3) {
-        switchScene(&robert);
-    } else if(sceneIndex == 4) {
-        switchScene(&editor);
+        switchScene(&deansHallway);
     }
 }
 

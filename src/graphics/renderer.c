@@ -16,7 +16,7 @@
 #include "window/windowManager.h"
 
 Shader shader;
-Camera renderCamera;
+Camera* renderCamera;
 
 int renderWidth, renderHeight;
 
@@ -97,7 +97,7 @@ float glc(int color) {
 }
 
 void gtmaSetRenderCamera(Camera* cam) {
-    renderCamera = *cam;
+    renderCamera = cam;
 }
 
 int lastWidth = 800, lastHeight = 600;
@@ -266,6 +266,10 @@ void gtmaRender() {
     if(objPack != NULL) {
         for (int i = 0; i < objPack->objectCount; i++) {
 
+            if (objPack->objects[i]->billboard == true) {
+                objPack->objects[i]->rotation[1] = -renderCamera->yaw;
+            }
+
             Model* model = &objPack->objects[i]->model;
 
             for(int j = 0; j < model->meshCount; j++) {
@@ -282,7 +286,7 @@ void gtmaRender() {
                 gtmaSetBool(&shader, "ui", false);
                 gtmaSetMatrix(&shader, "transMatrix", transformationMatrix);
                 gtmaSetBool(&shader, "lightEnabled", mesh.lit);
-                gtmaSetVec3(&shader, "viewPos", renderCamera.renderPos);
+                gtmaSetVec3(&shader, "viewPos", renderCamera->renderPos);
                 gtmaSetVec3(&shader, "clearColor", clearColor);
                 gtmaSetFloat(&shader, "fogLevel", fogLevel);
                 gtmaSetBool(&shader, "selected", objPack->objects[i]->selected);

@@ -146,7 +146,7 @@ void main() {
 
     gl_Position = camCross * transMatrix * vec4(position, 1.0);
 
-    gl_Position = snap(gl_Position, vec2(frameRes.x / 1, frameRes.y / 1));
+    gl_Position = snap(gl_Position, vec2(frameRes.x / 3, frameRes.y / 3));
 
     outColor = color;
     outTexCoord = texCoord;

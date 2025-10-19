@@ -321,8 +321,8 @@ void cameraMoveOrtho(Camera* cam) {
         cam->position[1] -= 150 * getDeltaTime();
     }
 
-    if(cam->pitch > 89.99f) cam->pitch = 89.99f;
-    if(cam->pitch < -89.99f) cam->pitch = -89.99f;
+    if(cam->pitch > 89.0f) cam->pitch = 89.0f;
+    if(cam->pitch < -89.0f) cam->pitch = -89.0f;
 }
 
 void gtmaCameraMove(Camera* cam, GameObjectPack* objPack, bool flying) {

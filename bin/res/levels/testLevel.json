@@ -1,0 +1,37 @@
+{
+	"initScript": "init.lua",
+	"updateScript": "update.lua",
+	"disposeScript": "dispose.lua",
+	"mapModel": "(path to map obj file)",
+	"objects": [
+		{
+			"path": "models/natatorium.glb",
+			"name": "nat",
+			"x": 0,
+			"y": 0,
+			"z": 0,
+			"sx": 1,
+			"sy": 1,
+			"sz": 1,
+			"rx": 0,
+			"ry": 0,
+			"rz": 0,
+			"pickable": false,
+		},
+		{
+			"path": "models/desk.glb",
+			"name": "desk",
+			"x": 0,
+			"y": 12,
+			"z": 0,
+			"sx": 1,
+			"sy": 1,
+			"sz": 1,
+			"rx": 0,
+			"ry": 0,
+			"rz": 0,
+			"pickable": true,
+		}
+
+	]
+}

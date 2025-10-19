@@ -28,6 +28,8 @@ void gtmaCreateGameObject(GameObject* object, const char* mdlPath, const char* n
 
     object->pickable = false;
 
+    object->billboard = false;
+
     for(int i = 0; i < object->model.meshCount; i++) {
         calculateMeshAABB(&object->model.meshes[i], object->scale, object->position);
     }
