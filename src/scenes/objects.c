@@ -35,6 +35,7 @@ void gtmaCreateGameObject(GameObject* object, const char* mdlPath, const char* n
     }
 
     object->selected = false;
+    object->inPack = false;
 }
 
 void gtmaCreateScreenObject(ScreenObject* object, const char* mdlPath, const char* name, vec2 position, vec2 size, float rotation) {
@@ -124,15 +125,10 @@ void gtmaLoadTransformationMatrix(mat4* matrix, GameObject* object) {
 }
 
 void gtmaAddGameObject(GameObject* obj, GameObjectPack* objPack) {
-    if(!obj->inPack) {
-        if(objPack->objectCount != 0) {
-            GameObjectPack tempPack = *objPack;
-            objPack->objects = malloc((objPack->objectCount + 1) * sizeof(GameObject*));
-            for(int i = 0; i <= tempPack.objectCount - 1; i++) {
-                objPack->objects[i] = tempPack.objects[i];
-            }
-        } else {
-            objPack->objects = malloc((objPack->objectCount + 1) * sizeof(GameObject*));
+    if (!obj->inPack) {
+        objPack->objects = realloc(objPack->objects, (objPack->objectCount + 1) * sizeof(GameObject*));
+        if (!objPack->objects) {
+            return;
         }
         objPack->objects[objPack->objectCount] = obj;
         obj->packID = objPack->objectCount;
@@ -210,6 +206,14 @@ void gtmaRemoveGameObjectID(GameObjectPack* objPack, int id) {
         }
     }
 
+}
+
+void gtmaCreateAndAddGameObject(GameObjectPack* objPack, const char* mdlPath, const char* name, vec3 position, vec3 scale, vec3 rotation) {
+    GameObject* newObj = malloc(sizeof(GameObject));
+
+    gtmaCreateGameObject(newObj, mdlPath, name, position, scale, rotation);
+
+    gtmaAddGameObject(newObj, objPack);
 }
 
 

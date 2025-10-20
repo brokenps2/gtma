@@ -116,8 +116,6 @@ static void startTransition() {
     loadingScreen.visible = true;
 }
 
-static bool spinMap = false;
-
 static void updateScene() {
 
     if(gtmaCheckPauseAndSelect(&pauseScreen, &sceneObjectPack, &sceneLightPack)) {

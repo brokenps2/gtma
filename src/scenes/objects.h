@@ -45,6 +45,7 @@ void gtmaCreateGameObjectPack(GameObjectPack* pack);
 void gtmaDeleteGameObject(GameObject* object);
 void gtmaLoadTransformationMatrix(mat4* matrix, GameObject* object);
 void gtmaAddGameObject(GameObject* object, GameObjectPack* objPack);
+void gtmaCreateAndAddGameObject(GameObjectPack* objPack, const char* mdlPath, const char* name, vec3 position, vec3 scale, vec3 rotation);
 void gtmaRemoveGameObjectName(GameObjectPack* objPack, const char* name);
 void gtmaRemoveGameObjectID(GameObjectPack* objPack, int id);
 void gtmaDeleteGameObjectPack(GameObjectPack* objPack);
