@@ -202,6 +202,10 @@ void gtmaCameraLook(Camera* cam) {
 
 }
 
+void gtmaSetCameraFallingSpeed(float speed) {
+    fallingSpeed = speed;
+}
+
 
 void cameraCollide(Camera* cam, GameObjectPack* objPack) {
     if (isKeyDown(SDL_SCANCODE_SPACE) && fallingSpeed == 0) { 

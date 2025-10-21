@@ -90,6 +90,7 @@ extern Scene natatorium;
 extern Scene robert;
 extern Scene testScene1;
 extern Scene deansHallway;
+extern Scene circleHallway;
 
 static bool spectating = true;
 
@@ -102,7 +103,7 @@ static void warp() {
     } else if(sceneIndex == 2) {
         switchScene(&natatorium);
     } else if(sceneIndex == 3) {
-        switchScene(&deansHallway);
+        switchScene(&circleHallway);
     }
 }
 
