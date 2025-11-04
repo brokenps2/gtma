@@ -1,9 +1,9 @@
 {
-  "resLoc": "/home/eli/gtma/bin/res/",
+  "resLoc": "res/",
   "title": "gtma",
-  "width": 1280,
-  "height": 960,
-  "mouseSensitivity": 12,
+  "width": 1024,
+  "height": 768,
+  "mouseSensitivity": 6,
   "fboScaleFactor": 0.5,
   "vertexSnap": true,
   "ditherEnabled": true,

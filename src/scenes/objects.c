@@ -1,7 +1,6 @@
-#include "graphics/models.h"
-#include "graphics/texture.h"
-#include "scenes/objects.h"
-#include "graphics/renderer.h"
+#include "../graphics/models.h"
+#include "../graphics/texture.h"
+#include "objects.h"
 #include <GL/glew.h>
 #include <stb_image.h>
 #include <string.h>
@@ -41,6 +40,8 @@ void gtmaCreateGameObject(GameObject* object, const char* mdlPath, const char* n
 void gtmaCreateScreenObject(ScreenObject* object, const char* mdlPath, const char* name, vec2 position, vec2 size, float rotation) {
     Model model;
     gtmaCreateModel(&model, mdlPath);
+
+    object->type = SCREENOBJECT_TEXTURE;
 
     object->name = name;
     object->model = model;
@@ -206,6 +207,23 @@ void gtmaRemoveGameObjectID(GameObjectPack* objPack, int id) {
         }
     }
 
+}
+
+void gtmaCreateTextObject(ScreenObject* object, const char* text, vec2 position, vec3 color, float scale) {
+    object->name = "text";
+    object->type = SCREENOBJECT_TEXT;
+
+    object->text = strdup(text);
+    object->textColor[0] = color[0];
+    object->textColor[1] = color[1];
+    object->textColor[2] = color[2];
+    object->textScale = scale;
+
+    object->position[0] = position[0];
+    object->position[1] = position[1];
+
+    object->visible = true;
+    object->inPack = false;
 }
 
 void gtmaCreateAndAddGameObject(GameObjectPack* objPack, const char* mdlPath, const char* name, vec3 position, vec3 scale, vec3 rotation) {

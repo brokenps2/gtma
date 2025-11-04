@@ -3,8 +3,8 @@
 #include <AL/alc.h>
 #define DR_WAV_IMPLEMENTATION
 #include <dr_wav.h>
-#include "audio/audio.h"
-#include "util/files.h"
+#include "audio.h"
+#include "../util/files.h"
 
 ALCcontext* audioContext;
 ALCdevice* audioDevice;

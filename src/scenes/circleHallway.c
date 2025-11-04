@@ -1,16 +1,16 @@
-#include "graphics/camera.h"
-#include "graphics/shader.h"
-#include "physics/physics.h"
-#include "scenes/objects.h"
-#include "scenes/scenes.h"
-#include "graphics/renderer.h"
-#include "audio/audio.h"
-#include "window/events.h"
+#include "../graphics/camera.h"
+#include "../graphics/shader.h"
+#include "../physics/physics.h"
+#include "objects.h"
+#include "scenes.h"
+#include "../graphics/renderer.h"
+#include "../audio/audio.h"
+#include "../window/events.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_timer.h>
 #include <cglm/types.h>
 #include <cglm/vec3.h>
-#include "window/windowManager.h"
+#include "../window/windowManager.h"
 #include <unistd.h>
 
 static Camera camera;
@@ -25,13 +25,14 @@ static GameObject deanWarp;
 static ScreenObject crosshair;
 static ScreenObject loadingScreen;
 static ScreenObject pauseScreen;
+static ScreenObject fpsText;
 static PointLight light1;
 static PointLight light2;
 static PointLight light3;
 static PointLight light4;
 static PointLight light5;
 
-static float brightness = 1.45f;
+static float brightness = 1.80f;
 
 static int sceneIndex = 0;
 
@@ -47,10 +48,12 @@ static void initScene() {
     gtmaLoadPointLightPack(&sceneLightPack);
     gtmaLoadScreenObjectPack(&sceneScreenPack);
 
-    gtmaCreateGameObject(&map, "models/circleHallway.glb", "map", (vec3){0, 0, 0}, (vec3){4, 4, 4}, (vec3){0, 0, 0});
+    gtmaCreateGameObject(&map, "models/circleHallway.glb", "map", (vec3){0, 0, 0}, (vec3){6, 5, 6}, (vec3){0, 0, 0});
     
     gtmaCreateGameObject(&deanWarp, "models/door2.glb", "deanWarp", (vec3){-108.2, 8, -36}, (vec3){3, 3, 3}, (vec3){0, 0, 0});
     deanWarp.pickable = true;
+
+    gtmaCreateTextObject(&fpsText, "FPS", (vec2){20, 40}, (vec3){1.0f, 1.0f, 1.0f}, 1.0f);
 
     gtmaCreateScreenObject(&crosshair, "models/uitest.glb", "uitest", (vec2){((float)getWindowWidth() / 2), ((float)getWindowHeight() / 2)}, (vec2){8, 8}, 0);
     gtmaChangeScreenObjectTexture(&crosshair, "images/crosshair.png");
@@ -67,17 +70,18 @@ static void initScene() {
         gtmaCreateCamera(&camera, 10, 6, (vec3){-105, 11, -36});
     } else {
         gtmaCreateCamera(&camera, 10, 6, camPos);
-    }
+   }
     gtmaSetRenderCamera(&camera);
 
-    gtmaCreatePointLight(&light1, -300, 300, 300, brightness, brightness, brightness); light1.sunMode = true;
-    gtmaCreatePointLight(&light2, 300, 300, -300, brightness, brightness, brightness); light2.sunMode = true;
-    gtmaCreatePointLight(&light3, -300, 300, -300, brightness/1.4, brightness/1.4, brightness/1.4); light3.sunMode = true;
-    gtmaCreatePointLight(&light4, 300, 300, 300, brightness, brightness, brightness); light4.sunMode = true;
-    gtmaCreatePointLight(&light5, 0, -300, 0, brightness*1.3, brightness*1.3, brightness*1.3); light5.sunMode = true;
+    gtmaCreatePointLight(&light1, -300, 250, 300, brightness, brightness, brightness); light1.sunMode = true;
+    gtmaCreatePointLight(&light2, 300, 250, -300, brightness, brightness, brightness); light2.sunMode = true;
+    gtmaCreatePointLight(&light3, -300, 250, -300, brightness, brightness, brightness); light3.sunMode = true;
+    gtmaCreatePointLight(&light4, 300, 250, 300, brightness, brightness, brightness); light4.sunMode = true;
+    gtmaCreatePointLight(&light5, 0, -200, 0, brightness*1.3, brightness*1.3, brightness*1.3); light5.sunMode = true;
 
     gtmaAddGameObject(&map, &sceneObjectPack);
     //gtmaAddGameObject(&deanWarp, &sceneObjectPack);
+    gtmaAddScreenObject(&fpsText, &sceneScreenPack);
     gtmaAddScreenObject(&crosshair, &sceneScreenPack);
     gtmaAddScreenObject(&loadingScreen, &sceneScreenPack);
     gtmaAddScreenObject(&pauseScreen, &sceneScreenPack);
@@ -87,7 +91,7 @@ static void initScene() {
     gtmaAddLight(&light4, &sceneLightPack);
     gtmaAddLight(&light5, &sceneLightPack);
 
-    gtmaSetFogLevel(0.0025);
+    gtmaSetFogLevel(0.00025);
 
     gtmaSetClearColor(9, 8, 22);
 
@@ -162,7 +166,7 @@ static void updateScene() {
     //misc
     if(isKeyPressed(SDL_SCANCODE_P)) spectating = !spectating;
 
-    if(camera.position[2] < 16 && camera.position[2] > -16 && camera.position[0] < 83 && camera.position[0] > 33) {
+    if(camera.position[2] < 20 && camera.position[2] > -20 && camera.position[0] < 104 && camera.position[0] > 41) {
         floating = true;
     } else { floating = false; }
 

@@ -1,16 +1,16 @@
-#include "graphics/camera.h"
-#include "graphics/shader.h"
-#include "physics/physics.h"
-#include "scenes/objects.h"
-#include "scenes/scenes.h"
-#include "graphics/renderer.h"
-#include "audio/audio.h"
-#include "window/events.h"
+#include "../graphics/camera.h"
+#include "../graphics/shader.h"
+#include "../physics/physics.h"
+#include "objects.h"
+#include "scenes.h"
+#include "../graphics/renderer.h"
+#include "../audio/audio.h"
+#include "../window/events.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_timer.h>
 #include <cglm/types.h>
 #include <cglm/vec3.h>
-#include "window/windowManager.h"
+#include "../window/windowManager.h"
 #include <unistd.h>
 
 static Camera camera;
@@ -25,7 +25,6 @@ static GameObject deanWarp;
 static ScreenObject crosshair;
 static ScreenObject loadingScreen;
 static ScreenObject pauseScreen;
-static ScreenObject healthBar;
 static PointLight light1;
 static PointLight light2;
 static PointLight light3;
@@ -62,10 +61,6 @@ static void initScene() {
     gtmaChangeScreenObjectTexture(&loadingScreen, "images/loading.png");
     loadingScreen.visible = false;
 
-    gtmaCreateScreenObject(&healthBar, "models/uitest.glb", "healthbar", (vec2){178, (float)getWindowHeight() - 114}, (vec2){128, 64}, 0);
-    gtmaChangeScreenObjectTexture(&healthBar, "images/health.png");
-
- 
     if(returning) {
         gtmaCreateCamera(&camera, 10, 6, (vec3){-105, 11, -36});
     } else {
@@ -84,7 +79,6 @@ static void initScene() {
     gtmaAddScreenObject(&crosshair, &sceneScreenPack);
     gtmaAddScreenObject(&loadingScreen, &sceneScreenPack);
     gtmaAddScreenObject(&pauseScreen, &sceneScreenPack);
-    gtmaAddScreenObject(&healthBar, &sceneScreenPack);
     gtmaAddLight(&light1, &sceneLightPack);
     gtmaAddLight(&light2, &sceneLightPack);
     gtmaAddLight(&light3, &sceneLightPack);

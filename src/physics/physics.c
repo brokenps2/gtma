@@ -3,10 +3,10 @@
 #include <math.h>
 #include <stdbool.h>
 #include <stdio.h>
-#include "physics/physics.h"
-#include "graphics/models.h"
-#include "scenes/objects.h"
-#include "graphics/camera.h"
+#include "physics.h"
+#include "../graphics/models.h"
+#include "../scenes/objects.h"
+#include "../graphics/camera.h"
 
 void calculateMeshAABB(Mesh* mesh, vec3 objScale, vec3 objPosition) {
     float minX = FLT_MAX, maxX = -FLT_MAX;

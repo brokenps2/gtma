@@ -1,8 +1,8 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 #include <GL/glew.h>
-#include "graphics/texture.h"
-#include "util/files.h"
+#include "texture.h"
+#include "../util/files.h"
 
 
 void gtmaCreateTexture(Texture* tex, const char* path) {

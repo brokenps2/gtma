@@ -1,10 +1,10 @@
-#include "graphics/camera.h"
-#include "graphics/shader.h"
-#include "scenes/objects.h"
-#include "graphics/renderer.h"
+#include "../graphics/camera.h"
+#include "../graphics/shader.h"
+#include "objects.h"
+#include "../graphics/renderer.h"
 #include <SDL2/SDL.h>
-#include "scenes/scenes.h"
-#include "window/events.h"
+#include "scenes.h"
+#include "../window/events.h"
 
 static Camera camera;
 

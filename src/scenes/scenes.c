@@ -1,11 +1,11 @@
-#include "scenes/scenes.h"
+#include "scenes.h"
 #include <SDL2/SDL.h>
-#include "graphics/camera.h"
-#include "graphics/shader.h"
-#include "physics/physics.h"
-#include "scenes/objects.h"
-#include "window/events.h"
-#include "graphics/renderer.h"
+#include "../graphics/camera.h"
+#include "../graphics/shader.h"
+#include "../physics/physics.h"
+#include "objects.h"
+#include "../window/events.h"
+#include "../graphics/renderer.h"
 #include <stdbool.h>
 
 extern Scene* currentScene;

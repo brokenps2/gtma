@@ -1,19 +1,18 @@
 #include <GL/glew.h>
-#include <GLFW/glfw3.h>
 #include <SDL2/SDL_mouse.h>
 #include <cglm/common.h>
 #include <cglm/vec3.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "graphics/shader.h"
-#include "graphics/models.h"
-#include "scenes/objects.h"
-#include "graphics/camera.h"
-#include "graphics/texture.h"
-#include "window/events.h"
-#include "util/config.h"
-#include "window/windowManager.h"
+#include "shader.h"
+#include "models.h"
+#include "../scenes/objects.h"
+#include "camera.h"
+#include "texture.h"
+#include "../window/events.h"
+#include "../util/config.h"
+#include "../window/windowManager.h"
 
 Shader shader;
 Camera* renderCamera;
@@ -127,41 +126,36 @@ void gtmaRenderScreen() {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    if (screenPack != NULL) {
-        for (int i = 0; i < screenPack->objectCount; i++) {
-            ScreenObject* obj = screenPack->objects[i];
-            if (!obj->visible) continue;
+    if (screenPack == NULL) return;
 
-            for (int j = 0; j < obj->model.meshCount; j++) {
-                Mesh mesh = obj->model.meshes[j];
-                glBindVertexArray(mesh.VAO);
-                glBindBuffer(GL_ARRAY_BUFFER, mesh.VBO);
-                glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.EBO);
+    mat4 ortho;
+    glm_ortho(0.0f, getWindowWidth(), getWindowHeight(), 0.0f, -1.0f, 1.0f, ortho);
 
-                mat4 transformationMatrix;
-                glm_mat4_identity(transformationMatrix);
+    for (int i = 0; i < screenPack->objectCount; i++) {
+        ScreenObject* obj = screenPack->objects[i];
+        if (!obj->visible) continue;
+        gtmaSetBool(&shader, "text", false);
+    	for (int j = 0; j < obj->model.meshCount; j++) {
+            Mesh mesh = obj->model.meshes[j];
+            glBindVertexArray(mesh.VAO);
+            glBindBuffer(GL_ARRAY_BUFFER, mesh.VBO);
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.EBO);
 
-                glm_scale(transformationMatrix, (vec3){obj->size[0], obj->size[1], 1.0f});
+            mat4 transformationMatrix;
+            glm_mat4_identity(transformationMatrix);
+            glm_scale(transformationMatrix, (vec3){obj->size[0], obj->size[1], 1.0f});
+            glm_translate(transformationMatrix, (vec3){obj->position[0]/obj->size[0], obj->position[1]/obj->size[1], 0.0f});
 
-                glm_translate(transformationMatrix, (vec3){obj->position[0]/obj->size[0], obj->position[1]/obj->size[1], 0.0f});
+            if (obj->rotation != 0.0f)
+               glm_rotate_z(transformationMatrix, glm_rad(obj->rotation), transformationMatrix);
 
-                if (obj->rotation != 0.0f)
-                    glm_rotate_z(transformationMatrix, glm_rad(obj->rotation), transformationMatrix);
-
-
-                gtmaUseShader(&shader);
-                gtmaSetBool(&shader, "frame", false);
-                gtmaSetBool(&shader, "ui", true);
-                gtmaSetMatrix(&shader, "transMatrix", transformationMatrix);
-                glBindTexture(GL_TEXTURE_2D, mesh.texture.id);
-                glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);
-
-                mat4 ortho;
-                glm_ortho(0.0f, getWindowWidth(), getWindowHeight(), 0.0f, -1.0f, 1.0f, ortho);  
-                glUniformMatrix4fv(glGetUniformLocation(shader.id, "orthoMatrix"), 1, GL_FALSE, (float*)ortho);
-
-
-            }
+            gtmaUseShader(&shader);
+            gtmaSetBool(&shader, "frame", false);
+            gtmaSetBool(&shader, "ui", true);
+            gtmaSetMatrix(&shader, "transMatrix", transformationMatrix);
+            gtmaSetMatrix(&shader, "orthoMatrix", ortho);
+            glBindTexture(GL_TEXTURE_2D, mesh.texture.id);
+            glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);
         }
     }
 }

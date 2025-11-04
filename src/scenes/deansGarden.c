@@ -1,18 +1,17 @@
-
-#include "graphics/camera.h"
-#include "graphics/shader.h"
-#include "graphics/texture.h"
-#include "physics/physics.h"
-#include "scenes/objects.h"
-#include "scenes/scenes.h"
-#include "graphics/renderer.h"
-#include "audio/audio.h"
-#include "window/events.h"
+#include "../graphics/camera.h"
+#include "../graphics/shader.h"
+#include "../graphics/texture.h"
+#include "../physics/physics.h"
+#include "objects.h"
+#include "scenes.h"
+#include "../graphics/renderer.h"
+#include "../audio/audio.h"
+#include "../window/events.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_timer.h>
 #include <cglm/types.h>
 #include <cglm/vec3.h>
-#include "window/windowManager.h"
+#include "../window/windowManager.h"
 #include <unistd.h>
 
 static Camera camera;
@@ -64,7 +63,7 @@ static void initScene() {
     gtmaCreateTexture(&blue, "images/gradientsky.png");
     gtmaCreateTexture(&cloudy, "images/cloudysky.png");
 
-    gtmaCreateGameObject(&map, "models/jimmyhouse.glb", "map", (vec3){0, 0, 0}, (vec3){6.5, 5.75, 6.5}, (vec3){0, 0, 0});
+    gtmaCreateGameObject(&map, "models/jimmyhouse.glb", "map", (vec3){0, 0, 0}, (vec3){6.5, 4.75, 6.5}, (vec3){0, 0, 0});
     map.model.meshes[map.model.meshCount - 1].collisionEnabled = false;
     
     gtmaCreateGameObject(&sky, "models/cloudysky.glb", "sky", (vec3){0, 0, 0}, (vec3){18, 18, 18}, (vec3){0, 0, 0});
@@ -96,7 +95,7 @@ static void initScene() {
     gtmaCreatePointLight(&light3, -300, 300, -300, brightness, brightness, brightness); light3.sunMode = true;
 
     gtmaAddGameObject(&map, &sceneObjectPack);
-    gtmaAddGameObject(&sky, &sceneObjectPack);
+    //gtmaAddGameObject(&sky, &sceneObjectPack);
     gtmaAddGameObject(&dean, &sceneObjectPack);
     gtmaAddGameObject(&hallWarp, &sceneObjectPack);
     gtmaAddScreenObject(&crosshair, &sceneScreenPack);
@@ -108,7 +107,7 @@ static void initScene() {
 
     gtmaSetFogLevel(0.0015);
 
-    gtmaSetClearColor(138, 154, 255);
+    gtmaSetClearColor(0, 0, 0);
 
     gtmaCameraMatrix(&camera, 0.1f, 450.0f, gtmaGetShader());
     camera.pitch = 0;
@@ -143,11 +142,6 @@ static void updateScene() {
 
     if(gtmaCheckPauseAndSelect(&pauseScreen, &sceneObjectPack, &sceneLightPack)) {
         return;
-    }
-
-    if(camera.position[1] < -8) {
-        sceneIndex = 1;
-        startTransition();
     }
 
     if (transitioning) {
@@ -200,6 +194,11 @@ static void updateScene() {
             sceneIndex = 0;
             startTransition();
         }
+    }
+
+    if(camera.position[1] < -8) {
+        sceneIndex = 1;
+        startTransition();
     }
 
     //misc

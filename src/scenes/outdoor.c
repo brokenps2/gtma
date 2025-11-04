@@ -1,16 +1,16 @@
-#include "graphics/camera.h"
-#include "graphics/shader.h"
-#include "physics/physics.h"
-#include "scenes/objects.h"
-#include "scenes/scenes.h"
-#include "graphics/renderer.h"
-#include "audio/audio.h"
-#include "window/events.h"
+#include "../graphics/camera.h"
+#include "../graphics/shader.h"
+#include "../physics/physics.h"
+#include "objects.h"
+#include "scenes.h"
+#include "../graphics/renderer.h"
+#include "../audio/audio.h"
+#include "../window/events.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_timer.h>
 #include <cglm/types.h>
 #include <cglm/vec3.h>
-#include "window/windowManager.h"
+#include "../window/windowManager.h"
 #include <unistd.h>
 #include <string.h>
 

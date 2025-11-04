@@ -1,6 +1,6 @@
 #pragma once
-#include "graphics/shader.h"
-#include "scenes/objects.h"
+#include "../graphics/shader.h"
+#include "objects.h"
 
 typedef struct Level {
     GameObject mapObject;

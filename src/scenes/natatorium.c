@@ -1,17 +1,17 @@
-#include "graphics/camera.h"
-#include "graphics/shader.h"
-#include "physics/physics.h"
-#include "scenes/objects.h"
-#include "scenes/scenes.h"
-#include "graphics/renderer.h"
-#include "audio/audio.h"
-#include "window/events.h"
+#include "../graphics/camera.h"
+#include "../graphics/shader.h"
+#include "../physics/physics.h"
+#include "objects.h"
+#include "scenes.h"
+#include "../graphics/renderer.h"
+#include "../audio/audio.h"
+#include "../window/events.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_scancode.h>
 #include <cglm/vec3.h>
 #include <stdbool.h>
 #include <stdio.h>
-#include "window/windowManager.h"
+#include "../window/windowManager.h"
 
 
 static Camera camera;

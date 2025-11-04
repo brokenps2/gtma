@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <GL/glew.h>
 #include <string.h>
-#include "util/files.h"
-#include "util/config.h"
+#include "files.h"
+#include "config.h"
 
 long vtShaderLength;
 long frShaderLength;

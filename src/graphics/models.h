@@ -1,7 +1,7 @@
 #pragma once
 #include <cglm/cglm.h>
-#include "graphics/texture.h"
-#include "physics/physics.h"
+#include "texture.h"
+#include "../physics/physics.h"
 
 typedef struct Vertex {
     float position[3];

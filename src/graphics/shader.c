@@ -3,8 +3,8 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "util/files.h"
-#include "graphics/shader.h"
+#include "../util/files.h"
+#include "shader.h"
 
 void gtmaCreateShader(Shader* shader) {
     shader->vtShaderSrc = getVertexShaderSrc();

@@ -1,8 +1,7 @@
 #pragma once
 #include <cglm/cglm.h>
-#include "graphics/shader.h"
-#include <GLFW/glfw3.h>
-#include "physics/physics.h"
+#include "shader.h"
+#include "../physics/physics.h"
 
 
 typedef struct Camera {

@@ -8,22 +8,21 @@
 #include <cglm/common.h>
 #include <cglm/vec3.h>
 #include <math.h>
-#include "physics/physics.h"
-#include "util/config.h"
-#include "graphics/shader.h"
-#include "window/windowManager.h"
+#include "../physics/physics.h"
+#include "../util/config.h"
+#include "shader.h"
+#include "../window/windowManager.h"
 #include <SDL2/SDL.h>
-#include "window/events.h"
-#include "graphics/camera.h"
-#include "audio/audio.h"
-#include <GLFW/glfw3.h>
+#include "../window/events.h"
+#include "camera.h"
+#include "../audio/audio.h"
 
 double oldMouseX = 0, oldMouseY = 0, newMouseX = 0, newMouseY = 0;
 
 float fov = 60.0f;
 
 float maxSpeed = 120.0f;
-float accel = 120.0f;
+float accel = 70.0f;
 float forwardVelocity = 0.0f;
 float backwardVelocity = 0.0f;
 float leftVelocity = 0.0f;
@@ -31,7 +30,6 @@ float rightVelocity = 0.0f;
 float upVelocity = 0.0f;
 float downVelocity = 0.0f;
 float fallingSpeed = 0.0f;
-float lastFallingSpeed = 0.0f;
 
 float maxSlopeHeight = 0.15f;
 float slopeStep = 0.05f;
@@ -89,6 +87,14 @@ void gtmaCreateCamera(Camera* cam, float length, float radius, vec3 pos) {
     cam->yaw = 0.0f;
     cam->roll = 0.0f;
     cam->sensitivity = (float)cfgLookupInt("mouseSensitivity") / 100;
+
+    forwardVelocity = 0;
+    backwardVelocity = 0;
+    fallingSpeed = 0;
+    upVelocity = 0;
+    downVelocity = 0;
+    leftVelocity = 0;
+    rightVelocity = 0;
 
     cam->aabb = calculateCameraAABB(cam->position, radius, length);
     camLength = length;
@@ -187,6 +193,7 @@ void gtmaCameraLook(Camera* cam) {
         if(cam->roll >= 360) cam->roll = cam->roll - 360;
         if(cam->roll <= -360) cam->roll = cam->roll + 360;  
     }
+
     if(isKeyDown(SDL_SCANCODE_LEFT)) {
         cam->yaw -= cam->sensitivity * getDeltaTime() * 600;
     }
@@ -208,11 +215,6 @@ void gtmaSetCameraFallingSpeed(float speed) {
 
 
 void cameraCollide(Camera* cam, GameObjectPack* objPack) {
-    if (isKeyDown(SDL_SCANCODE_SPACE) && fallingSpeed == 0) { 
-        gtmaSetSoundPosition(&jump, cam->position);
-        gtmaPlaySound(&jump);
-        fallingSpeed = -20.0f;
-    }
 
     if(SDL_GetRelativeMouseMode()) {
         proposedPosition[1] -= fallingSpeed * getDeltaTime();
@@ -265,9 +267,13 @@ void cameraCollide(Camera* cam, GameObjectPack* objPack) {
     tempPosition[1] = proposedPosition[1];
     tempPosition[2] = cam->position[2];
 
-    cam->aabb = calculateCameraAABB(tempPosition, camRadius, camLength);
+    if (isKeyDown(SDL_SCANCODE_SPACE) && fallingSpeed == 0) { 
+        gtmaSetSoundPosition(&jump, cam->position);
+        gtmaPlaySound(&jump);
+        fallingSpeed = -20.0f;
+    }
 
-    lastFallingSpeed = fallingSpeed;
+    cam->aabb = calculateCameraAABB(tempPosition, camRadius, camLength);
 
     if (!updateCameraPhysics(objPack, cam)) {
         cam->position[1] = tempPosition[1];
@@ -275,6 +281,7 @@ void cameraCollide(Camera* cam, GameObjectPack* objPack) {
     } else {
         fallingSpeed = 0.0f;
     }
+
 }
 
 float fallingSpeedRounded = 0;
@@ -342,11 +349,21 @@ void gtmaCameraMove(Camera* cam, GameObjectPack* objPack, bool flying) {
 
     if(flying) maxSpeed = 60;
 
+    if(isKeyDown(SDL_SCANCODE_Q)) {
+        if(maxSpeed < 120) {
+            maxSpeed += (400 * accel) * getDeltaTime();
+        }
+    } else if(!isKeyDown(SDL_SCANCODE_Q)) {
+        if(maxSpeed > 60) {
+            maxSpeed -= (400 * accel) * getDeltaTime();
+        }
+    }
+
     if (isKeyDown(SDL_SCANCODE_W)) {
         forwardVelocity += accel * getDeltaTime();
         if (forwardVelocity > maxSpeed) forwardVelocity = maxSpeed;
     } else {
-        forwardVelocity -= accel * getDeltaTime();
+        forwardVelocity -= (accel / 1.5) * getDeltaTime();
         if (forwardVelocity < 0) forwardVelocity = 0;
     }
 
@@ -354,7 +371,7 @@ void gtmaCameraMove(Camera* cam, GameObjectPack* objPack, bool flying) {
         backwardVelocity += accel * getDeltaTime();
         if (backwardVelocity > maxSpeed) backwardVelocity = maxSpeed;
     } else {
-        backwardVelocity -= accel * getDeltaTime();
+        backwardVelocity -= (accel / 1.5) * getDeltaTime();
         if (backwardVelocity < 0) backwardVelocity = 0;
     }
 
@@ -362,7 +379,7 @@ void gtmaCameraMove(Camera* cam, GameObjectPack* objPack, bool flying) {
         leftVelocity += accel * getDeltaTime();
         if (leftVelocity > maxSpeed) leftVelocity = maxSpeed;
     } else {
-        leftVelocity -= accel * getDeltaTime();
+        leftVelocity -= (accel / 1.5) * getDeltaTime();
         if (leftVelocity < 0) leftVelocity = 0;
     }
 
@@ -370,7 +387,7 @@ void gtmaCameraMove(Camera* cam, GameObjectPack* objPack, bool flying) {
         rightVelocity += accel * getDeltaTime();
         if (rightVelocity > maxSpeed) rightVelocity = maxSpeed;
     } else {
-        rightVelocity -= accel * getDeltaTime();
+        rightVelocity -= (accel / 1.5) * getDeltaTime();
         if (rightVelocity < 0) rightVelocity = 0;
     }
 

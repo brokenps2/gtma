@@ -1,13 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "graphics/renderer.h"
-#include <GLFW/glfw3.h>
+#include "../graphics/renderer.h"
 #include <stdbool.h>
-#include "audio/audio.h"
-#include "scenes/scenes.h"
-#include "window/windowManager.h"
-#include "window/events.h"
-#include "util/config.h"
+#include "../audio/audio.h"
+#include "../scenes/scenes.h"
+#include "../window/windowManager.h"
+#include "../window/events.h"
+#include "../util/config.h"
 #include <time.h>
 
 Scene* currentScene = NULL;

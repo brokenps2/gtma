@@ -116,8 +116,9 @@ void main() {
             (position.x / screenRes.x) * 2.0 - 1.0,
             (position.y / screenRes.y) * 2.0 - 1.0
         );
-        gl_Position = vec4(ndc, 0.0, 1.0);
+        gl_Position = vec4(ndc, 0.0, 1.0) * transMatrix;
         outTexCoord = texCoord;
+        return;
     }
 
     vec3 totalLight = vec3(0.0);
@@ -146,7 +147,7 @@ void main() {
 
     gl_Position = camCross * transMatrix * vec4(position, 1.0);
 
-    gl_Position = snap(gl_Position, vec2(frameRes.x / 3, frameRes.y / 3));
+    gl_Position = snap(gl_Position, vec2(frameRes.x / 2, frameRes.y / 2));
 
     outColor = color;
     outTexCoord = texCoord;

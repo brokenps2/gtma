@@ -1,18 +1,17 @@
-#include "window/events.h"
+#include "events.h"
 #include <SDL2/SDL.h>
 #include <GL/glew.h>
 #include <SDL2/SDL_events.h>
-#include <nuklear.h>
-#include <nuklear_sdl_gl3.h>
+#include <SDL2/SDL_scancode.h>
 #include <SDL2/SDL_mouse.h>
 #include <stdbool.h>
-#include "util/config.h"
+#include "../util/config.h"
 
 double mouseX;
 double mouseY;
 
 int windowPosX = 800, windowPosY = 200;
-int windowSizeX = 800, windowSizeY = 600;
+int windowSizeX = 1280, windowSizeY = 960;
 bool dimensionsUpdated = false;
 
 bool mouse1;
@@ -22,6 +21,8 @@ bool running = true;
 
 bool keys[SDL_NUM_SCANCODES];
 bool keysPressed[SDL_NUM_SCANCODES];
+
+static bool useFixedBorder = false;
 
 int blockAllEvents(void* userdata, SDL_Event* event) {
     return 0; // block everything
@@ -158,6 +159,7 @@ void windowMoveCallback(int xpos, int ypos) {
 }
 
 void gtmaInitInput() {
+    useFixedBorder = cfgLookupBool("useFixedBorder");
     windowSizeX = cfgLookupInt("width");
     windowSizeY = cfgLookupInt("height");
 }
@@ -172,9 +174,17 @@ void gtmaSetRunning(bool run) {
 
 bool controlsEnabled = true;
 
+void gtmaClearKeyInputs() {
+    for(int i = 0; i < SDL_NUM_SCANCODES; i++) {
+        keys[i] = false;
+        keysPressed[i] = false;
+    }
+}
+
 void gtmaToggleControls(bool onoff) {
     if(onoff == false) SDL_FlushEvents(SDL_FIRSTEVENT, SDL_LASTEVENT);
     controlsEnabled = onoff;
+    gtmaClearKeyInputs();
 }
 
 void gtmaUpdateEvents() {

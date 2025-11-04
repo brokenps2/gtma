@@ -1,5 +1,5 @@
 #pragma once
-#include "graphics/models.h"
+#include "../graphics/models.h"
 
 typedef struct GameObject {
     Model model;
@@ -14,11 +14,20 @@ typedef struct GameObject {
     bool billboard;
 } GameObject;
 
+typedef enum {
+    SCREENOBJECT_TEXTURE,
+    SCREENOBJECT_TEXT
+} ScreenObjectType;
+
 typedef struct ScreenObject {
     Model model;
     const char* name;
 
+    ScreenObjectType type;
+
     char* text;
+    vec3 textColor;
+    float textScale;
 
     vec2 position;
     vec2 size;
@@ -45,6 +54,7 @@ void gtmaCreateGameObjectPack(GameObjectPack* pack);
 void gtmaDeleteGameObject(GameObject* object);
 void gtmaLoadTransformationMatrix(mat4* matrix, GameObject* object);
 void gtmaAddGameObject(GameObject* object, GameObjectPack* objPack);
+void gtmaCreateTextObject(ScreenObject* object, const char* text, vec2 position, vec3 color, float scale);
 void gtmaCreateAndAddGameObject(GameObjectPack* objPack, const char* mdlPath, const char* name, vec3 position, vec3 scale, vec3 rotation);
 void gtmaRemoveGameObjectName(GameObjectPack* objPack, const char* name);
 void gtmaRemoveGameObjectID(GameObjectPack* objPack, int id);

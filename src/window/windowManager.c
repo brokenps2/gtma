@@ -7,11 +7,10 @@
 #include <SDL2/SDL.h>
 #include <stdbool.h>
 #include <unistd.h>
-#include "util/config.h"
-#include "graphics/renderer.h"
+#include "../util/config.h"
+#include "../graphics/renderer.h"
 #include <stb_image.h>
-#include "util/files.h"
-#include "window/events.h"
+#include "events.h"
 
 int fullscreen = 0;
 
@@ -25,6 +24,8 @@ float monitorWidth, monitorHeight;
 double frameTime;
 
 bool mouseCaptured = true;
+
+bool useFixedBorder = false;
 
 int posX, posY;
 

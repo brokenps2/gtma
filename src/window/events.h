@@ -16,3 +16,4 @@ void gtmaSetRunning(bool run);
 bool gtmaIsRunning();
 void gtmaUpdateEvents();
 void gtmaToggleControls(bool onoff);
+void gtmaClearKeyInputs();

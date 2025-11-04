@@ -76,6 +76,11 @@ vec4 dither(vec4 color, int numLevels) {
 
 void main() {
 
+    if (text) {
+        fragColor = vec4(textColor, 1.0);
+        return;
+    }
+
     if(frame) {
         fragColor = texture(tex0, outTexCoord) * vec4(fboBrightness);
         return;
