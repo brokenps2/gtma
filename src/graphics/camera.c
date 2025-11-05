@@ -19,55 +19,11 @@
 
 double oldMouseX = 0, oldMouseY = 0, newMouseX = 0, newMouseY = 0;
 
-float fov = 60.0f;
-
-float maxSpeed = 120.0f;
-float accel = 70.0f;
-float forwardVelocity = 0.0f;
-float backwardVelocity = 0.0f;
-float leftVelocity = 0.0f;
-float rightVelocity = 0.0f;
-float upVelocity = 0.0f;
-float downVelocity = 0.0f;
-float fallingSpeed = 0.0f;
-
-float maxSlopeHeight = 0.15f;
-float slopeStep = 0.05f;
-
-vec3 proposedPosition;
-
-bool crouched = false;
-float camLengthHalf = 0;
-
-static float camLength, camRadius;
-static float oldCamLength;
-
-static bool moving = false;
-
-Sound footstep;
-Sound footstepFast;
-Sound jump;
-
 bool orthographic = false;
 
 float zoom = 16.0f/14.0f;
 
-AABB calculateCameraAABB(vec3 position, float sizeXZ, float sizeY) {
-    vec3 halfSize = {sizeXZ / 2, sizeY / 2, sizeXZ / 2};
-    AABB box;
-
-    box.minX = position[0] - halfSize[0];
-    box.minY = position[1] - halfSize[1] * 2;
-    box.minZ = position[2] - halfSize[2];
-
-    box.maxX = position[0] + halfSize[0];
-    box.maxY = position[1] + halfSize[1];
-    box.maxZ = position[2] + halfSize[2];
-
-    return box;
-}
-
-void gtmaCreateCamera(Camera* cam, float length, float radius, vec3 pos) {
+void gtmaCreateCamera(Camera* cam, vec3 pos) {
     cam->width = getWindowWidth();
     cam->height = getWindowHeight();
 
@@ -83,43 +39,18 @@ void gtmaCreateCamera(Camera* cam, float length, float radius, vec3 pos) {
     cam->position[1] = pos[1];
     cam->position[2] = pos[2];
 
+    cam->fov = 60.0f;
+
     cam->pitch = 0.0f;
     cam->yaw = 0.0f;
     cam->roll = 0.0f;
     cam->sensitivity = (float)cfgLookupInt("mouseSensitivity") / 100;
-
-    forwardVelocity = 0;
-    backwardVelocity = 0;
-    fallingSpeed = 0;
-    upVelocity = 0;
-    downVelocity = 0;
-    leftVelocity = 0;
-    rightVelocity = 0;
-
-    cam->aabb = calculateCameraAABB(cam->position, radius, length);
-    camLength = length;
-    camRadius = radius;
-    oldCamLength = length;
-
-    gtmaCreateSound(&footstep, "audio/footstep.wav", true, 1, cam->position);
-    gtmaCreateSound(&footstepFast, "audio/footstepfast.wav", true, 1, cam->position);
-    alSourcef(footstep.sourceID, AL_GAIN, 0.5);
-    alSourcef(footstepFast.sourceID, AL_GAIN, 0.5);
-    gtmaCreateSound(&jump, "audio/jump.wav", 0, 1, cam->position);
 
 }
 
 void gtmaResizeCamera(Camera* cam, int width, int height) {
     cam->width = width;
     cam->height = height;
-}
-
-float bobState = 0;
-float bobIntensity = 0;
-float bobPhase = 0;
-
-void gtmaSetOrthographic(bool set) {
-    orthographic = set;
 }
 
 void gtmaCameraMatrix(Camera* cam, float nearPlane, float farPlane, Shader* shader) {
@@ -152,7 +83,7 @@ void gtmaCameraMatrix(Camera* cam, float nearPlane, float farPlane, Shader* shad
         float left = -(float)getWindowWidth() / 240, right = (float)getWindowWidth() / 240, down = -(float)getWindowWidth() / 240, up = (float)getWindowHeight() / 240;
         glm_ortho(left / zoom, right / zoom, down / zoom, up / zoom, 1.0f, 1000.0f, proj);
     } else {
-        glm_perspective(glm_rad(fov), ((float)cam->width / (float)cam->height), nearPlane, farPlane, proj);
+        glm_perspective(glm_rad(cam->fov), ((float)cam->width / (float)cam->height), nearPlane, farPlane, proj);
     }
 
     mat4 camCross;
@@ -161,8 +92,6 @@ void gtmaCameraMatrix(Camera* cam, float nearPlane, float farPlane, Shader* shad
     gtmaSetMatrix(shader, "camCross", camCross);
     gtmaSetMatrix(shader, "viewMatrix", view);
     gtmaSetMatrix(shader, "projMatrix", proj);
-
-    cam->aabb = calculateCameraAABB(cam->position, camRadius, camLength);
 
 }
 
@@ -208,281 +137,6 @@ void gtmaCameraLook(Camera* cam) {
     }
 
 }
-
-void gtmaSetCameraFallingSpeed(float speed) {
-    fallingSpeed = speed;
-}
-
-
-void cameraCollide(Camera* cam, GameObjectPack* objPack) {
-
-    if(SDL_GetRelativeMouseMode()) {
-        proposedPosition[1] -= fallingSpeed * getDeltaTime();
-    }
-
-    vec3 tempPosition;
-    tempPosition[1] = cam->position[1];
-    tempPosition[2] = cam->position[2];
-    tempPosition[0] = proposedPosition[0];
-
-    cam->aabb = calculateCameraAABB(tempPosition, camRadius, camLength);
-
-    if (!updateCameraPhysics(objPack, cam)) {
-        cam->position[0] = tempPosition[0];
-    } else {
-        for (float step = slopeStep; step <= maxSlopeHeight; step += slopeStep) {
-            tempPosition[1] = cam->position[1] + step;
-            cam->aabb = calculateCameraAABB(tempPosition, camRadius, camLength);
-
-            if (!updateCameraPhysics(objPack, cam)) {
-                cam->position[0] = tempPosition[0];
-                cam->position[1] = tempPosition[1];
-                break;
-            }
-        }
-    }
-
-    tempPosition[0] = cam->position[0];
-    tempPosition[1] = cam->position[1];
-    tempPosition[2] = proposedPosition[2];
-
-    cam->aabb = calculateCameraAABB(tempPosition, camRadius, camLength);
-
-    if (!updateCameraPhysics(objPack, cam)) {
-        cam->position[2] = tempPosition[2];
-    } else {
-        for (float step = slopeStep; step <= maxSlopeHeight; step += slopeStep) {
-            tempPosition[1] = cam->position[1] + step;
-            cam->aabb = calculateCameraAABB(tempPosition, camRadius, camLength);
-
-            if (!updateCameraPhysics(objPack, cam)) {
-                cam->position[2] = tempPosition[2];
-                cam->position[1] = tempPosition[1];
-                break;
-            }
-        }
-    }
-        
-
-    tempPosition[1] = proposedPosition[1];
-    tempPosition[2] = cam->position[2];
-
-    if (isKeyDown(SDL_SCANCODE_SPACE) && fallingSpeed == 0) { 
-        gtmaSetSoundPosition(&jump, cam->position);
-        gtmaPlaySound(&jump);
-        fallingSpeed = -20.0f;
-    }
-
-    cam->aabb = calculateCameraAABB(tempPosition, camRadius, camLength);
-
-    if (!updateCameraPhysics(objPack, cam)) {
-        cam->position[1] = tempPosition[1];
-        fallingSpeed += (9.81f * 4) * getDeltaTime();
-    } else {
-        fallingSpeed = 0.0f;
-    }
-
-}
-
-float fallingSpeedRounded = 0;
-
-void cameraMoveOrtho(Camera* cam) {
-     if(isKeyDown(SDL_SCANCODE_S)) {
-        cam->position[0] += (-cos(glm_rad(cam->yaw)) * 150) * getDeltaTime();
-        cam->position[2] -= (sin(glm_rad(cam->yaw)) * 150) * getDeltaTime();
-    }
-
-    if(isKeyDown(SDL_SCANCODE_A)) {
-        cam->position[0] += (sin(glm_rad(cam->yaw)) * 150) * getDeltaTime();
-        cam->position[2] -= (cos(glm_rad(cam->yaw)) * 150) * getDeltaTime();
-    }
-
-    if(isKeyDown(SDL_SCANCODE_D)) {
-        cam->position[0] -= (sin(glm_rad(cam->yaw)) * 150) * getDeltaTime();
-        cam->position[2] += (cos(glm_rad(cam->yaw)) * 150) * getDeltaTime();
-    }
-
-    if(isKeyDown(SDL_SCANCODE_W)) {
-        cam->position[0] -= (-cos(glm_rad(cam->yaw)) * 150) * getDeltaTime();
-        cam->position[2] += (sin(glm_rad(cam->yaw)) * 150) * getDeltaTime();
-    }
-
-    if(isKeyPressed(SDL_SCANCODE_PAGEUP)) {
-        zoom *= 1.2f;
-    }
-    if(isKeyPressed(SDL_SCANCODE_PAGEDOWN)) {
-        zoom *= 0.8f;
-    }
-    if(isKeyDown(SDL_SCANCODE_LEFT)) {
-        cam->yaw += cam->sensitivity * getDeltaTime() * 600;
-    }
-    if(isKeyDown(SDL_SCANCODE_RIGHT)) {
-        cam->yaw -= cam->sensitivity * getDeltaTime() * 600;
-    }
-    if(isKeyDown(SDL_SCANCODE_UP)) {
-        cam->pitch += cam->sensitivity * getDeltaTime() * 600;
-    }
-    if(isKeyDown(SDL_SCANCODE_DOWN)) {
-        cam->pitch -= cam->sensitivity * getDeltaTime() * 600;
-    }
-    if(isKeyDown(SDL_SCANCODE_SPACE)) {
-        cam->position[1] += 150 * getDeltaTime();
-    }
-    if(isKeyDown(SDL_SCANCODE_LCTRL)) {
-        cam->position[1] -= 150 * getDeltaTime();
-    }
-
-    if(cam->pitch > 89.0f) cam->pitch = 89.0f;
-    if(cam->pitch < -89.0f) cam->pitch = -89.0f;
-}
-
-void gtmaCameraMove(Camera* cam, GameObjectPack* objPack, bool flying) {
-
-    if(orthographic) {
-        cameraMoveOrtho(cam);
-        return;
-    }
-
-    proposedPosition[0] = cam->position[0];
-    proposedPosition[1] = cam->position[1];
-    proposedPosition[2] = cam->position[2];
-
-    if(flying) maxSpeed = 60;
-
-    if(isKeyDown(SDL_SCANCODE_Q)) {
-        if(maxSpeed < 120) {
-            maxSpeed += (400 * accel) * getDeltaTime();
-        }
-    } else if(!isKeyDown(SDL_SCANCODE_Q)) {
-        if(maxSpeed > 60) {
-            maxSpeed -= (400 * accel) * getDeltaTime();
-        }
-    }
-
-    if (isKeyDown(SDL_SCANCODE_W)) {
-        forwardVelocity += accel * getDeltaTime();
-        if (forwardVelocity > maxSpeed) forwardVelocity = maxSpeed;
-    } else {
-        forwardVelocity -= (accel / 1.5) * getDeltaTime();
-        if (forwardVelocity < 0) forwardVelocity = 0;
-    }
-
-    if (isKeyDown(SDL_SCANCODE_S)) {
-        backwardVelocity += accel * getDeltaTime();
-        if (backwardVelocity > maxSpeed) backwardVelocity = maxSpeed;
-    } else {
-        backwardVelocity -= (accel / 1.5) * getDeltaTime();
-        if (backwardVelocity < 0) backwardVelocity = 0;
-    }
-
-    if (isKeyDown(SDL_SCANCODE_A)) {
-        leftVelocity += accel * getDeltaTime();
-        if (leftVelocity > maxSpeed) leftVelocity = maxSpeed;
-    } else {
-        leftVelocity -= (accel / 1.5) * getDeltaTime();
-        if (leftVelocity < 0) leftVelocity = 0;
-    }
-
-    if (isKeyDown(SDL_SCANCODE_D)) {
-        rightVelocity += accel * getDeltaTime();
-        if (rightVelocity > maxSpeed) rightVelocity = maxSpeed;
-    } else {
-        rightVelocity -= (accel / 1.5) * getDeltaTime();
-        if (rightVelocity < 0) rightVelocity = 0;
-    }
-
-    bool playedFootstepSound = false;
-
-    if((forwardVelocity > 0 || backwardVelocity > 0 || leftVelocity > 0 || rightVelocity > 0)) {
-        gtmaSetSoundPosition(&footstep, cam->position);
-        gtmaSetSoundPosition(&footstepFast, cam->position);
-        moving = true;
-        if(!playedFootstepSound) {
-            playedFootstepSound = true;
-            if(isKeyDown(SDL_SCANCODE_LSHIFT)) {
-                gtmaChangePitch(&footstepFast, ((float)(rand() % (12 + 1 - 6) + 6)) / 10);
-                gtmaStopSound(&footstep);
-                gtmaPlaySound(&footstepFast);
-            } else {
-                gtmaChangePitch(&footstep, ((float)(rand() % (12 + 1 - 6) + 6)) / 10);
-                gtmaStopSound(&footstepFast);
-                gtmaPlaySound(&footstep);
-            }
-        }
-    } else {
-        gtmaStopSound(&footstep);
-        gtmaStopSound(&footstepFast);
-        playedFootstepSound = false;
-        moving = false;
-    }
-
-    if(SDL_GetRelativeMouseMode()) {
-        proposedPosition[0] -= (-cos(glm_rad(cam->yaw)) * forwardVelocity) * getDeltaTime();
-        proposedPosition[2] += (sin(glm_rad(cam->yaw)) * forwardVelocity) * getDeltaTime();
-
-        proposedPosition[0] += (-cos(glm_rad(cam->yaw)) * backwardVelocity) * getDeltaTime();
-        proposedPosition[2] -= (sin(glm_rad(cam->yaw)) * backwardVelocity) * getDeltaTime();
-
-        proposedPosition[0] += (sin(glm_rad(cam->yaw)) * leftVelocity) * getDeltaTime();
-        proposedPosition[2] -= (cos(glm_rad(cam->yaw)) * leftVelocity) * getDeltaTime();
-
-        proposedPosition[0] -= (sin(glm_rad(cam->yaw)) * rightVelocity) * getDeltaTime();
-        proposedPosition[2] += (cos(glm_rad(cam->yaw)) * rightVelocity) * getDeltaTime();
-
-        proposedPosition[1] += upVelocity * getDeltaTime();
-        proposedPosition[1] -= downVelocity * getDeltaTime();
-    }
-    
-    if(flying) {
-        if (isKeyDown(SDL_SCANCODE_SPACE)) {
-            upVelocity += accel * getDeltaTime();
-            if (upVelocity > 64) upVelocity = 64;
-        }
-        if (isKeyDown(SDL_SCANCODE_LCTRL)) {
-            downVelocity += accel * getDeltaTime();
-            if (downVelocity > 64) downVelocity = 64;
-        }
-        if (!isKeyDown(SDL_SCANCODE_SPACE)) {
-            upVelocity -= accel * getDeltaTime();
-            if (upVelocity < 0) upVelocity = 0;
-        }
-        if (!isKeyDown(SDL_SCANCODE_LCTRL)) {
-            downVelocity -= accel * getDeltaTime();
-            if (downVelocity < 0) downVelocity = 0;
-        }
-        glm_vec3_copy(proposedPosition, cam->position);
-        gtmaCameraLook(cam);
-        return;
-    }
-
-    if(isKeyDown(SDL_SCANCODE_LCTRL)) {
-        crouched = true;
-    } else {
-        crouched = false;
-    }
-
-    cameraCollide(cam, objPack);
-
-    float maxFov = 65.5;
-
-    if(isKeyDown(SDL_SCANCODE_LSHIFT)) {
-        maxSpeed = 32;
-        fov += 32 * getDeltaTime();
-        if(fov > maxFov) fov = maxFov;
-    } else {
-        maxSpeed = 20;
-        fov -= 32 * getDeltaTime();
-        if(fov <= 60) fov = 60;
-    }
-
-    cam->position[0] = roundf(cam->position[0] * 100) / 100;
-    cam->position[1] = roundf(cam->position[1] * 1000) / 1000;
-    cam->position[2] = roundf(cam->position[2] * 100) / 100;
-
-    gtmaCameraLook(cam);
-
-}
-
 
 void gtmaCameraSetPosition(Camera* cam, vec3 npos) {
     cam->position[0] = npos[0];

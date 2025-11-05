@@ -46,30 +46,6 @@ bool gtmaCheckPauseAndSelect(ScreenObject* pauseScreen, GameObjectPack* objPack,
         return paused;
     }
 
-
-    if(editMode == 1) {
-        gtmaSetOrthographic(true);
-        objPack->objects[objIndex]->selected = true;
-        if(isKeyPressed(SDL_SCANCODE_UP)) {
-            objPack->objects[objIndex]->selected = false;
-            if(objIndex != objPack->objectCount) {
-                objIndex++;
-            }
-        } else if(isKeyPressed(SDL_SCANCODE_DOWN)) {
-            objPack->objects[objIndex]->selected = false;
-            if(objIndex != 0) {
-                objIndex--;
-            }
-        }
-    } else if(editMode == 2) {
-        
-    } else {
-        gtmaSetOrthographic(false);
-        objPack->objects[objIndex]->selected = false;
-
-    }
-
-
 }
 
 void gtmaSetEditMode(int set) {

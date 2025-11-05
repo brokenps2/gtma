@@ -6,6 +6,7 @@
 #include "../graphics/renderer.h"
 #include "../audio/audio.h"
 #include "../window/events.h"
+#include "../scenes/player.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_scancode.h>
 #include <cglm/vec3.h>
@@ -13,9 +14,9 @@
 #include <stdio.h>
 #include "../window/windowManager.h"
 
-
 static Camera camera;
 static vec3 camPos = {0, 18, 100};
+static Player player;
 
 static GameObjectPack sceneObjectPack;
 static PointLightPack sceneLightPack;
@@ -64,8 +65,9 @@ static void initScene() {
     gtmaChangeScreenObjectTexture(&loadingScreen, "images/loading.png");
     loadingScreen.visible = false;
 
-    gtmaCreateCamera(&camera, 11, 6, camPos);
+    gtmaCreateCamera(&camera, camPos);
     gtmaSetRenderCamera(&camera);
+    gtmaCreatePlayer(&player, &camera, 100, 10, 6);
 
     gtmaCreatePointLight(&light0, 134, 70, -100, brightness, brightness, brightness); light0.sunMode = true;
     gtmaCreatePointLight(&light1, 0, 70, -100, brightness, brightness, brightness); light1.sunMode = true;
@@ -133,8 +135,6 @@ static void startTransition() {
     loadingScreen.visible = true;
 }
 
-static int setEdit = 0;
-
 static void updateScene() {
 
     if(isKeyPressed(SDL_SCANCODE_E)) {
@@ -156,7 +156,7 @@ static void updateScene() {
         return;
     }
 
-    gtmaCameraMove(&camera, &sceneObjectPack, spectating);
+    gtmaPlayerMove(&player, &sceneObjectPack, spectating);
     gtmaCameraMatrix(&camera, 0.1f, 450.0f, gtmaGetShader());
     
     printf("\r%f %f %f", camera.position[0], camera.position[1], camera.position[2]);

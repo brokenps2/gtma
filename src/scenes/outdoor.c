@@ -6,6 +6,7 @@
 #include "../graphics/renderer.h"
 #include "../audio/audio.h"
 #include "../window/events.h"
+#include "../scenes/player.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_timer.h>
 #include <cglm/types.h>
@@ -16,6 +17,7 @@
 
 static Camera camera;
 static vec3 camPos = {-28, 10, 0};
+static Player player;
 
 static GameObjectPack sceneObjectPack;
 static PointLightPack sceneLightPack;
@@ -67,8 +69,9 @@ static void initScene() {
     gtmaChangeScreenObjectTexture(&loadingScreen, "images/loading.png");
     loadingScreen.visible = false;
  
-    gtmaCreateCamera(&camera, 10, 6, camPos);
+    gtmaCreateCamera(&camera, camPos);
     gtmaSetRenderCamera(&camera);
+    gtmaCreatePlayer(&player, &camera, 100, 10, 6);
 
     gtmaCreatePointLight(&light1, -300, 300, 300, brightness, brightness, brightness); light1.sunMode = true;
     gtmaCreatePointLight(&light2, 300, 300, 0, brightness, brightness, brightness); light2.sunMode = true;
@@ -139,7 +142,7 @@ static void updateScene() {
 
     //camera stuff
     gtmaCameraMatrix(&camera, 0.1f, 650.0f, gtmaGetShader());
-    gtmaCameraMove(&camera, &sceneObjectPack, spectating);
+    gtmaPlayerMove(&player, &sceneObjectPack, spectating);
     glm_vec3_copy(camera.position, sky.position);
 
     //player pos printout
@@ -154,10 +157,12 @@ static void updateScene() {
     gtmaUpdateAudio(camera.position, camera.direction);
 
     //warps
+    /*
     if(strcmp(camera.currentCollision, "cliffsWarp") == 0) {
         sceneIndex = 1;
         startTransition();
     }
+    */
 
     if(isLeftPressed()) {
         if(strcmp(pickObject(&sceneObjectPack, &camera), "desk") == 0) {

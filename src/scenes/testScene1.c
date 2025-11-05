@@ -7,6 +7,7 @@
 #include "../audio/audio.h"
 #include "../window/events.h"
 #include "../window/windowManager.h"
+#include "../scenes/player.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_mouse.h>
 #include <SDL2/SDL_scancode.h>
@@ -17,6 +18,7 @@
 
 static Camera camera;
 static vec3 camPos = {-28, -2.2, 0};
+static Player player;
 
 static GameObjectPack sceneObjectPack;
 static PointLightPack sceneLightPack;
@@ -71,8 +73,9 @@ void initScene() {
     gtmaChangeScreenObjectTexture(&loadingScreen, "images/loading.png");
     loadingScreen.visible = false;
 
-    gtmaCreateCamera(&camera, 10, 6, camPos);
+    gtmaCreateCamera(&camera, camPos);
     gtmaSetRenderCamera(&camera);
+    gtmaCreatePlayer(&player, &camera, 100, 10, 6);
 
     gtmaCreatePointLight(&light1, -25, -4, 0, brightness/2, brightness/2, brightness/2);
     gtmaCreatePointLight(&light2, 0, 12, 0, brightness, brightness, brightness);
@@ -159,7 +162,7 @@ void updateScene() {
     }
 
     gtmaCameraMatrix(&camera, 0.1f, 450.0f, gtmaGetShader());
-    gtmaCameraMove(&camera, &sceneObjectPack, spectating);
+    gtmaPlayerMove(&player, &sceneObjectPack, spectating);
     
     printf("\r%f %f %f", camera.position[0], camera.position[1], camera.position[2]);
     fflush(stdout);

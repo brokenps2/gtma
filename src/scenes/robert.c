@@ -54,7 +54,7 @@ static void initScene() {
  
     gtmaCreateSound(&feild, "audio/feild.wav", true, 1, camPos);
 
-    gtmaCreateCamera(&camera, 10, 6, camPos);
+    //gtmaCreateCamera(&camera, 10, 6, camPos);
     gtmaSetRenderCamera(&camera);
 
     gtmaCreatePointLight(&light1, -300, 300, 300, brightness/2, brightness/2, brightness/2); light1.sunMode = true;
@@ -109,7 +109,7 @@ static void updateScene() {
 
     //camera stuff
     gtmaCameraMatrix(&camera, 0.1f, 650.0f, gtmaGetShader());
-    gtmaCameraMove(&camera, &sceneObjectPack, spectating);
+    //gtmaCameraMove(&camera, &sceneObjectPack, spectating);
 
     //player pos printout
     printf("\r%f %f %f", camera.position[0], camera.position[1], camera.position[2]);

@@ -7,6 +7,7 @@
 #include "../graphics/renderer.h"
 #include "../audio/audio.h"
 #include "../window/events.h"
+#include "../scenes/player.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_mouse.h>
 #include <SDL2/SDL_scancode.h>
@@ -16,6 +17,7 @@
 
 static Camera camera;
 static vec3 camPos = {0, 0.4, -0.35};
+static Player player;
 
 static GameObjectPack sceneObjectPack;
 static PointLightPack sceneLightPack;
@@ -67,8 +69,9 @@ static void initScene() {
 
     gtmaCreatePointLight(&light, camPos[0], camPos[1], camPos[2], brightness, brightness, brightness);
 
-    gtmaCreateCamera(&camera, 10, 6, camPos);
+    gtmaCreateCamera(&camera, camPos);
     gtmaSetRenderCamera(&camera);
+    gtmaCreatePlayer(&player, &camera, 100, 10, 6);
 
     gtmaAddGameObject(&sky, &sceneObjectPack);
     gtmaAddGameObject(&plane2, &sceneObjectPack);

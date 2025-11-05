@@ -3,7 +3,6 @@
 #include "shader.h"
 #include "../physics/physics.h"
 
-
 typedef struct Camera {
     vec3 position;
     vec3 renderPos;
@@ -14,21 +13,17 @@ typedef struct Camera {
     float pitch;
     float yaw;
     float roll;
+    
+    float fov;
 
     int width;
     int height;
     float sensitivity;
-
-    AABB aabb;
-    char* currentCollision;
 } Camera;
 
 
-void gtmaCreateCamera(Camera* cam, float length, float radius, vec3 pos);
-void gtmaSetCameraFallingSpeed(float speed);
-void gtmaSetOrthographic(bool set);
+void gtmaCreateCamera(Camera* cam, vec3 pos);
 void gtmaCameraMatrix(Camera* cam, float nearPlane, float farPlane, Shader* shader);
 void gtmaCameraLook(Camera* cam);
-void gtmaCameraMove(Camera* cam, GameObjectPack* objPack, bool flying);
 void gtmaCameraSetPosition(Camera* cam, vec3 npos);
 void gtmaCameraIncPosition(Camera* cam, vec3 inc);

@@ -6,7 +6,7 @@
 #include "physics.h"
 #include "../graphics/models.h"
 #include "../scenes/objects.h"
-#include "../graphics/camera.h"
+#include "../scenes/player.h"
 
 void calculateMeshAABB(Mesh* mesh, vec3 objScale, vec3 objPosition) {
     float minX = FLT_MAX, maxX = -FLT_MAX;
@@ -134,16 +134,14 @@ bool checkAABBTriangleCollision(AABB* aabb, vec3 triangle[3]) {
     return true;
 }
 
-bool updateCameraPhysics(GameObjectPack* objPack, Camera* cam) {
-
-
+bool updatePlayerPhysics(GameObjectPack* objPack, Player* player) {
     for(int i = 0; i < objPack->objectCount; i++) {
         GameObject* obj = objPack->objects[i];
 
         for(int j = 0; j < obj->model.meshCount; j++) {
 
             Mesh mesh = obj->model.meshes[j];
-            if(testAABBIntersection(mesh.aabb, cam->aabb) && mesh.collisionEnabled) {
+            if(testAABBIntersection(mesh.aabb, player->aabb) && mesh.collisionEnabled) {
                 for (int k = 0; k < mesh.indexCount; k += 3) {
                     vec3 tri[3];
                     for (int v = 0; v < 3; v++) {
@@ -153,10 +151,12 @@ bool updateCameraPhysics(GameObjectPack* objPack, Camera* cam) {
                         }
                     }
 
-                    if (triangleAABBOverlap(&cam->aabb, tri) && checkAABBTriangleCollision(&cam->aabb, tri)) {
+                    if (triangleAABBOverlap(&player->aabb, tri) && checkAABBTriangleCollision(&player->aabb, tri)) {
+                        /*
                         if(obj->pickable) {
-                            cam->currentCollision = (char*)obj->name;
+                            player->currentCollision = (char*)obj->name;
                         }
+                        */
                         return true;
                     }
                 }
@@ -164,7 +164,9 @@ bool updateCameraPhysics(GameObjectPack* objPack, Camera* cam) {
         }
     }
 
-    cam->currentCollision = "none";
+    /*
+    player->currentCollision = "none";
+    */
 
     return false;
 }

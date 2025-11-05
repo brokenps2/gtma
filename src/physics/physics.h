@@ -11,8 +11,9 @@ typedef struct AABB {
 typedef struct GameObjectPack GameObjectPack;
 typedef struct Mesh Mesh;
 typedef struct Camera Camera;
+typedef struct Player Player;
 
 void calculateMeshAABB(Mesh* mesh, float objScale[3], float objPosition[3]);
-bool updateCameraPhysics(GameObjectPack* objPack, Camera* cam);
+bool updatePlayerPhysics(GameObjectPack* objPack, Player* player);
 const char* pickObject(GameObjectPack* pack, Camera* cam);
 
