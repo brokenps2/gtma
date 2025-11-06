@@ -16,6 +16,15 @@
 #include <stdio.h>
 #include <string.h>
 
+static void initScene();
+static void updateScene();
+static void disposeScene();
+Scene testScene1 = {
+    .init = initScene,
+    .update = updateScene,
+    .dispose = disposeScene
+};
+
 static Camera camera;
 static vec3 camPos = {-28, -2.2, 0};
 static Player player;
@@ -146,9 +155,11 @@ void checkFlashlight() {
 
 void updateScene() {
 
+    /*
     if(gtmaCheckPauseAndSelect(&pauseScreen, &sceneObjectPack, &sceneLightPack)) {
         return;
     }
+    */
 
     if (transitioning) {
         transitionTimer -= getDeltaTime();
@@ -197,9 +208,3 @@ void disposeScene() {
     gtmaDeleteGameObjectPack(&sceneObjectPack);
     gtmaDeletScreenObjectPack(&sceneScreenPack);
 }
-
-Scene testScene1 = {
-    .init = initScene,
-    .update = updateScene,
-    .dispose = disposeScene
-};

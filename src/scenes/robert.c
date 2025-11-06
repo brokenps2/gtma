@@ -14,6 +14,15 @@
 #include "../window/windowManager.h"
 #include <unistd.h>
 
+static void initScene();
+static void updateScene();
+static void disposeScene();
+Scene robert = {
+    .init = initScene,
+    .update = updateScene,
+    .dispose = disposeScene
+};
+
 static Camera camera;
 static vec3 camPos = {-28, 10, 0};
 
@@ -134,9 +143,3 @@ static void disposeScene() {
     gtmaDeleteGameObjectPack(&sceneObjectPack);
     gtmaDeletScreenObjectPack(&sceneScreenPack);
 }
-
-Scene robert = {
-    .init = initScene,
-    .update = updateScene,
-    .dispose = disposeScene
-};

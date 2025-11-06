@@ -15,6 +15,15 @@
 #include <stdio.h>
 #include "../window/windowManager.h"
 
+static void initScene();
+static void updateScene();
+static void disposeScene();
+Scene titleScreen = {
+    .init = initScene,
+    .update = updateScene,
+    .dispose = disposeScene
+};
+
 static Camera camera;
 static vec3 camPos = {0, 0.4, -0.35};
 static Player player;
@@ -26,7 +35,6 @@ static ScreenObjectPack sceneScreenPack;
 static GameObject sky;
 static GameObject plane2;
 
-static ScreenObject loadingScreen;
 static ScreenObject logo;
 
 static PointLight light;
@@ -60,10 +68,6 @@ static void initScene() {
     //plane2.model.meshes[0].texture.id = titlescreenplanetex.id;
     //for (int i = 0; i < plane2.model.meshCount; i++) { plane2.model.meshes[i].lit = false; }
 
-    gtmaCreateScreenObject(&loadingScreen, "models/uitest.glb", "loading", (vec2){(float)getWindowWidth()/2, (float)getWindowHeight()/2 - 100}, (vec2){400, 60}, 0);
-    gtmaChangeScreenObjectTexture(&loadingScreen, "images/loading.png");
-    loadingScreen.visible = false;
-
     gtmaCreateScreenObject(&logo, "models/uitest.glb", "logo", (vec2){(float)getWindowWidth()/2, (float)getWindowHeight()/2 - 140}, (vec2){280, 60}, 0);
     gtmaChangeScreenObjectTexture(&logo, "images/gtmalogo.png");
 
@@ -76,7 +80,6 @@ static void initScene() {
     gtmaAddGameObject(&sky, &sceneObjectPack);
     gtmaAddGameObject(&plane2, &sceneObjectPack);
     gtmaAddScreenObject(&logo, &sceneScreenPack);
-    gtmaAddScreenObject(&loadingScreen, &sceneScreenPack);
     gtmaAddLight(&light, &sceneLightPack);
 
     gtmaSetClearColor(9, 8, 22);
@@ -84,6 +87,8 @@ static void initScene() {
     gtmaSetFogLevel(0.095);
 
     gtmaCameraMatrix(&camera, 0.1f, 450.0f, gtmaGetShader());
+
+    gtmaInitScene(&titleScreen, &player, &sceneObjectPack, &sceneScreenPack, (vec3){0, 0.4, -0.35});
 
 
 }
@@ -97,47 +102,16 @@ extern Scene circleHallway;
 
 static bool spectating = true;
 
-static void warp() {
-    SDL_SetRelativeMouseMode(true);
-    if(sceneIndex == 0) {
-        switchScene(&testScene1);
-    } else if(sceneIndex == 1) {
-        switchScene(&outdoorScene);
-    } else if(sceneIndex == 2) {
-        switchScene(&natatorium);
-    } else if(sceneIndex == 3) {
-        switchScene(&circleHallway);
-    }
-}
-
-static float transitionTimer = 0.0f;
-static float transitionDuration = 0.25f; // seconds
-static bool transitioning = false;
-
-static void startTransition() {
-    transitioning = true;
-    transitionTimer = transitionDuration;
-    gtmaToggleControls(false);
-    loadingScreen.visible = true;
-}
 
 static void updateScene() {
 
-    SDL_SetRelativeMouseMode(false);
-
-    if (transitioning) {
-        transitionTimer -= getDeltaTime();
-        if (transitionTimer <= 0.0f) {
-            transitioning = false;
-            loadingScreen.visible = false;
-            warp();
-            gtmaToggleControls(true);
-        }
+    if(gtmaUpdateScene(&titleScreen, &player)) {
         return;
     }
 
+    SDL_SetRelativeMouseMode(false);
+
     logo.position[0] = ((float)getWindowWidth()/ 2); logo.position[1] = ((float)getWindowHeight() / 2 - 100);
-    loadingScreen.position[0] = ((float)getWindowWidth()/ 2); loadingScreen.position[1] = ((float)getWindowHeight() / 2);
 
     //ogo.rotation += (sin((float)SDL_GetTicks() / 1000) / 50);
 
@@ -152,23 +126,18 @@ static void updateScene() {
     if(isKeyPressed(SDL_SCANCODE_1)) {
         logo.visible = false;
         sceneIndex = 0;
-        startTransition();
     } else if(isKeyPressed(SDL_SCANCODE_2)) {
         logo.visible = false;
         sceneIndex = 1;
-        startTransition();
     } else if(isKeyPressed(SDL_SCANCODE_3)) {
         logo.visible = false;
-        sceneIndex = 2;
-        startTransition();
     } else if(isKeyPressed(SDL_SCANCODE_4)) {
         logo.visible = false;
-        sceneIndex = 3;
-        startTransition();
+        SDL_SetRelativeMouseMode(true);
+        switchScene(&circleHallway);
     } else if(isKeyPressed(SDL_SCANCODE_5)) {
         logo.visible = false;
         sceneIndex = 4;
-        startTransition();
     }
 
     if(camera.position[0] > planeLimit) {
@@ -202,9 +171,3 @@ static void disposeScene() {
     gtmaDeleteGameObjectPack(&sceneObjectPack);
     gtmaDeletScreenObjectPack(&sceneScreenPack);
 }
-
-Scene titleScreen = {
-    .init = initScene,
-    .update = updateScene,
-    .dispose = disposeScene
-};

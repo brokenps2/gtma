@@ -15,6 +15,15 @@
 #include "../window/windowManager.h"
 #include <unistd.h>
 
+static void initScene();
+static void updateScene();
+static void disposeScene();
+Scene deansGarden = {
+    .init = initScene,
+    .update = updateScene,
+    .dispose = disposeScene,
+};
+
 static Camera camera;
 static vec3 camPos = {-117, 13, 7};
 static Player player;
@@ -30,9 +39,6 @@ static GameObject map;
 static GameObject sky;
 static GameObject dean;
 static GameObject hallWarp;
-static ScreenObject crosshair;
-static ScreenObject loadingScreen;
-static ScreenObject pauseScreen;
 static PointLight light1;
 static PointLight light2;
 static PointLight light3;
@@ -78,16 +84,6 @@ static void initScene() {
     gtmaCreateGameObject(&hallWarp, "models/door2.glb", "hallWarp", (vec3){-123, 9, 6}, (vec3){3, 3, 3}, (vec3){0, 0, 0});
     hallWarp.pickable = true;
 
-    gtmaCreateScreenObject(&crosshair, "models/uitest.glb", "uitest", (vec2){((float)getWindowWidth() / 2), ((float)getWindowHeight() / 2)}, (vec2){8, 8}, 0);
-    gtmaChangeScreenObjectTexture(&crosshair, "images/crosshair.png");
-
-    gtmaCreateScreenObject(&pauseScreen, "models/uitest.glb", "pause", (vec2){((float)getWindowWidth()/2), ((float)getWindowHeight()/2)}, (vec2){400, 80}, 0);
-    gtmaChangeScreenObjectTexture(&pauseScreen, "images/paused.png");
-    pauseScreen.visible = false;
-
-    gtmaCreateScreenObject(&loadingScreen, "models/uitest.glb", "loading", (vec2){(float)getWindowWidth()/2, (float)getWindowHeight() / 2}, (vec2){400, 60}, 0);
-    gtmaChangeScreenObjectTexture(&loadingScreen, "images/loading.png");
-    loadingScreen.visible = false;
  
     gtmaCreateCamera(&camera, camPos);
     gtmaCreatePlayer(&player, &camera, 100, 10, 6);
@@ -101,9 +97,6 @@ static void initScene() {
     //gtmaAddGameObject(&sky, &sceneObjectPack);
     gtmaAddGameObject(&dean, &sceneObjectPack);
     gtmaAddGameObject(&hallWarp, &sceneObjectPack);
-    gtmaAddScreenObject(&crosshair, &sceneScreenPack);
-    gtmaAddScreenObject(&loadingScreen, &sceneScreenPack);
-    gtmaAddScreenObject(&pauseScreen, &sceneScreenPack);
     gtmaAddLight(&light1, &sceneLightPack);
     gtmaAddLight(&light2, &sceneLightPack);
     gtmaAddLight(&light3, &sceneLightPack);
@@ -115,6 +108,8 @@ static void initScene() {
     gtmaCameraMatrix(&camera, 0.1f, 450.0f, gtmaGetShader());
     camera.pitch = 0;
 
+    gtmaInitScene(&deansGarden, &player, &sceneObjectPack, &sceneScreenPack, camPos);
+
 }
 
 extern Scene deansHallway;
@@ -122,39 +117,9 @@ extern Scene natatorium;
 
 static bool spectating = false;
 
-static void warp() {
-    if(sceneIndex == 0) {
-        switchScene(&deansHallway);
-    } else if(sceneIndex == 1) {
-        switchScene(&natatorium);
-    }
-}
-
-static float transitionTimer = 0.0f;
-static float transitionDuration = 1.0f; // seconds
-static bool transitioning = false;
-
-static void startTransition() {
-    transitioning = true;
-    transitionTimer = transitionDuration;
-    gtmaToggleControls(false);
-    loadingScreen.visible = true;
-}
-
 static void updateScene() {
 
-    if(gtmaCheckPauseAndSelect(&pauseScreen, &sceneObjectPack, &sceneLightPack)) {
-        return;
-    }
-
-    if (transitioning) {
-        transitionTimer -= getDeltaTime();
-        if (transitionTimer <= 0.0f) {
-            transitioning = false;
-            loadingScreen.visible = false;
-            warp();
-            gtmaToggleControls(true);
-        }
+    if(gtmaUpdateScene(&deansGarden, &player)) {
         return;
     }
 
@@ -186,22 +151,13 @@ static void updateScene() {
     printf("\r%f %f %f", camera.position[0], camera.position[1], camera.position[2]);
     fflush(stdout);
     
-    //object transforms
-    crosshair.position[0] = ((float)getWindowWidth() / 2); crosshair.position[1] = ((float)getWindowHeight() / 2);
-    loadingScreen.position[0] = ((float)getWindowWidth()/ 2); loadingScreen.position[1] = ((float)getWindowHeight() / 2);
-
     gtmaUpdateAudio(camera.position, camera.direction);
 
     if(isLeftPressed()) {
         if(strcmp(pickObject(&sceneObjectPack, &camera), "hallWarp") == 0) {
             sceneIndex = 0;
-            startTransition();
+            switchScene(&deansHallway);
         }
-    }
-
-    if(camera.position[1] < -8) {
-        sceneIndex = 1;
-        startTransition();
     }
 
     //misc
@@ -214,9 +170,3 @@ static void disposeScene() {
     gtmaDeleteGameObjectPack(&sceneObjectPack);
     gtmaDeletScreenObjectPack(&sceneScreenPack);
 }
-
-Scene deansGarden = {
-    .init = initScene,
-    .update = updateScene,
-    .dispose = disposeScene
-};

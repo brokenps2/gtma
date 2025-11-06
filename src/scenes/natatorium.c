@@ -14,6 +14,15 @@
 #include <stdio.h>
 #include "../window/windowManager.h"
 
+static void initScene();
+static void updateScene();
+static void disposeScene();
+Scene natatorium = {
+    .init = initScene,
+    .update = updateScene,
+    .dispose = disposeScene
+};
+
 static Camera camera;
 static vec3 camPos = {0, 18, 100};
 static Player player;
@@ -141,9 +150,11 @@ static void updateScene() {
         gtmaSetEditMode(1);
     }
 
+    /*
     if(gtmaCheckPauseAndSelect(&pauseScreen, &sceneObjectPack, &sceneLightPack)) {
         return;
     }
+*/
 
     if (transitioning) {
         transitionTimer -= getDeltaTime();
@@ -187,9 +198,3 @@ static void disposeScene() {
     gtmaDeleteGameObjectPack(&sceneObjectPack);
     gtmaDeletScreenObjectPack(&sceneScreenPack);
 }
-
-Scene natatorium = {
-    .init = initScene,
-    .update = updateScene,
-    .dispose = disposeScene
-};

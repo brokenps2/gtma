@@ -15,6 +15,15 @@
 #include <unistd.h>
 #include <string.h>
 
+static void initScene();
+static void updateScene();
+static void disposeScene();
+Scene outdoorScene = {
+    .init = initScene,
+    .update = updateScene,
+    .dispose = disposeScene
+};
+
 static Camera camera;
 static vec3 camPos = {-28, 10, 0};
 static Player player;
@@ -125,9 +134,11 @@ static bool spinMap = false;
 
 static void updateScene() {
 
+    /*
     if(gtmaCheckPauseAndSelect(&pauseScreen, &sceneObjectPack, &sceneLightPack)) {
         return;
     }
+    */
 
     if (transitioning) {
         transitionTimer -= getDeltaTime();
@@ -186,9 +197,3 @@ static void disposeScene() {
     gtmaDeleteGameObjectPack(&sceneObjectPack);
     gtmaDeletScreenObjectPack(&sceneScreenPack);
 }
-
-Scene outdoorScene = {
-    .init = initScene,
-    .update = updateScene,
-    .dispose = disposeScene
-};
