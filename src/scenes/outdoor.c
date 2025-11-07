@@ -25,7 +25,7 @@ Scene outdoorScene = {
 };
 
 static Camera camera;
-static vec3 camPos = {-28, 10, 0};
+static vec3 camPos = {-28, 240, 0};
 static Player player;
 
 static GameObjectPack sceneObjectPack;
@@ -36,9 +36,6 @@ static GameObject map;
 static GameObject sky;
 static GameObject desk;
 static GameObject cliffsWarp;
-static ScreenObject crosshair;
-static ScreenObject loadingScreen;
-static ScreenObject pauseScreen;
 static PointLight light1;
 static PointLight light2;
 static PointLight light3;
@@ -63,24 +60,15 @@ static void initScene() {
     sky.model.meshes[0].collisionEnabled = false;
     gtmaCreateGameObject(&desk, "models/desk.glb", "desk", (vec3){137, 4, 77}, (vec3){2, 2, 2}, (vec3){0, 0, 0});
     desk.pickable = true;
+    desk.pickableDistance = 24;
     gtmaCreateGameObject(&cliffsWarp, "models/office.glb", "cliffsWarp", (vec3){314, -248, -304}, (vec3){3, 3, 3}, (vec3){0, -30, 0});
     cliffsWarp.pickable = true;
+    cliffsWarp.pickableDistance = 24;
     cliffsWarp.model.meshes[0].collisionEnabled = false;
 
-    gtmaCreateScreenObject(&crosshair, "models/uitest.glb", "uitest", (vec2){((float)getWindowWidth() / 2), ((float)getWindowHeight() / 2)}, (vec2){8, 8}, 0);
-    gtmaChangeScreenObjectTexture(&crosshair, "images/crosshair.png");
-
-    gtmaCreateScreenObject(&pauseScreen, "models/uitest.glb", "pause", (vec2){((float)getWindowWidth()/2), ((float)getWindowHeight()/2)}, (vec2){400, 80}, 0);
-    gtmaChangeScreenObjectTexture(&pauseScreen, "images/paused.png");
-    pauseScreen.visible = false;
-
-    gtmaCreateScreenObject(&loadingScreen, "models/uitest.glb", "loading", (vec2){(float)getWindowWidth()/2, (float)getWindowHeight() / 2}, (vec2){400, 60}, 0);
-    gtmaChangeScreenObjectTexture(&loadingScreen, "images/loading.png");
-    loadingScreen.visible = false;
- 
     gtmaCreateCamera(&camera, camPos);
     gtmaSetRenderCamera(&camera);
-    gtmaCreatePlayer(&player, &camera, 100, 10, 6);
+    gtmaCreatePlayer(&player, &camera, 100, 6, 10);
 
     gtmaCreatePointLight(&light1, -300, 300, 300, brightness, brightness, brightness); light1.sunMode = true;
     gtmaCreatePointLight(&light2, 300, 300, 0, brightness, brightness, brightness); light2.sunMode = true;
@@ -90,9 +78,6 @@ static void initScene() {
     gtmaAddGameObject(&sky, &sceneObjectPack);
     gtmaAddGameObject(&desk, &sceneObjectPack);
     gtmaAddGameObject(&cliffsWarp, &sceneObjectPack);
-    gtmaAddScreenObject(&crosshair, &sceneScreenPack);
-    gtmaAddScreenObject(&loadingScreen, &sceneScreenPack);
-    gtmaAddScreenObject(&pauseScreen, &sceneScreenPack);
     gtmaAddLight(&light1, &sceneLightPack);
     gtmaAddLight(&light2, &sceneLightPack);
     gtmaAddLight(&light3, &sceneLightPack);
@@ -104,6 +89,8 @@ static void initScene() {
     camera.pitch = -85;
     gtmaCameraMatrix(&camera, 0.1f, 450.0f, gtmaGetShader());
 
+    gtmaInitScene(&outdoorScene, &player, &sceneObjectPack, &sceneScreenPack, camPos);
+
 }
 
 extern Scene testScene1;
@@ -111,43 +98,11 @@ extern Scene natatorium;
 
 static bool spectating = false;
 
-static void warp() {
-    if(sceneIndex == 0) {
-        switchScene(&testScene1);
-    } else if(sceneIndex == 1) {
-        switchScene(&natatorium);
-    }
-}
-
-static float transitionTimer = 0.0f;
-static float transitionDuration = 1.0f; // seconds
-static bool transitioning = false;
-
-static void startTransition() {
-    transitioning = true;
-    transitionTimer = transitionDuration;
-    gtmaToggleControls(false);
-    loadingScreen.visible = true;
-}
-
 static bool spinMap = false;
 
 static void updateScene() {
 
-    /*
-    if(gtmaCheckPauseAndSelect(&pauseScreen, &sceneObjectPack, &sceneLightPack)) {
-        return;
-    }
-    */
-
-    if (transitioning) {
-        transitionTimer -= getDeltaTime();
-        if (transitionTimer <= 0.0f) {
-            transitioning = false;
-            loadingScreen.visible = false;
-            warp();
-            gtmaToggleControls(true);
-        }
+    if(gtmaUpdateScene(&outdoorScene, &player)) {
         return;
     }
 
@@ -161,8 +116,6 @@ static void updateScene() {
     fflush(stdout);
     
     //object transforms
-    crosshair.position[0] = ((float)getWindowWidth() / 2); crosshair.position[1] = ((float)getWindowHeight() / 2);
-    loadingScreen.position[0] = ((float)getWindowWidth()/ 2); loadingScreen.position[1] = ((float)getWindowHeight() / 2);
     desk.rotation[1] += 150 * getDeltaTime();
 
     gtmaUpdateAudio(camera.position, camera.direction);

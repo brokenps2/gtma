@@ -3,6 +3,7 @@
 #include <math.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <string.h>
 #include "physics.h"
 #include "../graphics/models.h"
 #include "../scenes/objects.h"
@@ -134,6 +135,15 @@ bool checkAABBTriangleCollision(AABB* aabb, vec3 triangle[3]) {
     return true;
 }
 
+bool gtmaIsPlayerCollidingWith(Player* player, const char* name) {
+    for(int i = 0; i < player->currentCollisionCount; i++) {
+        if(strcmp(player->currentCollisions[i]->name, name) == 0) {
+            return true;
+        }
+    }
+    return false;
+}
+
 bool updatePlayerPhysics(GameObjectPack* objPack, Player* player) {
     for(int i = 0; i < objPack->objectCount; i++) {
         GameObject* obj = objPack->objects[i];
@@ -142,6 +152,15 @@ bool updatePlayerPhysics(GameObjectPack* objPack, Player* player) {
 
             Mesh mesh = obj->model.meshes[j];
             if(testAABBIntersection(mesh.aabb, player->aabb) && mesh.collisionEnabled) {
+
+                if (obj->pickable) {
+                    player->currentCollisions = realloc(player->currentCollisions, (player->currentCollisionCount + 1) * sizeof(GameObject*));
+                    if (player->currentCollisions) {
+                        player->currentCollisions[player->currentCollisionCount] = obj;
+                        player->currentCollisionCount++;
+                    }
+                }
+
                 for (int k = 0; k < mesh.indexCount; k += 3) {
                     vec3 tri[3];
                     for (int v = 0; v < 3; v++) {
@@ -152,11 +171,6 @@ bool updatePlayerPhysics(GameObjectPack* objPack, Player* player) {
                     }
 
                     if (triangleAABBOverlap(&player->aabb, tri) && checkAABBTriangleCollision(&player->aabb, tri)) {
-                        /*
-                        if(obj->pickable) {
-                            player->currentCollision = (char*)obj->name;
-                        }
-                        */
                         return true;
                     }
                 }
@@ -164,9 +178,9 @@ bool updatePlayerPhysics(GameObjectPack* objPack, Player* player) {
         }
     }
 
-    /*
-    player->currentCollision = "none";
-    */
+    free(player->currentCollisions);
+    player->currentCollisions = NULL;
+    player->currentCollisionCount = 0;
 
     return false;
 }
@@ -178,15 +192,20 @@ bool rayIntersectsAABB(vec3 rayOrigin, vec3 rayDir, AABB* aabb, float* t) {
     float tmax = (aabb->maxX - rayOrigin[0]) / rayDir[0];
     if (tmin > tmax) { float tmp = tmin; tmin = tmax; tmax = tmp; }
 
-    for (int i = 0; i < 3; i++) {
-        float t1 = ((i == 0 ? aabb->minX : (i == 1 ? aabb->minY : aabb->minZ)) - rayOrigin[i]) / rayDir[i];
-        float t2 = ((i == 0 ? aabb->maxX : (i == 1 ? aabb->maxY : aabb->maxZ)) - rayOrigin[i]) / rayDir[i];
+    for (int i = 1; i < 3; i++) {
+        float minVal = (i == 1 ? aabb->minY : aabb->minZ);
+        float maxVal = (i == 1 ? aabb->maxY : aabb->maxZ);
+        float t1 = (minVal - rayOrigin[i]) / rayDir[i];
+        float t2 = (maxVal - rayOrigin[i]) / rayDir[i];
         if (t1 > t2) { float tmp = t1; t1 = t2; t2 = tmp; }
 
         if ((tmin > t2) || (t1 > tmax)) return false;
         if (t1 > tmin) tmin = t1;
         if (t2 < tmax) tmax = t2;
     }
+
+    if (tmax < 0) return false;
+    if (tmin < 0) tmin = tmax;
 
     if (t) *t = tmin;
     return true;
@@ -215,7 +234,9 @@ const char* pickObject(GameObjectPack* pack, Camera* cam) {
                 t = fabs(t);
                 if (t < closestT) {
                     closestT = t;
-                    picked = obj->name;
+                    if(sqrt(pow((obj->position[0] - cam->position[0]), 2) + pow((obj->position[1] - cam->position[1]), 2) + pow((obj->position[2] - cam->position[2]), 2)) < obj->pickableDistance) {
+                        picked = obj->name;
+                    }
                 }
             }
         }

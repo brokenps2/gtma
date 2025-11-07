@@ -89,6 +89,7 @@ static void initScene() {
     gtmaCameraMatrix(&camera, 0.1f, 450.0f, gtmaGetShader());
 
     gtmaInitScene(&titleScreen, &player, &sceneObjectPack, &sceneScreenPack, (vec3){0, 0.4, -0.35});
+    gtmaToggleCrosshair(&titleScreen, false);
 
 
 }
@@ -113,7 +114,7 @@ static void updateScene() {
 
     logo.position[0] = ((float)getWindowWidth()/ 2); logo.position[1] = ((float)getWindowHeight() / 2 - 100);
 
-    //ogo.rotation += (sin((float)SDL_GetTicks() / 1000) / 50);
+    //ogo.rotation += (sin((float)SDL_GetTics() / 1000) / 50);
 
     camera.position[0] += 3 * getDeltaTime();
     glm_vec3_copy(camera.position, light.position);
@@ -131,6 +132,8 @@ static void updateScene() {
         sceneIndex = 1;
     } else if(isKeyPressed(SDL_SCANCODE_3)) {
         logo.visible = false;
+        SDL_SetRelativeMouseMode(true);
+        switchScene(&deansHallway);
     } else if(isKeyPressed(SDL_SCANCODE_4)) {
         logo.visible = false;
         SDL_SetRelativeMouseMode(true);

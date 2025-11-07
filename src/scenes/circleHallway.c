@@ -64,7 +64,7 @@ static void initScene() {
         gtmaCreateCamera(&camera, camPos);
     }
     gtmaSetRenderCamera(&camera);
-    gtmaCreatePlayer(&player, &camera, 100, 6, 10);
+    gtmaCreatePlayer(&player, &camera, 100, 7, 10);
 
     gtmaCreatePointLight(&light1, -300, 250, 300, brightness, brightness, brightness); light1.sunMode = true;
     gtmaCreatePointLight(&light2, 300, 250, -300, brightness, brightness, brightness); light2.sunMode = true;

@@ -1,6 +1,7 @@
 #include "scenes.h"
 #include <SDL2/SDL.h>
 #include "../physics/physics.h"
+#include "../graphics/texture.h"
 #include "player.h"
 #include "objects.h"
 #include "../window/events.h"
@@ -9,11 +10,14 @@
 #include <SDL2/SDL_mouse.h>
 #include <cglm/vec3.h>
 #include <stdbool.h>
+#include <string.h>
 
 extern Scene* currentScene;
 extern Scene titleScreen;
 
 static ScreenObject crosshair;
+static Texture regularCrosshair;
+static Texture highlightedCrosshair;
 static ScreenObject loadingScreen;
 static ScreenObject pauseScreen;
 
@@ -23,13 +27,31 @@ int editMode = 1;
 int objIndex = 0;
 int lightIndex = 0;
 
+void gtmaToggleCrosshair(Scene* scene, bool toggle) {
+    if(toggle) {
+        if(crosshair.inPack) {
+            return;
+        } else {
+            gtmaAddScreenObject(&crosshair, scene->screenPack);
+        }
+    } else {
+        if(crosshair.inPack) {
+            gtmaRemoveScreenObjectID(scene->screenPack, crosshair.packID);
+        } else {
+            return;
+        }
+    }
+}
+
 void gtmaInitScene(Scene* scene, Player* player, GameObjectPack* objectPack, ScreenObjectPack* screenObjPack, vec3 spawnpoint) {
     scene->player = player;
     scene->screenPack = screenObjPack;
     scene->objPack = objectPack;
 
-    gtmaCreateScreenObject(&crosshair, "models/uitest.glb", "uitest", (vec2){((float)getWindowWidth() / 2), ((float)getWindowHeight() / 2)}, (vec2){8, 8}, 0);
-    gtmaChangeScreenObjectTexture(&crosshair, "images/crosshair.png");
+    gtmaCreateScreenObject(&crosshair, "models/uitest.glb", "uitest", (vec2){((float)getWindowWidth() / 2), ((float)getWindowHeight() / 2)}, (vec2){10, 10}, 0);
+    gtmaCreateTexture(&regularCrosshair, "images/crosshair.png");
+    gtmaCreateTexture(&highlightedCrosshair, "images/crosshairselected.png");
+    crosshair.model.meshes[0].texture.id = regularCrosshair.id;
 
     gtmaCreateScreenObject(&pauseScreen, "models/uitest.glb", "pause", (vec2){((float)getWindowWidth()/2), ((float)getWindowHeight()/2)}, (vec2){400, 80}, 0);
     gtmaChangeScreenObjectTexture(&pauseScreen, "images/paused.png");
@@ -82,6 +104,8 @@ bool checkWarp() {
     return false;
 }
 
+static bool lastState = false;
+
 bool gtmaUpdateScene(Scene* scene, Player* player) {
 
     if (paused) {
@@ -117,6 +141,17 @@ bool gtmaUpdateScene(Scene* scene, Player* player) {
 
     if(player->camera->position[1] < -200) {
         player->health -= 200 * getDeltaTime();
+    }
+
+    bool isHighlighted = strcmp(pickObject(scene->objPack, player->camera), "none") != 0;
+
+    if (isHighlighted != lastState) {
+        if (isHighlighted) {
+            crosshair.model.meshes[0].texture.id = highlightedCrosshair.id;
+        } else {
+            crosshair.model.meshes[0].texture.id = regularCrosshair.id;
+        }
+        lastState = isHighlighted;
     }
 
     // Always update screen positions

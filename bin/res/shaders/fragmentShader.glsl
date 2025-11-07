@@ -105,7 +105,7 @@ void main() {
     }
 
     if(ditherEnabled) {
-        fragColor = dither(fragColor, 20);
+        fragColor = dither(fragColor, 14);
     }
 
 }

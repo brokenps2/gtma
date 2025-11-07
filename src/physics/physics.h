@@ -15,5 +15,6 @@ typedef struct Player Player;
 
 void calculateMeshAABB(Mesh* mesh, float objScale[3], float objPosition[3]);
 bool updatePlayerPhysics(GameObjectPack* objPack, Player* player);
+bool gtmaIsPlayerCollidingWith(Player* player, const char* name);
 const char* pickObject(GameObjectPack* pack, Camera* cam);
 

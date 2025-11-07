@@ -39,6 +39,7 @@ static GameObject map;
 static GameObject sky;
 static GameObject dean;
 static GameObject hallWarp;
+static GameObject stoneland;
 static PointLight light1;
 static PointLight light2;
 static PointLight light3;
@@ -74,36 +75,41 @@ static void initScene() {
     gtmaCreateGameObject(&map, "models/jimmyhouse.glb", "map", (vec3){0, 0, 0}, (vec3){6.5, 4.75, 6.5}, (vec3){0, 0, 0});
     map.model.meshes[map.model.meshCount - 1].collisionEnabled = false;
     
-    gtmaCreateGameObject(&sky, "models/cloudysky.glb", "sky", (vec3){0, 0, 0}, (vec3){18, 18, 18}, (vec3){0, 0, 0});
+    gtmaCreateGameObject(&sky, "models/sky.glb", "sky", (vec3){0, 0, 0}, (vec3){18, 18, 18}, (vec3){0, 0, 0});
     sky.model.meshes[0].lit = false;
     sky.model.meshes[0].collisionEnabled = false;
+
+    gtmaCreateGameObject(&stoneland, "models/stoneland.glb", "stoneland", (vec3){-32, -240, 42}, (vec3){1.5, 0.3, 1.5}, (vec3){0, 0, 0});
 
     gtmaCreateGameObject(&dean, "models/dean.glb", "dean", (vec3){90, 10, 0}, (vec3){3, 3, 3}, (vec3){0, 180, 0});
     dean.billboard = true;
 
     gtmaCreateGameObject(&hallWarp, "models/door2.glb", "hallWarp", (vec3){-123, 9, 6}, (vec3){3, 3, 3}, (vec3){0, 0, 0});
     hallWarp.pickable = true;
+    hallWarp.pickableDistance = 24;
 
  
     gtmaCreateCamera(&camera, camPos);
-    gtmaCreatePlayer(&player, &camera, 100, 10, 6);
+    gtmaCreatePlayer(&player, &camera, 100, 6, 7);
     gtmaSetRenderCamera(&camera);
 
     gtmaCreatePointLight(&light1, -300, 300, 300, brightness, brightness, brightness); light1.sunMode = true;
     gtmaCreatePointLight(&light2, 300, 300, 0, brightness, brightness, brightness); light2.sunMode = true;
     gtmaCreatePointLight(&light3, -300, 300, -300, brightness, brightness, brightness); light3.sunMode = true;
 
+
+    gtmaAddGameObject(&stoneland, &sceneObjectPack);
+    gtmaAddGameObject(&sky, &sceneObjectPack);
     gtmaAddGameObject(&map, &sceneObjectPack);
-    //gtmaAddGameObject(&sky, &sceneObjectPack);
     gtmaAddGameObject(&dean, &sceneObjectPack);
     gtmaAddGameObject(&hallWarp, &sceneObjectPack);
     gtmaAddLight(&light1, &sceneLightPack);
     gtmaAddLight(&light2, &sceneLightPack);
     gtmaAddLight(&light3, &sceneLightPack);
 
-    gtmaSetFogLevel(0.0015);
+    gtmaSetFogLevel(0.0035);
 
-    gtmaSetClearColor(0, 0, 0);
+    gtmaSetClearColor(138, 154, 255);
 
     gtmaCameraMatrix(&camera, 0.1f, 450.0f, gtmaGetShader());
     camera.pitch = 0;
@@ -113,7 +119,7 @@ static void initScene() {
 }
 
 extern Scene deansHallway;
-extern Scene natatorium;
+extern Scene outdoorScene;
 
 static bool spectating = false;
 
@@ -121,6 +127,10 @@ static void updateScene() {
 
     if(gtmaUpdateScene(&deansGarden, &player)) {
         return;
+    }
+
+    if(camera.position[1] < -8) {
+        switchScene(&outdoorScene);
     }
 
     light1.color[0] = brightness;

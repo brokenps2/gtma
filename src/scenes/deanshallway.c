@@ -57,6 +57,7 @@ static void initScene() {
     
     gtmaCreateGameObject(&deanWarp, "models/door2.glb", "deanWarp", (vec3){-108.2, 8, -36}, (vec3){3, 3, 3}, (vec3){0, 0, 0});
     deanWarp.pickable = true;
+    deanWarp.pickableDistance = 24;
 
     if(returning) {
         gtmaCreateCamera(&camera, (vec3){-105, 11, -36});
@@ -64,7 +65,7 @@ static void initScene() {
         gtmaCreateCamera(&camera, camPos);
     }
     gtmaSetRenderCamera(&camera);
-    gtmaCreatePlayer(&player, &camera, 100, 10, 6);
+    gtmaCreatePlayer(&player, &camera, 100, 6, 10);
 
     gtmaCreatePointLight(&light1, -300, 300, 300, brightness, brightness, brightness); light1.sunMode = true;
     gtmaCreatePointLight(&light2, 300, 300, -300, brightness, brightness, brightness); light2.sunMode = true;

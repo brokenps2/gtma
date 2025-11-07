@@ -12,22 +12,12 @@ typedef struct GameObject {
     bool pickable;
     bool selected;
     bool billboard;
+    float pickableDistance;
 } GameObject;
-
-typedef enum {
-    SCREENOBJECT_TEXTURE,
-    SCREENOBJECT_TEXT
-} ScreenObjectType;
 
 typedef struct ScreenObject {
     Model model;
     const char* name;
-
-    ScreenObjectType type;
-
-    char* text;
-    vec3 textColor;
-    float textScale;
 
     vec2 position;
     vec2 size;
