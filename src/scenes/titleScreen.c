@@ -61,17 +61,17 @@ static void initScene() {
 
     gtmaCreateTexture(&titlescreenplanetex, "images/select.png");
 
-    gtmaCreateGameObject(&sky, "models/plane.glb", "sky", (vec3){0, 0, 0}, (vec3){2, 2, 2}, (vec3){0, 90, 0});
+    gtmaCreateGameObject(&sky, "models/plane.glb", "sky", (vec3){0, 0, 0}, (vec3){2, 2, 2}, (vec3){0, 90, 0}, GTMA_FLAG_NONE);
     //for (int i = 0; i < sky.model.meshCount; i++) { sky.model.meshes[i].lit = false; }
     //sky.model.meshes[0].texture.id = titlescreenplanetex.id;
-    gtmaCreateGameObject(&plane2, "models/plane.glb", "sky", (vec3){73, 0, 0}, (vec3){2, 2, 2}, (vec3){0, 90, 0});
+    gtmaCreateGameObject(&plane2, "models/plane.glb", "sky", (vec3){73, 0, 0}, (vec3){2, 2, 2}, (vec3){0, 90, 0}, GTMA_FLAG_NONE);
     //plane2.model.meshes[0].texture.id = titlescreenplanetex.id;
     //for (int i = 0; i < plane2.model.meshCount; i++) { plane2.model.meshes[i].lit = false; }
 
-    gtmaCreateScreenObject(&logo, "models/uitest.glb", "logo", (vec2){(float)getWindowWidth()/2, (float)getWindowHeight()/2 - 140}, (vec2){280, 60}, 0);
+    gtmaCreateScreenObject(&logo, "models/uitest.glb", "logo", (vec2){(float)getWindowWidth()/2, (float)getWindowHeight()/2 - 140}, (vec2){280, 60}, 0, GTMA_FLAG_NONE);
     gtmaChangeScreenObjectTexture(&logo, "images/gtmalogo.png");
 
-    gtmaCreatePointLight(&light, camPos[0], camPos[1], camPos[2], brightness, brightness, brightness);
+    gtmaCreatePointLight(&light, camPos[0], camPos[1], camPos[2], brightness, brightness, brightness, GTMA_FLAG_NONE);
 
     gtmaCreateCamera(&camera, camPos);
     gtmaSetRenderCamera(&camera);
@@ -125,21 +125,21 @@ static void updateScene() {
     //sky.rotation[2] -= 1 * getDeltaTime();
 
     if(isKeyPressed(SDL_SCANCODE_1)) {
-        logo.visible = false;
+        logo.flags |= GTMA_FLAG_INVISIBLE;
         sceneIndex = 0;
     } else if(isKeyPressed(SDL_SCANCODE_2)) {
-        logo.visible = false;
+        logo.flags |= GTMA_FLAG_INVISIBLE;
         sceneIndex = 1;
     } else if(isKeyPressed(SDL_SCANCODE_3)) {
-        logo.visible = false;
+        logo.flags |= GTMA_FLAG_INVISIBLE;
         SDL_SetRelativeMouseMode(true);
         switchScene(&deansHallway);
     } else if(isKeyPressed(SDL_SCANCODE_4)) {
-        logo.visible = false;
+        logo.flags |= GTMA_FLAG_INVISIBLE;
         SDL_SetRelativeMouseMode(true);
         switchScene(&circleHallway);
     } else if(isKeyPressed(SDL_SCANCODE_5)) {
-        logo.visible = false;
+        logo.flags |= GTMA_FLAG_INVISIBLE;
         sceneIndex = 4;
     }
 

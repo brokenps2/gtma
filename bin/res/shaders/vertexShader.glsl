@@ -112,12 +112,7 @@ void main() {
     }
 
     if(text) {
-        vec2 ndc = vec2(
-            (position.x / screenRes.x) * 2.0 - 1.0,
-            (position.y / screenRes.y) * 2.0 - 1.0
-        );
-        gl_Position = vec4(ndc, 0.0, 1.0) * transMatrix;
-        outTexCoord = texCoord;
+        gl_Position = orthoMatrix * vec4(position.xy, 0, 1);
         return;
     }
 

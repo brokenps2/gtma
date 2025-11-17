@@ -42,8 +42,6 @@ static PointLight light3;
 
 static float brightness = 1.45f;
 
-static int sceneIndex = 0;
-
 static void initScene() {
 
     gtmaToggleControls(true);
@@ -52,27 +50,26 @@ static void initScene() {
     gtmaLoadPointLightPack(&sceneLightPack);
     gtmaLoadScreenObjectPack(&sceneScreenPack);
 
-    gtmaCreateGameObject(&map, "models/stoneland.glb", "map", (vec3){0, 0, 0}, (vec3){1.5, 1, 1.5}, (vec3){0, 0, 0});
-    map.model.meshes[map.model.meshCount-1].collisionEnabled = false;
+    gtmaCreateGameObject(&map, "models/stoneland.glb", "map", (vec3){0, 0, 0}, (vec3){1.5, 1, 1.5}, (vec3){0, 0, 0}, GTMA_FLAG_VERTEX_COLLIDE);
+    map.model.meshes[map.model.meshCount-1].flags |= GTMA_FLAG_NOCOLLIDE;
     
-    gtmaCreateGameObject(&sky, "models/sky.glb", "sky", (vec3){0, 0, 0}, (vec3){18, 18, 18}, (vec3){0, 0, 0});
-    sky.model.meshes[0].lit = false;
-    sky.model.meshes[0].collisionEnabled = false;
-    gtmaCreateGameObject(&desk, "models/desk.glb", "desk", (vec3){137, 4, 77}, (vec3){2, 2, 2}, (vec3){0, 0, 0});
-    desk.pickable = true;
+    gtmaCreateGameObject(&sky, "models/sky.glb", "sky", (vec3){0, 0, 0}, (vec3){18, 18, 18}, (vec3){0, 0, 0}, GTMA_FLAG_NONE);
+    sky.model.meshes[0].flags |= GTMA_FLAG_UNLIT;
+    sky.model.meshes[0].flags |= GTMA_FLAG_NOCOLLIDE;
+
+    gtmaCreateGameObject(&desk, "models/desk.glb", "desk", (vec3){137, 4, 77}, (vec3){2, 2, 2}, (vec3){0, 0, 0}, GTMA_FLAG_PICKABLE);
     desk.pickableDistance = 24;
-    gtmaCreateGameObject(&cliffsWarp, "models/office.glb", "cliffsWarp", (vec3){314, -248, -304}, (vec3){3, 3, 3}, (vec3){0, -30, 0});
-    cliffsWarp.pickable = true;
+
+    gtmaCreateGameObject(&cliffsWarp, "models/office.glb", "cliffsWarp", (vec3){314, -248, -304}, (vec3){3, 3, 3}, (vec3){0, -30, 0}, GTMA_FLAG_PICKABLE);
     cliffsWarp.pickableDistance = 24;
-    cliffsWarp.model.meshes[0].collisionEnabled = false;
 
     gtmaCreateCamera(&camera, camPos);
     gtmaSetRenderCamera(&camera);
     gtmaCreatePlayer(&player, &camera, 100, 6, 10);
 
-    gtmaCreatePointLight(&light1, -300, 300, 300, brightness, brightness, brightness); light1.sunMode = true;
-    gtmaCreatePointLight(&light2, 300, 300, 0, brightness, brightness, brightness); light2.sunMode = true;
-    gtmaCreatePointLight(&light3, -300, 300, -300, brightness, brightness, brightness); light3.sunMode = true;
+    gtmaCreatePointLight(&light1, -300, 300, 300, brightness, brightness, brightness, GTMA_FLAG_SUNMODE);
+    gtmaCreatePointLight(&light2, 300, 300, 0, brightness, brightness, brightness, GTMA_FLAG_SUNMODE);
+    gtmaCreatePointLight(&light3, -300, 300, -300, brightness, brightness, brightness, GTMA_FLAG_SUNMODE);
 
     gtmaAddGameObject(&map, &sceneObjectPack);
     gtmaAddGameObject(&sky, &sceneObjectPack);
@@ -119,14 +116,6 @@ static void updateScene() {
     desk.rotation[1] += 150 * getDeltaTime();
 
     gtmaUpdateAudio(camera.position, camera.direction);
-
-    //warps
-    /*
-    if(strcmp(camera.currentCollision, "cliffsWarp") == 0) {
-        sceneIndex = 1;
-        startTransition();
-    }
-    */
 
     if(isLeftPressed()) {
         if(strcmp(pickObject(&sceneObjectPack, &camera), "desk") == 0) {

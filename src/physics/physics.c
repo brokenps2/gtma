@@ -151,14 +151,18 @@ bool updatePlayerPhysics(GameObjectPack* objPack, Player* player) {
         for(int j = 0; j < obj->model.meshCount; j++) {
 
             Mesh mesh = obj->model.meshes[j];
-            if(testAABBIntersection(mesh.aabb, player->aabb) && mesh.collisionEnabled) {
+            if(testAABBIntersection(mesh.aabb, player->aabb) && !(mesh.flags & GTMA_FLAG_NOCOLLIDE)) {
 
-                if (obj->pickable) {
+                if (obj->flags & GTMA_FLAG_PICKABLE) {
                     player->currentCollisions = realloc(player->currentCollisions, (player->currentCollisionCount + 1) * sizeof(GameObject*));
                     if (player->currentCollisions) {
                         player->currentCollisions[player->currentCollisionCount] = obj;
                         player->currentCollisionCount++;
                     }
+                }
+
+                if(!(obj->flags & GTMA_FLAG_VERTEX_COLLIDE)) {
+                    return true;
                 }
 
                 for (int k = 0; k < mesh.indexCount; k += 3) {
@@ -174,6 +178,7 @@ bool updatePlayerPhysics(GameObjectPack* objPack, Player* player) {
                         return true;
                     }
                 }
+
             }
         }
     }
@@ -230,7 +235,7 @@ const char* pickObject(GameObjectPack* pack, Camera* cam) {
         GameObject* obj = pack->objects[i];
         float t;
         for(int j = 0; j < obj->model.meshCount; j++) {
-            if (obj->pickable && rayIntersectsAABB(rayOrigin, rayDir, &obj->model.meshes[j].aabb, &t)) {
+            if ((obj->flags & GTMA_FLAG_PICKABLE) && rayIntersectsAABB(rayOrigin, rayDir, &obj->model.meshes[j].aabb, &t)) {
                 t = fabs(t);
                 if (t < closestT) {
                     closestT = t;

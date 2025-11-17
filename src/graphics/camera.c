@@ -21,6 +21,8 @@ double oldMouseX = 0, oldMouseY = 0, newMouseX = 0, newMouseY = 0;
 
 bool orthographic = false;
 
+vec2 camPosLast;
+
 float zoom = 16.0f/14.0f;
 
 void gtmaCreateCamera(Camera* cam, vec3 pos) {
@@ -45,6 +47,8 @@ void gtmaCreateCamera(Camera* cam, vec3 pos) {
     cam->yaw = 0.0f;
     cam->roll = 0.0f;
     cam->sensitivity = (float)cfgLookupInt("mouseSensitivity") / 100;
+
+    camPosLast = (vec2){0, 0};
 
 }
 

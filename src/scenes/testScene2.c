@@ -27,7 +27,7 @@ void initScene2() {
     //gtmaCreateCamera(&camera, camPos);
     gtmaSetRenderCamera(&camera);
 
-    gtmaCreatePointLight(&light, 0, 30, 0, brightness, 3, brightness);
+    //gtmaCreatePointLight(&light, 0, 30, 0, brightness, 3, brightness);
 
     gtmaAddGameObject(&map2, &sceneObjectPack);
     gtmaAddLight(&light, &sceneLightPack);

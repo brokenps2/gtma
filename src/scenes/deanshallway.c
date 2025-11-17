@@ -41,8 +41,6 @@ static PointLight light5;
 
 static float brightness = 1.65f;
 
-static int sceneIndex = 0;
-
 static bool returning = false;
 
 static void initScene() {
@@ -53,10 +51,9 @@ static void initScene() {
     gtmaLoadPointLightPack(&sceneLightPack);
     gtmaLoadScreenObjectPack(&sceneScreenPack);
 
-    gtmaCreateGameObject(&map, "models/deanscorridor.glb", "map", (vec3){0, 0, 0}, (vec3){4.5, 4.5, 4.5}, (vec3){0, 0, 0});
+    gtmaCreateGameObject(&map, "models/deanscorridor.glb", "map", (vec3){0, 0, 0}, (vec3){4.5, 4.5, 4.5}, (vec3){0, 0, 0}, GTMA_FLAG_VERTEX_COLLIDE);
     
-    gtmaCreateGameObject(&deanWarp, "models/door2.glb", "deanWarp", (vec3){-108.2, 8, -36}, (vec3){3, 3, 3}, (vec3){0, 0, 0});
-    deanWarp.pickable = true;
+    gtmaCreateGameObject(&deanWarp, "models/door2.glb", "deanWarp", (vec3){-108.2, 8, -36}, (vec3){3, 3, 3}, (vec3){0, 0, 0}, GTMA_FLAG_PICKABLE);
     deanWarp.pickableDistance = 24;
 
     if(returning) {
@@ -67,11 +64,11 @@ static void initScene() {
     gtmaSetRenderCamera(&camera);
     gtmaCreatePlayer(&player, &camera, 100, 6, 10);
 
-    gtmaCreatePointLight(&light1, -300, 300, 300, brightness, brightness, brightness); light1.sunMode = true;
-    gtmaCreatePointLight(&light2, 300, 300, -300, brightness, brightness, brightness); light2.sunMode = true;
-    gtmaCreatePointLight(&light3, -300, 300, -300, brightness/1.4, brightness/1.4, brightness/1.4); light3.sunMode = true;
-    gtmaCreatePointLight(&light4, 300, 300, 300, brightness, brightness, brightness); light4.sunMode = true;
-    gtmaCreatePointLight(&light5, 0, -300, 0, brightness*1.3, brightness*1.3, brightness*1.3); light5.sunMode = true;
+    gtmaCreatePointLight(&light1, -300, 300, 300, brightness, brightness, brightness, GTMA_FLAG_SUNMODE);
+    gtmaCreatePointLight(&light2, 300, 300, -300, brightness, brightness, brightness, GTMA_FLAG_SUNMODE);
+    gtmaCreatePointLight(&light3, -300, 300, -300, brightness/1.4, brightness/1.4, brightness/1.4, GTMA_FLAG_SUNMODE);
+    gtmaCreatePointLight(&light4, 300, 300, 300, brightness, brightness, brightness, GTMA_FLAG_SUNMODE);
+    gtmaCreatePointLight(&light5, 0, -300, 0, brightness*1.3, brightness*1.3, brightness*1.3, GTMA_FLAG_SUNMODE);
 
     gtmaAddGameObject(&map, &sceneObjectPack);
     gtmaAddGameObject(&deanWarp, &sceneObjectPack);

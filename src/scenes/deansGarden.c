@@ -64,28 +64,23 @@ static void initScene() {
         if((randomX > -120 && randomX < 33 && randomZ > -19 && randomZ < 83) || (randomX > -32 && randomX < 42 && randomZ > -111 && randomZ < -58)) {
             continue;
         }
-        gtmaCreateAndAddGameObject(&sceneObjectPack, "models/tree.glb", "tree", (vec3){randomX, 9, randomZ}, (vec3){3, 2.5, 3}, (vec3){0, 0, 0});
-        sceneObjectPack.objects[sceneObjectPack.objectCount - 1]->billboard = true;
-        sceneObjectPack.objects[sceneObjectPack.objectCount - 1]->model.meshes[0].collisionEnabled = false;
+        gtmaCreateAndAddGameObject(&sceneObjectPack, "models/barney.glb", "tree", (vec3){randomX, 7, randomZ}, (vec3){0.7, 0.7, 0.7}, (vec3){0, 90, 0}, GTMA_FLAG_BILLBOARD | GTMA_FLAG_NOCOLLIDE);
     }
 
     gtmaCreateTexture(&blue, "images/gradientsky.png");
     gtmaCreateTexture(&cloudy, "images/cloudysky.png");
 
-    gtmaCreateGameObject(&map, "models/jimmyhouse.glb", "map", (vec3){0, 0, 0}, (vec3){6.5, 4.75, 6.5}, (vec3){0, 0, 0});
-    map.model.meshes[map.model.meshCount - 1].collisionEnabled = false;
+    gtmaCreateGameObject(&map, "models/jimmyhouse.glb", "map", (vec3){0, 0, 0}, (vec3){6.5, 4.75, 6.5}, (vec3){0, 0, 0}, GTMA_FLAG_VERTEX_COLLIDE);
+    map.model.meshes[map.model.meshCount - 1].flags |= GTMA_FLAG_NOCOLLIDE;
     
-    gtmaCreateGameObject(&sky, "models/sky.glb", "sky", (vec3){0, 0, 0}, (vec3){18, 18, 18}, (vec3){0, 0, 0});
-    sky.model.meshes[0].lit = false;
-    sky.model.meshes[0].collisionEnabled = false;
+    gtmaCreateGameObject(&sky, "models/sky.glb", "sky", (vec3){0, 0, 0}, (vec3){18, 18, 18}, (vec3){0, 0, 0}, GTMA_FLAG_NONE);
+    sky.model.meshes[0].flags |= GTMA_FLAG_UNLIT | GTMA_FLAG_NOCOLLIDE;
 
-    gtmaCreateGameObject(&stoneland, "models/stoneland.glb", "stoneland", (vec3){-32, -240, 42}, (vec3){1.5, 0.3, 1.5}, (vec3){0, 0, 0});
+    gtmaCreateGameObject(&stoneland, "models/stoneland.glb", "stoneland", (vec3){-32, -240, 42}, (vec3){1.5, 0.3, 1.5}, (vec3){0, 0, 0}, GTMA_FLAG_NONE);
 
-    gtmaCreateGameObject(&dean, "models/dean.glb", "dean", (vec3){90, 10, 0}, (vec3){3, 3, 3}, (vec3){0, 180, 0});
-    dean.billboard = true;
+    gtmaCreateGameObject(&dean, "models/dean.glb", "dean", (vec3){90, 10, 0}, (vec3){3, 3, 3}, (vec3){0, 180, 0}, GTMA_FLAG_BILLBOARD);
 
-    gtmaCreateGameObject(&hallWarp, "models/door2.glb", "hallWarp", (vec3){-123, 9, 6}, (vec3){3, 3, 3}, (vec3){0, 0, 0});
-    hallWarp.pickable = true;
+    gtmaCreateGameObject(&hallWarp, "models/door2.glb", "hallWarp", (vec3){-123, 9, 6}, (vec3){3, 3, 3}, (vec3){0, 0, 0}, GTMA_FLAG_PICKABLE);
     hallWarp.pickableDistance = 24;
 
  
@@ -93,9 +88,9 @@ static void initScene() {
     gtmaCreatePlayer(&player, &camera, 100, 6, 7);
     gtmaSetRenderCamera(&camera);
 
-    gtmaCreatePointLight(&light1, -300, 300, 300, brightness, brightness, brightness); light1.sunMode = true;
-    gtmaCreatePointLight(&light2, 300, 300, 0, brightness, brightness, brightness); light2.sunMode = true;
-    gtmaCreatePointLight(&light3, -300, 300, -300, brightness, brightness, brightness); light3.sunMode = true;
+    gtmaCreatePointLight(&light1, -300, 300, 300, brightness, brightness, brightness, GTMA_FLAG_SUNMODE);
+    gtmaCreatePointLight(&light2, 300, 300, 0, brightness, brightness, brightness, GTMA_FLAG_SUNMODE);
+    gtmaCreatePointLight(&light3, -300, 300, -300, brightness, brightness, brightness, GTMA_FLAG_SUNMODE);
 
 
     gtmaAddGameObject(&stoneland, &sceneObjectPack);

@@ -5,7 +5,7 @@
 #include <stb_image.h>
 #include <string.h>
 
-void gtmaCreateGameObject(GameObject* object, const char* mdlPath, const char* name, vec3 position, vec3 scale, vec3 rotation) {
+void gtmaCreateGameObject(GameObject* object, const char* mdlPath, const char* name, vec3 position, vec3 scale, vec3 rotation, unsigned int flags) {
     Model model; 
     gtmaCreateModel(&model, mdlPath);
 
@@ -25,19 +25,17 @@ void gtmaCreateGameObject(GameObject* object, const char* mdlPath, const char* n
     object->rotation[1] = rotation[1];
     object->rotation[2] = rotation[2];
 
-    object->pickable = false;
-
-    object->billboard = false;
-
     for(int i = 0; i < object->model.meshCount; i++) {
         calculateMeshAABB(&object->model.meshes[i], object->scale, object->position);
     }
 
-    object->selected = false;
+    object->flags = 0;
+    object->flags |= flags;
+
     object->inPack = false;
 }
 
-void gtmaCreateScreenObject(ScreenObject* object, const char* mdlPath, const char* name, vec2 position, vec2 size, float rotation) {
+void gtmaCreateScreenObject(ScreenObject* object, const char* mdlPath, const char* name, vec2 position, vec2 size, float rotation, unsigned int flags) {
     Model model;
     gtmaCreateModel(&model, mdlPath);
 
@@ -52,8 +50,10 @@ void gtmaCreateScreenObject(ScreenObject* object, const char* mdlPath, const cha
 
     object->rotation = rotation;
 
-    object->visible = true;
     object->inPack = false;
+    
+    object->flags = 0;
+    object->flags |= flags;
 }
 
 void gtmaDeleteGameObject(GameObject* object) {
@@ -207,10 +207,10 @@ void gtmaRemoveGameObjectID(GameObjectPack* objPack, int id) {
 
 }
 
-void gtmaCreateAndAddGameObject(GameObjectPack* objPack, const char* mdlPath, const char* name, vec3 position, vec3 scale, vec3 rotation) {
+void gtmaCreateAndAddGameObject(GameObjectPack* objPack, const char* mdlPath, const char* name, vec3 position, vec3 scale, vec3 rotation, unsigned int flags) {
     GameObject* newObj = malloc(sizeof(GameObject));
 
-    gtmaCreateGameObject(newObj, mdlPath, name, position, scale, rotation);
+    gtmaCreateGameObject(newObj, mdlPath, name, position, scale, rotation, flags);
 
     gtmaAddGameObject(newObj, objPack);
 }

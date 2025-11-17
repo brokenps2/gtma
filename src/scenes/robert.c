@@ -46,6 +46,8 @@ static int sceneIndex = 0;
 
 static void initScene() {
 
+    /*
+
     gtmaToggleControls(true);
 
     gtmaLoadGameObjectPack(&sceneObjectPack);
@@ -83,38 +85,13 @@ static void initScene() {
 
     gtmaPlaySound(&feild);
 
+    */
+
 }
 
 static bool spectating = false;
 
-static void warp() {
-    if(sceneIndex == 0) {
-    } else if(sceneIndex == 1) {
-    }
-}
-
-static float transitionTimer = 0.0f;
-static float transitionDuration = 1.0f; // seconds
-static bool transitioning = false;
-
-static void startTransition() {
-    transitioning = true;
-    transitionTimer = transitionDuration;
-    gtmaToggleControls(false);
-    loadingScreen.visible = true;
-}
-
 static void updateScene() {
-    if (transitioning) {
-        transitionTimer -= getDeltaTime();
-        if (transitionTimer <= 0.0f) {
-            transitioning = false;
-            loadingScreen.visible = false;
-            warp();
-            gtmaToggleControls(true);
-        }
-        return;
-    }
 
     //camera stuff
     gtmaCameraMatrix(&camera, 0.1f, 650.0f, gtmaGetShader());

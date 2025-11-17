@@ -12,7 +12,6 @@
 #include <cglm/vec3.h>
 #include <stdbool.h>
 #include <stdio.h>
-#include "../window/windowManager.h"
 
 static void initScene();
 static void updateScene();
@@ -50,8 +49,6 @@ static bool flashlightOn = false;
 
 static float brightness = 1.35f;
 
-static int sceneIndex = 0;
-
 static void initScene() {
 
     gtmaToggleControls(true);
@@ -60,34 +57,22 @@ static void initScene() {
     gtmaLoadPointLightPack(&sceneLightPack);
     gtmaLoadScreenObjectPack(&sceneScreenPack);
 
-    gtmaCreateGameObject(&map, "models/natatorium.glb", "map", (vec3){0, 0, 0}, (vec3){1.25, 1, 1.25}, (vec3){0, 0, 0});
-    map.model.meshes[7].lit = false;
-
-    gtmaCreateScreenObject(&crosshair, "models/uitest.glb", "uitest", (vec2){((float)getWindowWidth() / 2), ((float)getWindowHeight() / 2)}, (vec2){8, 8}, 0);
-    gtmaChangeScreenObjectTexture(&crosshair, "images/crosshair.png");
-
-    gtmaCreateScreenObject(&pauseScreen, "models/uitest.glb", "pause", (vec2){((float)getWindowWidth()/2), ((float)getWindowHeight()/2)}, (vec2){400, 80}, 0);
-    gtmaChangeScreenObjectTexture(&pauseScreen, "images/paused.png");
-    pauseScreen.visible = false;
-
-    gtmaCreateScreenObject(&loadingScreen, "models/uitest.glb", "loading", (vec2){(float)getWindowWidth()/2, (float)getWindowHeight()/2}, (vec2){400, 60}, 0);
-    gtmaChangeScreenObjectTexture(&loadingScreen, "images/loading.png");
-    loadingScreen.visible = false;
+    gtmaCreateGameObject(&map, "models/natatorium.glb", "map", (vec3){0, 0, 0}, (vec3){1.25, 1, 1.25}, (vec3){0, 0, 0}, GTMA_FLAG_NONE);
+    map.model.meshes[7].flags |= GTMA_FLAG_UNLIT;
 
     gtmaCreateCamera(&camera, camPos);
     gtmaSetRenderCamera(&camera);
     gtmaCreatePlayer(&player, &camera, 100, 10, 6);
 
-    gtmaCreatePointLight(&light0, 134, 70, -100, brightness, brightness, brightness); light0.sunMode = true;
-    gtmaCreatePointLight(&light1, 0, 70, -100, brightness, brightness, brightness); light1.sunMode = true;
-    gtmaCreatePointLight(&light2, -115, 70, -100, brightness, brightness, brightness); light2.sunMode = true;
-    gtmaCreatePointLight(&light3, -112, 60, 220, brightness, brightness, brightness); light3.sunMode = true;
-    gtmaCreatePointLight(&light4, 0, 60, 220, brightness, brightness, brightness); light4.sunMode = true;
-    gtmaCreatePointLight(&light5, 120, 60, 220, brightness, brightness, brightness); light5.sunMode = true;
-    gtmaCreatePointLight(&light6, 0, 56, 0, brightness, brightness, brightness); light6.sunMode = true;
+    gtmaCreatePointLight(&light0, 134, 70, -100, brightness, brightness, brightness, GTMA_FLAG_SUNMODE);
+    gtmaCreatePointLight(&light1, 0, 70, -100, brightness, brightness, brightness, GTMA_FLAG_SUNMODE);
+    gtmaCreatePointLight(&light2, -115, 70, -100, brightness, brightness, brightness, GTMA_FLAG_SUNMODE);
+    gtmaCreatePointLight(&light3, -112, 60, 220, brightness, brightness, brightness, GTMA_FLAG_SUNMODE); 
+    gtmaCreatePointLight(&light4, 0, 60, 220, brightness, brightness, brightness, GTMA_FLAG_SUNMODE);
+    gtmaCreatePointLight(&light5, 120, 60, 220, brightness, brightness, brightness, GTMA_FLAG_SUNMODE);
+    gtmaCreatePointLight(&light6, 0, 56, 0, brightness, brightness, brightness, GTMA_FLAG_SUNMODE);
 
-    gtmaCreatePointLight(&lamp, camPos[0], camPos[1], camPos[2], brightness*4, brightness*4, brightness*4);
-    lamp.sunMode = true;
+    gtmaCreatePointLight(&lamp, camPos[0], camPos[1], camPos[2], brightness*4, brightness*4, brightness*4, GTMA_FLAG_SUNMODE);
     lamp.range = 24 * lamp.range;
 
     gtmaAddGameObject(&map, &sceneObjectPack);
@@ -107,13 +92,14 @@ static void initScene() {
 
     gtmaCameraMatrix(&camera, 0.1f, 450.0f, gtmaGetShader());
 
+    gtmaInitScene(&natatorium, &player, &sceneObjectPack, &sceneScreenPack, camPos);
+
 
 }
 
 extern Scene outdoorScene;
 
 static bool spectating = false;
-static int frameCounter = 0;
 
 static void checkFlashlight() {
     glm_vec3_copy(camera.position, lamp.position);
@@ -125,45 +111,10 @@ static void checkFlashlight() {
         gtmaRemoveLightID(&sceneLightPack, lamp.packID);
     }
 }
-static void warp() {
-    if(sceneIndex == 0) {
-        //switchScene(&testScene1);
-    } else if(sceneIndex == 1) {
-        //switchScene(&testScene1);
-    }
-}
-
-static float transitionTimer = 0.0f;
-static float transitionDuration = 1.0f; // seconds
-static bool transitioning = false;
-
-static void startTransition() {
-    transitioning = true;
-    transitionTimer = transitionDuration;
-    gtmaToggleControls(false);
-    loadingScreen.visible = true;
-}
 
 static void updateScene() {
 
-    if(isKeyPressed(SDL_SCANCODE_E)) {
-        gtmaSetEditMode(1);
-    }
-
-    /*
-    if(gtmaCheckPauseAndSelect(&pauseScreen, &sceneObjectPack, &sceneLightPack)) {
-        return;
-    }
-*/
-
-    if (transitioning) {
-        transitionTimer -= getDeltaTime();
-        if (transitionTimer <= 0.0f) {
-            transitioning = false;
-            loadingScreen.visible = false;
-            warp();
-            gtmaToggleControls(true);
-        }
+    if(gtmaUpdateScene(&natatorium, &player)) {
         return;
     }
 
@@ -194,7 +145,6 @@ static void updateScene() {
 }
 
 static void disposeScene() {
-    frameCounter = 0;
     gtmaDeleteGameObjectPack(&sceneObjectPack);
     gtmaDeletScreenObjectPack(&sceneScreenPack);
 }

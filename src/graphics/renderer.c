@@ -13,6 +13,7 @@
 #include "../window/events.h"
 #include "../util/config.h"
 #include "../window/windowManager.h"
+#include <stb_easy_font.h>
 
 Shader shader;
 Camera* renderCamera;
@@ -133,7 +134,7 @@ void gtmaRenderScreen() {
 
     for (int i = 0; i < screenPack->objectCount; i++) {
         ScreenObject* obj = screenPack->objects[i];
-        if (!obj->visible) continue;
+        if ((obj->flags & GTMA_FLAG_INVISIBLE)) continue;
         gtmaSetBool(&shader, "text", false);
     	for (int j = 0; j < obj->model.meshCount; j++) {
             Mesh mesh = obj->model.meshes[j];
@@ -226,16 +227,14 @@ void gtmaRender() {
 
             gtmaSetVec3(&shader, posStr, lightPack->lights[i]->position);
             gtmaSetVec3(&shader, colStr, lightPack->lights[i]->color);
-            gtmaSetBool(&shader, actStr, lightPack->lights[i]->active);
-            gtmaSetBool(&shader, sunStr, lightPack->lights[i]->sunMode);
+            gtmaSetBool(&shader, actStr, !(lightPack->lights[i]->flags & GTMA_FLAG_INVISIBLE));
+            gtmaSetBool(&shader, sunStr, lightPack->lights[i]->flags & GTMA_FLAG_SUNMODE);
             gtmaSetFloat(&shader, rngStr, lightPack->lights[i]->range);
             gtmaSetFloat(&shader, "ambientLevel", ambientLight);
 
             gtmaSetInt(&shader, "actualLightCount", lightPack->lightCount);
         }
     }
-
-    
 
     glBindFramebuffer(GL_FRAMEBUFFER, FBO);
 
@@ -260,7 +259,7 @@ void gtmaRender() {
     if(objPack != NULL) {
         for (int i = 0; i < objPack->objectCount; i++) {
 
-            if (objPack->objects[i]->billboard == true) {
+            if (objPack->objects[i]->flags & GTMA_FLAG_BILLBOARD) {
                 objPack->objects[i]->rotation[1] = -renderCamera->yaw;
             }
 
@@ -269,7 +268,7 @@ void gtmaRender() {
             for(int j = 0; j < model->meshCount; j++) {
 
                 Mesh mesh = model->meshes[j];
-                if(mesh.visible == false) {
+                if(mesh.flags & GTMA_FLAG_INVISIBLE) {
                     continue;
                 }
                 glBindVertexArray(mesh.VAO);
@@ -279,11 +278,10 @@ void gtmaRender() {
                 gtmaLoadTransformationMatrix(&transformationMatrix, objPack->objects[i]);
                 gtmaSetBool(&shader, "ui", false);
                 gtmaSetMatrix(&shader, "transMatrix", transformationMatrix);
-                gtmaSetBool(&shader, "lightEnabled", mesh.lit);
+                gtmaSetBool(&shader, "lightEnabled", !(mesh.flags & GTMA_FLAG_UNLIT));
                 gtmaSetVec3(&shader, "viewPos", renderCamera->renderPos);
                 gtmaSetVec3(&shader, "clearColor", clearColor);
                 gtmaSetFloat(&shader, "fogLevel", fogLevel);
-                gtmaSetBool(&shader, "selected", objPack->objects[i]->selected);
                 gtmaSetInt(&shader, "meshIndex", j);
                 vec2 screenRes = {getWindowWidth(), getWindowHeight()};
                 vec2 frameRes = {renderWidth, renderHeight};
@@ -303,6 +301,7 @@ void gtmaRender() {
     gtmaRenderFBO();
 
     gtmaRenderScreen();
+
 }
 
 

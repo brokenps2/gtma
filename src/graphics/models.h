@@ -19,11 +19,9 @@ typedef struct Mesh {
     int texcoCount;
     int normlCount;
     Texture texture;
-    bool lit;
     unsigned int VAO, VBO, EBO;
     AABB aabb;
-    bool collisionEnabled;
-    bool visible;
+    unsigned int flags;
 } Mesh;
 
 typedef struct Model {

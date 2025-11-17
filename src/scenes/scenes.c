@@ -48,18 +48,16 @@ void gtmaInitScene(Scene* scene, Player* player, GameObjectPack* objectPack, Scr
     scene->screenPack = screenObjPack;
     scene->objPack = objectPack;
 
-    gtmaCreateScreenObject(&crosshair, "models/uitest.glb", "uitest", (vec2){((float)getWindowWidth() / 2), ((float)getWindowHeight() / 2)}, (vec2){10, 10}, 0);
+    gtmaCreateScreenObject(&crosshair, "models/uitest.glb", "uitest", (vec2){((float)getWindowWidth() / 2), ((float)getWindowHeight() / 2)}, (vec2){10, 10}, 0, GTMA_FLAG_NONE);
     gtmaCreateTexture(&regularCrosshair, "images/crosshair.png");
     gtmaCreateTexture(&highlightedCrosshair, "images/crosshairselected.png");
     crosshair.model.meshes[0].texture.id = regularCrosshair.id;
 
-    gtmaCreateScreenObject(&pauseScreen, "models/uitest.glb", "pause", (vec2){((float)getWindowWidth()/2), ((float)getWindowHeight()/2)}, (vec2){400, 80}, 0);
+    gtmaCreateScreenObject(&pauseScreen, "models/uitest.glb", "pause", (vec2){((float)getWindowWidth()/2), ((float)getWindowHeight()/2)}, (vec2){400, 80}, 0, GTMA_FLAG_INVISIBLE);
     gtmaChangeScreenObjectTexture(&pauseScreen, "images/paused.png");
-    pauseScreen.visible = false;
 
-    gtmaCreateScreenObject(&loadingScreen, "models/uitest.glb", "loading", (vec2){(float)getWindowWidth()/2, (float)getWindowHeight() / 2}, (vec2){400, 60}, 0);
+    gtmaCreateScreenObject(&loadingScreen, "models/uitest.glb", "loading", (vec2){(float)getWindowWidth()/2, (float)getWindowHeight() / 2}, (vec2){400, 60}, 0, GTMA_FLAG_INVISIBLE);
     gtmaChangeScreenObjectTexture(&loadingScreen, "images/loading.png");
-    loadingScreen.visible = false;
 
     gtmaAddScreenObject(&crosshair, scene->screenPack);
     gtmaAddScreenObject(&loadingScreen, scene->screenPack);
@@ -72,7 +70,6 @@ void gtmaSetEditMode(int set) {
     editMode = set;
 }
 
-
 static float transitionTimer = 0.0f;
 static float transitionDuration = 1.0f; // seconds
 static bool transitioning = false;
@@ -82,7 +79,7 @@ void switchScene(Scene* newScene) {
     transitioning = true;
     transitionTimer = transitionDuration;
     gtmaToggleControls(false);
-    loadingScreen.visible = true;
+    loadingScreen.flags &= ~GTMA_FLAG_INVISIBLE;
     nextScene = newScene;
 }
 
@@ -91,7 +88,7 @@ bool checkWarp() {
         transitionTimer -= getDeltaTime();
         if (transitionTimer <= 0.0f) {
             transitioning = false;
-            loadingScreen.visible = false;
+            loadingScreen.flags &= ~GTMA_FLAG_INVISIBLE;
             if (currentScene && currentScene->dispose)
                 currentScene->dispose();
             currentScene = nextScene;
@@ -111,7 +108,7 @@ bool gtmaUpdateScene(Scene* scene, Player* player) {
     if (paused) {
         if (isKeyPressed(SDL_SCANCODE_ESCAPE)) {
             paused = false;
-            pauseScreen.visible = false;
+            pauseScreen.flags |= ~GTMA_FLAG_INVISIBLE;
             SDL_SetRelativeMouseMode(true);
             gtmaSetFBOBrightness(1);
         }
@@ -120,14 +117,14 @@ bool gtmaUpdateScene(Scene* scene, Player* player) {
         }
         if (isKeyPressed(SDL_SCANCODE_T)) {
             paused = false;
-            pauseScreen.visible = false;
+            pauseScreen.flags |= ~GTMA_FLAG_INVISIBLE;
             SDL_SetRelativeMouseMode(true);
             gtmaSetFBOBrightness(1);
             switchScene(&titleScreen);
         }
     } else {
         if (isKeyPressed(SDL_SCANCODE_ESCAPE)) {
-            pauseScreen.visible = true;
+            pauseScreen.flags &= ~GTMA_FLAG_INVISIBLE;
             SDL_SetRelativeMouseMode(false);
             gtmaSetFBOBrightness(0.5);
             paused = true;

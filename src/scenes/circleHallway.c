@@ -53,10 +53,9 @@ static void initScene() {
     gtmaLoadPointLightPack(&sceneLightPack);
     gtmaLoadScreenObjectPack(&sceneScreenPack);
 
-    gtmaCreateGameObject(&map, "models/circleHallway.glb", "map", (vec3){0, 0, 0}, (vec3){6, 5, 6}, (vec3){0, 0, 0});
+    gtmaCreateGameObject(&map, "models/circleHallway.glb", "map", (vec3){0, 0, 0}, (vec3){6, 5, 6}, (vec3){0, 0, 0}, GTMA_FLAG_VERTEX_COLLIDE);
     
-    gtmaCreateGameObject(&deanWarp, "models/door2.glb", "deanWarp", (vec3){-108.2, 8, -36}, (vec3){3, 3, 3}, (vec3){0, 0, 0});
-    deanWarp.pickable = true;
+    gtmaCreateGameObject(&deanWarp, "models/door2.glb", "deanWarp", (vec3){-108.2, 8, -36}, (vec3){3, 3, 3}, (vec3){0, 0, 0}, GTMA_FLAG_PICKABLE);
 
     if(returning) {
         gtmaCreateCamera(&camera, (vec3){-105, 11, -36});
@@ -66,11 +65,11 @@ static void initScene() {
     gtmaSetRenderCamera(&camera);
     gtmaCreatePlayer(&player, &camera, 100, 7, 10);
 
-    gtmaCreatePointLight(&light1, -300, 250, 300, brightness, brightness, brightness); light1.sunMode = true;
-    gtmaCreatePointLight(&light2, 300, 250, -300, brightness, brightness, brightness); light2.sunMode = true;
-    gtmaCreatePointLight(&light3, -300, 250, -300, brightness, brightness, brightness); light3.sunMode = true;
-    gtmaCreatePointLight(&light4, 300, 250, 300, brightness, brightness, brightness); light4.sunMode = true;
-    gtmaCreatePointLight(&light5, 0, -200, 0, brightness*1.3, brightness*1.3, brightness*1.3); light5.sunMode = true;
+    gtmaCreatePointLight(&light1, -300, 250, 300, brightness, brightness, brightness, GTMA_FLAG_SUNMODE);
+    gtmaCreatePointLight(&light2, 300, 250, -300, brightness, brightness, brightness, GTMA_FLAG_SUNMODE);
+    gtmaCreatePointLight(&light3, -300, 250, -300, brightness, brightness, brightness, GTMA_FLAG_SUNMODE); 
+    gtmaCreatePointLight(&light4, 300, 250, 300, brightness, brightness, brightness, GTMA_FLAG_SUNMODE);
+    gtmaCreatePointLight(&light5, 0, -200, 0, brightness*1.3, brightness*1.3, brightness*1.3, GTMA_FLAG_SUNMODE);
 
     gtmaAddGameObject(&map, &sceneObjectPack);
     //gtmaAddGameObject(&deanWarp, &sceneObjectPack);

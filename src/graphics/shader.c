@@ -94,7 +94,7 @@ void gtmaCreateScreenShader(Shader* shader) {
 
 }
 
-void gtmaCreatePointLight(PointLight* light, float x, float y, float z, float r, float g, float b) {
+void gtmaCreatePointLight(PointLight* light, float x, float y, float z, float r, float g, float b, unsigned int flags) {
     light->position[0] = x;
     light->position[1] = y;
     light->position[2] = z;
@@ -104,10 +104,9 @@ void gtmaCreatePointLight(PointLight* light, float x, float y, float z, float r,
     light->color[2] = b;
 
     light->range = 1;
-    
-    light->sunMode = false;
 
-    light->active = true;
+    light->flags = 0;
+    light->flags |= flags;
 }
 
 void gtmaAddLight(PointLight* light, PointLightPack* lightPack) {

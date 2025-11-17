@@ -1,12 +1,12 @@
 {
   "resLoc": "res/",
   "title": "gtma",
-  "width": 1024,
-  "height": 768,
+  "width": 800,
+  "height": 600,
   "mouseSensitivity": 6,
   "fboScaleFactor": 0.5,
-  "vertexSnap": true,
-  "ditherEnabled": true,
+  "vertexSnap": false,
+  "ditherEnabled": false,
   "testObjs": [
     {
       "name": "john1"

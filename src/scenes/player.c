@@ -7,7 +7,7 @@
 #include <cglm/vec3.h>
 
 float maxSpeed = 120.0f;
-float accel = 70.0f;
+float accel = 180.0f;
 float forwardVelocity = 0.0f;
 float backwardVelocity = 0.0f;
 float leftVelocity = 0.0f;

@@ -1,3 +1,4 @@
+#include "scenes/objects.h"
 #include "texture.h"
 #include "../physics/physics.h"
 #include <cglm/quat.h>
@@ -93,6 +94,7 @@ void gtmaCreateModel(Model* model, const char* path) {
 
             cgltf_mesh* gltfMesh = node->mesh;
             Mesh* mesh = &model->meshes[i];
+            mesh->flags = GTMA_FLAG_NONE;
 
             size_t totalVertexCount = 0;
             size_t totalIndexCount = 0;
@@ -168,9 +170,6 @@ void gtmaCreateModel(Model* model, const char* path) {
             model->totalUVCount += mesh->texcoCount;
             model->totalIndexCount += mesh->indexCount;
 
-            mesh->lit = true;
-            mesh->visible = true;
-
             if (gltfMesh->primitives_count > 0) {
                 cgltf_primitive* firstPrimitive = &gltfMesh->primitives[0];
                 cgltf_texture* gltfTexture = NULL;
@@ -208,8 +207,6 @@ void gtmaCreateModel(Model* model, const char* path) {
             glEnableVertexAttribArray(2);
             glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, color));
             glEnableVertexAttribArray(3);
-
-            mesh->collisionEnabled = true;
 
             model->meshes[i] = *mesh;
         }
