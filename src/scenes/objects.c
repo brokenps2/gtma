@@ -1,8 +1,11 @@
 #include "../graphics/models.h"
 #include "../graphics/texture.h"
+#include "physics/physics.h"
 #include "objects.h"
 #include <GL/glew.h>
+#include <cglm/vec3.h>
 #include <stb_image.h>
+#include <stdlib.h>
 #include <string.h>
 
 void gtmaCreateGameObject(GameObject* object, const char* mdlPath, const char* name, vec3 position, vec3 scale, vec3 rotation, unsigned int flags) {
@@ -35,9 +38,68 @@ void gtmaCreateGameObject(GameObject* object, const char* mdlPath, const char* n
     object->inPack = false;
 }
 
-void gtmaCreateScreenObject(ScreenObject* object, const char* mdlPath, const char* name, vec2 position, vec2 size, float rotation, unsigned int flags) {
+void gtmaCreateScreenObject(ScreenObject* object, const char* texPath, const char* name, vec2 position, vec2 size, float rotation, unsigned int flags) {
+
     Model model;
-    gtmaCreateModel(&model, mdlPath);
+
+    float vertices[] = {
+        1.0f, 1.0f, 0.0f,
+        1.0f, -1.0f, 0.0f,
+        -1.0f,  1.0f, 0.0f,
+        -1.0f,  -1.0f, 0.0f
+    };
+    unsigned int indices[] = {
+        0, 1, 3,
+        0, 3, 2
+    };
+
+    float uvs[] = {
+        1.0f, 0.0f,
+        1.0f, 1.0f,
+        0.0f, 0.0f,
+        0.0f, 1.0f
+    };
+
+    model.meshCount = 1;
+    model.meshes = (Mesh*)malloc(model.meshCount * sizeof(Mesh));
+    model.meshes[0].vertices = (Vertex*)malloc(4 * sizeof(Vertex));
+    model.meshes[0].indices = (unsigned int*)malloc(6 * sizeof(unsigned int));
+
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 3; j++) {
+            model.meshes[0].vertices[i].position[j] = vertices[i * 3 + j];
+        }
+        for (int j = 0; j < 2; j++) {
+            model.meshes[0].vertices[i].texCoord[j] = uvs[i * 2 + j];
+        }
+        model.meshes[0].vertices[i].colored = false;
+        glm_vec3_copy((vec3){0, 0, 1}, model.meshes[0].vertices[i].normal);
+    }
+    for(int i = 0; i < 6; i++) {
+        model.meshes[0].indices[i] = indices[i];
+    }
+    model.meshes[0].indexCount = 6;
+    model.meshes[0].vertexCount = 4;
+
+    gtmaCreateTexture(&model.meshes[0].texture, texPath);
+
+    glGenVertexArrays(1, &model.meshes[0].VAO);
+    glGenBuffers(1, &model.meshes[0].VBO);
+    glGenBuffers(1, &model.meshes[0].EBO);
+
+    glBindVertexArray(model.meshes[0].VAO);
+
+    glBindBuffer(GL_ARRAY_BUFFER, model.meshes[0].VBO);
+    glBufferData(GL_ARRAY_BUFFER, model.meshes[0].vertexCount * sizeof(Vertex), model.meshes[0].vertices, GL_STATIC_DRAW);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, model.meshes[0].EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, model.meshes[0].indexCount * sizeof(unsigned int), model.meshes[0].indices, GL_STATIC_DRAW);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, texCoord));
+    glEnableVertexAttribArray(2);
 
     object->name = name;
     object->model = model;

@@ -109,9 +109,7 @@ void gtmaCreateModel(Model* model, const char* path) {
             mesh->indices = (unsigned int*)malloc(totalIndexCount * sizeof(unsigned int));
 
             mesh->indexCount = (int)totalIndexCount;
-            mesh->postnCount = (int)totalVertexCount;
-            mesh->texcoCount = (int)totalVertexCount;
-            mesh->normlCount = (int)totalVertexCount;
+            mesh->vertexCount = (int)totalVertexCount;
 
             size_t vertexOffset = 0;
             size_t indexOffset = 0;
@@ -165,9 +163,7 @@ void gtmaCreateModel(Model* model, const char* path) {
                 indexOffset += indexCount;
             }
 
-            model->totalPosCount += mesh->postnCount;
-            model->totalNormalCount += mesh->normlCount;
-            model->totalUVCount += mesh->texcoCount;
+            model->totalVertexCount += mesh->vertexCount;
             model->totalIndexCount += mesh->indexCount;
 
             if (gltfMesh->primitives_count > 0) {
@@ -195,7 +191,7 @@ void gtmaCreateModel(Model* model, const char* path) {
             glBindVertexArray(mesh->VAO);
 
             glBindBuffer(GL_ARRAY_BUFFER, mesh->VBO);
-            glBufferData(GL_ARRAY_BUFFER, mesh->postnCount * sizeof(Vertex), mesh->vertices, GL_STATIC_DRAW);
+            glBufferData(GL_ARRAY_BUFFER, mesh->vertexCount * sizeof(Vertex), mesh->vertices, GL_STATIC_DRAW);
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->EBO);
             glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh->indexCount * sizeof(unsigned int), mesh->indices, GL_STATIC_DRAW);
 

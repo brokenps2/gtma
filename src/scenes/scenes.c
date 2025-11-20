@@ -48,16 +48,13 @@ void gtmaInitScene(Scene* scene, Player* player, GameObjectPack* objectPack, Scr
     scene->screenPack = screenObjPack;
     scene->objPack = objectPack;
 
-    gtmaCreateScreenObject(&crosshair, "models/uitest.glb", "uitest", (vec2){((float)getWindowWidth() / 2), ((float)getWindowHeight() / 2)}, (vec2){10, 10}, 0, GTMA_FLAG_NONE);
+    gtmaCreateScreenObject(&crosshair, "images/crosshair.png", "uitest", (vec2){((float)getWindowWidth() / 2), ((float)getWindowHeight() / 2)}, (vec2){10, 10}, 0, GTMA_FLAG_NONE);
     gtmaCreateTexture(&regularCrosshair, "images/crosshair.png");
     gtmaCreateTexture(&highlightedCrosshair, "images/crosshairselected.png");
-    crosshair.model.meshes[0].texture.id = regularCrosshair.id;
 
-    gtmaCreateScreenObject(&pauseScreen, "models/uitest.glb", "pause", (vec2){((float)getWindowWidth()/2), ((float)getWindowHeight()/2)}, (vec2){400, 80}, 0, GTMA_FLAG_INVISIBLE);
-    gtmaChangeScreenObjectTexture(&pauseScreen, "images/paused.png");
+    gtmaCreateScreenObject(&pauseScreen, "images/paused.png", "pause", (vec2){((float)getWindowWidth()/2), ((float)getWindowHeight()/2)}, (vec2){400, 80}, 0, GTMA_FLAG_INVISIBLE);
 
-    gtmaCreateScreenObject(&loadingScreen, "models/uitest.glb", "loading", (vec2){(float)getWindowWidth()/2, (float)getWindowHeight() / 2}, (vec2){400, 60}, 0, GTMA_FLAG_INVISIBLE);
-    gtmaChangeScreenObjectTexture(&loadingScreen, "images/loading.png");
+    gtmaCreateScreenObject(&loadingScreen, "images/loading.png", "loading", (vec2){(float)getWindowWidth()/2, (float)getWindowHeight() / 2}, (vec2){400, 60}, 0, GTMA_FLAG_INVISIBLE);
 
     gtmaAddScreenObject(&crosshair, scene->screenPack);
     gtmaAddScreenObject(&loadingScreen, scene->screenPack);

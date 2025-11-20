@@ -47,9 +47,6 @@ void gtmaCreateCamera(Camera* cam, vec3 pos) {
     cam->yaw = 0.0f;
     cam->roll = 0.0f;
     cam->sensitivity = (float)cfgLookupInt("mouseSensitivity") / 100;
-
-    camPosLast = (vec2){0, 0};
-
 }
 
 void gtmaResizeCamera(Camera* cam, int width, int height) {

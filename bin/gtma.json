@@ -1,8 +1,8 @@
 {
   "resLoc": "res/",
   "title": "gtma",
-  "width": 800,
-  "height": 600,
+  "width": 1024,
+  "height": 768,
   "mouseSensitivity": 6,
   "fboScaleFactor": 0.5,
   "vertexSnap": false,

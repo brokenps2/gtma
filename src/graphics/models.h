@@ -15,9 +15,7 @@ typedef struct Mesh {
     Vertex* vertices;
     unsigned int* indices;
     int indexCount;
-    int postnCount;
-    int texcoCount;
-    int normlCount;
+    int vertexCount;
     Texture texture;
     unsigned int VAO, VBO, EBO;
     AABB aabb;
@@ -28,9 +26,7 @@ typedef struct Model {
     Mesh* meshes;
     int meshCount;
     int totalIndexCount;
-    int totalPosCount;
-    int totalUVCount;
-    int totalNormalCount;
+    int totalVertexCount;
     AABB aabb;
 } Model;
 
