@@ -4,10 +4,12 @@
 #include "../window/windowManager.h"
 #include "graphics/camera.h"
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_timer.h>
 #include <cglm/vec3.h>
+#include <math.h>
 
 float maxSpeed = 120.0f;
-float accel = 180.0f;
+float accel = 220.0f;
 float forwardVelocity = 0.0f;
 float backwardVelocity = 0.0f;
 float leftVelocity = 0.0f;
@@ -144,7 +146,11 @@ void gtmaCreatePlayer(Player* player, Camera *camera, int health, float collisio
     gtmaCreateSound(&jump, "audio/jump.wav", 0, 1, player->position);
 }
 
+int counter = 0;
+
 void gtmaPlayerMove(Player *player, GameObjectPack *objPack, bool flying) {
+
+    bool bob = false;
 
     proposedPosition[0] = player->position[0];
     proposedPosition[1] = player->position[1];
@@ -155,6 +161,7 @@ void gtmaPlayerMove(Player *player, GameObjectPack *objPack, bool flying) {
     if (isKeyDown(SDL_SCANCODE_W)) {
         forwardVelocity += accel * getDeltaTime();
         if (forwardVelocity > maxSpeed) forwardVelocity = maxSpeed;
+        bob = true;
     } else {
         forwardVelocity -= (accel / 1.5) * getDeltaTime();
         if (forwardVelocity < 0) forwardVelocity = 0;
@@ -163,6 +170,7 @@ void gtmaPlayerMove(Player *player, GameObjectPack *objPack, bool flying) {
     if (isKeyDown(SDL_SCANCODE_S)) {
         backwardVelocity += accel * getDeltaTime();
         if (backwardVelocity > maxSpeed) backwardVelocity = maxSpeed;
+        bob = true;
     } else {
         backwardVelocity -= (accel / 1.5) * getDeltaTime();
         if (backwardVelocity < 0) backwardVelocity = 0;
@@ -171,6 +179,7 @@ void gtmaPlayerMove(Player *player, GameObjectPack *objPack, bool flying) {
     if (isKeyDown(SDL_SCANCODE_A)) {
         leftVelocity += accel * getDeltaTime();
         if (leftVelocity > maxSpeed) leftVelocity = maxSpeed;
+        bob = true;
     } else {
         leftVelocity -= (accel / 1.5) * getDeltaTime();
         if (leftVelocity < 0) leftVelocity = 0;
@@ -179,6 +188,7 @@ void gtmaPlayerMove(Player *player, GameObjectPack *objPack, bool flying) {
     if (isKeyDown(SDL_SCANCODE_D)) {
         rightVelocity += accel * getDeltaTime();
         if (rightVelocity > maxSpeed) rightVelocity = maxSpeed;
+        bob = true;
     } else {
         rightVelocity -= (accel / 1.5) * getDeltaTime();
         if (rightVelocity < 0) rightVelocity = 0;

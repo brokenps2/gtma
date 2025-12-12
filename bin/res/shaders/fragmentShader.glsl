@@ -9,29 +9,14 @@ in float visibility;
 
 uniform sampler2D tex0;
 uniform bool lightEnabled;
-
 uniform bool frame = false;
-
 uniform bool ditherEnabled = true;
-
 uniform vec3 clearColor = vec3(0, 0, 0);
-
 uniform vec2 screenRes = vec2(640, 480);
 uniform vec2 frameRes = vec2(640, 480);
-
 uniform bool ui = false;
-
-uniform bool text = false;
-
-uniform vec3 textColor;
-
 uniform float fboBrightness = 1;
-
-uniform float fade = 0.0; // 0.0 = visible, 1.0 = black
-uniform bool startFadeOut = false;
-        bool fadingIn = false;
-        bool fadingOut = true;
-uniform float deltaTime = 1;
+uniform float meshBrightness = 1;
 
 vec3 greyscale(vec4 color) {
     vec3 tcol = vec3(color.r, color.g, color.b);
@@ -76,11 +61,6 @@ vec4 dither(vec4 color, int numLevels) {
 
 void main() {
 
-    if (text) {
-        fragColor = vec4(textColor, 1.0);
-        return;
-    }
-
     if(frame) {
         fragColor = texture(tex0, outTexCoord) * vec4(fboBrightness);
         return;
@@ -98,9 +78,9 @@ void main() {
     vec4 skyColor = vec4(clearColor.x/256, clearColor.y/256, clearColor.z/256, 1);
 
     if(lightEnabled) {
-        fragColor = mix(skyColor, texture(tex0, outTexCoord) * vec4(outColor, 1.0) * vec4(outLightColor, 1.0), visibility);
+        fragColor = mix(skyColor, texture(tex0, outTexCoord) * vec4(outColor, 1.0) * vec4(outLightColor, 1.0), visibility) * vec4(meshBrightness);
     } else {
-        fragColor = texture(tex0, outTexCoord) * vec4(outColor, 1.0);
+        fragColor = texture(tex0, outTexCoord) * vec4(outColor, 1.0) * vec4(meshBrightness);
         fragColor = mix(skyColor, fragColor, 1);
     }
 

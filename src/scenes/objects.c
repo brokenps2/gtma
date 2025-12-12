@@ -32,11 +32,124 @@ void gtmaCreateGameObject(GameObject* object, const char* mdlPath, const char* n
         calculateMeshAABB(&object->model.meshes[i], object->scale, object->position);
     }
 
-    object->flags = 0;
     object->flags |= flags;
 
     object->inPack = false;
 }
+
+void gtmaCreateText(ScreenObject* object, const char* content, const char* fontPath, vec2 position, vec2 size, int direction, unsigned int flags) {
+
+    int textLen = strlen(content);
+
+    Model model;
+    model.meshCount = textLen;
+    model.meshes = (Mesh*)malloc(sizeof(Mesh) * textLen);
+    Texture tex;
+    gtmaCreateTexture(&tex, fontPath);
+
+    float cellW = 1.0f / 18;
+    float cellH = 1.0f / 15;
+
+    for(int i = 0; i < textLen; i++) {
+
+        char c = content[i];
+        int ascii = (int)c;
+
+        int gx = (ascii) % 18;
+        int gy = (ascii) / 15;
+
+        float u0 = gx * cellW;
+        float v0 = gy * cellH;
+        float u1 = u0 + cellW;
+        float v1 = v0 + cellH;
+
+        //float u0 = 0.0f, v0 = 0.0f;
+        //float u1 = 1.0f, v1 = 1.0f;
+
+        Mesh* mesh = &model.meshes[i];
+        mesh->vertexCount = 4;
+        mesh->indexCount = 6;
+        mesh->texture = tex;
+        mesh->flags = flags;
+
+        mesh->vertices = (Vertex*)malloc(mesh->vertexCount * sizeof(Vertex));
+        mesh->indices = (unsigned int*)malloc(mesh->indexCount * sizeof(unsigned int));
+
+        float x = position[0] + (i * size[0] * direction);
+        float y = position[1];
+
+        mesh->vertices[0] = (Vertex){
+            {x + size[0], y + size[1], 0},  // position
+            {0, 0, 1},                      // normal
+            {1, 1, 1},                       // color (white)
+            {u1, v0},                        // texCoord
+            false                             // colored
+        };
+        mesh->vertices[1] = (Vertex){
+            {x + size[0], y, 0},
+            {0, 0, 1},
+            {1, 1, 1},
+            {u1, v1},
+            false
+        };
+        mesh->vertices[2] = (Vertex){
+            {x, y + size[1], 0},
+            {0, 0, 1},
+            {1, 1, 1},
+            {u0, v0},
+            false
+        };
+        mesh->vertices[3] = (Vertex){
+            {x, y, 0},
+            {0, 0, 1},
+            {1, 1, 1},
+            {u0, v1},
+            false
+        };
+
+        unsigned int idx[] = {0,1,3, 0,3,2};
+        memcpy(mesh->indices, idx, sizeof(idx));
+
+        // --- OpenGL Setup ---
+        glGenVertexArrays(1, &mesh->VAO);
+        glGenBuffers(1, &mesh->VBO);
+        glGenBuffers(1, &mesh->EBO);
+
+        glBindVertexArray(mesh->VAO);
+
+        glBindBuffer(GL_ARRAY_BUFFER, mesh->VBO);
+        glBufferData(GL_ARRAY_BUFFER,
+            mesh->vertexCount * sizeof(Vertex), mesh->vertices, GL_STATIC_DRAW);
+
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->EBO);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER,
+            mesh->indexCount * sizeof(unsigned int), mesh->indices, GL_STATIC_DRAW);
+
+        // Attributes: position, normal, texCoord
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, position));
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
+        glEnableVertexAttribArray(1);
+        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, texCoord));
+        glEnableVertexAttribArray(2);
+
+        glBindVertexArray(0);
+    }
+
+    object->model = model;
+
+    object->position[0] = position[0];
+    object->position[1] = position[1];
+
+    object->size[0] = size[0];
+    object->size[1] = size[1];
+
+    object->rotation = 0.0f;
+    object->inPack = false;
+
+    object->flags = flags;
+}
+
 
 void gtmaCreateScreenObject(ScreenObject* object, const char* texPath, const char* name, vec2 position, vec2 size, float rotation, unsigned int flags) {
 
@@ -114,7 +227,6 @@ void gtmaCreateScreenObject(ScreenObject* object, const char* texPath, const cha
 
     object->inPack = false;
     
-    object->flags = 0;
     object->flags |= flags;
 }
 

@@ -151,7 +151,7 @@ bool updatePlayerPhysics(GameObjectPack* objPack, Player* player) {
         for(int j = 0; j < obj->model.meshCount; j++) {
 
             Mesh mesh = obj->model.meshes[j];
-            if(testAABBIntersection(mesh.aabb, player->aabb) && !(mesh.flags & GTMA_FLAG_NOCOLLIDE)) {
+            if(testAABBIntersection(mesh.aabb, player->aabb) && !(obj->flags & GTMA_FLAG_NOCOLLIDE)) {
 
                 if (obj->flags & GTMA_FLAG_PICKABLE) {
                     player->currentCollisions = realloc(player->currentCollisions, (player->currentCollisionCount + 1) * sizeof(GameObject*));

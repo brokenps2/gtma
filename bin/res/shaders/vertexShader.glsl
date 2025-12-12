@@ -21,20 +21,11 @@ out vec3 outLightColor;
 out float visibility;
 
 uniform bool lightEnabled;
-
 uniform bool frame = false;
-
 uniform bool ui = false;
-
-uniform bool text = false;
-
 uniform vec3 viewPos;
-
 uniform float fogLevel = 0.0022f;
-
 uniform float ambientLevel = 0.02;
-
-vec3 ambient = vec3(ambientLevel);
 
 uniform mat4 camCross;
 uniform mat4 viewMatrix;
@@ -45,6 +36,8 @@ uniform mat4 orthoMatrix;
 uniform vec2 screenRes = vec2(640, 480);
 uniform vec2 frameRes;
 uniform bool vertexSnap = true;
+
+vec3 ambient = vec3(ambientLevel);
 
 vec3 calcPointLight(PointLight light) {
 
@@ -108,11 +101,6 @@ void main() {
     if(ui) {
         gl_Position = orthoMatrix * transMatrix * vec4(position, 1.0);
         outTexCoord = texCoord;
-        return;
-    }
-
-    if(text) {
-        gl_Position = orthoMatrix * vec4(position.xy, 0, 1);
         return;
     }
 

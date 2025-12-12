@@ -39,7 +39,7 @@ static PointLight light3;
 static PointLight light4;
 static PointLight light5;
 
-static float brightness = 1.65f;
+static float brightness = 1.35f;
 
 static bool returning = false;
 
@@ -64,11 +64,11 @@ static void initScene() {
     gtmaSetRenderCamera(&camera);
     gtmaCreatePlayer(&player, &camera, 100, 6, 10);
 
-    gtmaCreatePointLight(&light1, -300, 300, 300, brightness, brightness, brightness, GTMA_FLAG_SUNMODE);
-    gtmaCreatePointLight(&light2, 300, 300, -300, brightness, brightness, brightness, GTMA_FLAG_SUNMODE);
-    gtmaCreatePointLight(&light3, -300, 300, -300, brightness/1.4, brightness/1.4, brightness/1.4, GTMA_FLAG_SUNMODE);
-    gtmaCreatePointLight(&light4, 300, 300, 300, brightness, brightness, brightness, GTMA_FLAG_SUNMODE);
-    gtmaCreatePointLight(&light5, 0, -300, 0, brightness*1.3, brightness*1.3, brightness*1.3, GTMA_FLAG_SUNMODE);
+    gtmaCreatePointLight(&light1, (vec3){24, 22, 37}, (vec3){brightness, brightness, brightness}, GTMA_FLAG_NONE); light1.range = 0.1;
+    gtmaCreatePointLight(&light2, (vec3){-24, 22, 37}, (vec3){brightness, brightness, brightness}, GTMA_FLAG_NONE); light2.range = light1.range;
+    gtmaCreatePointLight(&light3, (vec3){24, 22, -37}, (vec3){brightness, brightness, brightness}, GTMA_FLAG_NONE); light3.range = light1.range;
+    gtmaCreatePointLight(&light4, (vec3){-24, 22, -37}, (vec3){brightness, brightness, brightness}, GTMA_FLAG_NONE); light4.range = light1.range;
+    gtmaCreatePointLight(&light5, (vec3){-74, 18, -35}, (vec3){brightness, brightness, brightness}, GTMA_FLAG_NONE); light5.range = light1.range;
 
     gtmaAddGameObject(&map, &sceneObjectPack);
     gtmaAddGameObject(&deanWarp, &sceneObjectPack);
@@ -110,12 +110,10 @@ static void updateScene() {
 
     if(isLeftPressed()) {
         if(strcmp(pickObject(&sceneObjectPack, &camera), "deanWarp") == 0) {
+            gtmaPlayDoorSound();
             switchScene(&deansGarden);
         }
     }
-    
-
-    gtmaUpdateAudio(camera.position, camera.direction);
 
     //misc
     if(isKeyPressed(SDL_SCANCODE_P)) spectating = !spectating;

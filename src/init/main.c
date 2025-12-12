@@ -7,7 +7,9 @@
 #include "../window/windowManager.h"
 #include "../window/events.h"
 #include "../util/config.h"
+#include "../util/diagnostics.h"
 #include <time.h>
+#include <unistd.h>
 
 Scene* currentScene = NULL;
 
@@ -30,6 +32,11 @@ int main(int argc, char* argv[]) {
     gtmaInitWindow();
     gtmaInitAudio();
     gtmaInitRenderer();
+    gtmaPrintSystemInfo();
+
+    sleep(1);
+    printf("\n");
+
     currentScene->init();
 
     while(gtmaIsRunning()) {
@@ -43,6 +50,8 @@ int main(int argc, char* argv[]) {
     gtmaCloseAudio();
     gtmaDestroyConfig();
     gtmaCloseWindow();
+
+    printf("\n");
 
     return 0;
 }

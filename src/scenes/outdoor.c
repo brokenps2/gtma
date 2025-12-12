@@ -50,8 +50,8 @@ static void initScene() {
     gtmaLoadPointLightPack(&sceneLightPack);
     gtmaLoadScreenObjectPack(&sceneScreenPack);
 
-    gtmaCreateGameObject(&map, "models/stoneland.glb", "map", (vec3){0, 0, 0}, (vec3){1.5, 1, 1.5}, (vec3){0, 0, 0}, GTMA_FLAG_VERTEX_COLLIDE);
-    map.model.meshes[map.model.meshCount-1].flags |= GTMA_FLAG_NOCOLLIDE;
+    gtmaCreateGameObject(&map, "models/terrain.glb", "map", (vec3){0, 0, 0}, (vec3){44.5, 40, 44.5}, (vec3){0, 0, 0}, GTMA_FLAG_VERTEX_COLLIDE);
+    //map.model.meshes[map.model.meshCount-1].flags |= GTMA_FLAG_NOCOLLIDE;
     
     gtmaCreateGameObject(&sky, "models/sky.glb", "sky", (vec3){0, 0, 0}, (vec3){18, 18, 18}, (vec3){0, 0, 0}, GTMA_FLAG_NONE);
     sky.model.meshes[0].flags |= GTMA_FLAG_UNLIT;
@@ -67,9 +67,9 @@ static void initScene() {
     gtmaSetRenderCamera(&camera);
     gtmaCreatePlayer(&player, &camera, 100, 6, 10);
 
-    gtmaCreatePointLight(&light1, -300, 300, 300, brightness, brightness, brightness, GTMA_FLAG_SUNMODE);
-    gtmaCreatePointLight(&light2, 300, 300, 0, brightness, brightness, brightness, GTMA_FLAG_SUNMODE);
-    gtmaCreatePointLight(&light3, -300, 300, -300, brightness, brightness, brightness, GTMA_FLAG_SUNMODE);
+    gtmaCreatePointLight(&light1, (vec3){-300, 300, 300}, (vec3){brightness, brightness, brightness}, GTMA_FLAG_SUNMODE);
+    gtmaCreatePointLight(&light2, (vec3){300, 300, 0}, (vec3){brightness, brightness, brightness}, GTMA_FLAG_SUNMODE);
+    gtmaCreatePointLight(&light3, (vec3){-300, 300, -300}, (vec3){brightness, brightness, brightness}, GTMA_FLAG_SUNMODE);
 
     gtmaAddGameObject(&map, &sceneObjectPack);
     gtmaAddGameObject(&sky, &sceneObjectPack);
@@ -114,8 +114,6 @@ static void updateScene() {
     
     //object transforms
     desk.rotation[1] += 150 * getDeltaTime();
-
-    gtmaUpdateAudio(camera.position, camera.direction);
 
     if(isLeftPressed()) {
         if(strcmp(pickObject(&sceneObjectPack, &camera), "desk") == 0) {

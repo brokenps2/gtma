@@ -39,9 +39,8 @@ void gtmaSetFloat(Shader* shader, const char* name, float value);
 void gtmaSetMatrix(Shader* shader, const char* name, mat4 value);
 void gtmaSetVec3(Shader* shader, const char* name, vec3 value);
 void gtmaSetVec2(Shader* shader, const char* name, vec2 value);
-
-void gtmaCreatePointLight(PointLight* light, float x, float y, float z, float r, float g, float b, unsigned int flags);
-
+void gtmaCreatePointLight(PointLight* light, vec3 position, vec3 color, unsigned int flags);
+void gtmaCreateAndAddPointLight(PointLightPack* lightPack, vec3 position, vec3 color, unsigned int flags);
 void gtmaRemoveLightID(PointLightPack* lightPack, int id);
 void gtmaAddLight(PointLight* light, PointLightPack* lightPack);
 

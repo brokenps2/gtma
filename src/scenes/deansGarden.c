@@ -64,7 +64,7 @@ static void initScene() {
         if((randomX > -120 && randomX < 33 && randomZ > -19 && randomZ < 83) || (randomX > -32 && randomX < 42 && randomZ > -111 && randomZ < -58)) {
             continue;
         }
-        gtmaCreateAndAddGameObject(&sceneObjectPack, "models/barney.glb", "tree", (vec3){randomX, 7, randomZ}, (vec3){0.7, 0.7, 0.7}, (vec3){0, 90, 0}, GTMA_FLAG_BILLBOARD | GTMA_FLAG_NOCOLLIDE);
+        gtmaCreateAndAddGameObject(&sceneObjectPack, "models/tree.glb", "tree", (vec3){randomX, 7, randomZ}, (vec3){4, 4, 4}, (vec3){0, 90, 0}, GTMA_FLAG_BILLBOARD | GTMA_FLAG_NOCOLLIDE);
     }
 
     gtmaCreateTexture(&blue, "images/gradientsky.png");
@@ -88,9 +88,9 @@ static void initScene() {
     gtmaCreatePlayer(&player, &camera, 100, 6, 7);
     gtmaSetRenderCamera(&camera);
 
-    gtmaCreatePointLight(&light1, -300, 300, 300, brightness, brightness, brightness, GTMA_FLAG_SUNMODE);
-    gtmaCreatePointLight(&light2, 300, 300, 0, brightness, brightness, brightness, GTMA_FLAG_SUNMODE);
-    gtmaCreatePointLight(&light3, -300, 300, -300, brightness, brightness, brightness, GTMA_FLAG_SUNMODE);
+    gtmaCreatePointLight(&light1, (vec3){-300, 300, 300}, (vec3){brightness, brightness, brightness}, GTMA_FLAG_SUNMODE);
+    gtmaCreatePointLight(&light2, (vec3){300, 300, 0}, (vec3){brightness, brightness, brightness}, GTMA_FLAG_SUNMODE);
+    gtmaCreatePointLight(&light3, (vec3){-300, 300, -300}, (vec3){brightness, brightness, brightness}, GTMA_FLAG_SUNMODE);
 
 
     gtmaAddGameObject(&stoneland, &sceneObjectPack);
@@ -125,6 +125,7 @@ static void updateScene() {
     }
 
     if(camera.position[1] < -8) {
+        gtmaBeep();
         switchScene(&outdoorScene);
     }
 
@@ -156,11 +157,10 @@ static void updateScene() {
     printf("\r%f %f %f", camera.position[0], camera.position[1], camera.position[2]);
     fflush(stdout);
     
-    gtmaUpdateAudio(camera.position, camera.direction);
-
     if(isLeftPressed()) {
         if(strcmp(pickObject(&sceneObjectPack, &camera), "hallWarp") == 0) {
             sceneIndex = 0;
+            gtmaPlayDoorSound();
             switchScene(&deansHallway);
         }
     }

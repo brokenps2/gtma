@@ -184,6 +184,8 @@ void gtmaCreateModel(Model* model, const char* path) {
                 }
             }
 
+            mesh->brightness = 1;
+
             glGenVertexArrays(1, &mesh->VAO);
             glGenBuffers(1, &mesh->VBO);
             glGenBuffers(1, &mesh->EBO);
@@ -201,7 +203,7 @@ void gtmaCreateModel(Model* model, const char* path) {
             glEnableVertexAttribArray(1);
             glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, texCoord));
             glEnableVertexAttribArray(2);
-            glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, color));
+            glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, color));
             glEnableVertexAttribArray(3);
 
             model->meshes[i] = *mesh;

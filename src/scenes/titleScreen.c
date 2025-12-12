@@ -37,6 +37,8 @@ static GameObject plane2;
 
 static ScreenObject logo;
 
+static ScreenObject text;
+
 static PointLight light;
 
 static Texture titlescreenplanetex;
@@ -70,7 +72,12 @@ static void initScene() {
 
     gtmaCreateScreenObject(&logo, "images/gtmalogo.png", "logo", (vec2){(float)getWindowWidth()/2, (float)getWindowHeight()/2 - 140}, (vec2){280, 60}, 0, GTMA_FLAG_NONE);
 
-    gtmaCreatePointLight(&light, camPos[0], camPos[1], camPos[2], brightness, brightness, brightness, GTMA_FLAG_NONE);
+    gtmaCreatePointLight(&light, (vec3){camPos[0], camPos[1], camPos[2]}, (vec3){brightness, brightness, brightness}, GTMA_FLAG_NONE);
+
+
+    gtmaCreateText(&text, "efghijklmnop", "images/font.png", (vec2){0, 16}, (vec2){5,8}, 1, GTMA_FLAG_NONE);
+
+
 
     gtmaCreateCamera(&camera, camPos);
     gtmaSetRenderCamera(&camera);
@@ -79,16 +86,19 @@ static void initScene() {
     gtmaAddGameObject(&sky, &sceneObjectPack);
     gtmaAddGameObject(&plane2, &sceneObjectPack);
     gtmaAddScreenObject(&logo, &sceneScreenPack);
+    gtmaAddScreenObject(&text, &sceneScreenPack);
     gtmaAddLight(&light, &sceneLightPack);
 
     gtmaSetClearColor(9, 8, 22);
 
-    gtmaSetFogLevel(0.095);
+    gtmaSetFogLevel(0.2);
 
     gtmaCameraMatrix(&camera, 0.1f, 450.0f, gtmaGetShader());
 
     gtmaInitScene(&titleScreen, &player, &sceneObjectPack, &sceneScreenPack, (vec3){0, 0.4, -0.35});
     gtmaToggleCrosshair(&titleScreen, false);
+
+    gtmaBeep();
 
 
 }
@@ -128,14 +138,18 @@ static void updateScene() {
         sceneIndex = 0;
     } else if(isKeyPressed(SDL_SCANCODE_2)) {
         logo.flags |= GTMA_FLAG_INVISIBLE;
-        sceneIndex = 1;
+        SDL_SetRelativeMouseMode(true);
+        gtmaBeep();
+        switchScene(&outdoorScene);
     } else if(isKeyPressed(SDL_SCANCODE_3)) {
         logo.flags |= GTMA_FLAG_INVISIBLE;
         SDL_SetRelativeMouseMode(true);
+        gtmaBeep();
         switchScene(&deansHallway);
     } else if(isKeyPressed(SDL_SCANCODE_4)) {
         logo.flags |= GTMA_FLAG_INVISIBLE;
         SDL_SetRelativeMouseMode(true);
+        gtmaBeep();
         switchScene(&circleHallway);
     } else if(isKeyPressed(SDL_SCANCODE_5)) {
         logo.flags |= GTMA_FLAG_INVISIBLE;
@@ -161,8 +175,6 @@ static void updateScene() {
     printf("\r%f %f %f", camera.position[0], camera.position[1], camera.position[2]);
     fflush(stdout);
     
-    gtmaUpdateAudio(camera.position, camera.direction);
-
     if(isKeyPressed(SDL_SCANCODE_P)) spectating = !spectating;
 
 

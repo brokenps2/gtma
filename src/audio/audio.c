@@ -104,27 +104,21 @@ void gtmaChangePitch(Sound* sound, float value) {
 void gtmaPlaySound(Sound* sound) {
     int state;
     alGetSourcei(sound->sourceID, AL_SOURCE_STATE, &state);
-    if(state == AL_STOPPED) {
-        sound->isPlaying = false;
-    }
 
-    if(!sound->isPlaying) {
+    if(state != AL_PLAYING) {
+        alSourceRewind(sound->sourceID);
         alSourcePlay(sound->sourceID);
-        sound->isPlaying = true;
     }
 }
 
 void gtmaPlaySoundFrom(Sound* sound, int seconds) {
+    alSourceStop(sound->sourceID);
     alSourcei(sound->sourceID, AL_SEC_OFFSET, seconds);
     int state;
     alGetSourcei(sound->sourceID, AL_SOURCE_STATE, &state);
-    if(state == AL_STOPPED) {
-        sound->isPlaying = false;
-    }
-
-    if(!sound->isPlaying) {
+    if(state != AL_PLAYING) {
+        alSourceRewind(sound->sourceID);
         alSourcePlay(sound->sourceID);
-        sound->isPlaying = true;
     }
 }
 

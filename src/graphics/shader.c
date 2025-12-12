@@ -1,5 +1,7 @@
 #include <GL/glew.h>
 #include <cglm/cglm.h>
+#include <cglm/vec3.h>
+#include <locale.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -94,14 +96,9 @@ void gtmaCreateScreenShader(Shader* shader) {
 
 }
 
-void gtmaCreatePointLight(PointLight* light, float x, float y, float z, float r, float g, float b, unsigned int flags) {
-    light->position[0] = x;
-    light->position[1] = y;
-    light->position[2] = z;
-
-    light->color[0] = r;
-    light->color[1] = g;
-    light->color[2] = b;
+void gtmaCreatePointLight(PointLight* light, vec3 position, vec3 color, unsigned int flags) {
+    glm_vec3_copy(position, light->position);
+    glm_vec3_copy(color, light->color);
 
     light->range = 1;
 
@@ -125,6 +122,14 @@ void gtmaAddLight(PointLight* light, PointLightPack* lightPack) {
         lightPack->lightCount++;
         light->inPack = true;
     }
+}
+
+void gtmaCreateAndAddPointLight(PointLightPack* lightPack, vec3 position, vec3 color, unsigned int flags) {
+    PointLight* newLight = malloc(sizeof(PointLight));
+
+    gtmaCreatePointLight(newLight, position, color, flags);
+
+    gtmaAddLight(newLight, lightPack);
 }
 
 void gtmaRemoveLightID(PointLightPack* lightPack, int id) {

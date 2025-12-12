@@ -7,6 +7,7 @@
 #include "../window/events.h"
 #include "../graphics/renderer.h"
 #include "../window/windowManager.h"
+#include "../audio/audio.h"
 #include <SDL2/SDL_mouse.h>
 #include <cglm/vec3.h>
 #include <stdbool.h>
@@ -20,6 +21,9 @@ static Texture regularCrosshair;
 static Texture highlightedCrosshair;
 static ScreenObject loadingScreen;
 static ScreenObject pauseScreen;
+
+static Sound beep;
+static Sound doorSound;
 
 bool paused = false;
 
@@ -60,6 +64,12 @@ void gtmaInitScene(Scene* scene, Player* player, GameObjectPack* objectPack, Scr
     gtmaAddScreenObject(&loadingScreen, scene->screenPack);
     gtmaAddScreenObject(&pauseScreen, scene->screenPack);
 
+    gtmaCreateSound(&beep, "audio/beep.wav", false, 1, player->position);
+    gtmaStopSound(&beep);
+
+    gtmaCreateSound(&doorSound, "audio/door.wav", false, 1, player->position);
+    gtmaStopSound(&doorSound);
+
     glm_vec3_copy(spawnpoint, scene->spawnpoint);
 }
 
@@ -67,8 +77,18 @@ void gtmaSetEditMode(int set) {
     editMode = set;
 }
 
+void gtmaPlayDoorSound() {
+    gtmaStopSound(&doorSound);
+    gtmaPlaySoundFrom(&doorSound, 0);
+}
+
+void gtmaBeep() {
+    gtmaStopSound(&beep);
+    gtmaPlaySoundFrom(&beep, 0);
+}
+
 static float transitionTimer = 0.0f;
-static float transitionDuration = 1.0f; // seconds
+static float transitionDuration = 0.5f; // seconds
 static bool transitioning = false;
 Scene* nextScene;
 
@@ -105,7 +125,7 @@ bool gtmaUpdateScene(Scene* scene, Player* player) {
     if (paused) {
         if (isKeyPressed(SDL_SCANCODE_ESCAPE)) {
             paused = false;
-            pauseScreen.flags |= ~GTMA_FLAG_INVISIBLE;
+            pauseScreen.flags |= GTMA_FLAG_INVISIBLE;
             SDL_SetRelativeMouseMode(true);
             gtmaSetFBOBrightness(1);
         }
@@ -114,7 +134,7 @@ bool gtmaUpdateScene(Scene* scene, Player* player) {
         }
         if (isKeyPressed(SDL_SCANCODE_T)) {
             paused = false;
-            pauseScreen.flags |= ~GTMA_FLAG_INVISIBLE;
+            pauseScreen.flags &= ~GTMA_FLAG_INVISIBLE;
             SDL_SetRelativeMouseMode(true);
             gtmaSetFBOBrightness(1);
             switchScene(&titleScreen);
@@ -136,6 +156,11 @@ bool gtmaUpdateScene(Scene* scene, Player* player) {
     if(player->camera->position[1] < -200) {
         player->health -= 200 * getDeltaTime();
     }
+
+    glm_vec3_copy(player->position, doorSound.position);
+    glm_vec3_copy(player->position, beep.position);
+
+    gtmaUpdateAudio(player->position, player->camera->direction);
 
     bool isHighlighted = strcmp(pickObject(scene->objPack, player->camera), "none") != 0;
 

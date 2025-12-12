@@ -177,10 +177,11 @@ void gtmaRenderFBO() {
     gtmaSetBool(&shader, "frame", false);
 }
 
-void gtmaRender() {
+void gtmaRenderScene() {
 
     renderWidth = getWindowWidth() * fboScaleFactor;
     renderHeight = getWindowHeight() * fboScaleFactor;
+
 
     if(lightPack != NULL) {
         for(int i = 0; i < lightPack->lightCount; i++) {
@@ -236,8 +237,6 @@ void gtmaRender() {
         }
     }
 
-    glBindFramebuffer(GL_FRAMEBUFFER, FBO);
-
     if (renderWidth != lastWidth || renderHeight != lastHeight) {
         resizeFBO(renderWidth, renderHeight);
         lastWidth = renderWidth;
@@ -279,6 +278,7 @@ void gtmaRender() {
                 gtmaSetBool(&shader, "ui", false);
                 gtmaSetMatrix(&shader, "transMatrix", transformationMatrix);
                 gtmaSetBool(&shader, "lightEnabled", !(mesh.flags & GTMA_FLAG_UNLIT));
+                gtmaSetFloat(&shader, "meshBrightness", mesh.brightness);
                 gtmaSetVec3(&shader, "viewPos", renderCamera->renderPos);
                 gtmaSetVec3(&shader, "clearColor", clearColor);
                 gtmaSetFloat(&shader, "fogLevel", fogLevel);
@@ -294,14 +294,15 @@ void gtmaRender() {
                 glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);
                 
             }
-
         }
     }
+}
 
+void gtmaRender() {
+    glBindFramebuffer(GL_FRAMEBUFFER, FBO);
+    gtmaRenderScene();
     gtmaRenderFBO();
-
     gtmaRenderScreen();
-
 }
 
 

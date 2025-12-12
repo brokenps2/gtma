@@ -64,15 +64,15 @@ static void initScene() {
     gtmaSetRenderCamera(&camera);
     gtmaCreatePlayer(&player, &camera, 100, 10, 6);
 
-    gtmaCreatePointLight(&light0, 134, 70, -100, brightness, brightness, brightness, GTMA_FLAG_SUNMODE);
-    gtmaCreatePointLight(&light1, 0, 70, -100, brightness, brightness, brightness, GTMA_FLAG_SUNMODE);
-    gtmaCreatePointLight(&light2, -115, 70, -100, brightness, brightness, brightness, GTMA_FLAG_SUNMODE);
-    gtmaCreatePointLight(&light3, -112, 60, 220, brightness, brightness, brightness, GTMA_FLAG_SUNMODE); 
-    gtmaCreatePointLight(&light4, 0, 60, 220, brightness, brightness, brightness, GTMA_FLAG_SUNMODE);
-    gtmaCreatePointLight(&light5, 120, 60, 220, brightness, brightness, brightness, GTMA_FLAG_SUNMODE);
-    gtmaCreatePointLight(&light6, 0, 56, 0, brightness, brightness, brightness, GTMA_FLAG_SUNMODE);
+    gtmaCreatePointLight(&light0, (vec3){134, 70, -100}, (vec3){brightness, brightness, brightness}, GTMA_FLAG_SUNMODE);
+    gtmaCreatePointLight(&light1, (vec3){0, 70, -100}, (vec3){brightness, brightness, brightness}, GTMA_FLAG_SUNMODE);
+    gtmaCreatePointLight(&light2, (vec3){-115, 70, -100}, (vec3){brightness, brightness, brightness}, GTMA_FLAG_SUNMODE);
+    gtmaCreatePointLight(&light3, (vec3){-112, 60, 220}, (vec3){brightness, brightness, brightness}, GTMA_FLAG_SUNMODE); 
+    gtmaCreatePointLight(&light4, (vec3){0, 60, 220}, (vec3){brightness, brightness, brightness}, GTMA_FLAG_SUNMODE);
+    gtmaCreatePointLight(&light5, (vec3){120, 60, 220}, (vec3){brightness, brightness, brightness}, GTMA_FLAG_SUNMODE);
+    gtmaCreatePointLight(&light6, (vec3){0, 56, 0}, (vec3){brightness, brightness, brightness}, GTMA_FLAG_SUNMODE);
 
-    gtmaCreatePointLight(&lamp, camPos[0], camPos[1], camPos[2], brightness*4, brightness*4, brightness*4, GTMA_FLAG_SUNMODE);
+    gtmaCreatePointLight(&lamp, (vec3){camPos[0], camPos[1], camPos[2]}, (vec3){brightness*4, brightness*4, brightness*4}, GTMA_FLAG_SUNMODE);
     lamp.range = 24 * lamp.range;
 
     gtmaAddGameObject(&map, &sceneObjectPack);

@@ -79,14 +79,14 @@ void initScene() {
     gtmaSetRenderCamera(&camera);
     gtmaCreatePlayer(&player, &camera, 100, 10, 6);
 
-    gtmaCreatePointLight(&light1, -25, -4, 0, brightness/2, brightness/2, brightness/2, GTMA_FLAG_NONE);
-    gtmaCreatePointLight(&light2, 0, 12, 0, brightness, brightness, brightness, GTMA_FLAG_NONE);
-    gtmaCreatePointLight(&light3, 12, 2, 0, brightness, brightness, brightness, GTMA_FLAG_NONE);
+    gtmaCreatePointLight(&light1, (vec3){-25, -4, 0}, (vec3){brightness/2, brightness/2, brightness/2}, GTMA_FLAG_NONE);
+    gtmaCreatePointLight(&light2, (vec3){0, 12, 0}, (vec3){brightness, brightness, brightness}, GTMA_FLAG_NONE);
+    gtmaCreatePointLight(&light3, (vec3){12, 2, 0}, (vec3){brightness, brightness, brightness}, GTMA_FLAG_NONE);
 
-    gtmaCreatePointLight(&rightHallLight, 40, 3, 74, brightness/1.2, brightness/1.2, brightness/1.2, GTMA_FLAG_NONE);
-    gtmaCreatePointLight(&leftHallLight, 50, 7, -95, brightness/1.3, brightness/1.3, brightness/1.3, GTMA_FLAG_NONE);
+    gtmaCreatePointLight(&rightHallLight, (vec3){40, 3, 74}, (vec3){brightness/1.2, brightness/1.2, brightness/1.2}, GTMA_FLAG_NONE);
+    gtmaCreatePointLight(&leftHallLight, (vec3){50, 7, -95}, (vec3){brightness/1.3, brightness/1.3, brightness/1.3}, GTMA_FLAG_NONE);
 
-    gtmaCreatePointLight(&lamp, camPos[0], camPos[1], camPos[2], brightness, brightness, brightness, GTMA_FLAG_NONE);
+    gtmaCreatePointLight(&lamp, (vec3){camPos[0], camPos[1], camPos[2]}, (vec3){brightness, brightness, brightness}, GTMA_FLAG_NONE);
 
     gtmaAddGameObject(&map, &sceneObjectPack);
     gtmaAddGameObject(&exitSign, &sceneObjectPack);

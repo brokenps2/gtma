@@ -16,6 +16,7 @@ typedef struct Mesh {
     unsigned int* indices;
     int indexCount;
     int vertexCount;
+    float brightness;
     Texture texture;
     unsigned int VAO, VBO, EBO;
     AABB aabb;

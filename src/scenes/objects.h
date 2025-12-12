@@ -9,7 +9,8 @@ typedef enum {
     GTMA_FLAG_INVISIBLE = 1 << 4,
     GTMA_FLAG_SUNMODE = 1 << 5,
     GTMA_FLAG_NOCOLLIDE = 1 << 6,
-    GTMA_FLAG_UNLIT = 1 << 7
+    GTMA_FLAG_UNLIT = 1 << 7,
+    GTMA_FLAG_TEXT = 1 << 8
 } SceneComponentFlags;
 
 typedef struct GameObject {
@@ -51,7 +52,7 @@ void gtmaCreateGameObjectPack(GameObjectPack* pack);
 void gtmaDeleteGameObject(GameObject* object);
 void gtmaLoadTransformationMatrix(mat4* matrix, GameObject* object);
 void gtmaAddGameObject(GameObject* object, GameObjectPack* objPack);
-void gtmaCreateTextObject(ScreenObject* object, const char* text, vec2 position, vec3 color, float scale);
+void gtmaCreateText(ScreenObject* object, const char* content, const char* fontPath, vec2 position, vec2 size, int direction, unsigned int flags);
 void gtmaCreateAndAddGameObject(GameObjectPack* objPack, const char* mdlPath, const char* name, vec3 position, vec3 scale, vec3 rotation, unsigned int flags);
 void gtmaRemoveGameObjectName(GameObjectPack* objPack, const char* name);
 void gtmaRemoveGameObjectID(GameObjectPack* objPack, int id);
