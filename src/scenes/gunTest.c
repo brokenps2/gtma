@@ -1,3 +1,4 @@
+
 #include "../graphics/camera.h"
 #include "../graphics/shader.h"
 #include "../physics/physics.h"
@@ -8,24 +9,25 @@
 #include "../objects/player.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_timer.h>
-#include "../objects/entities.h"
 #include <cglm/types.h>
 #include <cglm/vec3.h>
-#include "../window/windowManager.h"
+#include "../objects/entities.h"
+#include <stdio.h>
 #include <unistd.h>
 #include <string.h>
+#include "util/util.h"
 
 static void initScene();
 static void updateScene();
 static void disposeScene();
-Scene outdoorScene = {
+Scene gunTest = {
     .init = initScene,
     .update = updateScene,
     .dispose = disposeScene
 };
 
 static Camera camera;
-static vec3 camPos = {-28, 240, 0};
+static vec3 camPos = {-28, 11, 0};
 static Player player;
 
 static GameObjectPack sceneObjectPack;
@@ -35,13 +37,13 @@ static EntityPack sceneEntityPack;
 
 static GameObject map;
 static GameObject sky;
-static GameObject desk;
-static GameObject cliffsWarp;
 static PointLight light1;
 static PointLight light2;
 static PointLight light3;
 
-static float brightness = 1.45f;
+static ScreenObject gun;
+
+static float brightness = 1.15f;
 
 static void initScene() {
 
@@ -52,18 +54,19 @@ static void initScene() {
     gtmaLoadScreenObjectPack(&sceneScreenPack);
     gtmaLoadEntityPack(&sceneEntityPack);
 
-    gtmaCreateGameObject(&map, "models/stoneland.glb", "map", (vec3){0, 0, 0}, (vec3){1.5, 1, 1.5}, (vec3){0, 0, 0}, GTMA_VERTEX_COLLIDE);
-    map.model.meshes[map.model.meshCount - 1].flags |= GTMA_NOCOLLIDE;
+    gtmaCreateGameObject(&map, "models/tiletest.glb", "map", (vec3){0, 0, 0}, (vec3){9, 6, 9}, (vec3){0, 0, 0}, GTMA_VERTEX_COLLIDE);
     
     gtmaCreateGameObject(&sky, "models/sky.glb", "sky", (vec3){0, 0, 0}, (vec3){18, 18, 18}, (vec3){0, 0, 0}, GTMA_NOCOLLIDE);
     sky.model.meshes[0].flags |= GTMA_UNLIT;
     sky.model.meshes[0].flags |= GTMA_NOCOLLIDE;
 
-    gtmaCreateGameObject(&desk, "models/desk.glb", "desk", (vec3){137, 4, 77}, (vec3){2, 2, 2}, (vec3){0, 0, 0}, GTMA_PICKABLE);
-    desk.pickableDistance = 24;
+    for(int i = 0; i < 20; i++) {
+        gtmaCreateAndAddEntity(&sceneEntityPack, "fartshit", "entity", (vec3){randBetween(-100, 100), 5, randBetween(-100, 100)}, (vec3){0.4, 0.4, 0.4}, (vec3){0, 0, 0}, 40, GTMA_ENEMY);
+        Entity* entity = sceneEntityPack.entities[i];
+        snprintf(entity->name, sizeof(entity->name), "entity%i", i);
+    }
 
-    gtmaCreateGameObject(&cliffsWarp, "models/office.glb", "cliffsWarp", (vec3){314, -248, -304}, (vec3){3, 3, 3}, (vec3){0, -30, 0}, GTMA_PICKABLE);
-    cliffsWarp.pickableDistance = 24;
+    gtmaCreateScreenObject(&gun, "images/gun.png", "gun", (vec2){((float)getWindowWidth() - 256), ((float)getWindowHeight() - 200)}, (vec2){200, 256}, 0, GTMA_NONE);
 
     gtmaCreateCamera(&camera, camPos);
     gtmaSetRenderCamera(&camera);
@@ -75,20 +78,19 @@ static void initScene() {
 
     gtmaAddGameObject(&map, &sceneObjectPack);
     gtmaAddGameObject(&sky, &sceneObjectPack);
-    gtmaAddGameObject(&desk, &sceneObjectPack);
-    gtmaAddGameObject(&cliffsWarp, &sceneObjectPack);
     gtmaAddLight(&light1, &sceneLightPack);
     gtmaAddLight(&light2, &sceneLightPack);
     gtmaAddLight(&light3, &sceneLightPack);
 
-    gtmaSetFogLevel(0.0035);
+    gtmaSetFogLevel(0.00035);
 
-    gtmaSetClearColor(138, 154, 255);
+    gtmaSetClearColor(6, 8, 18);
 
     camera.pitch = -85;
     gtmaCameraMatrix(&camera, 0.1f, 450.0f, gtmaGetShader());
 
-    gtmaInitScene(&outdoorScene, &player, &sceneObjectPack, &sceneScreenPack, &sceneEntityPack, camPos);
+    gtmaInitScene(&gunTest, &player, &sceneObjectPack, &sceneScreenPack, &sceneEntityPack, camPos);
+    gtmaAddScreenObject(&gun, &sceneScreenPack);
 
 }
 
@@ -97,11 +99,9 @@ extern Scene natatorium;
 
 static bool spectating = false;
 
-static bool spinMap = false;
-
 static void updateScene() {
 
-    if(gtmaUpdateScene(&outdoorScene, &player)) {
+    if(gtmaUpdateScene(&gunTest, &player)) {
         return;
     }
 
@@ -113,21 +113,6 @@ static void updateScene() {
     //player pos printout
     printf("\r%f %f %f", camera.position[0], camera.position[1], camera.position[2]);
     fflush(stdout);
-    
-    //object transforms
-    desk.rotation[1] += 150 * getDeltaTime();
-
-    if(isLeftPressed()) {
-        if(strcmp(pickObject(&sceneObjectPack, &camera)->name, "desk") == 0) {
-            spinMap = !spinMap;
-        }
-    }
-
-    if(spinMap) {
-        map.rotation[1] += 150 * getDeltaTime();
-    } else {
-        map.rotation[1] = 0;
-    }
 
     //misc
     if(isKeyPressed(SDL_SCANCODE_P)) spectating = !spectating;

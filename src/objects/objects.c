@@ -273,28 +273,28 @@ void gtmaChangeScreenObjectTexture(ScreenObject* object, const char* path) {
     gtmaCreateTexture(&object->model.meshes[0].texture, path);
 }
 
-void gtmaLoadTransformationMatrix(mat4* matrix, GameObject* object) {
+void gtmaLoadTransformationMatrix(mat4* matrix, vec3 position, vec3 rotation, vec3 scale) {
 
-    if(object->rotation[0] < 0) object->rotation[0] = 360 + object->rotation[0];
-    if(object->rotation[1] < 0) object->rotation[1] = 360 + object->rotation[1];
-    if(object->rotation[2] < 0) object->rotation[2] = 360 + object->rotation[2];
+    if(rotation[0] < 0) rotation[0] = 360 + rotation[0];
+    if(rotation[1] < 0) rotation[1] = 360 + rotation[1];
+    if(rotation[2] < 0) rotation[2] = 360 + rotation[2];
 
-    if(object->rotation[0] >= 360) object->rotation[0] = object->rotation[0] - 360;
-    if(object->rotation[0] <= -360) object->rotation[0] = object->rotation[0] + 360;
+    if(rotation[0] >= 360) rotation[0] = rotation[0] - 360;
+    if(rotation[0] <= -360) rotation[0] = rotation[0] + 360;
 
-    if(object->rotation[1] >= 360) object->rotation[1] = object->rotation[1] - 360;
-    if(object->rotation[1] <= -360) object->rotation[1] = object->rotation[1] + 360;
+    if(rotation[1] >= 360) rotation[1] = rotation[1] - 360;
+    if(rotation[1] <= -360) rotation[1] = rotation[1] + 360;
 
-    if(object->rotation[2] >= 360) object->rotation[2] = object->rotation[2] - 360;
-    if(object->rotation[2] <= -360) object->rotation[2] = object->rotation[2] + 360;
+    if(rotation[2] >= 360) rotation[2] = rotation[2] - 360;
+    if(rotation[2] <= -360) rotation[2] = rotation[2] + 360;
 
     glm_mat4_identity(*matrix);
-    glm_translate(*matrix, object->position);
-    glm_rotate_x(*matrix, glm_rad(object->rotation[0]), *matrix);
-    glm_rotate_y(*matrix, glm_rad(object->rotation[1]), *matrix);
-    glm_rotate_z(*matrix, glm_rad(object->rotation[2]), *matrix);
+    glm_translate(*matrix, position);
+    glm_rotate_x(*matrix, glm_rad(rotation[0]), *matrix);
+    glm_rotate_y(*matrix, glm_rad(rotation[1]), *matrix);
+    glm_rotate_z(*matrix, glm_rad(rotation[2]), *matrix);
 
-    glm_scale(*matrix, object->scale);
+    glm_scale(*matrix, scale);
 }
 
 void gtmaAddGameObject(GameObject* obj, GameObjectPack* objPack) {

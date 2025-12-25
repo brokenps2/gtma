@@ -2,12 +2,13 @@
 #include <SDL2/SDL.h>
 #include "../physics/physics.h"
 #include "../graphics/texture.h"
-#include "player.h"
-#include "objects.h"
+#include "../objects/player.h"
+#include "../objects/objects.h"
 #include "../window/events.h"
 #include "../graphics/renderer.h"
 #include "../window/windowManager.h"
 #include "../audio/audio.h"
+#include "objects/entities.h"
 #include <SDL2/SDL_mouse.h>
 #include <cglm/vec3.h>
 #include <stdbool.h>
@@ -47,18 +48,19 @@ void gtmaToggleCrosshair(Scene* scene, bool toggle) {
     }
 }
 
-void gtmaInitScene(Scene* scene, Player* player, GameObjectPack* objectPack, ScreenObjectPack* screenObjPack, vec3 spawnpoint) {
+void gtmaInitScene(Scene* scene, Player* player, GameObjectPack* objectPack, ScreenObjectPack* screenObjPack, EntityPack* entityPack, vec3 spawnpoint) {
     scene->player = player;
     scene->screenPack = screenObjPack;
     scene->objPack = objectPack;
+    scene->entPack = entityPack;
 
-    gtmaCreateScreenObject(&crosshair, "images/crosshair.png", "uitest", (vec2){((float)getWindowWidth() / 2), ((float)getWindowHeight() / 2)}, (vec2){10, 10}, 0, GTMA_FLAG_NONE);
+    gtmaCreateScreenObject(&crosshair, "images/crosshair.png", "uitest", (vec2){((float)getWindowWidth() / 2), ((float)getWindowHeight() / 2)}, (vec2){10, 10}, 0, GTMA_NONE);
     gtmaCreateTexture(&regularCrosshair, "images/crosshair.png");
     gtmaCreateTexture(&highlightedCrosshair, "images/crosshairselected.png");
 
-    gtmaCreateScreenObject(&pauseScreen, "images/paused.png", "pause", (vec2){((float)getWindowWidth()/2), ((float)getWindowHeight()/2)}, (vec2){400, 80}, 0, GTMA_FLAG_INVISIBLE);
+    gtmaCreateScreenObject(&pauseScreen, "images/paused.png", "pause", (vec2){((float)getWindowWidth()/2), ((float)getWindowHeight()/2)}, (vec2){400, 80}, 0, GTMA_INVISIBLE);
 
-    gtmaCreateScreenObject(&loadingScreen, "images/loading.png", "loading", (vec2){(float)getWindowWidth()/2, (float)getWindowHeight() / 2}, (vec2){400, 60}, 0, GTMA_FLAG_INVISIBLE);
+    gtmaCreateScreenObject(&loadingScreen, "images/loading.png", "loading", (vec2){(float)getWindowWidth()/2, (float)getWindowHeight() / 2}, (vec2){400, 60}, 0, GTMA_INVISIBLE);
 
     gtmaAddScreenObject(&crosshair, scene->screenPack);
     gtmaAddScreenObject(&loadingScreen, scene->screenPack);
@@ -96,7 +98,7 @@ void switchScene(Scene* newScene) {
     transitioning = true;
     transitionTimer = transitionDuration;
     gtmaToggleControls(false);
-    loadingScreen.flags &= ~GTMA_FLAG_INVISIBLE;
+    loadingScreen.flags &= ~GTMA_INVISIBLE;
     nextScene = newScene;
 }
 
@@ -105,7 +107,7 @@ bool checkWarp() {
         transitionTimer -= getDeltaTime();
         if (transitionTimer <= 0.0f) {
             transitioning = false;
-            loadingScreen.flags &= ~GTMA_FLAG_INVISIBLE;
+            loadingScreen.flags &= ~GTMA_INVISIBLE;
             if (currentScene && currentScene->dispose)
                 currentScene->dispose();
             currentScene = nextScene;
@@ -125,7 +127,7 @@ bool gtmaUpdateScene(Scene* scene, Player* player) {
     if (paused) {
         if (isKeyPressed(SDL_SCANCODE_ESCAPE)) {
             paused = false;
-            pauseScreen.flags |= GTMA_FLAG_INVISIBLE;
+            pauseScreen.flags |= GTMA_INVISIBLE;
             SDL_SetRelativeMouseMode(true);
             gtmaSetFBOBrightness(1);
         }
@@ -134,17 +136,30 @@ bool gtmaUpdateScene(Scene* scene, Player* player) {
         }
         if (isKeyPressed(SDL_SCANCODE_T)) {
             paused = false;
-            pauseScreen.flags &= ~GTMA_FLAG_INVISIBLE;
+            pauseScreen.flags &= ~GTMA_INVISIBLE;
             SDL_SetRelativeMouseMode(true);
             gtmaSetFBOBrightness(1);
             switchScene(&titleScreen);
         }
     } else {
         if (isKeyPressed(SDL_SCANCODE_ESCAPE)) {
-            pauseScreen.flags &= ~GTMA_FLAG_INVISIBLE;
+            pauseScreen.flags &= ~GTMA_INVISIBLE;
             SDL_SetRelativeMouseMode(false);
             gtmaSetFBOBrightness(0.5);
             paused = true;
+        }
+    }
+
+    for(int i = 0; i < scene->entPack->entityCount; i++) {
+        gtmaUpdateEntity(scene->entPack->entities[i], scene->entPack, player->camera);
+    }
+
+    if (isLeftPressed()) {
+        Entity* picked = pickEntity(scene->entPack, player->camera);
+
+        if (picked && !(picked->flags & GTMA_INVISIBLE)) {
+            picked->health -= 10;
+            picked->damaged = true;
         }
     }
 
@@ -162,7 +177,12 @@ bool gtmaUpdateScene(Scene* scene, Player* player) {
 
     gtmaUpdateAudio(player->position, player->camera->direction);
 
-    bool isHighlighted = strcmp(pickObject(scene->objPack, player->camera), "none") != 0;
+    bool isHighlighted;
+    if(pickObject(scene->objPack, scene->player->camera) == NULL) {
+        isHighlighted = true;
+    } else {
+        isHighlighted = false;
+    }
 
     if (isHighlighted != lastState) {
         if (isHighlighted) {

@@ -34,7 +34,6 @@ int main(int argc, char* argv[]) {
     gtmaInitRenderer();
     gtmaPrintSystemInfo();
 
-    sleep(1);
     printf("\n");
 
     currentScene->init();

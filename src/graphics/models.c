@@ -1,4 +1,4 @@
-#include "scenes/objects.h"
+#include "objects/objects.h"
 #include "texture.h"
 #include "../physics/physics.h"
 #include <cglm/quat.h>
@@ -94,7 +94,7 @@ void gtmaCreateModel(Model* model, const char* path) {
 
             cgltf_mesh* gltfMesh = node->mesh;
             Mesh* mesh = &model->meshes[i];
-            mesh->flags = GTMA_FLAG_NONE;
+            mesh->flags = GTMA_NONE;
 
             size_t totalVertexCount = 0;
             size_t totalIndexCount = 0;
@@ -120,15 +120,15 @@ void gtmaCreateModel(Model* model, const char* path) {
                 size_t vertexCount = primitive->attributes[0].data->count;
                 size_t indexCount = primitive->indices->count;
 
+                for (size_t l = 0; l < vertexCount; l++) {
+                    mesh->vertices[vertexOffset + l].color[0] = 1.0f;
+                    mesh->vertices[vertexOffset + l].color[1] = 1.0f;
+                    mesh->vertices[vertexOffset + l].color[2] = 1.0f;
+                }
+
                 for (size_t k = 0; k < primitive->attributes_count; k++) {
                     cgltf_attribute* attr = &primitive->attributes[k];
                     cgltf_accessor* accessor = attr->data;
-
-                    for (size_t l = 0; l < vertexCount; l++) {
-                        mesh->vertices[vertexOffset + l].color[0] = 1;
-                        mesh->vertices[vertexOffset + l].color[1] = 1;
-                        mesh->vertices[vertexOffset + l].color[2] = 1;
-                    }
 
                     if (attr->type == cgltf_attribute_type_position) {
                         for (size_t l = 0; l < vertexCount; l++) {
@@ -184,7 +184,7 @@ void gtmaCreateModel(Model* model, const char* path) {
                 }
             }
 
-            mesh->brightness = 1;
+            glm_vec3_copy((vec3){1, 1, 1}, mesh->color);
 
             glGenVertexArrays(1, &mesh->VAO);
             glGenBuffers(1, &mesh->VBO);

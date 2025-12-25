@@ -2,17 +2,16 @@
 #include "../graphics/shader.h"
 #include "../graphics/texture.h"
 #include "../physics/physics.h"
-#include "objects.h"
+#include "../objects/objects.h"
 #include "scenes.h"
 #include "../graphics/renderer.h"
-#include "../audio/audio.h"
 #include "../window/events.h"
-#include "../scenes/player.h"
+#include "../objects/entities.h"
+#include "../objects/player.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_timer.h>
 #include <cglm/types.h>
 #include <cglm/vec3.h>
-#include "../window/windowManager.h"
 #include <unistd.h>
 
 static void initScene();
@@ -31,6 +30,7 @@ static Player player;
 static GameObjectPack sceneObjectPack;
 static PointLightPack sceneLightPack;
 static ScreenObjectPack sceneScreenPack;
+static EntityPack sceneEntityPack;
 
 static Texture cloudy;
 static Texture blue;
@@ -55,6 +55,7 @@ static void initScene() {
     gtmaLoadGameObjectPack(&sceneObjectPack);
     gtmaLoadPointLightPack(&sceneLightPack);
     gtmaLoadScreenObjectPack(&sceneScreenPack);
+    gtmaLoadEntityPack(&sceneEntityPack);
 
     for(int i = 0; i < 32; i++) {
         int min = -120;
@@ -64,33 +65,33 @@ static void initScene() {
         if((randomX > -120 && randomX < 33 && randomZ > -19 && randomZ < 83) || (randomX > -32 && randomX < 42 && randomZ > -111 && randomZ < -58)) {
             continue;
         }
-        gtmaCreateAndAddGameObject(&sceneObjectPack, "models/tree.glb", "tree", (vec3){randomX, 7, randomZ}, (vec3){4, 4, 4}, (vec3){0, 90, 0}, GTMA_FLAG_BILLBOARD | GTMA_FLAG_NOCOLLIDE);
+        gtmaCreateAndAddGameObject(&sceneObjectPack, "models/tree.glb", "tree", (vec3){randomX, 7, randomZ}, (vec3){3, 2, 3}, (vec3){0, 90, 0}, GTMA_BILLBOARD | GTMA_NOCOLLIDE);
     }
 
     gtmaCreateTexture(&blue, "images/gradientsky.png");
     gtmaCreateTexture(&cloudy, "images/cloudysky.png");
 
-    gtmaCreateGameObject(&map, "models/jimmyhouse.glb", "map", (vec3){0, 0, 0}, (vec3){6.5, 4.75, 6.5}, (vec3){0, 0, 0}, GTMA_FLAG_VERTEX_COLLIDE);
-    map.model.meshes[map.model.meshCount - 1].flags |= GTMA_FLAG_NOCOLLIDE;
+    gtmaCreateGameObject(&map, "models/jimmyhouse.glb", "map", (vec3){0, 0, 0}, (vec3){6.5, 4.75, 6.5}, (vec3){0, 0, 0}, GTMA_VERTEX_COLLIDE);
+    map.model.meshes[map.model.meshCount - 1].flags |= GTMA_NOCOLLIDE;
     
-    gtmaCreateGameObject(&sky, "models/sky.glb", "sky", (vec3){0, 0, 0}, (vec3){18, 18, 18}, (vec3){0, 0, 0}, GTMA_FLAG_NONE);
-    sky.model.meshes[0].flags |= GTMA_FLAG_UNLIT | GTMA_FLAG_NOCOLLIDE;
+    gtmaCreateGameObject(&sky, "models/sky.glb", "sky", (vec3){0, 0, 0}, (vec3){18, 18, 18}, (vec3){0, 0, 0}, GTMA_NOCOLLIDE);
+    sky.model.meshes[0].flags |= GTMA_UNLIT | GTMA_NOCOLLIDE;
 
-    gtmaCreateGameObject(&stoneland, "models/stoneland.glb", "stoneland", (vec3){-32, -240, 42}, (vec3){1.5, 0.3, 1.5}, (vec3){0, 0, 0}, GTMA_FLAG_NONE);
+    gtmaCreateGameObject(&stoneland, "models/stoneland.glb", "stoneland", (vec3){-32, -240, 42}, (vec3){1.5, 0.3, 1.5}, (vec3){0, 0, 0}, GTMA_NONE);
 
-    gtmaCreateGameObject(&dean, "models/dean.glb", "dean", (vec3){90, 10, 0}, (vec3){3, 3, 3}, (vec3){0, 180, 0}, GTMA_FLAG_BILLBOARD);
+    gtmaCreateGameObject(&dean, "models/dean.glb", "dean", (vec3){90, 10, 0}, (vec3){3, 3, 3}, (vec3){0, 180, 0}, GTMA_BILLBOARD);
 
-    gtmaCreateGameObject(&hallWarp, "models/door2.glb", "hallWarp", (vec3){-123, 9, 6}, (vec3){3, 3, 3}, (vec3){0, 0, 0}, GTMA_FLAG_PICKABLE);
+    gtmaCreateGameObject(&hallWarp, "models/door2.glb", "hallWarp", (vec3){-123, 9, 6}, (vec3){3, 3, 3}, (vec3){0, 0, 0}, GTMA_PICKABLE);
     hallWarp.pickableDistance = 24;
 
  
     gtmaCreateCamera(&camera, camPos);
-    gtmaCreatePlayer(&player, &camera, 100, 6, 7);
+    gtmaCreatePlayer(&player, &camera, 100, 6, 10);
     gtmaSetRenderCamera(&camera);
 
-    gtmaCreatePointLight(&light1, (vec3){-300, 300, 300}, (vec3){brightness, brightness, brightness}, GTMA_FLAG_SUNMODE);
-    gtmaCreatePointLight(&light2, (vec3){300, 300, 0}, (vec3){brightness, brightness, brightness}, GTMA_FLAG_SUNMODE);
-    gtmaCreatePointLight(&light3, (vec3){-300, 300, -300}, (vec3){brightness, brightness, brightness}, GTMA_FLAG_SUNMODE);
+    gtmaCreatePointLight(&light1, (vec3){-300, 300, 300}, (vec3){brightness, brightness, brightness}, GTMA_SUNMODE);
+    gtmaCreatePointLight(&light2, (vec3){300, 300, 0}, (vec3){brightness, brightness, brightness}, GTMA_SUNMODE);
+    gtmaCreatePointLight(&light3, (vec3){-300, 300, -300}, (vec3){brightness, brightness, brightness}, GTMA_SUNMODE);
 
 
     gtmaAddGameObject(&stoneland, &sceneObjectPack);
@@ -109,7 +110,7 @@ static void initScene() {
     gtmaCameraMatrix(&camera, 0.1f, 450.0f, gtmaGetShader());
     camera.pitch = 0;
 
-    gtmaInitScene(&deansGarden, &player, &sceneObjectPack, &sceneScreenPack, camPos);
+    gtmaInitScene(&deansGarden, &player, &sceneObjectPack, &sceneScreenPack, &sceneEntityPack, camPos);
 
 }
 
@@ -158,7 +159,7 @@ static void updateScene() {
     fflush(stdout);
     
     if(isLeftPressed()) {
-        if(strcmp(pickObject(&sceneObjectPack, &camera), "hallWarp") == 0) {
+        if(strcmp(pickObject(&sceneObjectPack, &camera)->name, "hallWarp") == 0) {
             sceneIndex = 0;
             gtmaPlayDoorSound();
             switchScene(&deansHallway);

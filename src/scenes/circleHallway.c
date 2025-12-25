@@ -1,12 +1,12 @@
 #include "../graphics/camera.h"
 #include "../graphics/shader.h"
 #include "../physics/physics.h"
-#include "objects.h"
+#include "../objects/objects.h"
 #include "scenes.h"
 #include "../graphics/renderer.h"
-#include "../audio/audio.h"
 #include "../window/events.h"
-#include "../scenes/player.h"
+#include "../objects/player.h"
+#include "../objects/entities.h"
 #include "window/windowManager.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_timer.h>
@@ -30,6 +30,7 @@ static Player player;
 static GameObjectPack sceneObjectPack;
 static PointLightPack sceneLightPack;
 static ScreenObjectPack sceneScreenPack;
+static EntityPack sceneEntityPack;
 
 static GameObject map;
 static GameObject deanWarp;
@@ -37,23 +38,15 @@ static GameObject sphere;
 
 static PointLight playerLamp;
 
-static float brightness = 2.32f;
+static float brightness = 3.85f;
 
 static bool returning = false;
 
 static bool floating = false;
 
-vec2 positions[9] = {
-    {160, 160},
-    {-160, -160},
-    {0, 160},
-    {0, -160},
-    {160, 0},
-    {-160, 0},
-    {160, -160},
-    {-160, 160},
-    {0, 81}
-};
+int lightCount = 5;
+float maxPos = 130;
+float minPos = -130;
 
 static void initScene() {
 
@@ -62,13 +55,13 @@ static void initScene() {
     gtmaLoadGameObjectPack(&sceneObjectPack);
     gtmaLoadPointLightPack(&sceneLightPack);
     gtmaLoadScreenObjectPack(&sceneScreenPack);
+    gtmaLoadEntityPack(&sceneEntityPack);
 
-    gtmaCreateGameObject(&map, "models/circleHallway.glb", "map", (vec3){0, 0, 0}, (vec3){5.5, 4.5, 5.5}, (vec3){0, 0, 0}, GTMA_FLAG_VERTEX_COLLIDE);
-    map.model.meshes[map.model.meshCount - 1].brightness = 1.8;
+    gtmaCreateGameObject(&map, "models/circleHallway.glb", "map", (vec3){0, 0, 0}, (vec3){4.5, 4, 4.5}, (vec3){0, 0, 0}, GTMA_VERTEX_COLLIDE);
 
-    gtmaCreateGameObject(&deanWarp, "models/door2.glb", "deanWarp", (vec3){-108.2, 8, -36}, (vec3){3, 3, 3}, (vec3){0, 0, 0}, GTMA_FLAG_PICKABLE);
+    gtmaCreateGameObject(&deanWarp, "models/door2.glb", "deanWarp", (vec3){-108.2, 8, -36}, (vec3){3, 3, 3}, (vec3){0, 0, 0}, GTMA_PICKABLE);
 
-    gtmaCreateGameObject(&sphere, "models/collisionSphere.glb", "sphere", (vec3){-68, 14, 0}, (vec3){6, 6, 6}, (vec3){0, 0, 0}, GTMA_FLAG_NONE);
+    gtmaCreateGameObject(&sphere, "models/collisionSphere.glb", "sphere", (vec3){-68, 14, 0}, (vec3){6, 6, 6}, (vec3){0, 0, 0}, GTMA_NONE);
 
     if(returning) {
         gtmaCreateCamera(&camera, (vec3){-105, 11, -36});
@@ -78,16 +71,27 @@ static void initScene() {
     gtmaSetRenderCamera(&camera);
     gtmaCreatePlayer(&player, &camera, 100, 7, 10);
 
-    for(int i = 0; i < 9; i++) {
-        gtmaCreateAndAddPointLight(&sceneLightPack, (vec3){positions[i][0], 26, positions[i][1]}, (vec3){brightness, brightness, brightness}, GTMA_FLAG_NONE);
-        sceneLightPack.lights[i - 1]->range = 0.205;
-    }
-    for(int i = 0; i < 9; i++) {
-        gtmaCreateAndAddPointLight(&sceneLightPack, (vec3){positions[i][0], 12, positions[i][1]}, (vec3){brightness, brightness, brightness}, GTMA_FLAG_NONE);
-        sceneLightPack.lights[i - 1]->range = 0.205;
-    }
-    gtmaCreatePointLight(&playerLamp, (vec3){camera.position[0], camera.position[1], camera.position[2]}, (vec3){brightness, brightness, brightness}, GTMA_FLAG_SUNMODE); playerLamp.range = 0.1;
+    float step = (maxPos - minPos) / (lightCount - 1);
 
+    for (int x = 0; x < lightCount; x++) {
+        for (int z = 0; z < lightCount; z++) {
+            vec3 position = {
+                minPos + x * step,
+                5.0f,                     // Y height of lights
+                minPos + z * step
+            };
+
+            vec3 color = { brightness, brightness, brightness};  // white light
+            unsigned int flags = 0;
+
+            gtmaCreateAndAddPointLight(&sceneLightPack, (vec3){position[0], 23, position[2]}, color, flags);
+            gtmaCreateAndAddPointLight(&sceneLightPack, (vec3){position[0], 6, position[2]}, color, flags);
+            sceneLightPack.lights[sceneLightPack.lightCount - 1]->range = 0.3;
+        }
+    }
+
+
+    gtmaCreatePointLight(&playerLamp, (vec3){camera.position[0], camera.position[1], camera.position[2]}, (vec3){brightness, brightness, brightness}, GTMA_SUNMODE); playerLamp.range = 0.02;
 
     gtmaAddGameObject(&map, &sceneObjectPack);
     gtmaAddGameObject(&sphere, &sceneObjectPack);
@@ -102,7 +106,7 @@ static void initScene() {
     camera.yaw = 90;
     camera.pitch = 0;
 
-    gtmaInitScene(&circleHallway, &player, &sceneObjectPack, &sceneScreenPack, (vec3){0, 11, 48});
+    gtmaInitScene(&circleHallway, &player, &sceneObjectPack, &sceneScreenPack, &sceneEntityPack, (vec3){0, 11, 48});
 
     SDL_SetRelativeMouseMode(true);
     gtmaToggleControls(true);
@@ -136,7 +140,7 @@ static void updateScene() {
     //misc
     if(isKeyPressed(SDL_SCANCODE_P)) spectating = !spectating;
 
-    if(camera.position[2] < 20 && camera.position[2] > -20 && camera.position[0] < 104 && camera.position[0] > 41) {
+    if(camera.position[2] < 20 && camera.position[2] > -20 && camera.position[0] < 94 && camera.position[0] > 41) {
         floating = true;
     } else { floating = false; }
 

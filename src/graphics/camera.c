@@ -15,7 +15,6 @@
 #include <SDL2/SDL.h>
 #include "../window/events.h"
 #include "camera.h"
-#include "../audio/audio.h"
 
 double oldMouseX = 0, oldMouseY = 0, newMouseX = 0, newMouseY = 0;
 

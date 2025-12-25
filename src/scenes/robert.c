@@ -1,17 +1,17 @@
 #include "../graphics/camera.h"
 #include "../graphics/shader.h"
 #include "../physics/physics.h"
-#include "objects.h"
+#include "../objects/objects.h"
 #include "scenes.h"
 #include "../graphics/renderer.h"
 #include "../audio/audio.h"
 #include "../window/events.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_timer.h>
+#include "../objects/entities.h"
 #include <cglm/types.h>
 #include <cglm/vec3.h>
 #include <stdio.h>
-#include "../window/windowManager.h"
 #include <unistd.h>
 
 static void initScene();
@@ -29,6 +29,7 @@ static vec3 camPos = {-28, 10, 0};
 static GameObjectPack sceneObjectPack;
 static PointLightPack sceneLightPack;
 static ScreenObjectPack sceneScreenPack;
+static EntityPack sceneEntityPack;
 
 static GameObject map;
 

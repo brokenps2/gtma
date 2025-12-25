@@ -2,15 +2,19 @@
 #include "../graphics/models.h"
 
 typedef enum {
-    GTMA_FLAG_NONE = 0,
-    GTMA_FLAG_PICKABLE = 1 << 1,
-    GTMA_FLAG_BILLBOARD = 1 << 2,
-    GTMA_FLAG_VERTEX_COLLIDE = 1 << 3,
-    GTMA_FLAG_INVISIBLE = 1 << 4,
-    GTMA_FLAG_SUNMODE = 1 << 5,
-    GTMA_FLAG_NOCOLLIDE = 1 << 6,
-    GTMA_FLAG_UNLIT = 1 << 7,
-    GTMA_FLAG_TEXT = 1 << 8
+    GTMA_NONE = 0,
+    GTMA_PICKABLE = 1 << 1,
+    GTMA_BILLBOARD = 1 << 2,
+    GTMA_VERTEX_COLLIDE = 1 << 3,
+    GTMA_INVISIBLE = 1 << 4,
+    GTMA_SUNMODE = 1 << 5,
+    GTMA_NOCOLLIDE = 1 << 6,
+    GTMA_UNLIT = 1 << 7,
+    GTMA_TEXT = 1 << 8,
+    GTMA_ENEMY = 1 << 9,
+    GTMA_NPC = 1 << 10,
+    GTMA_MELEE = 1 << 11,
+    GTMA_PROJECTILE = 1 << 12
 } SceneComponentFlags;
 
 typedef struct GameObject {
@@ -50,14 +54,13 @@ typedef struct GameObjectPack {
 void gtmaCreateGameObject(GameObject* object, const char* mdlPath, const char* name, vec3 position, vec3 scale, vec3 rotation, unsigned int flags);
 void gtmaCreateGameObjectPack(GameObjectPack* pack);
 void gtmaDeleteGameObject(GameObject* object);
-void gtmaLoadTransformationMatrix(mat4* matrix, GameObject* object);
+void gtmaLoadTransformationMatrix(mat4* matrix, vec3 position, vec3 rotation, vec3 scale);
 void gtmaAddGameObject(GameObject* object, GameObjectPack* objPack);
 void gtmaCreateText(ScreenObject* object, const char* content, const char* fontPath, vec2 position, vec2 size, int direction, unsigned int flags);
 void gtmaCreateAndAddGameObject(GameObjectPack* objPack, const char* mdlPath, const char* name, vec3 position, vec3 scale, vec3 rotation, unsigned int flags);
 void gtmaRemoveGameObjectName(GameObjectPack* objPack, const char* name);
 void gtmaRemoveGameObjectID(GameObjectPack* objPack, int id);
 void gtmaDeleteGameObjectPack(GameObjectPack* objPack);
-void gtmaLoadTransformationMatrix(mat4* matrix, GameObject* object);
 void gtmaCreateScreenObject(ScreenObject* object, const char* mdlPath, const char* name, vec2 position, vec2 size, float rotation, unsigned int flags);
 void gtmaAddScreenObject(ScreenObject* obj, ScreenObjectPack* pack);
 void gtmaRemoveScreenObjectName(ScreenObjectPack* pack, const char* name);

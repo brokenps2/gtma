@@ -1,21 +1,19 @@
 #include "../graphics/camera.h"
 #include "../graphics/shader.h"
 #include "../physics/physics.h"
-#include "objects.h"
+#include "../objects/objects.h"
 #include "scenes.h"
 #include "../graphics/renderer.h"
 #include "../audio/audio.h"
 #include "../window/events.h"
-#include "../window/windowManager.h"
-#include "../scenes/player.h"
+#include "../objects/entities.h"
+#include "../objects/player.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_mouse.h>
 #include <SDL2/SDL_scancode.h>
 #include <cglm/vec3.h>
-#include <signal.h>
 #include <stdbool.h>
 #include <stdio.h>
-#include <string.h>
 
 static void initScene();
 static void updateScene();
@@ -33,6 +31,7 @@ static Player player;
 static GameObjectPack sceneObjectPack;
 static PointLightPack sceneLightPack;
 static ScreenObjectPack sceneScreenPack;
+static EntityPack sceneEntityPack;
 
 static GameObject map;
 static GameObject sky;
@@ -62,31 +61,32 @@ void initScene() {
     gtmaLoadGameObjectPack(&sceneObjectPack);
     gtmaLoadPointLightPack(&sceneLightPack);
     gtmaLoadScreenObjectPack(&sceneScreenPack);
+    gtmaLoadEntityPack(&sceneEntityPack);
 
-    gtmaCreateGameObject(&map, "models/office.glb", "map", (vec3){0, 0, 0}, (vec3){3, 2.3, 3}, (vec3){0, 0, 0}, GTMA_FLAG_VERTEX_COLLIDE);
-    gtmaCreateGameObject(&sky, "models/sky.glb", "sky", (vec3){0, 0, 0}, (vec3){12, 12, 12}, (vec3){0, 0, 0}, GTMA_FLAG_NONE);
-    sky.model.meshes[0].flags |= GTMA_FLAG_UNLIT;
-    sky.model.meshes[0].flags |= GTMA_FLAG_NOCOLLIDE;
+    gtmaCreateGameObject(&map, "models/office.glb", "map", (vec3){0, 0, 0}, (vec3){3, 2.3, 3}, (vec3){0, 0, 0}, GTMA_VERTEX_COLLIDE);
+    gtmaCreateGameObject(&sky, "models/sky.glb", "sky", (vec3){0, 0, 0}, (vec3){12, 12, 12}, (vec3){0, 0, 0}, GTMA_NONE);
+    sky.model.meshes[0].flags |= GTMA_UNLIT;
+    sky.model.meshes[0].flags |= GTMA_NOCOLLIDE;
 
-    gtmaCreateGameObject(&exitSign, "models/exitsign.glb", "exitSign", (vec3){17.5, 9, -31}, (vec3){2, 2, 2}, (vec3){0, -120, 0}, GTMA_FLAG_NONE);
+    gtmaCreateGameObject(&exitSign, "models/exitsign.glb", "exitSign", (vec3){17.5, 9, -31}, (vec3){2, 2, 2}, (vec3){0, -120, 0}, GTMA_NONE);
 
-    gtmaCreateGameObject(&desk, "models/desk.glb", "desk", (vec3){-19, -9, 0}, (vec3){3.2, 3, 3.2}, (vec3){0, 0, 0}, GTMA_FLAG_NONE);
+    gtmaCreateGameObject(&desk, "models/desk.glb", "desk", (vec3){-19, -9, 0}, (vec3){3.2, 3, 3.2}, (vec3){0, 0, 0}, GTMA_NONE);
 
-    gtmaCreateGameObject(&stonelandWarp, "models/door2.glb", "stonelandWarp", (vec3){63, 2, 121}, (vec3){3.75, 3.45, 3.75}, (vec3){0, 118, 0}, GTMA_FLAG_PICKABLE);
+    gtmaCreateGameObject(&stonelandWarp, "models/door2.glb", "stonelandWarp", (vec3){63, 2, 121}, (vec3){3.75, 3.45, 3.75}, (vec3){0, 118, 0}, GTMA_PICKABLE);
     stonelandWarp.pickableDistance = 24;
 
     gtmaCreateCamera(&camera, camPos);
     gtmaSetRenderCamera(&camera);
     gtmaCreatePlayer(&player, &camera, 100, 10, 6);
 
-    gtmaCreatePointLight(&light1, (vec3){-25, -4, 0}, (vec3){brightness/2, brightness/2, brightness/2}, GTMA_FLAG_NONE);
-    gtmaCreatePointLight(&light2, (vec3){0, 12, 0}, (vec3){brightness, brightness, brightness}, GTMA_FLAG_NONE);
-    gtmaCreatePointLight(&light3, (vec3){12, 2, 0}, (vec3){brightness, brightness, brightness}, GTMA_FLAG_NONE);
+    gtmaCreatePointLight(&light1, (vec3){-25, -4, 0}, (vec3){brightness/2, brightness/2, brightness/2}, GTMA_NONE);
+    gtmaCreatePointLight(&light2, (vec3){0, 12, 0}, (vec3){brightness, brightness, brightness}, GTMA_NONE);
+    gtmaCreatePointLight(&light3, (vec3){12, 2, 0}, (vec3){brightness, brightness, brightness}, GTMA_NONE);
 
-    gtmaCreatePointLight(&rightHallLight, (vec3){40, 3, 74}, (vec3){brightness/1.2, brightness/1.2, brightness/1.2}, GTMA_FLAG_NONE);
-    gtmaCreatePointLight(&leftHallLight, (vec3){50, 7, -95}, (vec3){brightness/1.3, brightness/1.3, brightness/1.3}, GTMA_FLAG_NONE);
+    gtmaCreatePointLight(&rightHallLight, (vec3){40, 3, 74}, (vec3){brightness/1.2, brightness/1.2, brightness/1.2}, GTMA_NONE);
+    gtmaCreatePointLight(&leftHallLight, (vec3){50, 7, -95}, (vec3){brightness/1.3, brightness/1.3, brightness/1.3}, GTMA_NONE);
 
-    gtmaCreatePointLight(&lamp, (vec3){camPos[0], camPos[1], camPos[2]}, (vec3){brightness, brightness, brightness}, GTMA_FLAG_NONE);
+    gtmaCreatePointLight(&lamp, (vec3){camPos[0], camPos[1], camPos[2]}, (vec3){brightness, brightness, brightness}, GTMA_NONE);
 
     gtmaAddGameObject(&map, &sceneObjectPack);
     gtmaAddGameObject(&exitSign, &sceneObjectPack);
@@ -105,7 +105,7 @@ void initScene() {
 
     gtmaCameraMatrix(&camera, 0.1f, 450.0f, gtmaGetShader());
 
-    gtmaInitScene(&testScene1, &player, &sceneObjectPack, &sceneScreenPack, camPos);
+    gtmaInitScene(&testScene1, &player, &sceneObjectPack, &sceneScreenPack, &sceneEntityPack, camPos);
 
 }
 

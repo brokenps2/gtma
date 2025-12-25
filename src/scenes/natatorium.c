@@ -1,12 +1,13 @@
 #include "../graphics/camera.h"
 #include "../graphics/shader.h"
 #include "../physics/physics.h"
-#include "objects.h"
+#include "../objects/objects.h"
 #include "scenes.h"
 #include "../graphics/renderer.h"
 #include "../audio/audio.h"
 #include "../window/events.h"
-#include "../scenes/player.h"
+#include "../objects/player.h"
+#include "../objects/entities.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_scancode.h>
 #include <cglm/vec3.h>
@@ -29,6 +30,7 @@ static Player player;
 static GameObjectPack sceneObjectPack;
 static PointLightPack sceneLightPack;
 static ScreenObjectPack sceneScreenPack;
+static EntityPack sceneEntityPack;
 
 static GameObject map;
 
@@ -56,23 +58,24 @@ static void initScene() {
     gtmaLoadGameObjectPack(&sceneObjectPack);
     gtmaLoadPointLightPack(&sceneLightPack);
     gtmaLoadScreenObjectPack(&sceneScreenPack);
+    gtmaLoadEntityPack(&sceneEntityPack);
 
-    gtmaCreateGameObject(&map, "models/natatorium.glb", "map", (vec3){0, 0, 0}, (vec3){1.25, 1, 1.25}, (vec3){0, 0, 0}, GTMA_FLAG_NONE);
-    map.model.meshes[7].flags |= GTMA_FLAG_UNLIT;
+    gtmaCreateGameObject(&map, "models/natatorium.glb", "map", (vec3){0, 0, 0}, (vec3){1.25, 1, 1.25}, (vec3){0, 0, 0}, GTMA_NONE);
+    map.model.meshes[7].flags |= GTMA_UNLIT;
 
     gtmaCreateCamera(&camera, camPos);
     gtmaSetRenderCamera(&camera);
     gtmaCreatePlayer(&player, &camera, 100, 10, 6);
 
-    gtmaCreatePointLight(&light0, (vec3){134, 70, -100}, (vec3){brightness, brightness, brightness}, GTMA_FLAG_SUNMODE);
-    gtmaCreatePointLight(&light1, (vec3){0, 70, -100}, (vec3){brightness, brightness, brightness}, GTMA_FLAG_SUNMODE);
-    gtmaCreatePointLight(&light2, (vec3){-115, 70, -100}, (vec3){brightness, brightness, brightness}, GTMA_FLAG_SUNMODE);
-    gtmaCreatePointLight(&light3, (vec3){-112, 60, 220}, (vec3){brightness, brightness, brightness}, GTMA_FLAG_SUNMODE); 
-    gtmaCreatePointLight(&light4, (vec3){0, 60, 220}, (vec3){brightness, brightness, brightness}, GTMA_FLAG_SUNMODE);
-    gtmaCreatePointLight(&light5, (vec3){120, 60, 220}, (vec3){brightness, brightness, brightness}, GTMA_FLAG_SUNMODE);
-    gtmaCreatePointLight(&light6, (vec3){0, 56, 0}, (vec3){brightness, brightness, brightness}, GTMA_FLAG_SUNMODE);
+    gtmaCreatePointLight(&light0, (vec3){134, 70, -100}, (vec3){brightness, brightness, brightness}, GTMA_SUNMODE);
+    gtmaCreatePointLight(&light1, (vec3){0, 70, -100}, (vec3){brightness, brightness, brightness}, GTMA_SUNMODE);
+    gtmaCreatePointLight(&light2, (vec3){-115, 70, -100}, (vec3){brightness, brightness, brightness}, GTMA_SUNMODE);
+    gtmaCreatePointLight(&light3, (vec3){-112, 60, 220}, (vec3){brightness, brightness, brightness}, GTMA_SUNMODE); 
+    gtmaCreatePointLight(&light4, (vec3){0, 60, 220}, (vec3){brightness, brightness, brightness}, GTMA_SUNMODE);
+    gtmaCreatePointLight(&light5, (vec3){120, 60, 220}, (vec3){brightness, brightness, brightness}, GTMA_SUNMODE);
+    gtmaCreatePointLight(&light6, (vec3){0, 56, 0}, (vec3){brightness, brightness, brightness}, GTMA_SUNMODE);
 
-    gtmaCreatePointLight(&lamp, (vec3){camPos[0], camPos[1], camPos[2]}, (vec3){brightness*4, brightness*4, brightness*4}, GTMA_FLAG_SUNMODE);
+    gtmaCreatePointLight(&lamp, (vec3){camPos[0], camPos[1], camPos[2]}, (vec3){brightness*4, brightness*4, brightness*4}, GTMA_SUNMODE);
     lamp.range = 24 * lamp.range;
 
     gtmaAddGameObject(&map, &sceneObjectPack);
@@ -92,7 +95,7 @@ static void initScene() {
 
     gtmaCameraMatrix(&camera, 0.1f, 450.0f, gtmaGetShader());
 
-    gtmaInitScene(&natatorium, &player, &sceneObjectPack, &sceneScreenPack, camPos);
+    gtmaInitScene(&natatorium, &player, &sceneObjectPack, &sceneScreenPack, &sceneEntityPack, camPos);
 
 
 }

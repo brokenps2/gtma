@@ -1,6 +1,6 @@
 #pragma once
 #include <stdbool.h>
-#include "objects.h"
+#include "../objects/objects.h"
 #include "../physics/physics.h"
 
 typedef struct Scene {
@@ -11,10 +11,11 @@ typedef struct Scene {
     Player* player;
     ScreenObjectPack* screenPack;
     GameObjectPack* objPack;
+    EntityPack* entPack;
 } Scene;
 
 
-void gtmaInitScene(Scene* scene, Player* player, GameObjectPack* objectPack, ScreenObjectPack* screenObjPack, vec3 spawnpoint);
+void gtmaInitScene(Scene* scene, Player* player, GameObjectPack* objectPack, ScreenObjectPack* screenObjPack, EntityPack* entityPack, vec3 spawnpoint);
 void gtmaToggleCrosshair(Scene* scene, bool toggle);
 bool gtmaUpdateScene(Scene* scene, Player* player);
 void gtmaPlayDoorSound();

@@ -2,12 +2,13 @@
 #include "../graphics/shader.h"
 #include "../graphics/texture.h"
 #include "../physics/physics.h"
-#include "objects.h"
+#include "../objects/objects.h"
 #include "scenes.h"
 #include "../graphics/renderer.h"
 #include "../audio/audio.h"
 #include "../window/events.h"
-#include "../scenes/player.h"
+#include "../objects/entities.h"
+#include "../objects/player.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_mouse.h>
 #include <SDL2/SDL_scancode.h>
@@ -31,6 +32,7 @@ static Player player;
 static GameObjectPack sceneObjectPack;
 static PointLightPack sceneLightPack;
 static ScreenObjectPack sceneScreenPack;
+static EntityPack sceneEntityPack;
 
 static GameObject sky;
 static GameObject plane2;
@@ -60,22 +62,23 @@ static void initScene() {
     gtmaLoadGameObjectPack(&sceneObjectPack);
     gtmaLoadPointLightPack(&sceneLightPack);
     gtmaLoadScreenObjectPack(&sceneScreenPack);
+    gtmaLoadEntityPack(&sceneEntityPack);
 
     gtmaCreateTexture(&titlescreenplanetex, "images/select.png");
 
-    gtmaCreateGameObject(&sky, "models/plane.glb", "sky", (vec3){0, 0, 0}, (vec3){2, 2, 2}, (vec3){0, 90, 0}, GTMA_FLAG_NONE);
+    gtmaCreateGameObject(&sky, "models/plane.glb", "sky", (vec3){0, 0, 0}, (vec3){2, 2, 2}, (vec3){0, 90, 0}, GTMA_NONE);
     //for (int i = 0; i < sky.model.meshCount; i++) { sky.model.meshes[i].lit = false; }
     //sky.model.meshes[0].texture.id = titlescreenplanetex.id;
-    gtmaCreateGameObject(&plane2, "models/plane.glb", "sky", (vec3){73, 0, 0}, (vec3){2, 2, 2}, (vec3){0, 90, 0}, GTMA_FLAG_NONE);
+    gtmaCreateGameObject(&plane2, "models/plane.glb", "sky", (vec3){73, 0, 0}, (vec3){2, 2, 2}, (vec3){0, 90, 0}, GTMA_NONE);
     //plane2.model.meshes[0].texture.id = titlescreenplanetex.id;
     //for (int i = 0; i < plane2.model.meshCount; i++) { plane2.model.meshes[i].lit = false; }
 
-    gtmaCreateScreenObject(&logo, "images/gtmalogo.png", "logo", (vec2){(float)getWindowWidth()/2, (float)getWindowHeight()/2 - 140}, (vec2){280, 60}, 0, GTMA_FLAG_NONE);
+    gtmaCreateScreenObject(&logo, "images/gtmalogo.png", "logo", (vec2){(float)getWindowWidth()/2, (float)getWindowHeight()/2 - 140}, (vec2){280, 60}, 0, GTMA_NONE);
 
-    gtmaCreatePointLight(&light, (vec3){camPos[0], camPos[1], camPos[2]}, (vec3){brightness, brightness, brightness}, GTMA_FLAG_NONE);
+    gtmaCreatePointLight(&light, (vec3){camPos[0], camPos[1], camPos[2]}, (vec3){brightness, brightness, brightness}, GTMA_NONE);
 
 
-    gtmaCreateText(&text, "efghijklmnop", "images/font.png", (vec2){0, 16}, (vec2){5,8}, 1, GTMA_FLAG_NONE);
+    gtmaCreateText(&text, "efghijklmnop", "images/font.png", (vec2){0, 16}, (vec2){5,8}, 1, GTMA_NONE);
 
 
 
@@ -86,7 +89,7 @@ static void initScene() {
     gtmaAddGameObject(&sky, &sceneObjectPack);
     gtmaAddGameObject(&plane2, &sceneObjectPack);
     gtmaAddScreenObject(&logo, &sceneScreenPack);
-    gtmaAddScreenObject(&text, &sceneScreenPack);
+    //gtmaAddScreenObject(&text, &sceneScreenPack);
     gtmaAddLight(&light, &sceneLightPack);
 
     gtmaSetClearColor(9, 8, 22);
@@ -95,11 +98,8 @@ static void initScene() {
 
     gtmaCameraMatrix(&camera, 0.1f, 450.0f, gtmaGetShader());
 
-    gtmaInitScene(&titleScreen, &player, &sceneObjectPack, &sceneScreenPack, (vec3){0, 0.4, -0.35});
+    gtmaInitScene(&titleScreen, &player, &sceneObjectPack, &sceneScreenPack, &sceneEntityPack, (vec3){0, 0.4, -0.35});
     gtmaToggleCrosshair(&titleScreen, false);
-
-    gtmaBeep();
-
 
 }
 
@@ -109,6 +109,7 @@ extern Scene robert;
 extern Scene testScene1;
 extern Scene deansHallway;
 extern Scene circleHallway;
+extern Scene gunTest;
 
 static bool spectating = true;
 
@@ -134,26 +135,24 @@ static void updateScene() {
     //sky.rotation[2] -= 1 * getDeltaTime();
 
     if(isKeyPressed(SDL_SCANCODE_1)) {
-        logo.flags |= GTMA_FLAG_INVISIBLE;
+        logo.flags |= GTMA_INVISIBLE;
         sceneIndex = 0;
     } else if(isKeyPressed(SDL_SCANCODE_2)) {
-        logo.flags |= GTMA_FLAG_INVISIBLE;
+        logo.flags |= GTMA_INVISIBLE;
         SDL_SetRelativeMouseMode(true);
-        gtmaBeep();
         switchScene(&outdoorScene);
     } else if(isKeyPressed(SDL_SCANCODE_3)) {
-        logo.flags |= GTMA_FLAG_INVISIBLE;
+        logo.flags |= GTMA_INVISIBLE;
         SDL_SetRelativeMouseMode(true);
-        gtmaBeep();
         switchScene(&deansHallway);
     } else if(isKeyPressed(SDL_SCANCODE_4)) {
-        logo.flags |= GTMA_FLAG_INVISIBLE;
+        logo.flags |= GTMA_INVISIBLE;
         SDL_SetRelativeMouseMode(true);
-        gtmaBeep();
         switchScene(&circleHallway);
     } else if(isKeyPressed(SDL_SCANCODE_5)) {
-        logo.flags |= GTMA_FLAG_INVISIBLE;
-        sceneIndex = 4;
+        logo.flags |= GTMA_INVISIBLE;
+        SDL_SetRelativeMouseMode(true);
+        switchScene(&gunTest);
     }
 
     if(camera.position[0] > planeLimit) {

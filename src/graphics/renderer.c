@@ -7,13 +7,13 @@
 #include <string.h>
 #include "shader.h"
 #include "models.h"
-#include "../scenes/objects.h"
+#include "../objects/objects.h"
 #include "camera.h"
 #include "texture.h"
 #include "../window/events.h"
 #include "../util/config.h"
+#include "../objects/entities.h"
 #include "../window/windowManager.h"
-#include <stb_easy_font.h>
 
 Shader shader;
 Camera* renderCamera;
@@ -37,6 +37,7 @@ float fboBrightness = 1;
 GameObjectPack* objPack;
 ScreenObjectPack* screenPack;
 PointLightPack* lightPack;
+EntityPack* entPack;
 
 void gtmaInitRenderer() {
 
@@ -134,7 +135,7 @@ void gtmaRenderScreen() {
 
     for (int i = 0; i < screenPack->objectCount; i++) {
         ScreenObject* obj = screenPack->objects[i];
-        if ((obj->flags & GTMA_FLAG_INVISIBLE)) continue;
+        if ((obj->flags & GTMA_INVISIBLE)) continue;
         gtmaSetBool(&shader, "text", false);
     	for (int j = 0; j < obj->model.meshCount; j++) {
             Mesh mesh = obj->model.meshes[j];
@@ -159,6 +160,7 @@ void gtmaRenderScreen() {
             glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);
         }
     }
+
 }
 
 void gtmaRenderFBO() {
@@ -228,8 +230,8 @@ void gtmaRenderScene() {
 
             gtmaSetVec3(&shader, posStr, lightPack->lights[i]->position);
             gtmaSetVec3(&shader, colStr, lightPack->lights[i]->color);
-            gtmaSetBool(&shader, actStr, !(lightPack->lights[i]->flags & GTMA_FLAG_INVISIBLE));
-            gtmaSetBool(&shader, sunStr, lightPack->lights[i]->flags & GTMA_FLAG_SUNMODE);
+            gtmaSetBool(&shader, actStr, !(lightPack->lights[i]->flags & GTMA_INVISIBLE));
+            gtmaSetBool(&shader, sunStr, lightPack->lights[i]->flags & GTMA_SUNMODE);
             gtmaSetFloat(&shader, rngStr, lightPack->lights[i]->range);
             gtmaSetFloat(&shader, "ambientLevel", ambientLight);
 
@@ -258,7 +260,7 @@ void gtmaRenderScene() {
     if(objPack != NULL) {
         for (int i = 0; i < objPack->objectCount; i++) {
 
-            if (objPack->objects[i]->flags & GTMA_FLAG_BILLBOARD) {
+            if (objPack->objects[i]->flags & GTMA_BILLBOARD) {
                 objPack->objects[i]->rotation[1] = -renderCamera->yaw;
             }
 
@@ -267,18 +269,58 @@ void gtmaRenderScene() {
             for(int j = 0; j < model->meshCount; j++) {
 
                 Mesh mesh = model->meshes[j];
-                if(mesh.flags & GTMA_FLAG_INVISIBLE) {
+                if(mesh.flags & GTMA_INVISIBLE) continue;
+                glBindVertexArray(mesh.VAO);
+                glBindBuffer(GL_ARRAY_BUFFER, mesh.VBO);
+                glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.EBO);
+                mat4 transformationMatrix;
+                gtmaLoadTransformationMatrix(&transformationMatrix, objPack->objects[i]->position, objPack->objects[i]->rotation, objPack->objects[i]->scale);
+                gtmaSetBool(&shader, "ui", false);
+                gtmaSetMatrix(&shader, "transMatrix", transformationMatrix);
+                gtmaSetBool(&shader, "lightEnabled", !(mesh.flags & GTMA_UNLIT));
+                gtmaSetVec3(&shader, "meshColor", mesh.color);
+                gtmaSetVec3(&shader, "viewPos", renderCamera->renderPos);
+                gtmaSetVec3(&shader, "clearColor", clearColor);
+                gtmaSetFloat(&shader, "fogLevel", fogLevel);
+                gtmaSetInt(&shader, "meshIndex", j);
+                vec2 screenRes = {getWindowWidth(), getWindowHeight()};
+                vec2 frameRes = {renderWidth, renderHeight};
+                gtmaSetVec2(&shader, "screenRes", screenRes);
+                gtmaSetVec2(&shader, "frameRes", frameRes);
+                gtmaSetBool(&shader, "ditherEnabled", cfgLookupBool("ditherEnabled"));
+                gtmaSetBool(&shader, "vertexSnap", cfgLookupBool("vertexSnap"));
+
+                glBindTexture(GL_TEXTURE_2D, mesh.texture.id);
+                glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);
+                
+            }
+        }
+
+        for (int i = 0; i < entPack->entityCount; i++) {
+
+            if (entPack->entities[i]->flags & GTMA_BILLBOARD) {
+                entPack->entities[i]->rotation[1] = -renderCamera->yaw;
+            }
+
+            if(entPack->entities[i]->flags & GTMA_INVISIBLE) continue;
+
+            Model* model = &entPack->entities[i]->model;
+
+            for(int j = 0; j < model->meshCount; j++) {
+
+                Mesh mesh = model->meshes[j];
+                if(mesh.flags & GTMA_INVISIBLE) {
                     continue;
                 }
                 glBindVertexArray(mesh.VAO);
                 glBindBuffer(GL_ARRAY_BUFFER, mesh.VBO);
                 glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.EBO);
                 mat4 transformationMatrix;
-                gtmaLoadTransformationMatrix(&transformationMatrix, objPack->objects[i]);
+                gtmaLoadTransformationMatrix(&transformationMatrix, entPack->entities[i]->position, entPack->entities[i]->rotation, entPack->entities[i]->scale);
                 gtmaSetBool(&shader, "ui", false);
                 gtmaSetMatrix(&shader, "transMatrix", transformationMatrix);
-                gtmaSetBool(&shader, "lightEnabled", !(mesh.flags & GTMA_FLAG_UNLIT));
-                gtmaSetFloat(&shader, "meshBrightness", mesh.brightness);
+                gtmaSetBool(&shader, "lightEnabled", !(mesh.flags & GTMA_UNLIT));
+                gtmaSetVec3(&shader, "meshColor", mesh.color);
                 gtmaSetVec3(&shader, "viewPos", renderCamera->renderPos);
                 gtmaSetVec3(&shader, "clearColor", clearColor);
                 gtmaSetFloat(&shader, "fogLevel", fogLevel);
@@ -318,15 +360,23 @@ void gtmaSetClearColor(float r, float g, float b) {
 }
 
 void gtmaLoadGameObjectPack(GameObjectPack* pack) {
+    pack->objectCount = 0;
     objPack = pack;
 }
 
 void gtmaLoadPointLightPack(PointLightPack* pack) {
+    pack->lightCount = 0;
     lightPack = pack;
 }
 
 void gtmaLoadScreenObjectPack(ScreenObjectPack* pack) {
+    pack->objectCount = 0;
     screenPack = pack;
+}
+
+void gtmaLoadEntityPack(EntityPack* pack) {
+    pack->entityCount = 0;
+    entPack = pack;
 }
 
 Shader* gtmaGetShader() {

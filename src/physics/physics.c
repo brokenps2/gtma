@@ -6,8 +6,9 @@
 #include <string.h>
 #include "physics.h"
 #include "../graphics/models.h"
-#include "../scenes/objects.h"
-#include "../scenes/player.h"
+#include "../objects/objects.h"
+#include "../objects/player.h"
+#include "../objects/entities.h"
 
 void calculateMeshAABB(Mesh* mesh, vec3 objScale, vec3 objPosition) {
     float minX = FLT_MAX, maxX = -FLT_MAX;
@@ -148,12 +149,14 @@ bool updatePlayerPhysics(GameObjectPack* objPack, Player* player) {
     for(int i = 0; i < objPack->objectCount; i++) {
         GameObject* obj = objPack->objects[i];
 
+        if(obj->flags & GTMA_NOCOLLIDE) continue;
+
         for(int j = 0; j < obj->model.meshCount; j++) {
 
             Mesh mesh = obj->model.meshes[j];
-            if(testAABBIntersection(mesh.aabb, player->aabb) && !(obj->flags & GTMA_FLAG_NOCOLLIDE)) {
+            if(testAABBIntersection(mesh.aabb, player->aabb) && !(mesh.flags & GTMA_NOCOLLIDE)) {
 
-                if (obj->flags & GTMA_FLAG_PICKABLE) {
+                if (obj->flags & GTMA_PICKABLE) {
                     player->currentCollisions = realloc(player->currentCollisions, (player->currentCollisionCount + 1) * sizeof(GameObject*));
                     if (player->currentCollisions) {
                         player->currentCollisions[player->currentCollisionCount] = obj;
@@ -161,7 +164,7 @@ bool updatePlayerPhysics(GameObjectPack* objPack, Player* player) {
                     }
                 }
 
-                if(!(obj->flags & GTMA_FLAG_VERTEX_COLLIDE)) {
+                if(!(obj->flags & GTMA_VERTEX_COLLIDE)) {
                     return true;
                 }
 
@@ -216,9 +219,9 @@ bool rayIntersectsAABB(vec3 rayOrigin, vec3 rayDir, AABB* aabb, float* t) {
     return true;
 }
 
-const char* pickObject(GameObjectPack* pack, Camera* cam) {
+GameObject* pickObject(GameObjectPack* pack, Camera* cam) {
 
-    const char* picked = NULL;
+    GameObject* picked = NULL;
     float closestT = FLT_MAX;
 
     vec3 rayOrigin;
@@ -235,21 +238,60 @@ const char* pickObject(GameObjectPack* pack, Camera* cam) {
         GameObject* obj = pack->objects[i];
         float t;
         for(int j = 0; j < obj->model.meshCount; j++) {
-            if ((obj->flags & GTMA_FLAG_PICKABLE) && rayIntersectsAABB(rayOrigin, rayDir, &obj->model.meshes[j].aabb, &t)) {
-                t = fabs(t);
-                if (t < closestT) {
+            if ((obj->flags & GTMA_PICKABLE) && rayIntersectsAABB(rayOrigin, rayDir, &obj->model.meshes[j].aabb, &t)) {
+                t = fabsf(t);
+
+                float dx = obj->position[0] - cam->position[0];
+                float dy = obj->position[1] - cam->position[1];
+                float dz = obj->position[2] - cam->position[2];
+                float dist = sqrtf(dx*dx + dy*dy + dz*dz);
+    
+                if (dist < obj->pickableDistance && t < closestT) {
                     closestT = t;
-                    if(sqrt(pow((obj->position[0] - cam->position[0]), 2) + pow((obj->position[1] - cam->position[1]), 2) + pow((obj->position[2] - cam->position[2]), 2)) < obj->pickableDistance) {
-                        picked = obj->name;
-                    }
+                    picked = obj;
                 }
             }
         }
         
     }
 
-    if(picked == NULL) {
-        picked = "none";
+    return picked;
+}
+
+Entity* pickEntity(EntityPack* pack, Camera* cam) {
+
+    Entity* picked = NULL;
+    float closestT = FLT_MAX;
+
+    vec3 rayOrigin;
+    glm_vec3_copy(cam->position, rayOrigin);
+
+    vec3 rayDir = {
+        cos(glm_rad(cam->yaw)) * cos(glm_rad(cam->pitch)),
+        sin(glm_rad(cam->pitch)),
+        sin(glm_rad(cam->yaw)) * cos(glm_rad(cam->pitch))
+    };
+    glm_vec3_normalize(rayDir);
+
+    for (int i = 0; i < pack->entityCount; i++) {
+        Entity* entity = pack->entities[i];
+        float t;
+        for(int j = 0; j < entity->model.meshCount; j++) {
+            if ((entity->flags & GTMA_PICKABLE) && rayIntersectsAABB(rayOrigin, rayDir, &entity->model.meshes[j].aabb, &t)) {
+                t = fabsf(t);
+
+                float dx = entity->position[0] - cam->position[0];
+                float dy = entity->position[1] - cam->position[1];
+                float dz = entity->position[2] - cam->position[2];
+                float dist = sqrtf(dx*dx + dy*dy + dz*dz);
+    
+                if (dist < entity->pickableDistance && t < closestT) {
+                    closestT = t;
+                    picked = entity;
+                }
+            }
+        }
+        
     }
 
     return picked;

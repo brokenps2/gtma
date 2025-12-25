@@ -1,6 +1,6 @@
 #include "../graphics/camera.h"
 #include "../graphics/shader.h"
-#include "objects.h"
+#include "../objects/objects.h"
 #include "../graphics/renderer.h"
 #include <SDL2/SDL.h>
 #include "scenes.h"

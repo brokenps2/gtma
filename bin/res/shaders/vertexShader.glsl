@@ -12,7 +12,7 @@ struct PointLight {
     float range;
 };
 
-uniform PointLight pointLights[32]; //remember this incase I somehow need more
+uniform PointLight pointLights[64]; //remember this incase I somehow need more
 uniform int actualLightCount = 0;
 
 out vec2 outTexCoord;

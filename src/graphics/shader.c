@@ -102,6 +102,8 @@ void gtmaCreatePointLight(PointLight* light, vec3 position, vec3 color, unsigned
 
     light->range = 1;
 
+    light->inPack = false;
+
     light->flags = 0;
     light->flags |= flags;
 }
