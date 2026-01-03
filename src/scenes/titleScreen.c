@@ -74,6 +74,7 @@ static void initScene() {
     //for (int i = 0; i < plane2.model.meshCount; i++) { plane2.model.meshes[i].lit = false; }
 
     gtmaCreateScreenObject(&logo, "images/gtmalogo.png", "logo", (vec2){(float)getWindowWidth()/2, (float)getWindowHeight()/2 - 140}, (vec2){280, 60}, 0, GTMA_NONE);
+    logo.flags &= ~GTMA_INVISIBLE;
 
     gtmaCreatePointLight(&light, (vec3){camPos[0], camPos[1], camPos[2]}, (vec3){brightness, brightness, brightness}, GTMA_NONE);
 
@@ -98,7 +99,7 @@ static void initScene() {
 
     gtmaCameraMatrix(&camera, 0.1f, 450.0f, gtmaGetShader());
 
-    gtmaInitScene(&titleScreen, &player, &sceneObjectPack, &sceneScreenPack, &sceneEntityPack, (vec3){0, 0.4, -0.35});
+    gtmaInitScene(&titleScreen, &player, &sceneObjectPack, &sceneScreenPack, &sceneEntityPack, (vec3){0, 0.4, -0.35}, false);
     gtmaToggleCrosshair(&titleScreen, false);
 
 }
@@ -136,7 +137,8 @@ static void updateScene() {
 
     if(isKeyPressed(SDL_SCANCODE_1)) {
         logo.flags |= GTMA_INVISIBLE;
-        sceneIndex = 0;
+        SDL_SetRelativeMouseMode(true);
+        switchScene(&testScene1);
     } else if(isKeyPressed(SDL_SCANCODE_2)) {
         logo.flags |= GTMA_INVISIBLE;
         SDL_SetRelativeMouseMode(true);
@@ -170,9 +172,6 @@ static void updateScene() {
 
     gtmaCameraMatrix(&camera, 0.1f, 450.0f, gtmaGetShader());
     gtmaCameraLook(&camera);
-    
-    printf("\r%f %f %f", camera.position[0], camera.position[1], camera.position[2]);
-    fflush(stdout);
     
     if(isKeyPressed(SDL_SCANCODE_P)) spectating = !spectating;
 

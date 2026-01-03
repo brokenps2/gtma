@@ -1,26 +1,11 @@
 {
   "resLoc": "res/",
   "title": "gtma",
-  "width": 1280,
-  "height": 800,
+  "width": 1024,
+  "height": 768,
   "mouseSensitivity": 6,
-  "fboScaleFactor": 1,
+  "fboScaleFactor": 0.5,
   "vertexSnap": false,
-  "ditherEnabled": false,
-  "testObjs": [
-    {
-      "name": "john1"
-    },
-    {
-      "name": "john2"
-    },
-    {
-      "name": "john3"
-    },
-    {
-      "name": "john4"
-    }
-  ]
-  }
+  "ditherEnabled": true
 }
 

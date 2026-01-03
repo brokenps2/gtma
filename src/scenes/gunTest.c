@@ -89,7 +89,7 @@ static void initScene() {
     camera.pitch = -85;
     gtmaCameraMatrix(&camera, 0.1f, 450.0f, gtmaGetShader());
 
-    gtmaInitScene(&gunTest, &player, &sceneObjectPack, &sceneScreenPack, &sceneEntityPack, camPos);
+    gtmaInitScene(&gunTest, &player, &sceneObjectPack, &sceneScreenPack, &sceneEntityPack, camPos, true);
     gtmaAddScreenObject(&gun, &sceneScreenPack);
 
 }
@@ -109,10 +109,6 @@ static void updateScene() {
     gtmaCameraMatrix(&camera, 0.1f, 650.0f, gtmaGetShader());
     gtmaPlayerMove(&player, &sceneObjectPack, spectating);
     glm_vec3_copy(camera.position, sky.position);
-
-    //player pos printout
-    printf("\r%f %f %f", camera.position[0], camera.position[1], camera.position[2]);
-    fflush(stdout);
 
     //misc
     if(isKeyPressed(SDL_SCANCODE_P)) spectating = !spectating;

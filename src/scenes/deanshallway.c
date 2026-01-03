@@ -79,7 +79,7 @@ static void initScene() {
     gtmaAddLight(&light4, &sceneLightPack);
     gtmaAddLight(&light5, &sceneLightPack);
 
-    gtmaInitScene(&deansHallway, &player, &sceneObjectPack, &sceneScreenPack, &sceneEntityPack, camPos);
+    gtmaInitScene(&deansHallway, &player, &sceneObjectPack, &sceneScreenPack, &sceneEntityPack, camPos, false);
 
     gtmaSetFogLevel(0.0035);
 
@@ -106,11 +106,11 @@ static void updateScene() {
     gtmaPlayerMove(&player, &sceneObjectPack, spectating);
 
     //player pos printout
-    printf("\r%f %f %f", camera.position[0], camera.position[1], camera.position[2]);
-    fflush(stdout);
+    //printf("\r%f %f %f", camera.position[0], camera.position[1], camera.position[2]);
+    //fflush(stdout);
 
     if(isLeftPressed()) {
-        if(strcmp(pickObject(&sceneObjectPack, &camera)->name, "deanWarp") == 0) {
+        if(pickObject(&sceneObjectPack, &camera) == &deanWarp) {
             gtmaPlayDoorSound();
             switchScene(&deansGarden);
         }

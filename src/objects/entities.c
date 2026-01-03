@@ -9,7 +9,7 @@
 #include <string.h>
 #include "window/windowManager.h"
 
-void gtmaCreateEntity(Entity *entity, const char *texPath, const char *name, float *position, float *scale, float *rotation, int health, unsigned int flags) {
+void gtmaCreateEntity(Entity *entity, const char *texPath, const char *name, vec3 position, vec3 scale, vec3 rotation, int health, unsigned int flags) {
     Model model;
 /*
     float vertices[] = {

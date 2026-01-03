@@ -85,6 +85,10 @@ bool isMouseCaptured() {
     return mouseCaptured;
 }
 
+float gtmaGetFramerate() {
+    return 1 / deltaTime;
+}
+
 void gtmaUpdateWindow() {
     double currentTime = (double)SDL_GetTicks() / 1000;
     deltaTime = currentTime - lastTime;
@@ -116,8 +120,7 @@ void gtmaUpdateWindow() {
         usleep(timeToSleep * 1e6);
     }
 
-    //printf("\r%lf", 1 / deltaTime);
-    //fflush(stdout);
+    gtmaEndInputFrame();
 
     SDL_GL_SwapWindow(window);
 

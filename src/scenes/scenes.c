@@ -12,6 +12,7 @@
 #include <SDL2/SDL_mouse.h>
 #include <cglm/vec3.h>
 #include <stdbool.h>
+#include <stdio.h>
 #include <string.h>
 
 extern Scene* currentScene;
@@ -48,7 +49,7 @@ void gtmaToggleCrosshair(Scene* scene, bool toggle) {
     }
 }
 
-void gtmaInitScene(Scene* scene, Player* player, GameObjectPack* objectPack, ScreenObjectPack* screenObjPack, EntityPack* entityPack, vec3 spawnpoint) {
+void gtmaInitScene(Scene* scene, Player* player, GameObjectPack* objectPack, ScreenObjectPack* screenObjPack, EntityPack* entityPack, vec3 spawnpoint, bool debug) {
     scene->player = player;
     scene->screenPack = screenObjPack;
     scene->objPack = objectPack;
@@ -73,6 +74,8 @@ void gtmaInitScene(Scene* scene, Player* player, GameObjectPack* objectPack, Scr
     gtmaStopSound(&doorSound);
 
     glm_vec3_copy(spawnpoint, scene->spawnpoint);
+
+    scene->debugInfo = debug;
 }
 
 void gtmaSetEditMode(int set) {
@@ -178,7 +181,7 @@ bool gtmaUpdateScene(Scene* scene, Player* player) {
     gtmaUpdateAudio(player->position, player->camera->direction);
 
     bool isHighlighted;
-    if(pickObject(scene->objPack, scene->player->camera) == NULL) {
+    if(pickObject(scene->objPack, scene->player->camera) != NULL) {
         isHighlighted = true;
     } else {
         isHighlighted = false;
@@ -191,6 +194,11 @@ bool gtmaUpdateScene(Scene* scene, Player* player) {
             crosshair.model.meshes[0].texture.id = regularCrosshair.id;
         }
         lastState = isHighlighted;
+    }
+
+    if(scene->debugInfo) {
+        printf("\rx:%f y:%f z:%f    pitch:%f yaw:%f    %ffps", player->position[0], player->position[1], player->position[2], player->camera->pitch, player->camera->yaw, gtmaGetFramerate());
+        fflush(stdout);
     }
 
     // Always update screen positions

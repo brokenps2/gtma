@@ -106,7 +106,7 @@ static void initScene() {
     camera.yaw = 90;
     camera.pitch = 0;
 
-    gtmaInitScene(&circleHallway, &player, &sceneObjectPack, &sceneScreenPack, &sceneEntityPack, (vec3){0, 11, 48});
+    gtmaInitScene(&circleHallway, &player, &sceneObjectPack, &sceneScreenPack, &sceneEntityPack, (vec3){0, 11, 48}, true);
 
     SDL_SetRelativeMouseMode(true);
     gtmaToggleControls(true);
@@ -132,10 +132,6 @@ static void updateScene() {
     //camera stuff
     gtmaCameraMatrix(&camera, 0.1f, 650.0f, gtmaGetShader());
     gtmaPlayerMove(&player, &sceneObjectPack, spectating);
-
-    //player pos printout
-    printf("\r%f %f %f", camera.position[0], camera.position[1], camera.position[2]);
-    fflush(stdout);
 
     //misc
     if(isKeyPressed(SDL_SCANCODE_P)) spectating = !spectating;

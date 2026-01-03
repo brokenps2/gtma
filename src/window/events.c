@@ -14,8 +14,8 @@ int windowPosX = 800, windowPosY = 200;
 int windowSizeX = 1280, windowSizeY = 960;
 bool dimensionsUpdated = false;
 
-bool mouse1;
-bool mouse2;
+bool mouse1, mouse1Pressed;
+bool mouse2, mouse2Pressed;
 
 bool running = true;
 
@@ -49,9 +49,7 @@ bool isLeftDown() {
 }
 
 bool isLeftPressed() {
-    bool pressed = mouse1;
-    mouse1 = false;
-    return pressed;
+    return mouse1Pressed;
 }
 
 bool isRightDown() {
@@ -59,9 +57,7 @@ bool isRightDown() {
 }
 
 bool isRightPressed() {
-    bool pressed = mouse2;
-    mouse2 = false;
-    return pressed;
+    return mouse2Pressed;
 }
 
 int getWindowWidth() {
@@ -122,18 +118,22 @@ void keyUpCallback(SDL_KeyboardEvent keyEvent) {
 void mouseDownCallback(SDL_MouseButtonEvent mouseEvent) {
     if (mouseEvent.button == SDL_BUTTON_LEFT) {
         mouse1 = true;
+        mouse1Pressed = true;
     }
     if (mouseEvent.button == SDL_BUTTON_RIGHT) {
         mouse2 = true;
+        mouse2Pressed = true;
     }
 }
 
 void mouseUpCallback(SDL_MouseButtonEvent mouseEvent) {
     if (mouseEvent.button == SDL_BUTTON_LEFT) {
         mouse1 = false;
+        mouse1Pressed = false;
     }
     if (mouseEvent.button == SDL_BUTTON_RIGHT) {
         mouse2 = false;
+        mouse1Pressed = false;
     }
 }
 
@@ -185,6 +185,11 @@ void gtmaToggleControls(bool onoff) {
     if(onoff == false) SDL_FlushEvents(SDL_FIRSTEVENT, SDL_LASTEVENT);
     controlsEnabled = onoff;
     gtmaClearKeyInputs();
+}
+
+void gtmaEndInputFrame() {
+    mouse1Pressed = false;
+    mouse2Pressed = false;
 }
 
 void gtmaUpdateEvents() {

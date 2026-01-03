@@ -110,7 +110,7 @@ static void initScene() {
     gtmaCameraMatrix(&camera, 0.1f, 450.0f, gtmaGetShader());
     camera.pitch = 0;
 
-    gtmaInitScene(&deansGarden, &player, &sceneObjectPack, &sceneScreenPack, &sceneEntityPack, camPos);
+    gtmaInitScene(&deansGarden, &player, &sceneObjectPack, &sceneScreenPack, &sceneEntityPack, camPos, true);
 
 }
 
@@ -154,10 +154,6 @@ static void updateScene() {
     gtmaPlayerMove(&player, &sceneObjectPack, spectating);
     glm_vec3_copy(camera.position, sky.position);
 
-    //player pos printout
-    printf("\r%f %f %f", camera.position[0], camera.position[1], camera.position[2]);
-    fflush(stdout);
-    
     if(isLeftPressed()) {
         if(strcmp(pickObject(&sceneObjectPack, &camera)->name, "hallWarp") == 0) {
             sceneIndex = 0;

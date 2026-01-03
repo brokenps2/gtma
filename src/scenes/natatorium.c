@@ -95,7 +95,7 @@ static void initScene() {
 
     gtmaCameraMatrix(&camera, 0.1f, 450.0f, gtmaGetShader());
 
-    gtmaInitScene(&natatorium, &player, &sceneObjectPack, &sceneScreenPack, &sceneEntityPack, camPos);
+    gtmaInitScene(&natatorium, &player, &sceneObjectPack, &sceneScreenPack, &sceneEntityPack, camPos, true);
 
 
 }
@@ -123,9 +123,6 @@ static void updateScene() {
 
     gtmaPlayerMove(&player, &sceneObjectPack, spectating);
     gtmaCameraMatrix(&camera, 0.1f, 450.0f, gtmaGetShader());
-    
-    printf("\r%f %f %f", camera.position[0], camera.position[1], camera.position[2]);
-    fflush(stdout);
     
     crosshair.position[0] = ((float)getWindowWidth() / 2);
     crosshair.position[1] = ((float)getWindowHeight() / 2);

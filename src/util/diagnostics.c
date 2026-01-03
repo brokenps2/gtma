@@ -30,7 +30,7 @@ void gtmaPrintSystemInfo() {
     gtmaLog(LOG_INFO, "OpenGL: %s", glGetString(GL_VERSION));
     gtmaLog(LOG_INFO, "GLSL: %s", glGetString(GL_SHADING_LANGUAGE_VERSION));
     gtmaLog(LOG_INFO, "GPU: %s", glGetString(GL_RENDERER));
-    gtmaLog(LOG_INFO, "Vendor:%s", glGetString(GL_VENDOR));
+    gtmaLog(LOG_INFO, "Vendor: %s", glGetString(GL_VENDOR));
 
     ALCdevice* device = alcGetContextsDevice(alcGetCurrentContext());
     const ALCchar* name = alcGetString(device, ALC_DEVICE_SPECIFIER);

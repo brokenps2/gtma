@@ -10,3 +10,4 @@ float getDeltaTime();
 SDL_Window* getWindow();
 void gtmaCloseWindow();
 bool isMouseCaptured();
+float gtmaGetFramerate();
