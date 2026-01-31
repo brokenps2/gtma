@@ -77,7 +77,7 @@ void initScene() {
 
     gtmaCreateCamera(&camera, camPos);
     gtmaSetRenderCamera(&camera);
-    gtmaCreatePlayer(&player, &camera, 100, 10, 6);
+    gtmaCreatePlayer(&player, &camera, 100, 6, 10);
 
     gtmaCreatePointLight(&light1, (vec3){-25, -4, 0}, (vec3){brightness/2, brightness/2, brightness/2}, GTMA_NONE);
     gtmaCreatePointLight(&light2, (vec3){0, 12, 0}, (vec3){brightness, brightness, brightness}, GTMA_NONE);
@@ -130,6 +130,10 @@ void updateScene() {
 
     if(gtmaUpdateScene(&testScene1, &player)) {
         return;
+    }
+
+    if(pickObject(&sceneObjectPack, &camera) == &stonelandWarp) {
+        switchScene(&outdoorScene);
     }
 
     gtmaCameraMatrix(&camera, 0.1f, 450.0f, gtmaGetShader());

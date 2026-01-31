@@ -2,6 +2,7 @@
 #include <stdbool.h>
 #include "../objects/objects.h"
 #include "../physics/physics.h"
+#include "graphics/shader.h"
 
 typedef struct Scene {
     void (*init)();
@@ -21,4 +22,5 @@ void gtmaToggleCrosshair(Scene* scene, bool toggle);
 bool gtmaUpdateScene(Scene* scene, Player* player);
 void gtmaPlayDoorSound();
 void gtmaBeep();
+void gtmaSpawnLightGrid(PointLightPack* pack, float brightness, int lightCount, float maxPos, float minPos);
 void switchScene(Scene* newScene);

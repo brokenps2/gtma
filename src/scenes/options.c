@@ -1,3 +1,4 @@
+
 #include "../graphics/camera.h"
 #include "../graphics/shader.h"
 #include "../graphics/texture.h"
@@ -5,7 +6,7 @@
 #include "../objects/objects.h"
 #include "scenes.h"
 #include "../graphics/renderer.h"
-#include "../objects/objects.h"
+#include "../audio/audio.h"
 #include "../window/events.h"
 #include "../objects/entities.h"
 #include "../objects/player.h"
@@ -13,12 +14,13 @@
 #include <SDL2/SDL_mouse.h>
 #include <SDL2/SDL_scancode.h>
 #include <cglm/vec3.h>
+#include <stdio.h>
 #include "../window/windowManager.h"
 
 static void initScene();
 static void updateScene();
 static void disposeScene();
-Scene titleScreen = {
+Scene optionsMenu = {
     .init = initScene,
     .update = updateScene,
     .dispose = disposeScene
@@ -45,10 +47,12 @@ static PointLight light;
 static Texture titlescreenplanetex;
 
 static float brightness = 1.0f;
-int randomNumber;
+static int randomNumber;
 
-int planeNo = 0;
-float planeLimit = 73;
+static int planeNo = 0;
+static float planeLimit = 73;
+
+static int sceneIndex = 0;
 
 static void initScene() {
 
@@ -96,8 +100,8 @@ static void initScene() {
 
     gtmaCameraMatrix(&camera, 0.1f, 450.0f, gtmaGetShader());
 
-    gtmaInitScene(&titleScreen, &player, &sceneObjectPack, &sceneScreenPack, &sceneEntityPack, (vec3){0, 0.4, -0.35}, false);
-    gtmaToggleCrosshair(&titleScreen, false);
+    gtmaInitScene(&optionsMenu, &player, &sceneObjectPack, &sceneScreenPack, &sceneEntityPack, (vec3){0, 0.4, -0.35}, false);
+    gtmaToggleCrosshair(&optionsMenu, false);
 
 }
 
@@ -108,55 +112,14 @@ extern Scene testScene1;
 extern Scene deansHallway;
 extern Scene circleHallway;
 extern Scene gunTest;
-extern Scene optionsMenu;
 
 static bool spectating = true;
 
-
-static void updateScene() {
-
-    if(gtmaUpdateScene(&titleScreen, &player)) {
-        return;
-    }
-
-    SDL_SetRelativeMouseMode(false);
-
-    logo.position[0] = ((float)getWindowWidth()/ 2); logo.position[1] = ((float)getWindowHeight() / 2 - 100);
-
-    //ogo.rotation += (sin((float)SDL_GetTics() / 1000) / 50);
-
+static void movePlaneAndCamera() {
     camera.position[0] += 3 * getDeltaTime();
     glm_vec3_copy(camera.position, light.position);
     light.position[1] += 10;
 
-    //sky.rotation[0] -= 100 * getDeltaTime();
-    //sky.rotation[1] -= 6 * getDeltaTime();
-    //sky.rotation[2] -= 1 * getDeltaTime();
-
-    if(isKeyPressed(SDL_SCANCODE_1)) {
-        logo.flags |= GTMA_INVISIBLE;
-        SDL_SetRelativeMouseMode(true);
-        switchScene(&testScene1);
-    } else if(isKeyPressed(SDL_SCANCODE_2)) {
-        logo.flags |= GTMA_INVISIBLE;
-        SDL_SetRelativeMouseMode(true);
-        switchScene(&outdoorScene);
-    } else if(isKeyPressed(SDL_SCANCODE_3)) {
-        logo.flags |= GTMA_INVISIBLE;
-        SDL_SetRelativeMouseMode(true);
-        switchScene(&deansHallway);
-    } else if(isKeyPressed(SDL_SCANCODE_4)) {
-        logo.flags |= GTMA_INVISIBLE;
-        SDL_SetRelativeMouseMode(true);
-        switchScene(&circleHallway);
-    } else if(isKeyPressed(SDL_SCANCODE_5)) {
-        logo.flags |= GTMA_INVISIBLE;
-        SDL_SetRelativeMouseMode(true);
-        switchScene(&gunTest);
-    } else if(isKeyPressed(SDL_SCANCODE_O)) {
-        logo.flags |= GTMA_INVISIBLE;
-        switchScene(&optionsMenu);
-    }
 
     if(camera.position[0] > planeLimit) {
         if(planeNo == 0) {
@@ -166,17 +129,26 @@ static void updateScene() {
             plane2.position[0] += 146;
             planeNo = 0;
         }
-
         planeLimit += 73;
-
     }
+}
+
+
+static void updateScene() {
+
+    if(gtmaUpdateScene(&optionsMenu, &player)) {
+        return;
+    }
+
+    SDL_SetRelativeMouseMode(false);
+
+    logo.position[0] = ((float)getWindowWidth()/ 2); logo.position[1] = ((float)getWindowHeight() / 2 - 100);
+
+    movePlaneAndCamera();
 
     gtmaCameraMatrix(&camera, 0.1f, 450.0f, gtmaGetShader());
     gtmaCameraLook(&camera);
     
-    if(isKeyPressed(SDL_SCANCODE_P)) spectating = !spectating;
-
-
 }
 
 static void disposeScene() {

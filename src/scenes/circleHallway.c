@@ -38,15 +38,9 @@ static GameObject sphere;
 
 static PointLight playerLamp;
 
-static float brightness = 3.85f;
-
 static bool returning = false;
 
 static bool floating = false;
-
-int lightCount = 5;
-float maxPos = 130;
-float minPos = -130;
 
 static void initScene() {
 
@@ -71,27 +65,9 @@ static void initScene() {
     gtmaSetRenderCamera(&camera);
     gtmaCreatePlayer(&player, &camera, 100, 7, 10);
 
-    float step = (maxPos - minPos) / (lightCount - 1);
+    gtmaSpawnLightGrid(&sceneLightPack, 3.85, 5, 130, -130);
 
-    for (int x = 0; x < lightCount; x++) {
-        for (int z = 0; z < lightCount; z++) {
-            vec3 position = {
-                minPos + x * step,
-                5.0f,                     // Y height of lights
-                minPos + z * step
-            };
-
-            vec3 color = { brightness, brightness, brightness};  // white light
-            unsigned int flags = 0;
-
-            gtmaCreateAndAddPointLight(&sceneLightPack, (vec3){position[0], 23, position[2]}, color, flags);
-            gtmaCreateAndAddPointLight(&sceneLightPack, (vec3){position[0], 6, position[2]}, color, flags);
-            sceneLightPack.lights[sceneLightPack.lightCount - 1]->range = 0.3;
-        }
-    }
-
-
-    gtmaCreatePointLight(&playerLamp, (vec3){camera.position[0], camera.position[1], camera.position[2]}, (vec3){brightness, brightness, brightness}, GTMA_SUNMODE); playerLamp.range = 0.02;
+    gtmaCreatePointLight(&playerLamp, (vec3){camera.position[0], camera.position[1], camera.position[2]}, (vec3){3.85, 3.85, 3.85}, GTMA_SUNMODE); playerLamp.range = 0.02;
 
     gtmaAddGameObject(&map, &sceneObjectPack);
     gtmaAddGameObject(&sphere, &sceneObjectPack);

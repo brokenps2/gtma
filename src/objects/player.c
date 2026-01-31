@@ -269,16 +269,11 @@ void gtmaPlayerMove(Player *player, GameObjectPack *objPack, bool flying) {
 
     gtmaPlayerCollide(player, objPack);
 
-    float maxFov = 65.5;
 
     if(isKeyDown(SDL_SCANCODE_LSHIFT)) {
         maxSpeed = 32;
-        cam->fov += 32 * getDeltaTime();
-        if(cam->fov > maxFov) cam->fov = maxFov;
     } else {
         maxSpeed = 20;
-        cam->fov -= 32 * getDeltaTime();
-        if(cam->fov <= 60) cam->fov = 60;
     }
 
     player->position[0] = roundf(player->position[0] * 100) / 100;

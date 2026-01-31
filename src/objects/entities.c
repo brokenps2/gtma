@@ -2,7 +2,6 @@
 #include "graphics/models.h"
 #include "objects/objects.h"
 #include "physics/physics.h"
-#include "window/events.h"
 #include <stb_image.h>
 #include <GL/glew.h>
 #include <stdio.h>

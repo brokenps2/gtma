@@ -1,6 +1,4 @@
 #include <AL/al.h>
-#include <SDL2/SDL_scancode.h>
-#include <SDL2/SDL_timer.h>
 #include <cglm/cam.h>
 #include <cglm/cglm.h>
 #include <cglm/mat4.h>
@@ -22,7 +20,8 @@ bool orthographic = false;
 
 vec2 camPosLast;
 
-float zoom = 16.0f/14.0f;
+float maxFOV = 95.5;
+float targetFOV = 88;
 
 void gtmaCreateCamera(Camera* cam, vec3 pos) {
     cam->width = getWindowWidth();
@@ -79,12 +78,7 @@ void gtmaCameraMatrix(Camera* cam, float nearPlane, float farPlane, Shader* shad
     glm_vec3_add(cam->renderPos, cam->front, cent);
 
     glm_lookat(cam->renderPos, cent, cam->up, view);
-    if(orthographic) {
-        float left = -(float)getWindowWidth() / 240, right = (float)getWindowWidth() / 240, down = -(float)getWindowWidth() / 240, up = (float)getWindowHeight() / 240;
-        glm_ortho(left / zoom, right / zoom, down / zoom, up / zoom, 1.0f, 1000.0f, proj);
-    } else {
-        glm_perspective(glm_rad(cam->fov), ((float)cam->width / (float)cam->height), nearPlane, farPlane, proj);
-    }
+    glm_perspective(glm_rad(cam->fov), ((float)cam->width / (float)cam->height), nearPlane, farPlane, proj);
 
     mat4 camCross;
     glm_mat4_mul(proj, view, camCross);
@@ -134,6 +128,14 @@ void gtmaCameraLook(Camera* cam) {
     }
     if(isKeyDown(SDL_SCANCODE_DOWN)) {
         cam->pitch -= cam->sensitivity * getDeltaTime() * 600;
+    }
+
+    if(isKeyDown(SDL_SCANCODE_LSHIFT)) {
+        cam->fov += 64 * getDeltaTime();
+        if(cam->fov > maxFOV) cam->fov = maxFOV;
+    } else {
+        cam->fov -= 64 * getDeltaTime();
+        if(cam->fov < targetFOV) cam->fov = targetFOV;
     }
 
 }

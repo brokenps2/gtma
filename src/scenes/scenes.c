@@ -213,3 +213,24 @@ bool gtmaUpdateScene(Scene* scene, Player* player) {
 
     return paused;
 }
+
+void gtmaSpawnLightGrid(PointLightPack* pack, float brightness, int lightCount, float maxPos, float minPos) {
+    float step = (maxPos - minPos) / (lightCount - 1);
+
+    for (int x = 0; x < lightCount; x++) {
+        for (int z = 0; z < lightCount; z++) {
+            vec3 position = {
+                minPos + x * step,
+                5.0f,                     // Y height of lights
+                minPos + z * step
+            };
+
+            vec3 color = { brightness, brightness, brightness};  // white light
+            unsigned int flags = 0;
+
+            gtmaCreateAndAddPointLight(pack, (vec3){position[0], 23, position[2]}, color, flags);
+            gtmaCreateAndAddPointLight(pack, (vec3){position[0], 6, position[2]}, color, flags);
+            pack->lights[pack->lightCount - 1]->range = 0.3;
+        }
+    }
+}

@@ -9,7 +9,6 @@
 #include "../objects/entities.h"
 #include "../objects/player.h"
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_timer.h>
 #include <cglm/types.h>
 #include <cglm/vec3.h>
 #include <unistd.h>
@@ -66,6 +65,7 @@ static void initScene() {
             continue;
         }
         gtmaCreateAndAddGameObject(&sceneObjectPack, "models/tree.glb", "tree", (vec3){randomX, 7, randomZ}, (vec3){3, 2, 3}, (vec3){0, 90, 0}, GTMA_BILLBOARD | GTMA_NOCOLLIDE);
+        sceneObjectPack.objects[sceneObjectPack.objectCount - 1]->flags &= ~GTMA_PICKABLE;
     }
 
     gtmaCreateTexture(&blue, "images/gradientsky.png");

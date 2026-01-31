@@ -1,4 +1,4 @@
-#version 330 core
+#version 300 es
 layout (location = 0) in vec3 position;
 layout (location = 1) in vec3 normal;
 layout (location = 2) in vec2 texCoord;
@@ -13,7 +13,7 @@ struct PointLight {
 };
 
 uniform PointLight pointLights[64]; //remember this incase I somehow need more
-uniform int actualLightCount = 0;
+uniform int actualLightCount;
 
 out vec2 outTexCoord;
 out vec3 outColor;
@@ -21,11 +21,11 @@ out vec3 outLightColor;
 out float visibility;
 
 uniform bool lightEnabled;
-uniform bool frame = false;
-uniform bool ui = false;
+uniform bool frame;
+uniform bool ui;
 uniform vec3 viewPos;
-uniform float fogLevel = 0.0022f;
-uniform float ambientLevel = 0.02;
+uniform float fogLevel;
+uniform float ambientLevel;
 
 uniform mat4 camCross;
 uniform mat4 viewMatrix;
@@ -33,11 +33,11 @@ uniform mat4 projMatrix;
 uniform mat4 transMatrix;
 uniform mat4 orthoMatrix;
 
-uniform vec2 screenRes = vec2(640, 480);
+uniform vec2 screenRes;
 uniform vec2 frameRes;
-uniform bool vertexSnap = true;
+uniform bool vertexSnap;
 
-vec3 ambient = vec3(ambientLevel);
+vec3 ambient;
 
 vec3 calcPointLight(PointLight light) {
 
@@ -53,7 +53,7 @@ vec3 calcPointLight(PointLight light) {
     float specularStrength = 0.5;
     vec3 viewDir = normalize(viewPos - lPos);
     vec3 reflectDir = reflect(-lightDir, norm);
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32.0);
     vec3 specular = specularStrength * spec * light.color;
 
     float constant = 1.0f;
@@ -62,7 +62,7 @@ vec3 calcPointLight(PointLight light) {
 
     if(!light.sunMode) {
         float distance    = length(light.position - lPos);
-        float avgBri = (light.color[0] + light.color[1] + light.color[2]) / 3;
+        float avgBri = (light.color[0] + light.color[1] + light.color[2]) / 3.0;
         float range = light.range;
         float attenuation = 1.0 / (constant + (linear * range) * distance + 
   		    (quadratic * range) * (distance * distance));
@@ -91,6 +91,8 @@ vec4 snap(vec4 vertex, vec2 resolution) {
 }
 
 void main() {
+
+    ambient = vec3(ambientLevel);
 
     if(frame) {
         gl_Position = vec4(position, 1.0);
@@ -123,14 +125,14 @@ void main() {
     }
 
     outLightColor = totalLight;
-    if(totalLight.r > 1 || totalLight.g > 1 || totalLight.b > 1) 
-        totalLight.r = 1;
-        totalLight.g = 1;
-        totalLight.b = 1;
+    if(totalLight.r > 1.0 || totalLight.g > 1.0 || totalLight.b > 1.0) 
+        totalLight.r = 1.0;
+        totalLight.g = 1.0;
+        totalLight.b = 1.0;
 
     gl_Position = camCross * transMatrix * vec4(position, 1.0);
 
-    gl_Position = snap(gl_Position, vec2(frameRes.x / 1, frameRes.y / 1));
+    gl_Position = snap(gl_Position, vec2(frameRes.x / 2.0, frameRes.y / 2.0));
 
     outColor = color;
     outTexCoord = texCoord;
@@ -138,7 +140,7 @@ void main() {
     vec4 worldPosition = transMatrix * vec4(position, 1.0);
     vec4 positionRelativeToCam = viewMatrix * worldPosition;
     float distance = length(positionRelativeToCam.xyz);
-    visibility = exp(-pow((distance*fogLevel), 5));
+    visibility = exp(-pow((distance*fogLevel), 5.0));
     visibility = clamp(visibility, 0.0, 1.0);
     
 

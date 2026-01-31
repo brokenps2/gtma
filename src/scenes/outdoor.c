@@ -114,7 +114,7 @@ static void updateScene() {
     desk.rotation[1] += 150 * getDeltaTime();
 
     if(isLeftPressed()) {
-        if(strcmp(pickObject(&sceneObjectPack, &camera)->name, "desk") == 0) {
+        if(pickObject(&sceneObjectPack, &camera) == &desk) {
             spinMap = !spinMap;
         }
     }

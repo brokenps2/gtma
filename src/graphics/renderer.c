@@ -179,54 +179,43 @@ void gtmaRenderFBO() {
     gtmaSetBool(&shader, "frame", false);
 }
 
+void gtmaRenderMesh(Mesh* mesh) {
+    if(mesh->flags & GTMA_INVISIBLE) return;
+    glBindVertexArray(mesh->VAO);
+    glBindBuffer(GL_ARRAY_BUFFER, mesh->VBO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->EBO);
+    gtmaSetBool(&shader, "ui", false);
+    gtmaSetBool(&shader, "lightEnabled", !(mesh->flags & GTMA_UNLIT));
+    gtmaSetVec3(&shader, "meshColor", mesh->color);
+
+    glBindTexture(GL_TEXTURE_2D, mesh->texture.id);
+    glDrawElements(GL_TRIANGLES, mesh->indexCount, GL_UNSIGNED_INT, 0);
+}
+
 void gtmaRenderScene() {
 
     renderWidth = getWindowWidth() * fboScaleFactor;
     renderHeight = getWindowHeight() * fboScaleFactor;
-
+    if (renderWidth != lastWidth || renderHeight != lastHeight) {
+        resizeFBO(renderWidth, renderHeight);
+        lastWidth = renderWidth;
+        lastHeight = renderHeight;
+    }
 
     if(lightPack != NULL) {
         for(int i = 0; i < lightPack->lightCount; i++) {
 
-            char ati[256];
-            char posStr[512];
-            char colStr[512];
-            char actStr[512];
-            char sunStr[512];
-            char rngStr[512];
+            char posStr[128];
+            char colStr[128];
+            char actStr[128];
+            char sunStr[128];
+            char rngStr[128];
 
-            if(i != 0) {
-                memset(ati, 0, strlen(ati));
-                memset(posStr, 0, strlen(posStr));
-                memset(colStr, 0, strlen(colStr));
-                memset(actStr, 0, strlen(actStr));
-                memset(sunStr, 0, strlen(sunStr));
-                memset(rngStr, 0, strlen(rngStr));
-            }
-
-            strcpy(ati, "pointLights[");
-            sprintf(ati + strlen(ati), "%i", i);
-            strcat(ati, "]");
-
-            strcpy(posStr, ati);
-            strcat(posStr, ".position");
-            posStr[strlen(posStr) + 1] = '\0';
-
-            strcpy(colStr, ati);
-            strcat(colStr, ".color");
-            colStr[strlen(colStr) + 1] = '\0';
-
-            strcpy(actStr, ati);
-            strcat(actStr, ".onoff");
-            actStr[strlen(actStr) + 1] = '\0';
-
-            strcpy(sunStr, ati);
-            strcat(sunStr, ".sunMode");
-            sunStr[strlen(sunStr) + 1] = '\0';
-            
-            strcpy(rngStr, ati);
-            strcat(rngStr, ".range");
-            rngStr[strlen(rngStr) + 1] = '\0';
+            snprintf(posStr, 128, "pointLights[%d].position", i);
+            snprintf(colStr, 128, "pointLights[%d].color", i);
+            snprintf(actStr, 128, "pointLights[%d].onoff", i);
+            snprintf(sunStr, 128, "pointLights[%d].sunMode", i);
+            snprintf(rngStr, 128, "pointLights[%d].range", i);
 
             gtmaSetVec3(&shader, posStr, lightPack->lights[i]->position);
             gtmaSetVec3(&shader, colStr, lightPack->lights[i]->color);
@@ -239,15 +228,8 @@ void gtmaRenderScene() {
         }
     }
 
-    if (renderWidth != lastWidth || renderHeight != lastHeight) {
-        resizeFBO(renderWidth, renderHeight);
-        lastWidth = renderWidth;
-        lastHeight = renderHeight;
-    }
-
     glEnable(GL_DEPTH_TEST);
     glViewport(0, 0, renderWidth, renderHeight);
-
     glClearColor(glc(clearColor[0]), glc(clearColor[1]), glc(clearColor[2]), 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -256,86 +238,56 @@ void gtmaRenderScene() {
     gtmaSetBool(&shader, "frame", false);
     gtmaSetFloat(&shader, "deltaTime", getDeltaTime());
 
+    gtmaSetVec3(&shader, "viewPos", renderCamera->renderPos);
+    gtmaSetVec3(&shader, "clearColor", clearColor);
+    gtmaSetFloat(&shader, "fogLevel", fogLevel);
+    vec2 screenRes = {getWindowWidth(), getWindowHeight()};
+    vec2 frameRes = {renderWidth, renderHeight};
+    gtmaSetVec2(&shader, "screenRes", screenRes);
+    gtmaSetVec2(&shader, "frameRes", frameRes);
+    gtmaSetBool(&shader, "ditherEnabled", cfgLookupBool("ditherEnabled"));
+    gtmaSetBool(&shader, "vertexSnap", cfgLookupBool("vertexSnap"));
 
     if(objPack != NULL) {
         for (int i = 0; i < objPack->objectCount; i++) {
-
             if (objPack->objects[i]->flags & GTMA_BILLBOARD) {
                 objPack->objects[i]->rotation[1] = -renderCamera->yaw;
             }
+            if (objPack->objects[i]->flags & GTMA_INVISIBLE) {
+                continue;
+            }
+
+            mat4 transformationMatrix;
+            gtmaLoadTransformationMatrix(&transformationMatrix, objPack->objects[i]->position, objPack->objects[i]->rotation, objPack->objects[i]->scale);
+            gtmaSetMatrix(&shader, "transMatrix", transformationMatrix);
 
             Model* model = &objPack->objects[i]->model;
 
             for(int j = 0; j < model->meshCount; j++) {
-
-                Mesh mesh = model->meshes[j];
-                if(mesh.flags & GTMA_INVISIBLE) continue;
-                glBindVertexArray(mesh.VAO);
-                glBindBuffer(GL_ARRAY_BUFFER, mesh.VBO);
-                glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.EBO);
-                mat4 transformationMatrix;
-                gtmaLoadTransformationMatrix(&transformationMatrix, objPack->objects[i]->position, objPack->objects[i]->rotation, objPack->objects[i]->scale);
-                gtmaSetBool(&shader, "ui", false);
-                gtmaSetMatrix(&shader, "transMatrix", transformationMatrix);
-                gtmaSetBool(&shader, "lightEnabled", !(mesh.flags & GTMA_UNLIT));
-                gtmaSetVec3(&shader, "meshColor", mesh.color);
-                gtmaSetVec3(&shader, "viewPos", renderCamera->renderPos);
-                gtmaSetVec3(&shader, "clearColor", clearColor);
-                gtmaSetFloat(&shader, "fogLevel", fogLevel);
-                gtmaSetInt(&shader, "meshIndex", j);
-                vec2 screenRes = {getWindowWidth(), getWindowHeight()};
-                vec2 frameRes = {renderWidth, renderHeight};
-                gtmaSetVec2(&shader, "screenRes", screenRes);
-                gtmaSetVec2(&shader, "frameRes", frameRes);
-                gtmaSetBool(&shader, "ditherEnabled", cfgLookupBool("ditherEnabled"));
-                gtmaSetBool(&shader, "vertexSnap", cfgLookupBool("vertexSnap"));
-
-                glBindTexture(GL_TEXTURE_2D, mesh.texture.id);
-                glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);
-                
+                Mesh* mesh = &model->meshes[j];
+                gtmaRenderMesh(mesh);
             }
         }
+    }
 
-        for (int i = 0; i < entPack->entityCount; i++) {
+    for (int i = 0; i < entPack->entityCount; i++) {
+        if (entPack->entities[i]->flags & GTMA_BILLBOARD) {
+            entPack->entities[i]->rotation[1] = -renderCamera->yaw;
+        }
+        if(entPack->entities[i]->flags & GTMA_INVISIBLE) {
+            continue;
+        }
 
-            if (entPack->entities[i]->flags & GTMA_BILLBOARD) {
-                entPack->entities[i]->rotation[1] = -renderCamera->yaw;
-            }
+        mat4 transformationMatrix;
+        gtmaLoadTransformationMatrix(&transformationMatrix, entPack->entities[i]->position, entPack->entities[i]->rotation, entPack->entities[i]->scale);
+        gtmaSetMatrix(&shader, "transMatrix", transformationMatrix);
 
-            if(entPack->entities[i]->flags & GTMA_INVISIBLE) continue;
+        Model* model = &entPack->entities[i]->model;
 
-            Model* model = &entPack->entities[i]->model;
-
-            for(int j = 0; j < model->meshCount; j++) {
-
-                Mesh mesh = model->meshes[j];
-                if(mesh.flags & GTMA_INVISIBLE) {
-                    continue;
-                }
-                glBindVertexArray(mesh.VAO);
-                glBindBuffer(GL_ARRAY_BUFFER, mesh.VBO);
-                glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.EBO);
-                mat4 transformationMatrix;
-                gtmaLoadTransformationMatrix(&transformationMatrix, entPack->entities[i]->position, entPack->entities[i]->rotation, entPack->entities[i]->scale);
-                gtmaSetBool(&shader, "ui", false);
-                gtmaSetMatrix(&shader, "transMatrix", transformationMatrix);
-                gtmaSetBool(&shader, "lightEnabled", !(mesh.flags & GTMA_UNLIT));
-                gtmaSetVec3(&shader, "meshColor", mesh.color);
-                gtmaSetVec3(&shader, "viewPos", renderCamera->renderPos);
-                gtmaSetVec3(&shader, "clearColor", clearColor);
-                gtmaSetFloat(&shader, "fogLevel", fogLevel);
-                gtmaSetInt(&shader, "meshIndex", j);
-                vec2 screenRes = {getWindowWidth(), getWindowHeight()};
-                vec2 frameRes = {renderWidth, renderHeight};
-                gtmaSetVec2(&shader, "screenRes", screenRes);
-                gtmaSetVec2(&shader, "frameRes", frameRes);
-                gtmaSetBool(&shader, "ditherEnabled", cfgLookupBool("ditherEnabled"));
-                gtmaSetBool(&shader, "vertexSnap", cfgLookupBool("vertexSnap"));
-
-                glBindTexture(GL_TEXTURE_2D, mesh.texture.id);
-                glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);
+        for(int j = 0; j < model->meshCount; j++) {
+            Mesh* mesh = &model->meshes[j];
+            gtmaRenderMesh(mesh);
                 
-            }
         }
     }
 }
