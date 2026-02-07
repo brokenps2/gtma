@@ -1,6 +1,6 @@
 [
   {
-    "directory": ".",
+    "directory": "/home/eli/gtma",
     "command": "/usr/bin/gcc -Wall -g -O2 -pthread -I./src -I./deps/include -L./deps/lib -c src/$(file).c -o obj/$(file).o",
     "file": "./src/*.c",
     "output": "./obj/*.o"

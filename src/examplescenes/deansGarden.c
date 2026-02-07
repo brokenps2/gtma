@@ -3,7 +3,7 @@
 #include "../graphics/texture.h"
 #include "../physics/physics.h"
 #include "../objects/objects.h"
-#include "scenes.h"
+#include "scenes/scenes.h"
 #include "../graphics/renderer.h"
 #include "../window/events.h"
 #include "../objects/entities.h"

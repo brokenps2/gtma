@@ -15,8 +15,7 @@
 #include <stdio.h>
 #include <string.h>
 
-extern Scene* currentScene;
-extern Scene titleScreen;
+Scene* currentScene = NULL;
 
 static ScreenObject crosshair;
 static Texture regularCrosshair;
@@ -47,6 +46,15 @@ void gtmaToggleCrosshair(Scene* scene, bool toggle) {
             return;
         }
     }
+}
+
+void gtmaLoadInitialScene(Scene* scene) {
+    currentScene = scene;
+    currentScene->init();
+}
+
+Scene* gtmaGetCurrentScene() {
+    return currentScene;
 }
 
 void gtmaInitScene(Scene* scene, Player* player, GameObjectPack* objectPack, ScreenObjectPack* screenObjPack, EntityPack* entityPack, vec3 spawnpoint, bool debug) {
@@ -142,7 +150,7 @@ bool gtmaUpdateScene(Scene* scene, Player* player) {
             pauseScreen.flags &= ~GTMA_INVISIBLE;
             SDL_SetRelativeMouseMode(true);
             gtmaSetFBOBrightness(1);
-            switchScene(&titleScreen);
+            //switchScene(&titleScreen);
         }
     } else {
         if (isKeyPressed(SDL_SCANCODE_ESCAPE)) {

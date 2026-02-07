@@ -9,7 +9,7 @@ SRC_FILES := $(shell find $(SRC_DIR) -type f -name "*.c")
 
 # Exclude these from the library
 LIB_SRC_FILES := $(filter-out \
-    src/scenes/% \
+    src/examplescenes/% \
     src/init/% , \
     $(SRC_FILES))
 

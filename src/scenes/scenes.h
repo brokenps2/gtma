@@ -17,6 +17,8 @@ typedef struct Scene {
 } Scene;
 
 
+void gtmaLoadInitialScene(Scene* scene);
+Scene* gtmaGetCurrentScene();
 void gtmaInitScene(Scene* scene, Player* player, GameObjectPack* objectPack, ScreenObjectPack* screenObjPack, EntityPack* entityPack, vec3 spawnpoint, bool debug);
 void gtmaToggleCrosshair(Scene* scene, bool toggle);
 bool gtmaUpdateScene(Scene* scene, Player* player);

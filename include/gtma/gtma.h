@@ -1,6 +1,5 @@
 #pragma once
 
-int randBetween(int a, int b);
 void gtmaInit(const char* cfgPath);
 void gtmaUpdate();
 void gtmaClose();

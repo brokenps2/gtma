@@ -3,7 +3,7 @@
 #include "../objects/objects.h"
 #include "../graphics/renderer.h"
 #include <SDL2/SDL.h>
-#include "scenes.h"
+#include "scenes/scenes.h"
 #include "../window/events.h"
 
 static Camera camera;
