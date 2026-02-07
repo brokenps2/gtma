@@ -5,7 +5,6 @@
 #include <cglm/vec3.h>
 #include <mm_malloc.h>
 #include <time.h>
-#define FAST_OBJ_IMPLEMENTATION
 #define CGLTF_IMPLEMENTATION
 #include <cglm/affine.h>
 #include <cglm/affine-pre.h>

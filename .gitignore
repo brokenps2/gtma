@@ -36,8 +36,12 @@
 *.x86_64
 *.hex
 /bin/gtma
-/build
-/obj
+/obj/
+/obj_pic/
+/deps/
+/include/
+/bin/libgtma.so
+
 
 # Debug files
 *.dSYM/
