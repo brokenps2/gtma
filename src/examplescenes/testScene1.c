@@ -112,8 +112,6 @@ void initScene() {
 extern Scene outdoorScene;
 extern Scene titleScreen;
 
-bool spectating = false;
-
 
 void checkFlashlight() {
     glm_vec3_copy(camera.position, lamp.position);
@@ -137,7 +135,7 @@ void updateScene() {
     }
 
     gtmaCameraMatrix(&camera, 0.1f, 450.0f, gtmaGetShader());
-    gtmaPlayerMove(&player, &sceneObjectPack, spectating);
+    gtmaPlayerMove(&player, &sceneObjectPack);
     
     crosshair.position[0] = ((float)getWindowWidth() / 2);
     crosshair.position[1] = ((float)getWindowHeight() / 2);
@@ -153,9 +151,6 @@ void updateScene() {
     }
 
     checkFlashlight();
-
-    if(isKeyPressed(SDL_SCANCODE_P)) spectating = !spectating;
-
 }
 
 void disposeScene() {

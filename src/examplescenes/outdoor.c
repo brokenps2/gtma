@@ -95,8 +95,6 @@ static void initScene() {
 extern Scene testScene1;
 extern Scene natatorium;
 
-static bool spectating = false;
-
 static bool spinMap = false;
 
 static void updateScene() {
@@ -107,7 +105,7 @@ static void updateScene() {
 
     //camera stuff
     gtmaCameraMatrix(&camera, 0.1f, 650.0f, gtmaGetShader());
-    gtmaPlayerMove(&player, &sceneObjectPack, spectating);
+    gtmaPlayerMove(&player, &sceneObjectPack);
     glm_vec3_copy(camera.position, sky.position);
 
     //object transforms
@@ -124,10 +122,6 @@ static void updateScene() {
     } else {
         map.rotation[1] = 0;
     }
-
-    //misc
-    if(isKeyPressed(SDL_SCANCODE_P)) spectating = !spectating;
-
 }
 
 static void disposeScene() {

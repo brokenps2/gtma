@@ -110,9 +110,6 @@ extern Scene circleHallway;
 extern Scene gunTest;
 extern Scene optionsMenu;
 
-static bool spectating = true;
-
-
 static void updateScene() {
 
     if(gtmaUpdateScene(&titleScreen, &player)) {
@@ -173,10 +170,6 @@ static void updateScene() {
 
     gtmaCameraMatrix(&camera, 0.1f, 450.0f, gtmaGetShader());
     gtmaCameraLook(&camera);
-    
-    if(isKeyPressed(SDL_SCANCODE_P)) spectating = !spectating;
-
-
 }
 
 static void disposeScene() {

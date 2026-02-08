@@ -128,7 +128,8 @@ void gtmaChangeScreenObjectTexture(ScreenObject* object, const char* path);
 //player
 void gtmaCreatePlayer(Player* player, Camera *camera, int health, float collisionRadius, float collisionLength);
 void gtmaSetPlayerFallingSpeed(float speed);
-void gtmaPlayerMove(Player* player, GameObjectPack* objPack, bool flying);
+void gtmaPlayerMove(Player *player, GameObjectPack *objPack);
+void gtmaToggleNoClip(Player* player);
 
 //scenes
 void gtmaLoadInitialScene(Scene* scene);
@@ -140,3 +141,4 @@ void gtmaPlayDoorSound();
 void gtmaBeep();
 void gtmaSpawnLightGrid(PointLightPack* pack, float brightness, int lightCount, float maxPos, float minPos);
 void switchScene(Scene* newScene);
+bool gtmaIsPaused();

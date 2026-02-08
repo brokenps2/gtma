@@ -117,7 +117,6 @@ static void initScene() {
 extern Scene deansHallway;
 extern Scene outdoorScene;
 
-static bool spectating = false;
 
 static void updateScene() {
 
@@ -151,7 +150,7 @@ static void updateScene() {
 
     //camera stuff
     gtmaCameraMatrix(&camera, 0.1f, 650.0f, gtmaGetShader());
-    gtmaPlayerMove(&player, &sceneObjectPack, spectating);
+    gtmaPlayerMove(&player, &sceneObjectPack);
     glm_vec3_copy(camera.position, sky.position);
 
     if(isLeftPressed()) {
@@ -161,9 +160,6 @@ static void updateScene() {
             switchScene(&deansHallway);
         }
     }
-
-    //misc
-    if(isKeyPressed(SDL_SCANCODE_P)) spectating = !spectating;
 
 }
 

@@ -30,9 +30,10 @@ INSTALL_HDR_FILES := $(patsubst $(SRC_DIR)/%,$(INCLUDE_DIR)/%,$(LIB_HDR_FILES))
 
 all: $(BIN_DIR)/libgtma.so
 
-test-demo: $(BIN_DIR)/gtma
+test: $(BIN_DIR)/gtma
 
-install-headers: $(INSTALL_HDR_FILES)
+install:
+	cp bin/libgtma.so /usr/local/lib
 
 $(BIN_DIR)/gtma: $(BIN_OBJ_FILES)
 	@mkdir -p $(BIN_DIR)

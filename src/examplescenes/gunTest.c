@@ -14,7 +14,6 @@
 #include "../objects/entities.h"
 #include <stdio.h>
 #include <unistd.h>
-#include <string.h>
 #include "util/util.h"
 
 static void initScene();
@@ -97,8 +96,6 @@ static void initScene() {
 extern Scene testScene1;
 extern Scene natatorium;
 
-static bool spectating = false;
-
 static void updateScene() {
 
     if(gtmaUpdateScene(&gunTest, &player)) {
@@ -107,12 +104,8 @@ static void updateScene() {
 
     //camera stuff
     gtmaCameraMatrix(&camera, 0.1f, 650.0f, gtmaGetShader());
-    gtmaPlayerMove(&player, &sceneObjectPack, spectating);
+    gtmaPlayerMove(&player, &sceneObjectPack);
     glm_vec3_copy(camera.position, sky.position);
-
-    //misc
-    if(isKeyPressed(SDL_SCANCODE_P)) spectating = !spectating;
-
 }
 
 static void disposeScene() {

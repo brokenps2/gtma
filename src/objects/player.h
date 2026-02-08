@@ -10,8 +10,10 @@ typedef struct Player {
     AABB aabb;
     GameObject** currentCollisions;
     int currentCollisionCount;
+    bool noclip;
 } Player;
 
 void gtmaCreatePlayer(Player* player, Camera *camera, int health, float collisionRadius, float collisionLength);
 void gtmaSetPlayerFallingSpeed(float speed);
-void gtmaPlayerMove(Player* player, GameObjectPack* objPack, bool flying);
+void gtmaToggleNoClip(Player* player);
+void gtmaPlayerMove(Player *player, GameObjectPack *objPack);

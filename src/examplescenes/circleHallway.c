@@ -92,8 +92,6 @@ static void initScene() {
 
 extern Scene deansHallway;
 
-static bool spectating = false;
-
 static void updateScene() {
 
     if(gtmaUpdateScene(&circleHallway, &player)) {
@@ -107,10 +105,7 @@ static void updateScene() {
 
     //camera stuff
     gtmaCameraMatrix(&camera, 0.1f, 650.0f, gtmaGetShader());
-    gtmaPlayerMove(&player, &sceneObjectPack, spectating);
-
-    //misc
-    if(isKeyPressed(SDL_SCANCODE_P)) spectating = !spectating;
+    gtmaPlayerMove(&player, &sceneObjectPack);
 
     if(camera.position[2] < 20 && camera.position[2] > -20 && camera.position[0] < 94 && camera.position[0] > 41) {
         floating = true;

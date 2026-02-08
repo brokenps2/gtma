@@ -1,5 +1,6 @@
 #include <cglm/cglm.h>
 #include <GL/glew.h>
+#include <SDL2/SDL.h>
 #include "physics.h"
 #pragma once
 

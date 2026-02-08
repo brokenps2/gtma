@@ -93,7 +93,6 @@ static void initScene() {
 
 extern Scene deansGarden;
 
-static bool spectating = false;
 
 static void updateScene() {
 
@@ -103,7 +102,7 @@ static void updateScene() {
 
     //camera stuff
     gtmaCameraMatrix(&camera, 0.1f, 650.0f, gtmaGetShader());
-    gtmaPlayerMove(&player, &sceneObjectPack, spectating);
+    gtmaPlayerMove(&player, &sceneObjectPack);
 
     //player pos printout
     //printf("\r%f %f %f", camera.position[0], camera.position[1], camera.position[2]);
@@ -115,10 +114,6 @@ static void updateScene() {
             switchScene(&deansGarden);
         }
     }
-
-    //misc
-    if(isKeyPressed(SDL_SCANCODE_P)) spectating = !spectating;
-
 }
 
 static void disposeScene() {

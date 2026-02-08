@@ -53,6 +53,10 @@ void gtmaSetPlayerFallingSpeed(float speed) {
     fallingSpeed = speed;
 }
 
+void gtmaToggleNoClip(Player* player) {
+    player->noclip = !player->noclip;
+}
+
 void gtmaPlayerCollide(Player* player, GameObjectPack* objPack) {
 
     if(SDL_GetRelativeMouseMode()) {
@@ -148,20 +152,17 @@ void gtmaCreatePlayer(Player* player, Camera *camera, int health, float collisio
 
 int counter = 0;
 
-void gtmaPlayerMove(Player *player, GameObjectPack *objPack, bool flying) {
-
-    bool bob = false;
+void gtmaPlayerMove(Player *player, GameObjectPack *objPack) {
 
     proposedPosition[0] = player->position[0];
     proposedPosition[1] = player->position[1];
     proposedPosition[2] = player->position[2];
 
-    if(flying) maxSpeed = 60;
+    if(player->noclip) maxSpeed = 60;
 
     if (isKeyDown(SDL_SCANCODE_W)) {
         forwardVelocity += accel * getDeltaTime();
         if (forwardVelocity > maxSpeed) forwardVelocity = maxSpeed;
-        bob = true;
     } else {
         forwardVelocity -= (accel / 1.5) * getDeltaTime();
         if (forwardVelocity < 0) forwardVelocity = 0;
@@ -170,7 +171,6 @@ void gtmaPlayerMove(Player *player, GameObjectPack *objPack, bool flying) {
     if (isKeyDown(SDL_SCANCODE_S)) {
         backwardVelocity += accel * getDeltaTime();
         if (backwardVelocity > maxSpeed) backwardVelocity = maxSpeed;
-        bob = true;
     } else {
         backwardVelocity -= (accel / 1.5) * getDeltaTime();
         if (backwardVelocity < 0) backwardVelocity = 0;
@@ -179,7 +179,6 @@ void gtmaPlayerMove(Player *player, GameObjectPack *objPack, bool flying) {
     if (isKeyDown(SDL_SCANCODE_A)) {
         leftVelocity += accel * getDeltaTime();
         if (leftVelocity > maxSpeed) leftVelocity = maxSpeed;
-        bob = true;
     } else {
         leftVelocity -= (accel / 1.5) * getDeltaTime();
         if (leftVelocity < 0) leftVelocity = 0;
@@ -188,7 +187,6 @@ void gtmaPlayerMove(Player *player, GameObjectPack *objPack, bool flying) {
     if (isKeyDown(SDL_SCANCODE_D)) {
         rightVelocity += accel * getDeltaTime();
         if (rightVelocity > maxSpeed) rightVelocity = maxSpeed;
-        bob = true;
     } else {
         rightVelocity -= (accel / 1.5) * getDeltaTime();
         if (rightVelocity < 0) rightVelocity = 0;
@@ -238,7 +236,7 @@ void gtmaPlayerMove(Player *player, GameObjectPack *objPack, bool flying) {
         proposedPosition[1] -= downVelocity * getDeltaTime();
     }
     
-    if(flying) {
+    if(player->noclip) {
         if (isKeyDown(SDL_SCANCODE_SPACE)) {
             upVelocity += accel * getDeltaTime();
             if (upVelocity > 64) upVelocity = 64;
