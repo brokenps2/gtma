@@ -20,10 +20,10 @@ bool orthographic = false;
 
 vec2 camPosLast;
 
-float maxFOV = 95.5;
-float targetFOV = 88;
+float maxFOV;
+float targetFOV;
 
-void gtmaCreateCamera(Camera* cam, vec3 pos) {
+void gtmaCreateCamera(Camera* cam, vec3 pos, float fov, float pitch, float yaw, float roll) {
     cam->width = getWindowWidth();
     cam->height = getWindowHeight();
 
@@ -39,22 +39,17 @@ void gtmaCreateCamera(Camera* cam, vec3 pos) {
     cam->position[1] = pos[1];
     cam->position[2] = pos[2];
 
-    cam->fov = 60.0f;
+    cam->fov = fov;
+    targetFOV = cam->fov;
+    maxFOV = cam->fov + 8;
 
-    cam->pitch = 0.0f;
-    cam->yaw = 0.0f;
-    cam->roll = 0.0f;
+    cam->pitch = pitch;
+    cam->yaw = yaw;
+    cam->roll = roll;
     cam->sensitivity = (float)cfgLookupInt("mouseSensitivity") / 100;
 }
 
-void gtmaResizeCamera(Camera* cam, int width, int height) {
-    cam->width = width;
-    cam->height = height;
-}
-
 void gtmaCameraMatrix(Camera* cam, float nearPlane, float farPlane, Shader* shader) {
-
-    glm_vec3_copy(cam->position, cam->renderPos);
 
     if(cam->width != getWindowWidth()) {
         cam->width = getWindowWidth();
@@ -75,9 +70,9 @@ void gtmaCameraMatrix(Camera* cam, float nearPlane, float farPlane, Shader* shad
     glm_normalize_to(cam->direction, cam->front);
 
     vec3 cent;
-    glm_vec3_add(cam->renderPos, cam->front, cent);
+    glm_vec3_add(cam->position, cam->front, cent);
 
-    glm_lookat(cam->renderPos, cent, cam->up, view);
+    glm_lookat(cam->position, cent, cam->up, view);
     glm_perspective(glm_rad(cam->fov), ((float)cam->width / (float)cam->height), nearPlane, farPlane, proj);
 
     mat4 camCross;

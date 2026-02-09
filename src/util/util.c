@@ -14,6 +14,7 @@ int randBetween(int a, int b) {
 void gtmaInit(const char* cfgPath) {
     gtmaInitConfig(cfgPath);
     gtmaInitWindow();
+    gtmaInitAudio();
     gtmaInitRenderer();
     gtmaPrintSystemInfo();
 }

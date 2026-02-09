@@ -8,6 +8,7 @@
 #include "../graphics/renderer.h"
 #include "../window/windowManager.h"
 #include "../audio/audio.h"
+#include "graphics/camera.h"
 #include "objects/entities.h"
 #include <SDL2/SDL_mouse.h>
 #include <cglm/vec3.h>
@@ -84,6 +85,8 @@ void gtmaInitScene(Scene* scene, Player* player, GameObjectPack* objectPack, Scr
     glm_vec3_copy(spawnpoint, scene->spawnpoint);
 
     scene->debugInfo = debug;
+
+    gtmaCameraMatrix(player->camera, 0.1, 450.0f, gtmaGetShader());
 }
 
 void gtmaSetEditMode(int set) {
@@ -213,6 +216,7 @@ bool gtmaUpdateScene(Scene* scene, Player* player) {
     if(scene->debugInfo) {
         printf("\rx:%f y:%f z:%f    pitch:%f yaw:%f    %ffps", player->position[0], player->position[1], player->position[2], player->camera->pitch, player->camera->yaw, gtmaGetFramerate());
         fflush(stdout);
+        if(isKeyPressed(SDL_SCANCODE_P)) gtmaToggleNoClip(scene->player);
     }
 
     // Always update screen positions

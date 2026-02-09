@@ -148,6 +148,7 @@ void gtmaCreateModel(Model* model, const char* path) {
                         }
                     } else if (attr->type == cgltf_attribute_type_color) {
                         for (size_t l = 0; l < vertexCount; l++) {
+                            printf("giddlegum\n");
                             cgltf_accessor_read_float(accessor, l, mesh->vertices[vertexOffset + l].color, 3);
                         }
                     }

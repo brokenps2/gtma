@@ -238,7 +238,7 @@ void gtmaRenderScene() {
     gtmaSetBool(&shader, "frame", false);
     gtmaSetFloat(&shader, "deltaTime", getDeltaTime());
 
-    gtmaSetVec3(&shader, "viewPos", renderCamera->renderPos);
+    gtmaSetVec3(&shader, "viewPos", renderCamera->position);
     gtmaSetVec3(&shader, "clearColor", clearColor);
     gtmaSetFloat(&shader, "fogLevel", fogLevel);
     vec2 screenRes = {getWindowWidth(), getWindowHeight()};
