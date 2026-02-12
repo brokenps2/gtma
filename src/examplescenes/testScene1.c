@@ -70,6 +70,7 @@ void initScene() {
     sky.model.meshes[0].flags |= GTMA_NOCOLLIDE;
 
     gtmaCreateGameObject(&exitSign, "models/exitsign.glb", "exitSign", (vec3){17.5, 9, -31}, (vec3){2, 2, 2}, (vec3){0, -120, 0}, GTMA_NONE);
+    gtmaLoadGIF(&exitSign.model.meshes[0].texture, "images/testGif.gif", 1);
 
     gtmaCreateGameObject(&desk, "models/desk.glb", "desk", (vec3){-19, -9, 0}, (vec3){3.2, 3, 3.2}, (vec3){0, 0, 0}, GTMA_NONE);
 

@@ -70,7 +70,7 @@ static void initScene() {
     //plane2.model.meshes[0].texture.id = titlescreenplanetex.id;
     //for (int i = 0; i < plane2.model.meshCount; i++) { plane2.model.meshes[i].lit = false; }
 
-    gtmaCreateScreenObject(&logo, "images/gtmalogo.png", "logo", (vec2){(float)getWindowWidth()/2, (float)getWindowHeight()/2 - 140}, (vec2){280, 60}, 0, GTMA_NONE);
+    gtmaCreateScreenObject(&logo, "images/gtmats.png", "logo", (vec2){(float)getWindowWidth()/2, (float)getWindowHeight()/2 - 140}, (vec2){280, 90}, 0, GTMA_NONE);
     logo.flags &= ~GTMA_INVISIBLE;
 
     gtmaCreatePointLight(&light, (vec3){camPos[0], camPos[1], camPos[2]}, (vec3){brightness, brightness, brightness}, GTMA_NONE);

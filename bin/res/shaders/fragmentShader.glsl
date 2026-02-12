@@ -17,6 +17,7 @@ uniform vec2 frameRes = vec2(640, 480);
 uniform bool ui = false;
 uniform float fboBrightness = 1;
 uniform vec3 meshColor = vec3(1);
+uniform float gifAlpha = 1;
 
 vec3 greyscale(vec4 color) {
     vec3 tcol = vec3(color.r, color.g, color.b);
@@ -78,7 +79,7 @@ void main() {
     vec4 skyColor = vec4(clearColor.x/256, clearColor.y/256, clearColor.z/256, 1);
 
     if(lightEnabled) {
-        fragColor = mix(skyColor, texture(tex0, outTexCoord) * vec4(outColor, 1.0) * vec4(outLightColor, 1.0), visibility) * vec4(meshColor, 1.0);
+        fragColor = mix(skyColor, texture(tex0, outTexCoord) * vec4(outColor, 1.0) * vec4(outLightColor, 1.0), visibility) * vec4(meshColor, 1.0) * vec4(1, 1, 1, gifAlpha);
     } else {
         fragColor = texture(tex0, outTexCoord) * vec4(outColor, 1.0) * vec4(meshColor, 1.0);
         fragColor = mix(skyColor, fragColor, 1);

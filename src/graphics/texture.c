@@ -19,6 +19,7 @@ void gtmaCreateTexture(Texture* tex, const char* path) {
     tex->delays = malloc(sizeof(int));
     tex->delays[0] = 0;
     tex->frameTimer = 0;
+    tex->gifAlpha = 1;
    
     glGenTextures(1, &tex->ids[0]);
     glActiveTexture(GL_TEXTURE0);
@@ -38,14 +39,10 @@ void gtmaCreateTexture(Texture* tex, const char* path) {
     }
 }
 
-void gtmaLoadGIF(Texture* tex, const char* path) {
+void gtmaLoadGIF(Texture* tex, const char* path, float alpha) {
 
     char* rawGifData;
     int rawGifSize;
-
-    if(tex->ids || tex->data) {
-        gtmaDeleteTexture(tex);
-    }
 
     rawGifSize = getFileSize(res(path));
     rawGifData = getFileSrc(res(path));
@@ -60,6 +57,7 @@ void gtmaLoadGIF(Texture* tex, const char* path) {
 
     tex->currentFrame = 0;
     tex->frameTimer = 0;
+    tex->gifAlpha = alpha;
 
     tex->ids = malloc(sizeof(unsigned int) * tex->frames);
 
@@ -96,6 +94,7 @@ void gtmaLoadTextureFromMemory(Texture* tex, const unsigned char* buffer, size_t
     tex->delays[0] = 0;
     tex->currentFrame = 0;
     tex->frameTimer = 0;
+    tex->gifAlpha = 1;
 
     glGenTextures(1, &tex->ids[0]);
     glBindTexture(GL_TEXTURE_2D, tex->ids[0]);
@@ -108,7 +107,20 @@ void gtmaLoadTextureFromMemory(Texture* tex, const unsigned char* buffer, size_t
 }
 
 void gtmaDeleteTexture(Texture* tex) {
-    stbi_image_free(tex->data);
-    free(tex->delays);
-    free(tex->ids);
+    if (!tex) return;
+
+    if (tex->data) {
+        stbi_image_free(tex->data);
+        tex->data = NULL;
+    }
+
+    if (tex->delays) {
+        free(tex->delays);
+        tex->delays = NULL;
+    }
+
+    if (tex->ids) {
+        free(tex->ids);
+        tex->ids = NULL;
+    }
 }

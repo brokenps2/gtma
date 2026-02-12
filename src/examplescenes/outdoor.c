@@ -2,6 +2,7 @@
 #include "../graphics/shader.h"
 #include "../physics/physics.h"
 #include "../objects/objects.h"
+#include "graphics/texture.h"
 #include "scenes/scenes.h"
 #include "../graphics/renderer.h"
 #include "../window/events.h"
@@ -25,7 +26,7 @@ Scene outdoorScene = {
 };
 
 static Camera camera;
-static vec3 camPos = {-28, 240, 0};
+static vec3 camPos = {8, 12.2, 48};
 static Player player;
 
 static GameObjectPack sceneObjectPack;
@@ -54,6 +55,12 @@ static void initScene() {
 
     gtmaCreateGameObject(&map, "models/stoneland.glb", "map", (vec3){0, 0, 0}, (vec3){1.5, 1, 1.5}, (vec3){0, 0, 0}, GTMA_VERTEX_COLLIDE);
     map.model.meshes[map.model.meshCount - 1].flags |= GTMA_NOCOLLIDE;
+
+    for(int i = 0; i < map.model.meshCount; i++) {
+        if(strcmp(map.model.meshes[i].name, "water") == 0) {
+            gtmaLoadGIF(&map.model.meshes[i].texture, "images/wateranim.gif", 0.70);
+        }
+    }
     
     gtmaCreateGameObject(&sky, "models/sky.glb", "sky", (vec3){0, 0, 0}, (vec3){18, 18, 18}, (vec3){0, 0, 0}, GTMA_NOCOLLIDE);
     sky.model.meshes[0].flags |= GTMA_UNLIT;

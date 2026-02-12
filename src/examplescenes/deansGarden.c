@@ -89,7 +89,7 @@ static void initScene() {
     for(int i = 0; i < map.model.meshCount; i++) {
         printf("%s\n", map.model.meshes[i].name);
         if (strcmp(map.model.meshes[i].name, "water") == 0) {
-            gtmaLoadGIF(&map.model.meshes[i].texture, "images/testGif.gif");
+            gtmaLoadGIF(&map.model.meshes[i].texture, "images/wateranim.gif", 0.999);
         }
     }
 

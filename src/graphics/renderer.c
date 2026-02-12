@@ -154,6 +154,7 @@ void gtmaRenderScreen() {
             gtmaSetBool(&shader, "ui", true);
             gtmaSetMatrix(&shader, "transMatrix", transformationMatrix);
             gtmaSetMatrix(&shader, "orthoMatrix", ortho);
+            gtmaSetFloat(&shader, "gifAlpha", mesh.texture.gifAlpha);
             glBindTexture(GL_TEXTURE_2D, mesh.texture.ids[mesh.texture.currentFrame]);
             glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);
             if(mesh.texture.currentFrame != mesh.texture.frames - 1) {
@@ -188,6 +189,7 @@ void gtmaRenderMesh(Mesh* mesh) {
     gtmaSetBool(&shader, "ui", false);
     gtmaSetBool(&shader, "lightEnabled", !(mesh->flags & GTMA_UNLIT));
     gtmaSetVec3(&shader, "meshColor", mesh->color);
+    gtmaSetFloat(&shader, "gifAlpha", mesh->texture.gifAlpha);
 
     glBindTexture(GL_TEXTURE_2D, mesh->texture.ids[mesh->texture.currentFrame]);
     glDrawElements(GL_TRIANGLES, mesh->indexCount, GL_UNSIGNED_INT, 0);
