@@ -206,9 +206,9 @@ bool gtmaUpdateScene(Scene* scene, Player* player) {
 
     if (isHighlighted != lastState) {
         if (isHighlighted) {
-            crosshair.model.meshes[0].texture.id = highlightedCrosshair.id;
+            crosshair.model.meshes[0].texture.ids[0] = highlightedCrosshair.ids[0];
         } else {
-            crosshair.model.meshes[0].texture.id = regularCrosshair.id;
+            crosshair.model.meshes[0].texture.ids[0] = regularCrosshair.ids[0];
         }
         lastState = isHighlighted;
     }

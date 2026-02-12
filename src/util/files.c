@@ -1,3 +1,4 @@
+#include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <GL/glew.h>
@@ -68,7 +69,11 @@ char* getFileSrc(const char* path) {
 
     char* buffer = NULL;
     long length;
-    FILE* fptr = fopen(path, "r");
+    FILE* fptr = fopen(path, "rb");
+    if(!fptr) {
+        printf("failed to open file for raw loading: %s\n", path);
+        exit(1);
+    }
 
     if (fptr) {
         fseek(fptr, 0, SEEK_END);
@@ -89,6 +94,10 @@ char* getFileSrc(const char* path) {
 long getFileSize(const char* path) {
     long length;
     FILE* fptr = fopen(path, "r");
+    if(!fptr) {
+        printf("failed to open file for size parsing: %s\n", path);
+        exit(1);
+    }
 
     fseek(fptr, 0, SEEK_END);
     length = ftell(fptr);

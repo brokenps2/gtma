@@ -235,11 +235,19 @@ void gtmaDeleteGameObject(GameObject* object) {
         Mesh mesh = object->model.meshes[i];
         free(mesh.vertices);
         free(mesh.indices);
-        stbi_image_free(mesh.texture.data);
         glDeleteVertexArrays(1, &mesh.VAO);
         glDeleteBuffers(1, &mesh.VBO);
         glDeleteBuffers(1, &mesh.EBO);
-        glDeleteTextures(1, &mesh.texture.id);
+        for(int i = 0; i < mesh.texture.frames; i++) {
+            stbi_image_free(mesh.texture.data);
+            free(mesh.texture.delays);
+            free(mesh.texture.ids);
+        }
+        glDeleteTextures(mesh.texture.frames, &mesh.texture.ids[i]);
+        if (mesh.name) {
+            free(mesh.name);
+            mesh.name = NULL;
+        }
         mesh.vertices = NULL;
         mesh.texture.data = NULL;
         mesh.indices = NULL;
@@ -254,11 +262,13 @@ void gtmaDeleteScreenObject(ScreenObject* object) {
         Mesh mesh = object->model.meshes[i];
         free(mesh.vertices);
         free(mesh.indices);
-        stbi_image_free(mesh.texture.data);
         glDeleteVertexArrays(1, &mesh.VAO);
         glDeleteBuffers(1, &mesh.VBO);
         glDeleteBuffers(1, &mesh.EBO);
-        glDeleteTextures(1, &mesh.texture.id);
+        for(int i = 0; i < mesh.texture.frames; i++) {
+            gtmaDeleteTexture(&mesh.texture);
+        }
+        glDeleteTextures(mesh.texture.frames, &mesh.texture.ids[i]);
         mesh.vertices = NULL;
         mesh.texture.data = NULL;
         mesh.indices = NULL;

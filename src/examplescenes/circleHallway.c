@@ -58,9 +58,9 @@ static void initScene() {
     gtmaCreateGameObject(&sphere, "models/collisionSphere.glb", "sphere", (vec3){-68, 14, 0}, (vec3){6, 6, 6}, (vec3){0, 0, 0}, GTMA_NONE);
 
     if(returning) {
-        gtmaCreateCamera(&camera, (vec3){-105, 11, -36});
+        gtmaCreateCamera(&camera, (vec3){-105, 11, -36}, 90, 0, 90, 0);
     } else {
-        gtmaCreateCamera(&camera, camPos);
+        gtmaCreateCamera(&camera, camPos, 90, 0, 90, 0);
     }
     gtmaSetRenderCamera(&camera);
     gtmaCreatePlayer(&player, &camera, 100, 7, 10);

@@ -11,6 +11,8 @@
 #include <SDL2/SDL.h>
 #include <cglm/types.h>
 #include <cglm/vec3.h>
+#include <stdio.h>
+#include <string.h>
 #include <unistd.h>
 
 static void initScene();
@@ -84,8 +86,15 @@ static void initScene() {
     gtmaCreateGameObject(&hallWarp, "models/door2.glb", "hallWarp", (vec3){-123, 9, 6}, (vec3){3, 3, 3}, (vec3){0, 0, 0}, GTMA_PICKABLE);
     hallWarp.pickableDistance = 24;
 
+    for(int i = 0; i < map.model.meshCount; i++) {
+        printf("%s\n", map.model.meshes[i].name);
+        if (strcmp(map.model.meshes[i].name, "water") == 0) {
+            gtmaLoadGIF(&map.model.meshes[i].texture, "images/testGif.gif");
+        }
+    }
+
  
-    gtmaCreateCamera(&camera, camPos);
+    gtmaCreateCamera(&camera, camPos, 90, 0, 90, 0);
     gtmaCreatePlayer(&player, &camera, 100, 6, 10);
     gtmaSetRenderCamera(&camera);
 
@@ -140,11 +149,11 @@ static void updateScene() {
     light3.color[2] = brightness;
 
     if(isKeyPressed(SDL_SCANCODE_1)) {
-        sky.model.meshes[0].texture.id = blue.id;
+        sky.model.meshes[0].texture.ids[0] = blue.ids[0];
         brightness = 1.45;
         
     } else if(isKeyPressed(SDL_SCANCODE_2)) {
-        sky.model.meshes[0].texture.id = cloudy.id;
+        sky.model.meshes[0].texture.ids[0] = cloudy.ids[0];
         brightness = 0.95;
     }
 

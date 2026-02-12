@@ -1,5 +1,6 @@
 #include "entities.h"
 #include "graphics/models.h"
+#include "graphics/texture.h"
 #include "objects/objects.h"
 #include "physics/physics.h"
 #include <stb_image.h>
@@ -145,7 +146,10 @@ void gtmaDeleteEntity(Entity* entity) {
         glDeleteVertexArrays(1, &mesh.VAO);
         glDeleteBuffers(1, &mesh.VBO);
         glDeleteBuffers(1, &mesh.EBO);
-        glDeleteTextures(1, &mesh.texture.id);
+        for(int i = 0; i < mesh.texture.frames; i++) {
+            gtmaDeleteTexture(&mesh.texture);
+            glDeleteTextures(1, &mesh.texture.ids[i]);
+        }
         mesh.vertices = NULL;
         mesh.texture.data = NULL;
         mesh.indices = NULL;

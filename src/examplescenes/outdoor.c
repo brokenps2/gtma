@@ -65,7 +65,7 @@ static void initScene() {
     gtmaCreateGameObject(&cliffsWarp, "models/office.glb", "cliffsWarp", (vec3){314, -248, -304}, (vec3){3, 3, 3}, (vec3){0, -30, 0}, GTMA_PICKABLE);
     cliffsWarp.pickableDistance = 24;
 
-    gtmaCreateCamera(&camera, camPos);
+    gtmaCreateCamera(&camera, camPos, 90, 0, 90, 0);
     gtmaSetRenderCamera(&camera);
     gtmaCreatePlayer(&player, &camera, 100, 6, 10);
 

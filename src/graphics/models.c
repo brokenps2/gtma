@@ -113,8 +113,13 @@ void gtmaCreateModel(Model* model, const char* path) {
             size_t vertexOffset = 0;
             size_t indexOffset = 0;
 
+            if (gltfMesh->name) {
+                mesh->name = strdup(gltfMesh->name);
+            }
+
             for (size_t j = 0; j < gltfMesh->primitives_count; j++) {
                 cgltf_primitive* primitive = &gltfMesh->primitives[j];
+
 
                 size_t vertexCount = primitive->attributes[0].data->count;
                 size_t indexCount = primitive->indices->count;
@@ -148,7 +153,6 @@ void gtmaCreateModel(Model* model, const char* path) {
                         }
                     } else if (attr->type == cgltf_attribute_type_color) {
                         for (size_t l = 0; l < vertexCount; l++) {
-                            printf("giddlegum\n");
                             cgltf_accessor_read_float(accessor, l, mesh->vertices[vertexOffset + l].color, 3);
                         }
                     }

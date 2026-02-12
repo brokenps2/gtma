@@ -63,7 +63,7 @@ static void initScene() {
     gtmaCreateGameObject(&map, "models/natatorium.glb", "map", (vec3){0, 0, 0}, (vec3){1.25, 1, 1.25}, (vec3){0, 0, 0}, GTMA_NONE);
     map.model.meshes[7].flags |= GTMA_UNLIT;
 
-    gtmaCreateCamera(&camera, camPos);
+    gtmaCreateCamera(&camera, camPos, 90, 0, 90, 0);
     gtmaSetRenderCamera(&camera);
     gtmaCreatePlayer(&player, &camera, 100, 10, 6);
 

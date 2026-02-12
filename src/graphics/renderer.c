@@ -1,15 +1,13 @@
 #include <GL/glew.h>
 #include <SDL2/SDL_mouse.h>
+#include <SDL2/SDL_timer.h>
 #include <cglm/common.h>
 #include <cglm/vec3.h>
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include "shader.h"
 #include "models.h"
 #include "../objects/objects.h"
 #include "camera.h"
-#include "texture.h"
 #include "../window/events.h"
 #include "../util/config.h"
 #include "../objects/entities.h"
@@ -156,8 +154,11 @@ void gtmaRenderScreen() {
             gtmaSetBool(&shader, "ui", true);
             gtmaSetMatrix(&shader, "transMatrix", transformationMatrix);
             gtmaSetMatrix(&shader, "orthoMatrix", ortho);
-            glBindTexture(GL_TEXTURE_2D, mesh.texture.id);
+            glBindTexture(GL_TEXTURE_2D, mesh.texture.ids[mesh.texture.currentFrame]);
             glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);
+            if(mesh.texture.currentFrame != mesh.texture.frames - 1) {
+                mesh.texture.currentFrame++;
+            } else { mesh.texture.currentFrame = 0; }
         }
     }
 
@@ -188,8 +189,16 @@ void gtmaRenderMesh(Mesh* mesh) {
     gtmaSetBool(&shader, "lightEnabled", !(mesh->flags & GTMA_UNLIT));
     gtmaSetVec3(&shader, "meshColor", mesh->color);
 
-    glBindTexture(GL_TEXTURE_2D, mesh->texture.id);
+    glBindTexture(GL_TEXTURE_2D, mesh->texture.ids[mesh->texture.currentFrame]);
     glDrawElements(GL_TRIANGLES, mesh->indexCount, GL_UNSIGNED_INT, 0);
+    mesh->texture.frameTimer += getDeltaTime();
+
+    float delaySeconds = mesh->texture.delays[mesh->texture.currentFrame] / 1000.0f;
+
+    if (mesh->texture.frameTimer >= delaySeconds) {
+        mesh->texture.frameTimer -= delaySeconds;
+        mesh->texture.currentFrame = (mesh->texture.currentFrame + 1) % mesh->texture.frames;
+    }
 }
 
 void gtmaRenderScene() {

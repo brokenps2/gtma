@@ -2,6 +2,7 @@
 #include "../graphics/shader.h"
 #include "../physics/physics.h"
 #include "../objects/objects.h"
+#include "graphics/texture.h"
 #include "scenes/scenes.h"
 #include "../graphics/renderer.h"
 #include "../audio/audio.h"
@@ -75,7 +76,7 @@ void initScene() {
     gtmaCreateGameObject(&stonelandWarp, "models/door2.glb", "stonelandWarp", (vec3){63, 2, 121}, (vec3){3.75, 3.45, 3.75}, (vec3){0, 118, 0}, GTMA_PICKABLE);
     stonelandWarp.pickableDistance = 24;
 
-    gtmaCreateCamera(&camera, camPos);
+    gtmaCreateCamera(&camera, camPos, 90, 0, 90, 0);
     gtmaSetRenderCamera(&camera);
     gtmaCreatePlayer(&player, &camera, 100, 6, 10);
 

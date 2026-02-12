@@ -20,7 +20,7 @@ void gtmaInitConfig(const char* path) {
         exit(1);
     }
 
-    json = cJSON_Parse(contents);
+    json = cJSON_Parse((const char*)contents);
 
     if(!json) {
         printf("error reading config file %s\n", path);

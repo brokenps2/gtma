@@ -79,8 +79,7 @@ static void initScene() {
     gtmaCreateText(&text, "efghijklmnop", "images/font.png", (vec2){0, 16}, (vec2){5,8}, 1, GTMA_NONE);
 
 
-
-    gtmaCreateCamera(&camera, camPos);
+    gtmaCreateCamera(&camera, camPos, 90, 0, 90, 0);
     gtmaSetRenderCamera(&camera);
     gtmaCreatePlayer(&player, &camera, 100, 10, 6);
 
@@ -108,7 +107,6 @@ extern Scene testScene1;
 extern Scene deansHallway;
 extern Scene circleHallway;
 extern Scene gunTest;
-extern Scene optionsMenu;
 
 static void updateScene() {
 
@@ -152,7 +150,6 @@ static void updateScene() {
         switchScene(&gunTest);
     } else if(isKeyPressed(SDL_SCANCODE_O)) {
         logo.flags |= GTMA_INVISIBLE;
-        switchScene(&optionsMenu);
     }
 
     if(camera.position[0] > planeLimit) {

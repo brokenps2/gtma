@@ -14,6 +14,7 @@ typedef struct Vertex {
 typedef struct Mesh {
     Vertex* vertices;
     unsigned int* indices;
+    char* name;
     int indexCount;
     int vertexCount;
     vec3 color;

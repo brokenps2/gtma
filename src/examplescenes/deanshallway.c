@@ -58,9 +58,9 @@ static void initScene() {
     deanWarp.pickableDistance = 24;
 
     if(returning) {
-        gtmaCreateCamera(&camera, (vec3){-105, 11, -36});
+        gtmaCreateCamera(&camera, (vec3){-105, 11, -36}, 90, 0, 90, 0);
     } else {
-        gtmaCreateCamera(&camera, camPos);
+        gtmaCreateCamera(&camera, camPos, 90, 0, 90, 0);
     }
     gtmaSetRenderCamera(&camera);
     gtmaCreatePlayer(&player, &camera, 100, 6, 10);

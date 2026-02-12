@@ -67,7 +67,7 @@ static void initScene() {
 
     gtmaCreateScreenObject(&gun, "images/gun.png", "gun", (vec2){((float)getWindowWidth() - 256), ((float)getWindowHeight() - 200)}, (vec2){200, 256}, 0, GTMA_NONE);
 
-    gtmaCreateCamera(&camera, camPos);
+    gtmaCreateCamera(&camera, camPos, 90, 0, 90, 0);
     gtmaSetRenderCamera(&camera);
     gtmaCreatePlayer(&player, &camera, 100, 6, 10);
 
