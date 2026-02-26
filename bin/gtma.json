@@ -3,8 +3,8 @@
   "title": "gtma",
   "width": 1024,
   "height": 768,
-  "mouseSensitivity": 6,
-  "fboScaleFactor": 0.5,
+  "mouseSensitivity": 15,
+  "fboScaleFactor": 1,
   "vertexSnap": false,
   "ditherEnabled": true
 }

@@ -51,7 +51,7 @@ static void initScene() {
     gtmaLoadScreenObjectPack(&sceneScreenPack);
     gtmaLoadEntityPack(&sceneEntityPack);
 
-    gtmaCreateGameObject(&map, "models/circleHallway.glb", "map", (vec3){0, 0, 0}, (vec3){4.5, 4, 4.5}, (vec3){0, 0, 0}, GTMA_VERTEX_COLLIDE);
+    gtmaCreateGameObject(&map, "models/road.glb", "map", (vec3){0, 0, 0}, (vec3){4.5, 4, 4.5}, (vec3){0, 0, 0}, GTMA_VERTEX_COLLIDE);
 
     gtmaCreateGameObject(&deanWarp, "models/door2.glb", "deanWarp", (vec3){-108.2, 8, -36}, (vec3){3, 3, 3}, (vec3){0, 0, 0}, GTMA_PICKABLE);
 

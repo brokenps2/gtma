@@ -126,6 +126,12 @@ void gtmaCreateAndAddEntity(EntityPack* entPack, const char *texPath, const char
 }
 
 void gtmaUpdateEntity(Entity* entity, EntityPack* pack, Camera* cam) {
+
+    Model* entModel = &entity->model;
+    for(int i = 0; i < entModel->meshCount; i++) {
+        calculateMeshAABB(&entModel->meshes[i], entity->scale, entity->position);
+    }
+
     if(entity->health <= 0) entity->dead = true;
 
     if(entity->damaged) {

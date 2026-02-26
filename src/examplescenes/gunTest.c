@@ -11,7 +11,9 @@
 #include <SDL2/SDL_timer.h>
 #include <cglm/types.h>
 #include <cglm/vec3.h>
+#include "window/windowManager.h"
 #include "../objects/entities.h"
+#include <math.h>
 #include <stdio.h>
 #include <unistd.h>
 #include "util/util.h"
@@ -42,7 +44,7 @@ static PointLight light3;
 
 static ScreenObject gun;
 
-static float brightness = 1.15f;
+static float brightness = 1.35f;
 
 static void initScene() {
 
@@ -53,7 +55,7 @@ static void initScene() {
     gtmaLoadScreenObjectPack(&sceneScreenPack);
     gtmaLoadEntityPack(&sceneEntityPack);
 
-    gtmaCreateGameObject(&map, "models/tiletest.glb", "map", (vec3){0, 0, 0}, (vec3){9, 6, 9}, (vec3){0, 0, 0}, GTMA_VERTEX_COLLIDE);
+    gtmaCreateGameObject(&map, "models/plane.glb", "map", (vec3){0, 0, 0}, (vec3){9, 6, 9}, (vec3){0, 0, 0}, GTMA_VERTEX_COLLIDE);
     
     gtmaCreateGameObject(&sky, "models/sky.glb", "sky", (vec3){0, 0, 0}, (vec3){18, 18, 18}, (vec3){0, 0, 0}, GTMA_NOCOLLIDE);
     sky.model.meshes[0].flags |= GTMA_UNLIT;
@@ -71,19 +73,19 @@ static void initScene() {
     gtmaSetRenderCamera(&camera);
     gtmaCreatePlayer(&player, &camera, 100, 6, 10);
 
-    gtmaCreatePointLight(&light1, (vec3){-300, 300, 300}, (vec3){brightness, brightness, brightness}, GTMA_SUNMODE);
-    gtmaCreatePointLight(&light2, (vec3){300, 300, 0}, (vec3){brightness, brightness, brightness}, GTMA_SUNMODE);
-    gtmaCreatePointLight(&light3, (vec3){-300, 300, -300}, (vec3){brightness, brightness, brightness}, GTMA_SUNMODE);
+    gtmaCreatePointLight(&light1, (vec3){-400, 400, 400}, (vec3){brightness, brightness, brightness}, GTMA_SUNMODE);
+    gtmaCreatePointLight(&light2, (vec3){400, 400, 0}, (vec3){brightness, brightness, brightness}, GTMA_SUNMODE);
+    gtmaCreatePointLight(&light3, (vec3){-400, 400, -400}, (vec3){brightness, brightness, brightness}, GTMA_SUNMODE);
 
     gtmaAddGameObject(&map, &sceneObjectPack);
-    gtmaAddGameObject(&sky, &sceneObjectPack);
+    //gtmaAddGameObject(&sky, &sceneObjectPack);
     gtmaAddLight(&light1, &sceneLightPack);
     gtmaAddLight(&light2, &sceneLightPack);
     gtmaAddLight(&light3, &sceneLightPack);
 
     gtmaSetFogLevel(0.00035);
 
-    gtmaSetClearColor(6, 8, 18);
+    gtmaSetClearColor(0, 92, 240);
 
     camera.pitch = -85;
     gtmaCameraMatrix(&camera, 0.1f, 450.0f, gtmaGetShader());
@@ -96,7 +98,27 @@ static void initScene() {
 extern Scene testScene1;
 extern Scene natatorium;
 
+float entSpeed = 11;
+
 static void updateScene() {
+
+    for(int i = 0; i < sceneEntityPack.entityCount; i++) {
+        float dx = player.position[0] - sceneEntityPack.entities[i]->position[0];
+        float dz = player.position[2] - sceneEntityPack.entities[i]->position[2];
+
+        sceneEntityPack.entities[i]->rotation[1] = player.camera->yaw;
+
+        float length = sqrtf(dx * dx + dx * dz);
+
+        if(length > 0.0001f) {
+            dx /= length;
+            dz /= length;
+            
+            sceneEntityPack.entities[i]->position[0] += dx * entSpeed * getDeltaTime();
+            sceneEntityPack.entities[i]->position[2] += dz * entSpeed * getDeltaTime();
+        }
+
+    }
 
     if(gtmaUpdateScene(&gunTest, &player)) {
         return;

@@ -184,7 +184,9 @@ void gtmaCreateModel(Model* model, const char* path) {
                 if (gltfTexture && gltfTexture->image && gltfTexture->image->buffer_view && gltfTexture->image->buffer_view->buffer->data) {
                     const unsigned char* buffer = (const unsigned char*)gltfTexture->image->buffer_view->buffer->data + gltfTexture->image->buffer_view->offset;
                     size_t bufferSize = gltfTexture->image->buffer_view->size;
-                    gtmaLoadTextureFromMemory(&mesh->texture, buffer, bufferSize); 
+                    if(gtmaLoadTextureFromMemory(&mesh->texture, buffer, bufferSize) != 0) {
+                        printf("error loading texture from gltf model: %s\n", path);
+                    }
                 }
             }
 

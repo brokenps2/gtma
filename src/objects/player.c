@@ -18,8 +18,8 @@ float upVelocity = 0.0f;
 float downVelocity = 0.0f;
 float fallingSpeed = 0.0f;
 
-float maxSlopeHeight = 0.15f;
-float slopeStep = 0.05f;
+float maxSlopeHeight = 2.25f;
+float slopeStep = 500.0f;
 
 vec3 proposedPosition;
 
