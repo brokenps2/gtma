@@ -81,12 +81,11 @@ void gtmaLoadGIF(Texture* tex, const char* path, float alpha) {
     free(rawGifData);
 }
 
-void gtmaLoadTextureFromMemory(Texture* tex, const unsigned char* buffer, size_t size) {
+int gtmaLoadTextureFromMemory(Texture* tex, const unsigned char* buffer, size_t size) {
     stbi_set_flip_vertically_on_load(0);
     tex->data = stbi_load_from_memory(buffer, size, &tex->w, &tex->h, &tex->channels, 0);
     if (!tex->data) {
-        printf("Failed to load texture from memory\n");
-        return;
+        return 1;
     }
     tex->frames = 1;
     tex->ids = malloc(sizeof(unsigned int));
@@ -104,6 +103,8 @@ void gtmaLoadTextureFromMemory(Texture* tex, const unsigned char* buffer, size_t
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    return 0;
 }
 
 void gtmaDeleteTexture(Texture* tex) {

@@ -2,6 +2,7 @@
 #include "../graphics/shader.h"
 #include "../physics/physics.h"
 #include "../objects/objects.h"
+#include "graphics/texture.h"
 #include "scenes/scenes.h"
 #include "../graphics/renderer.h"
 #include "../window/events.h"
@@ -51,11 +52,12 @@ static void initScene() {
     gtmaLoadScreenObjectPack(&sceneScreenPack);
     gtmaLoadEntityPack(&sceneEntityPack);
 
-    gtmaCreateGameObject(&map, "models/road.glb", "map", (vec3){0, 0, 0}, (vec3){4.5, 4, 4.5}, (vec3){0, 0, 0}, GTMA_VERTEX_COLLIDE);
+    gtmaCreateGameObject(&map, "models/circleHallway.glb", "map", (vec3){0, 0, 0}, (vec3){4.5, 4, 4.5}, (vec3){0, 0, 0}, GTMA_VERTEX_COLLIDE);
 
     gtmaCreateGameObject(&deanWarp, "models/door2.glb", "deanWarp", (vec3){-108.2, 8, -36}, (vec3){3, 3, 3}, (vec3){0, 0, 0}, GTMA_PICKABLE);
 
-    gtmaCreateGameObject(&sphere, "models/collisionSphere.glb", "sphere", (vec3){-68, 14, 0}, (vec3){6, 6, 6}, (vec3){0, 0, 0}, GTMA_NONE);
+    gtmaCreateGameObject(&sphere, "models/billboard.glb", "sphere", (vec3){-68, 14, 0}, (vec3){5, 3, 5}, (vec3){180, 180, 0}, GTMA_NONE);
+    gtmaLoadGIF(&sphere.model.meshes[0].texture, "images/oney.gif", 1);
 
     if(returning) {
         gtmaCreateCamera(&camera, (vec3){-105, 11, -36}, 90, 0, 90, 0);
@@ -65,7 +67,8 @@ static void initScene() {
     gtmaSetRenderCamera(&camera);
     gtmaCreatePlayer(&player, &camera, 100, 7, 10);
 
-    gtmaSpawnLightGrid(&sceneLightPack, 3.85, 5, 130, -130);
+    gtmaSpawnLightGrid(&sceneLightPack, 0.85, 5, (vec3){-130, 6, -130}, (vec3){130, 6, 130});
+    gtmaSpawnLightGrid(&sceneLightPack, 0.85, 5, (vec3){-130, 23, -130}, (vec3){130, 23, 130});
 
     gtmaCreatePointLight(&playerLamp, (vec3){camera.position[0], camera.position[1], camera.position[2]}, (vec3){3.85, 3.85, 3.85}, GTMA_SUNMODE); playerLamp.range = 0.02;
 
@@ -74,9 +77,9 @@ static void initScene() {
 
     gtmaAddLight(&playerLamp, &sceneLightPack);
 
-    gtmaSetFogLevel(0.00025);
+    gtmaSetFogLevel(0.025);
 
-    gtmaSetClearColor(9, 8, 22);
+    gtmaSetClearColor(22, 22, 22);
 
     gtmaCameraMatrix(&camera, 0.1f, 450.0f, gtmaGetShader());
     camera.yaw = 90;
@@ -100,8 +103,8 @@ static void updateScene() {
 
     glm_vec3_copy(camera.position, playerLamp.position);
 
-    sphere.rotation[1] += 60 * getDeltaTime();
-    sphere.rotation[2] += 60 * getDeltaTime();
+    //sphere.rotation[1] += 60 * getDeltaTime();
+    //sphere.rotation[2] += 60 * getDeltaTime();
 
     //camera stuff
     gtmaCameraMatrix(&camera, 0.1f, 650.0f, gtmaGetShader());

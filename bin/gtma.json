@@ -4,7 +4,7 @@
   "width": 1024,
   "height": 768,
   "mouseSensitivity": 15,
-  "fboScaleFactor": 1,
+  "fboScaleFactor": 0.5,
   "vertexSnap": false,
   "ditherEnabled": true
 }

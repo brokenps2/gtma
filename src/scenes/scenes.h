@@ -24,5 +24,5 @@ void gtmaToggleCrosshair(Scene* scene, bool toggle);
 bool gtmaUpdateScene(Scene* scene, Player* player);
 void gtmaPlayDoorSound();
 void gtmaBeep();
-void gtmaSpawnLightGrid(PointLightPack* pack, float brightness, int lightCount, float maxPos, float minPos);
+void gtmaSpawnLightGrid(PointLightPack* pack, float brightness, int lightCount, vec3 minPos, vec3 maxPos);
 void switchScene(Scene* newScene);

@@ -23,7 +23,7 @@ Scene deansHallway = {
 };
 
 static Camera camera;
-static vec3 camPos = {23, 11, 36};
+static vec3 camPos = {10, 11, 11};
 static Player player;
 
 static GameObjectPack sceneObjectPack;
@@ -32,16 +32,9 @@ static ScreenObjectPack sceneScreenPack;
 static EntityPack sceneEntityPack;
 
 static GameObject map;
-static GameObject deanWarp;
-static PointLight light1;
-static PointLight light2;
-static PointLight light3;
-static PointLight light4;
-static PointLight light5;
+static GameObject desk;
 
-static float brightness = 1.35f;
-
-static bool returning = false;
+static float brightness = 1.85f;
 
 static void initScene() {
 
@@ -52,36 +45,39 @@ static void initScene() {
     gtmaLoadScreenObjectPack(&sceneScreenPack);
     gtmaLoadEntityPack(&sceneEntityPack);
 
-    gtmaCreateGameObject(&map, "models/deanscorridor.glb", "map", (vec3){0, 0, 0}, (vec3){4.5, 4.5, 4.5}, (vec3){0, 0, 0}, GTMA_VERTEX_COLLIDE);
-    
-    gtmaCreateGameObject(&deanWarp, "models/door2.glb", "deanWarp", (vec3){-108.2, 8, -36}, (vec3){3, 3, 3}, (vec3){0, 0, 0}, GTMA_PICKABLE);
-    deanWarp.pickableDistance = 24;
+    gtmaCreateGameObject(&map, "models/fblaoffice.glb", "map", (vec3){0, 0, 0}, (vec3){3, 3, 3}, (vec3){0, 0, 0}, GTMA_VERTEX_COLLIDE);
+    map.model.meshes[3].flags |= GTMA_UNLIT;
+    glm_vec3_copy((vec3){0.8, 0.8, 0.8}, map.model.meshes[3].color);
 
-    if(returning) {
-        gtmaCreateCamera(&camera, (vec3){-105, 11, -36}, 90, 0, 90, 0);
-    } else {
-        gtmaCreateCamera(&camera, camPos, 90, 0, 90, 0);
-    }
+    gtmaCreateGameObject(&desk, "models/desk.glb", "desk", (vec3){31, 3.35, -25}, (vec3){3, 3, 3}, (vec3){0, 180, 0}, GTMA_NONE);
+    
+
+    gtmaCreateCamera(&camera, camPos, 90, 0, 90, 0);
     gtmaSetRenderCamera(&camera);
     gtmaCreatePlayer(&player, &camera, 100, 6, 10);
 
-    gtmaCreatePointLight(&light1, (vec3){24, 22, 37}, (vec3){brightness, brightness, brightness}, GTMA_NONE); light1.range = 0.1;
-    gtmaCreatePointLight(&light2, (vec3){-24, 22, 37}, (vec3){brightness, brightness, brightness}, GTMA_NONE); light2.range = light1.range;
-    gtmaCreatePointLight(&light3, (vec3){24, 22, -37}, (vec3){brightness, brightness, brightness}, GTMA_NONE); light3.range = light1.range;
-    gtmaCreatePointLight(&light4, (vec3){-24, 22, -37}, (vec3){brightness, brightness, brightness}, GTMA_NONE); light4.range = light1.range;
-    gtmaCreatePointLight(&light5, (vec3){-74, 18, -35}, (vec3){brightness, brightness, brightness}, GTMA_NONE); light5.range = light1.range;
-
     gtmaAddGameObject(&map, &sceneObjectPack);
-    gtmaAddGameObject(&deanWarp, &sceneObjectPack);
-    gtmaAddLight(&light1, &sceneLightPack);
-    gtmaAddLight(&light2, &sceneLightPack);
-    gtmaAddLight(&light3, &sceneLightPack);
-    gtmaAddLight(&light4, &sceneLightPack);
-    gtmaAddLight(&light5, &sceneLightPack);
+    gtmaAddGameObject(&desk, &sceneObjectPack);
 
-    gtmaInitScene(&deansHallway, &player, &sceneObjectPack, &sceneScreenPack, &sceneEntityPack, camPos, false);
+    gtmaSpawnLightGrid(&sceneLightPack, brightness, 9, (vec3){6, 21, 6}, (vec3){64, 21, -66});
+    //gtmaSpawnLightGrid(&sceneLightPack, brightness, 9, (vec3){6, 1, 6}, (vec3){64, 1, -66});
 
-    gtmaSetFogLevel(0.0035);
+    /*
+        * 9 grid lights from -32 -26
+        * to 32 26
+        *
+        * and
+        * 
+        * 9 grid lights from -106 -56
+        * to 106 -33
+        *
+        *
+        * desk at 0 6 8
+    */
+
+    gtmaInitScene(&deansHallway, &player, &sceneObjectPack, &sceneScreenPack, &sceneEntityPack, camPos, true);
+
+    gtmaSetFogLevel(0.000035);
 
     gtmaSetClearColor(138, 154, 255);
 
@@ -108,12 +104,6 @@ static void updateScene() {
     //printf("\r%f %f %f", camera.position[0], camera.position[1], camera.position[2]);
     //fflush(stdout);
 
-    if(isLeftPressed()) {
-        if(pickObject(&sceneObjectPack, &camera) == &deanWarp) {
-            gtmaPlayDoorSound();
-            switchScene(&deansGarden);
-        }
-    }
 }
 
 static void disposeScene() {
