@@ -18,3 +18,5 @@ void gtmaUpdateEvents();
 void gtmaToggleControls(bool onoff);
 void gtmaClearKeyInputs();
 void gtmaEndInputFrame();
+void gtmaToggleFullscreen();
+void gtmaInitInput();

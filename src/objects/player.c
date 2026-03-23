@@ -7,6 +7,7 @@
 #include <SDL2/SDL_timer.h>
 #include <cglm/vec3.h>
 #include <math.h>
+#include <string.h>
 
 float maxSpeed = 120.0f;
 float accel = 220.0f;
@@ -129,6 +130,7 @@ void gtmaPlayerCollide(Player* player, GameObjectPack* objPack) {
 }
 
 void gtmaCreatePlayer(Player* player, Camera *camera, int health, float collisionRadius, float collisionLength) {
+    memset(player, 0, sizeof(Player));
     glm_vec3_copy(camera->position, player->position);
     player->health = 100;
     player->camera = camera;

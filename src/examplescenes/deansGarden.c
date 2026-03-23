@@ -66,7 +66,7 @@ static void initScene() {
         if((randomX > -120 && randomX < 33 && randomZ > -19 && randomZ < 83) || (randomX > -32 && randomX < 42 && randomZ > -111 && randomZ < -58)) {
             continue;
         }
-        gtmaCreateAndAddGameObject(&sceneObjectPack, "models/tree.glb", "tree", (vec3){randomX, 7, randomZ}, (vec3){3, 2, 3}, (vec3){0, 90, 0}, GTMA_BILLBOARD | GTMA_NOCOLLIDE);
+        gtmaCreateAndAddGameObject(&sceneObjectPack, "models/tree.glb", "tree", (vec3){randomX, 10, randomZ}, (vec3){3.2, 3.2, 3.2}, (vec3){0, 90, 0}, GTMA_BILLBOARD | GTMA_NOCOLLIDE);
         sceneObjectPack.objects[sceneObjectPack.objectCount - 1]->flags &= ~GTMA_PICKABLE;
     }
 
@@ -102,7 +102,6 @@ static void initScene() {
     gtmaCreatePointLight(&light2, (vec3){300, 300, 0}, (vec3){brightness, brightness, brightness}, GTMA_SUNMODE);
     gtmaCreatePointLight(&light3, (vec3){-300, 300, -300}, (vec3){brightness, brightness, brightness}, GTMA_SUNMODE);
 
-
     gtmaAddGameObject(&stoneland, &sceneObjectPack);
     gtmaAddGameObject(&sky, &sceneObjectPack);
     gtmaAddGameObject(&map, &sceneObjectPack);
@@ -112,7 +111,7 @@ static void initScene() {
     gtmaAddLight(&light2, &sceneLightPack);
     gtmaAddLight(&light3, &sceneLightPack);
 
-    gtmaSetFogLevel(0.0035);
+    gtmaSetFogLevel(0.0015);
 
     gtmaSetClearColor(138, 154, 255);
 
@@ -129,7 +128,7 @@ extern Scene outdoorScene;
 
 static void updateScene() {
 
-    if(gtmaUpdateScene(&deansGarden, &player)) {
+    if(!gtmaUpdateScene(&deansGarden, &player)) {
         return;
     }
 

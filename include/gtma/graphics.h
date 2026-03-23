@@ -39,8 +39,14 @@ typedef struct Texture {
     int w;
     int h;
     int channels;
+    bool isGIF;
+    int frames;
+    int* delays;
+    float frameTimer;
+    int currentFrame;
+    float gifAlpha;
     unsigned char* data;
-    unsigned int id;
+    unsigned int* ids;
 } Texture;
 
 //models
@@ -55,6 +61,7 @@ typedef struct Vertex {
 typedef struct Mesh {
     Vertex* vertices;
     unsigned int* indices;
+    char* name;
     int indexCount;
     int vertexCount;
     vec3 color;
@@ -75,7 +82,6 @@ typedef struct Model {
 //camera
 typedef struct Camera {
     vec3 position;
-    vec3 renderPos;
     vec3 front;
     vec3 up;
     vec3 direction;
@@ -140,6 +146,7 @@ GLint gtmaGetInt(Shader* shader, const char* name);
 GLfloat gtmaGetFloat(Shader* shader, const char* name);
 
 //textures
+void gtmaLoadGIF(Texture* tex, const char* path, float alpha);
 void gtmaCreateTexture(Texture* tex, const char* path);
-void gtmaLoadTextureFromMemory(Texture* texture, const unsigned char* buffer, size_t size);
+int gtmaLoadTextureFromMemory(Texture* tex, const unsigned char* buffer, size_t size);
 void gtmaDeleteTexture(Texture* tex);

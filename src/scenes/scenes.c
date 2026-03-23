@@ -140,6 +140,8 @@ bool gtmaIsPaused() {
     return paused;
 }
 
+extern Scene titleScreen;
+
 bool gtmaUpdateScene(Scene* scene, Player* player) {
 
     if (paused) {
@@ -152,15 +154,14 @@ bool gtmaUpdateScene(Scene* scene, Player* player) {
         if (isKeyPressed(SDL_SCANCODE_Q)) {
             gtmaSetRunning(false);
         }
-        /*
         if (isKeyPressed(SDL_SCANCODE_T)) {
             paused = false;
             pauseScreen.flags &= ~GTMA_INVISIBLE;
             SDL_SetRelativeMouseMode(true);
             gtmaSetFBOBrightness(1);
-            //switchScene(&titleScreen);
+            switchScene(&titleScreen);
         }
-        */
+        
     } else {
         if (isKeyPressed(SDL_SCANCODE_ESCAPE)) {
             pauseScreen.flags &= ~GTMA_INVISIBLE;
@@ -226,13 +227,13 @@ bool gtmaUpdateScene(Scene* scene, Player* player) {
     loadingScreen.position[1] = (float)getWindowHeight() / 2;
 
     if (checkWarp()) {
-        return true;
+        return false;
     }
 
-    return paused;
+    return !paused;
 }
 
-void gtmaSpawnLightGrid(PointLightPack* pack, float brightness, int lightCount, vec3 minPos, vec3 maxPos) {
+void gtmaSpawnLightGrid(PointLightPack* pack, float brightness, int lightCount, vec3 minPos, vec3 maxPos, unsigned int flags) {
     float stepX = (maxPos[0] - minPos[0]) / (lightCount - 1);
     float stepZ = (maxPos[2] - minPos[2]) / (lightCount - 1);
 
@@ -245,7 +246,6 @@ void gtmaSpawnLightGrid(PointLightPack* pack, float brightness, int lightCount, 
             };
 
             vec3 color = { brightness, brightness, brightness };
-            unsigned int flags = 0;
 
             gtmaCreateAndAddPointLight(pack, (vec3){position[0], position[1], position[2]}, color, flags);
 

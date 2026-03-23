@@ -106,7 +106,7 @@ static bool spinMap = false;
 
 static void updateScene() {
 
-    if(gtmaUpdateScene(&outdoorScene, &player)) {
+    if(!gtmaUpdateScene(&outdoorScene, &player)) {
         return;
     }
 

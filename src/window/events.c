@@ -4,8 +4,10 @@
 #include <SDL2/SDL_events.h>
 #include <SDL2/SDL_scancode.h>
 #include <SDL2/SDL_mouse.h>
+#include <SDL2/SDL_video.h>
 #include <stdbool.h>
-#include "../util/config.h"
+#include "util/config.h"
+#include "window/windowManager.h"
 
 double mouseX;
 double mouseY;
@@ -19,10 +21,12 @@ bool mouse2, mouse2Pressed;
 
 bool running = true;
 
+bool fullscreen = false;
+
 bool keys[SDL_NUM_SCANCODES];
 bool keysPressed[SDL_NUM_SCANCODES];
 
-static bool useFixedBorder = false;
+float monitorWidth, monitorHeight;
 
 int blockAllEvents(void* userdata, SDL_Event* event) {
     return 0; // block everything
@@ -153,15 +157,37 @@ void windowResizeCallback(int width, int height) {
     glViewport(0, 0, windowSizeX, windowSizeY);
 }
 
+void gtmaToggleFullscreen() {
+    if(!fullscreen) {
+        SDL_SetWindowSize(getWindow(), monitorWidth, monitorHeight);
+        SDL_SetWindowFullscreen(getWindow(), SDL_WINDOW_BORDERLESS);
+        windowSizeX = monitorWidth; windowSizeY = monitorHeight;
+        windowResizeCallback(windowSizeX, windowSizeY);
+        fullscreen = true;
+    } else {
+        SDL_SetWindowSize(getWindow(), cfgLookupInt("width"), cfgLookupInt("height"));
+        SDL_SetWindowPosition(getWindow(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
+        SDL_SetWindowFullscreen(getWindow(), 0);
+        windowSizeX = cfgLookupInt("width"); windowSizeY = cfgLookupInt("height");
+        windowResizeCallback(windowSizeX, windowSizeY);
+        fullscreen = false;
+    }
+    
+}
+
 void windowMoveCallback(int xpos, int ypos) {
     windowPosX = xpos;
     windowPosY = ypos;
 }
 
 void gtmaInitInput() {
-    useFixedBorder = cfgLookupBool("useFixedBorder");
     windowSizeX = cfgLookupInt("width");
     windowSizeY = cfgLookupInt("height");
+
+    SDL_DisplayMode dm;
+    SDL_GetDesktopDisplayMode(0, &dm);
+    monitorWidth = dm.w;
+    monitorHeight = dm.h;
 }
 
 bool gtmaIsRunning() {

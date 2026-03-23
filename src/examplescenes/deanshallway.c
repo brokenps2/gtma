@@ -23,7 +23,7 @@ Scene deansHallway = {
 };
 
 static Camera camera;
-static vec3 camPos = {10, 11, 11};
+static vec3 camPos = {37, 10, -24};
 static Player player;
 
 static GameObjectPack sceneObjectPack;
@@ -34,7 +34,7 @@ static EntityPack sceneEntityPack;
 static GameObject map;
 static GameObject desk;
 
-static float brightness = 1.85f;
+static float brightness = 1.65f;
 
 static void initScene() {
 
@@ -46,10 +46,11 @@ static void initScene() {
     gtmaLoadEntityPack(&sceneEntityPack);
 
     gtmaCreateGameObject(&map, "models/fblaoffice.glb", "map", (vec3){0, 0, 0}, (vec3){3, 3, 3}, (vec3){0, 0, 0}, GTMA_VERTEX_COLLIDE);
-    map.model.meshes[3].flags |= GTMA_UNLIT;
-    glm_vec3_copy((vec3){0.8, 0.8, 0.8}, map.model.meshes[3].color);
+    map.model.meshes[map.model.meshCount - 2].flags |= GTMA_UNLIT;
+    glm_vec3_copy((vec3){1.7, 1.7, 1.7}, map.model.meshes[3].color);
+    glm_vec3_copy((vec3){0.7, 0.7, 0.7}, map.model.meshes[map.model.meshCount - 2].color);
 
-    gtmaCreateGameObject(&desk, "models/desk.glb", "desk", (vec3){31, 3.35, -25}, (vec3){3, 3, 3}, (vec3){0, 180, 0}, GTMA_NONE);
+    gtmaCreateGameObject(&desk, "models/desk.glb", "desk", (vec3){31, 2.45, -25}, (vec3){3, 3, 3}, (vec3){0, 180, 0}, GTMA_NONE);
     
 
     gtmaCreateCamera(&camera, camPos, 90, 0, 90, 0);
@@ -59,7 +60,7 @@ static void initScene() {
     gtmaAddGameObject(&map, &sceneObjectPack);
     gtmaAddGameObject(&desk, &sceneObjectPack);
 
-    gtmaSpawnLightGrid(&sceneLightPack, brightness, 9, (vec3){6, 21, 6}, (vec3){64, 21, -66});
+    gtmaSpawnLightGrid(&sceneLightPack, brightness, 2, (vec3){6, 20.5, 0}, (vec3){44, 20.5, -45}, GTMA_NONE);
     //gtmaSpawnLightGrid(&sceneLightPack, brightness, 9, (vec3){6, 1, 6}, (vec3){64, 1, -66});
 
     /*
@@ -92,7 +93,7 @@ extern Scene deansGarden;
 
 static void updateScene() {
 
-    if(gtmaUpdateScene(&deansHallway, &player)) {
+    if(!gtmaUpdateScene(&deansHallway, &player)) {
         return;
     }
 

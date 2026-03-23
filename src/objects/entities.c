@@ -54,6 +54,8 @@ void gtmaCreateEntity(Entity *entity, const char *texPath, const char *name, vec
     gtmaCreateTexture(&model.meshes[0].texture, texPath);
     */
 
+    memset(entity, 0, sizeof(Entity));
+
     gtmaCreateModel(&model, "models/barney.glb");
 
     entity->model = model;

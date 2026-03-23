@@ -115,7 +115,7 @@ static void checkFlashlight() {
 
 static void updateScene() {
 
-    if(gtmaUpdateScene(&natatorium, &player)) {
+    if(!gtmaUpdateScene(&natatorium, &player)) {
         return;
     }
 

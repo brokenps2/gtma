@@ -9,6 +9,8 @@
 #include <string.h>
 
 void gtmaCreateGameObject(GameObject* object, const char* mdlPath, const char* name, vec3 position, vec3 scale, vec3 rotation, unsigned int flags) {
+    memset(object, 0, sizeof(GameObject));
+
     Model model; 
     gtmaCreateModel(&model, mdlPath);
 
@@ -32,12 +34,13 @@ void gtmaCreateGameObject(GameObject* object, const char* mdlPath, const char* n
         calculateMeshAABB(&object->model.meshes[i], object->scale, object->position);
     }
 
-    object->flags |= flags;
+    object->flags = flags;
 
     object->inPack = false;
 }
 
 void gtmaCreateText(ScreenObject* object, const char* content, const char* fontPath, vec2 position, vec2 size, int direction, unsigned int flags) {
+    memset(object, 0, sizeof(ScreenObject));
 
     int textLen = strlen(content);
 
@@ -152,6 +155,7 @@ void gtmaCreateText(ScreenObject* object, const char* content, const char* fontP
 
 
 void gtmaCreateScreenObject(ScreenObject* object, const char* texPath, const char* name, vec2 position, vec2 size, float rotation, unsigned int flags) {
+    memset(object, 0, sizeof(ScreenObject));
 
     Model model;
 

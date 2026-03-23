@@ -12,15 +12,10 @@
 #include <stb_image.h>
 #include "events.h"
 
-int fullscreen = 0;
-
 SDL_Window* window;
 float currentTime = 0;
 float lastTime = 0;
 float deltaTime;
-
-float monitorWidth, monitorHeight;
-
 double frameTime;
 
 bool mouseCaptured = true;

@@ -24,7 +24,7 @@ Scene valleyway = {
 };
 
 static Camera camera;
-static vec3 camPos = {23, 11, 36};
+static vec3 camPos = {128, 10, 0};
 static Player player;
 
 static GameObjectPack sceneObjectPack;
@@ -85,7 +85,7 @@ static void initScene() {
 
     gtmaInitScene(&valleyway, &player, &sceneObjectPack, &sceneScreenPack, &sceneEntityPack, camPos, true);
  
-    gtmaSetFogLevel(0.000035);
+    gtmaSetFogLevel(0.0025);
 
     gtmaSetClearColor(0, 113, 246);
 
@@ -100,7 +100,7 @@ extern Scene deansGarden;
 
 static void updateScene() {
 
-    if(gtmaUpdateScene(&valleyway, &player)) {
+    if(!gtmaUpdateScene(&valleyway, &player)) {
         return;
     }
 

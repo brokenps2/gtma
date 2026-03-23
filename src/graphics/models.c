@@ -61,7 +61,10 @@ void applyNodeTransform(cgltf_node* node, mat4 parentTransform, mat4 outTransfor
 
     glm_mat4_mul(parentTransform, localTransform, outTransform);
 }
+
 void gtmaCreateModel(Model* model, const char* path) {
+    memset(model, 0, sizeof(Model));
+
     cgltf_options options = {0};
     cgltf_data* data = NULL;
     cgltf_result result = cgltf_parse_file(&options, res(path), &data);

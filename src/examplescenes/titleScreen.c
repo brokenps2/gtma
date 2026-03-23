@@ -79,7 +79,7 @@ static void initScene() {
     gtmaCreateText(&text, "efghijklmnop", "images/font.png", (vec2){0, 16}, (vec2){5,8}, 1, GTMA_NONE);
 
 
-    gtmaCreateCamera(&camera, camPos, 90, 0, 90, 0);
+    gtmaCreateCamera(&camera, camPos, 90, 0, 0, 0);
     gtmaSetRenderCamera(&camera);
     gtmaCreatePlayer(&player, &camera, 100, 10, 6);
 
@@ -105,12 +105,14 @@ extern Scene natatorium;
 extern Scene robert;
 extern Scene testScene1;
 extern Scene deansHallway;
+extern Scene deansGarden;
 extern Scene circleHallway;
 extern Scene gunTest;
+extern Scene valleyway;
 
 static void updateScene() {
 
-    if(gtmaUpdateScene(&titleScreen, &player)) {
+    if(!gtmaUpdateScene(&titleScreen, &player)) {
         return;
     }
 
@@ -147,9 +149,15 @@ static void updateScene() {
     } else if(isKeyPressed(SDL_SCANCODE_5)) {
         logo.flags |= GTMA_INVISIBLE;
         SDL_SetRelativeMouseMode(true);
-        switchScene(&gunTest);
+        switchScene(&valleyway);
     } else if(isKeyPressed(SDL_SCANCODE_O)) {
         logo.flags |= GTMA_INVISIBLE;
+        SDL_SetRelativeMouseMode(true);
+        switchScene(&deansGarden);
+    }
+
+    if(isKeyPressed(SDL_SCANCODE_F)) {
+        gtmaToggleFullscreen();
     }
 
     if(camera.position[0] > planeLimit) {
@@ -160,7 +168,6 @@ static void updateScene() {
             plane2.position[0] += 146;
             planeNo = 0;
         }
-
         planeLimit += 73;
 
     }

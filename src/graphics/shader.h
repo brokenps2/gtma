@@ -1,9 +1,9 @@
-#pragma once
 #include <GL/glew.h>
 #include <cglm/cglm.h>
+#pragma once
+
 
 typedef struct Shader {
-
     GLuint vertexShader;
     GLuint fragmentShader;
     GLuint id;
@@ -12,7 +12,6 @@ typedef struct Shader {
 
     char* vtShaderSrc;
     char* frShaderSrc;
-
 } Shader;
 
 typedef struct PointLight {    

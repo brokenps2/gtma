@@ -1,11 +1,5 @@
 #pragma once
 
-typedef enum {
-	LOG_INFO,
-	LOG_WARN,
-	LOG_ERROR
-} LogLevel;
-
 void gtmaInitConfig(const char* path);
 void gtmaDestroyConfig();
 
@@ -16,7 +10,6 @@ int cfgLookupInt(const char* key);
 float cfgLookupFloat(const char* key);
 int cfgLookupBool(const char* key);
 
-void gtmaLog(LogLevel level, const char* fmt, ...);
 void gtmaPrintSystemInfo();
 
 const char* res(const char* path);

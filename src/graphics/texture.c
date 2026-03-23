@@ -1,5 +1,6 @@
 #include <stddef.h>
 #include <stdlib.h>
+#include <string.h>
 #define STB_IMAGE_IMPLEMENTATION
 #define STB_ONLY_GIF
 #include <stb_image.h>
@@ -9,6 +10,7 @@
 
 
 void gtmaCreateTexture(Texture* tex, const char* path) {
+    memset(tex, 0, sizeof(Texture));
 
     stbi_set_flip_vertically_on_load(1);
     tex->data = stbi_load(res(path), &tex->w, &tex->h, &tex->channels, 0);

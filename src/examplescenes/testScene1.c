@@ -128,7 +128,7 @@ void checkFlashlight() {
 
 void updateScene() {
 
-    if(gtmaUpdateScene(&testScene1, &player)) {
+    if(!gtmaUpdateScene(&testScene1, &player)) {
         return;
     }
 

@@ -5,6 +5,7 @@
 #include "window/windowManager.h"
 #include "util/diagnostics.h"
 #include "audio/audio.h"
+#include "window/events.h"
 #include <stdlib.h>
 
 int randBetween(int a, int b) { 
@@ -16,6 +17,7 @@ void gtmaInit(const char* cfgPath) {
     gtmaInitWindow();
     gtmaInitAudio();
     gtmaInitRenderer();
+    gtmaInitInput();
     gtmaPrintSystemInfo();
 }
 

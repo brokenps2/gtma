@@ -120,7 +120,7 @@ static void updateScene() {
 
     }
 
-    if(gtmaUpdateScene(&gunTest, &player)) {
+    if(!gtmaUpdateScene(&gunTest, &player)) {
         return;
     }
 

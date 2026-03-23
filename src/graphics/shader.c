@@ -6,9 +6,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "../util/files.h"
+#include "cglm/types.h"
 #include "shader.h"
+#include <string.h>
 
 void gtmaCreateShader(Shader* shader) {
+    memset(shader, 0, sizeof(Shader));
+
     shader->vtShaderSrc = getVertexShaderSrc();
     shader->frShaderSrc = getFragmentShaderSrc();
 
@@ -52,51 +56,9 @@ void gtmaCreateShader(Shader* shader) {
 
 }
 
-void gtmaCreateScreenShader(Shader* shader) {
-    shader->vtShaderSrc = getFileSrc(res("/shaders/screenVertexShader.glsl"));
-    shader->frShaderSrc = getFileSrc(res("/shaders/screenFragmentShader.glsl"));
-
-    int success;
-    char infoLog[512];
-
-    shader->vertexShader = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(shader->vertexShader, 1, (const char**)&shader->vtShaderSrc, NULL);
-    glCompileShader(shader->vertexShader);
-
-    free(shader->vtShaderSrc);
-
-    glGetShaderiv(shader->vertexShader, GL_COMPILE_STATUS, &success);
-    if(!success) {
-        glGetShaderInfoLog(shader->vertexShader, 512, NULL, infoLog);
-        printf("screen vertex shader compile failed\n%s\n", infoLog);
-    };
-
-
-    shader->fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(shader->fragmentShader, 1, (const char**)&shader->frShaderSrc, NULL);
-    glCompileShader(shader->fragmentShader);
-
-    free(shader->frShaderSrc);
-
-    glGetShaderiv(shader->fragmentShader, GL_COMPILE_STATUS, &success);
-    if(!success) {
-        glGetShaderInfoLog(shader->fragmentShader, 512, NULL, infoLog);
-        printf("screen fragment shader compile failed\n%s\n", infoLog);
-    };
-
-    shader->id = glCreateProgram();
-
-    glAttachShader(shader->id, shader->vertexShader);
-    glAttachShader(shader->id, shader->fragmentShader);
-
-    glLinkProgram(shader->id);
-
-    glDeleteShader(shader->vertexShader);
-    glDeleteShader(shader->fragmentShader);
-
-}
-
 void gtmaCreatePointLight(PointLight* light, vec3 position, vec3 color, unsigned int flags) {
+    memset(light, 0, sizeof(PointLight));
+
     glm_vec3_copy(position, light->position);
     glm_vec3_copy(color, light->color);
 
@@ -106,6 +68,7 @@ void gtmaCreatePointLight(PointLight* light, vec3 position, vec3 color, unsigned
 
     light->flags = 0;
     light->flags |= flags;
+
 }
 
 void gtmaAddLight(PointLight* light, PointLightPack* lightPack) {

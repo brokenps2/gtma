@@ -24,6 +24,8 @@ float maxFOV;
 float targetFOV;
 
 void gtmaCreateCamera(Camera* cam, vec3 pos, float fov, float pitch, float yaw, float roll) {
+    memset(cam, 0, sizeof(Camera));
+
     cam->width = getWindowWidth();
     cam->height = getWindowHeight();
 
