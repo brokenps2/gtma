@@ -140,8 +140,6 @@ bool gtmaIsPaused() {
     return paused;
 }
 
-extern Scene titleScreen;
-
 bool gtmaUpdateScene(Scene* scene, Player* player) {
 
     if (paused) {
@@ -154,6 +152,7 @@ bool gtmaUpdateScene(Scene* scene, Player* player) {
         if (isKeyPressed(SDL_SCANCODE_Q)) {
             gtmaSetRunning(false);
         }
+        /*
         if (isKeyPressed(SDL_SCANCODE_T)) {
             paused = false;
             pauseScreen.flags &= ~GTMA_INVISIBLE;
@@ -161,6 +160,7 @@ bool gtmaUpdateScene(Scene* scene, Player* player) {
             gtmaSetFBOBrightness(1);
             switchScene(&titleScreen);
         }
+        */
         
     } else {
         if (isKeyPressed(SDL_SCANCODE_ESCAPE)) {
